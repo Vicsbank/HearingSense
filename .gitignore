@@ -1,0 +1,41 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.DS_Store
+
+# 运行时上传的文件
+uploads/
+
+# 数据集音频较大，按 data/README.md 自行下载
+data/emotify/audio/
+data/gtzan/
+
+# 预训练模型与转换结果（用 tools/download_pretrained.py 和 ml/export_coreml.py 重新生成）
+models/pretrained/
+models/coreml/*.mlpackage
+# 评估数据与缓存
+data/noise/
+data/mtg_jamendo/audio/
+data/pmemo/
+results/eval/*/cache.npz
+# Swift 构建产物
+app/.build/
+
+# Hearing Sense iOS 2.0 (Window 1)
+.pytest_cache/
+data/emotify/audio_full/
+# Xcode / SwiftPM per-user state and build output
+xcuserdata/
+*.xcuserstate
+DerivedData/
+packages/*/.build/
+packages/*/.swiftpm/
+
+# Version control setup (Window 2, before the first commit): keep all dataset content and audio
+# out of Git. Re-download with tools/download_datasets.py (see data/README.md).
+data/*
+!data/README.md
+!data/downloads/
+data/downloads/*
+!data/downloads/CHECKSUMS.json

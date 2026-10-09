@@ -1,0 +1,211 @@
+import HearingSenseAudio
+import SwiftUI
+
+struct ContentView: View {
+    @Environment(ListeningController.self) private var controller
+    @Environment(\.scenePhase) private var scenePhase
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    BrandHeader()
+                    StatusCard(state: controller.state, format: controller.captureFormat)
+                    ListeningButtons()
+                    LevelMeterView(level: controller.level, history: controller.levelHistory,
+                                   capacity: ListeningController.historyLength,
+                                   isActive: controller.state.isCapturing)
+                    RouteSummaryCard(assessment: controller.assessment, route: controller.route)
+                    PolicyCard()
+                    DiagnosticsLinks()
+                    PrivacyNote()
+                }
+                .padding()
+            }
+            .background(Color(.systemGroupedBackground))
+            .navigationTitle("Hearing Sense")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            controller.scenePhaseChanged(phase)
+        }
+    }
+}
+
+private struct BrandHeader: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "ear.badge.waveform")
+                .font(.largeTitle)
+                .foregroundStyle(.tint)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Hearing Sense")
+                    .font(.title.bold())
+                Text("Environmental awareness · Audio foundation")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
+    }
+}
+
+private struct ListeningButtons: View {
+    @Environment(ListeningController.self) private var controller
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    var body: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: 12)) : AnyLayout(HStackLayout(spacing: 12))
+        VStack(alignment: .leading, spacing: 12) {
+            layout {
+                Button {
+                    Task { await controller.start() }
+                } label: {
+                    Label("Start Listening", systemImage: "mic.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(!controller.state.canStart)
+                .accessibilityHint("Turns on the microphone and starts measuring sound around you.")
+
+                Button {
+                    controller.stop()
+                } label: {
+                    Label("Stop Listening", systemImage: "stop.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .disabled(!controller.state.canStop)
+                .accessibilityHint("Turns off the microphone.")
+            }
+            .controlSize(.large)
+
+            if controller.state == .permissionDenied,
+               let settings = URL(string: UIApplication.openSettingsURLString) {
+                Link(destination: settings) {
+                    Label("Open Settings to allow microphone access", systemImage: "gear")
+                }
+            }
+        }
+    }
+}
+
+private struct RouteSummaryCard: View {
+    let assessment: RouteAssessment
+    let route: AudioRouteSnapshot
+
+    var body: some View {
+        Card {
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Audio route", systemImage: "point.3.connected.trianglepath.dotted")
+                    .font(.headline)
+                Text(assessment.headline)
+                    .font(.body.weight(.semibold))
+                Text(assessment.detail)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Divider()
+                RouteLine(title: "In", ports: route.inputs)
+                RouteLine(title: "Out", ports: route.outputs)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private struct RouteLine: View {
+    let title: String
+    let ports: [AudioPortInfo]
+
+    var body: some View {
+        LabeledContent(title) {
+            Text(ports.isEmpty ? "None" : ports.map { "\($0.name) (\($0.kind.displayName))" }.joined(separator: ", "))
+                .multilineTextAlignment(.trailing)
+        }
+        .font(.subheadline)
+    }
+}
+
+private struct PolicyCard: View {
+    @Environment(ListeningController.self) private var controller
+
+    var body: some View {
+        Card {
+            VStack(alignment: .leading, spacing: 8) {
+                Picker(selection: Binding(get: { controller.policy }, set: { controller.select($0) })) {
+                    ForEach(AudioSessionPolicy.all) { policy in
+                        Text(policy.isExperimental ? "\(policy.title) (test)" : policy.title).tag(policy)
+                    }
+                } label: {
+                    Label("Audio session policy", systemImage: "slider.horizontal.3")
+                        .font(.headline)
+                }
+                .pickerStyle(.navigationLink)
+                .disabled(controller.state.isCapturing)
+
+                Text(controller.policy.summary)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                if controller.state.isCapturing {
+                    Text("Stop listening to change the policy.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+}
+
+private struct DiagnosticsLinks: View {
+    @Environment(ListeningController.self) private var controller
+
+    var body: some View {
+        Card {
+            VStack(alignment: .leading, spacing: 12) {
+                NavigationLink {
+                    RouteDiagnosticsView()
+                } label: {
+                    Label("Audio route diagnostics", systemImage: "stethoscope")
+                }
+                Divider()
+                NavigationLink {
+                    DiagnosticLogView()
+                } label: {
+                    LabeledContent {
+                        Text("\(controller.log.entries.count)")
+                    } label: {
+                        Label("Event log", systemImage: "list.bullet.rectangle")
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct PrivacyNote: View {
+    var body: some View {
+        Label {
+            Text("Audio is processed on this iPhone, in memory only. Hearing Sense does not record, "
+                + "store or upload audio. It is not a safety or emergency alert system.")
+        } icon: {
+            Image(systemName: "lock.shield")
+        }
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+    }
+}
+
+/// Rounded container used by the main screen sections.
+struct Card<Content: View>: View {
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        content
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+    }
+}

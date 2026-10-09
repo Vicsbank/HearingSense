@@ -1,0 +1,30 @@
+# Apple Silicon (M1 Max) 上验证过的版本。Python 3.12：
+#   /opt/homebrew/bin/python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# torch/torchaudio 固定在 2.7.0：coremltools 9.0 官方只测试到 torch 2.7；
+# torchaudio >= 2.9 移除了 src/ 旧代码依赖的 torchaudio.load 后端。
+torch==2.7.0
+torchaudio==2.7.0
+torchvision==0.22.0
+timm==1.0.30
+numpy==2.5.3
+scipy==1.18.1
+librosa==1.0.0
+soundfile==0.14.0
+soxr==1.1.0
+pandas==3.0.6
+scikit-learn==1.9.1
+matplotlib==3.11.2
+seaborn==0.13.2
+tqdm==4.70.1
+coremltools==9.0
+onnx==1.23.2
+onnxruntime==1.31.0
+onnx2torch==1.5.15
+# 只用于核对前端与 Essentia 一致（tests），推理不依赖它
+essentia==2.1b6.dev1389
+# 测试与数据集下载
+pytest==9.1.1
+gdown==6.4.2
+
+# 旧的 FastAPI 网页版（src/app.py）才需要，新流程不需要：
+# fastapi uvicorn jinja2 python-multipart

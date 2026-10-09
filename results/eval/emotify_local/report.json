@@ -1,0 +1,8227 @@
+{
+ "dataset": "emotify_local",
+ "n_tracks": 12,
+ "conditions": [
+  "clean",
+  "phone_room_1m",
+  "phone_room_3m",
+  "phone_babble_10dB",
+  "phone_babble_0dB",
+  "phone_ambient_10dB",
+  "phone_ambient_0dB",
+  "phone_quiet"
+ ],
+ "condition_descriptions": {
+  "clean": "原始文件，未经任何处理",
+  "phone_room_1m": "手机外放，普通房间 (RT60 0.4 s)，约 1 m",
+  "phone_room_3m": "手机外放，较大房间 (RT60 0.7 s)，约 3 m，音量更低",
+  "phone_babble_10dB": "1 m 外放 + 背景人声交谈，SNR 10 dB",
+  "phone_babble_0dB": "1 m 外放 + 背景人声交谈，SNR 0 dB（人声与音乐一样响）",
+  "phone_ambient_10dB": "1 m 外放 + 环境噪声（餐厅/街道等），SNR 10 dB",
+  "phone_ambient_0dB": "1 m 外放 + 环境噪声，SNR 0 dB",
+  "phone_quiet": "1 m 外放，极低音量（接近麦克风本底噪声）"
+ },
+ "noise_sources": {
+  "babble": "macOS 合成语音 TTS (10 段) —— 合成替代品，真实性有限",
+  "ambient": "合成粉红噪声 —— 合成替代品，真实性有限"
+ },
+ "window_seconds_new": 4.992,
+ "window_seconds_legacy": 5.5,
+ "genre": {
+  "clean": {
+   "window": {
+    "new_open": {
+     "n": 144,
+     "accuracy": [
+      0.9097222222222222,
+      0.8611111111111112,
+      0.9513888888888888
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9097222222222222,
+       "f1": 0.9527272727272728,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Rock",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       131,
+       0,
+       0,
+       0,
+       7,
+       2,
+       1,
+       3
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 144,
+     "accuracy": [
+      0.9166666666666666,
+      0.8680555555555556,
+      0.9583333333333334
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9166666666666666,
+       "f1": 0.9565217391304348,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       132,
+       1,
+       0,
+       11
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 144,
+     "accuracy": [
+      0.9097222222222222,
+      0.8611111111111112,
+      0.9513888888888888
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9097222222222222,
+       "f1": 0.9527272727272728,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Rock",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       131,
+       0,
+       0,
+       7,
+       2,
+       1,
+       3
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 120,
+     "accuracy": [
+      0.6333333333333333,
+      0.5416666666666666,
+      0.7166666666666667
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.6333333333333333,
+       "f1": 0.7755102040816326,
+       "support": 120
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:blues",
+      "other:country",
+      "other:hiphop",
+      "other:jazz",
+      "other:pop",
+      "other:rock"
+     ],
+     "confusion_matrix": [
+      [
+       76,
+       0,
+       0,
+       6,
+       4,
+       4,
+       17,
+       10,
+       3
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "track": {
+    "new_open": {
+     "n": 12,
+     "accuracy": [
+      0.9166666666666666,
+      0.75,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9166666666666666,
+       "f1": 0.9565217391304348,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic"
+     ],
+     "confusion_matrix": [
+      [
+       11,
+       0,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 12,
+     "accuracy": [
+      0.9166666666666666,
+      0.75,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9166666666666666,
+       "f1": 0.9565217391304348,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       11,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.9166666666666666,
+      0.75,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9166666666666666,
+       "f1": 0.9565217391304348,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic"
+     ],
+     "confusion_matrix": [
+      [
+       11,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.75,
+      0.5,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.75,
+       "f1": 0.8571428571428571,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:country",
+      "other:jazz",
+      "other:pop"
+     ],
+     "confusion_matrix": [
+      [
+       9,
+       0,
+       0,
+       1,
+       1,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "flicker_rate": {
+    "new_open": 0.10606060606060608,
+    "legacy": 0.4074074074074074
+   }
+  },
+  "phone_room_1m": {
+   "window": {
+    "new_open": {
+     "n": 144,
+     "accuracy": [
+      0.8125,
+      0.75,
+      0.875
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.8125,
+       "f1": 0.896551724137931,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Hip Hop",
+      "other:Pop",
+      "other:Rock",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       117,
+       0,
+       0,
+       0,
+       4,
+       9,
+       1,
+       1,
+       2,
+       10
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 144,
+     "accuracy": [
+      0.9097222222222222,
+      0.8611111111111112,
+      0.9513888888888888
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9097222222222222,
+       "f1": 0.9527272727272728,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       131,
+       4,
+       2,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 144,
+     "accuracy": [
+      0.8125,
+      0.75,
+      0.875
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.8125,
+       "f1": 0.896551724137931,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Hip Hop",
+      "other:Pop",
+      "other:Rock",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       117,
+       0,
+       0,
+       4,
+       9,
+       1,
+       1,
+       2,
+       10
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 120,
+     "accuracy": [
+      0.975,
+      0.9416666666666667,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.975,
+       "f1": 0.9873417721518988,
+       "support": 120
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:disco",
+      "other:hiphop"
+     ],
+     "confusion_matrix": [
+      [
+       117,
+       0,
+       0,
+       1,
+       2
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "track": {
+    "new_open": {
+     "n": 12,
+     "accuracy": [
+      0.9166666666666666,
+      0.75,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9166666666666666,
+       "f1": 0.9565217391304348,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Folk, World, & Country"
+     ],
+     "confusion_matrix": [
+      [
+       11,
+       0,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 12,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       12,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.9166666666666666,
+      0.75,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9166666666666666,
+       "f1": 0.9565217391304348,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Folk, World, & Country"
+     ],
+     "confusion_matrix": [
+      [
+       11,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop"
+     ],
+     "confusion_matrix": [
+      [
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "flicker_rate": {
+    "new_open": 0.23484848484848486,
+    "legacy": 0.0462962962962963
+   }
+  },
+  "phone_room_3m": {
+   "window": {
+    "new_open": {
+     "n": 144,
+     "accuracy": [
+      0.9583333333333334,
+      0.9236111111111112,
+      0.9861111111111112
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9583333333333334,
+       "f1": 0.9787234042553191,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       138,
+       0,
+       0,
+       0,
+       5,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 144,
+     "accuracy": [
+      0.9652777777777778,
+      0.9305555555555556,
+      0.9930555555555556
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9652777777777778,
+       "f1": 0.9823321554770318,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       139,
+       0,
+       0,
+       5
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 144,
+     "accuracy": [
+      0.9583333333333334,
+      0.9236111111111112,
+      0.9861111111111112
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9583333333333334,
+       "f1": 0.9787234042553191,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       138,
+       0,
+       0,
+       5,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 120,
+     "accuracy": [
+      0.9916666666666667,
+      0.975,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9916666666666667,
+       "f1": 0.99581589958159,
+       "support": 120
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:hiphop"
+     ],
+     "confusion_matrix": [
+      [
+       119,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "track": {
+    "new_open": {
+     "n": 12,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       12,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 12,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       12,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop"
+     ],
+     "confusion_matrix": [
+      [
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop"
+     ],
+     "confusion_matrix": [
+      [
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "flicker_rate": {
+    "new_open": 0.06818181818181818,
+    "legacy": 0.018518518518518517
+   }
+  },
+  "phone_babble_10dB": {
+   "window": {
+    "new_open": {
+     "n": 144,
+     "accuracy": [
+      0.5694444444444444,
+      0.4791666666666667,
+      0.6458333333333334
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.5694444444444444,
+       "f1": 0.7256637168141593,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Children's",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Jazz",
+      "other:Pop",
+      "other:Rock"
+     ],
+     "confusion_matrix": [
+      [
+       82,
+       0,
+       0,
+       0,
+       1,
+       2,
+       6,
+       5,
+       41,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 144,
+     "accuracy": [
+      0.6041666666666666,
+      0.5208333333333334,
+      0.6805555555555556
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.6041666666666666,
+       "f1": 0.7532467532467533,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       87,
+       8,
+       46,
+       3
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 144,
+     "accuracy": [
+      0.5694444444444444,
+      0.4791666666666667,
+      0.6458333333333334
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.5694444444444444,
+       "f1": 0.7256637168141593,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Children's",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Jazz",
+      "other:Pop",
+      "other:Rock"
+     ],
+     "confusion_matrix": [
+      [
+       82,
+       0,
+       0,
+       1,
+       2,
+       6,
+       5,
+       41,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 120,
+     "accuracy": [
+      0.9083333333333333,
+      0.8583333333333333,
+      0.9583333333333334
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9083333333333333,
+       "f1": 0.9519650655021834,
+       "support": 120
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:blues",
+      "other:disco",
+      "other:hiphop",
+      "other:jazz"
+     ],
+     "confusion_matrix": [
+      [
+       109,
+       0,
+       0,
+       1,
+       1,
+       3,
+       6
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "track": {
+    "new_open": {
+     "n": 12,
+     "accuracy": [
+      0.5833333333333334,
+      0.3333333333333333,
+      0.8333333333333334
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.5833333333333334,
+       "f1": 0.7368421052631579,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Folk, World, & Country",
+      "other:Pop"
+     ],
+     "confusion_matrix": [
+      [
+       7,
+       0,
+       0,
+       0,
+       1,
+       4
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 12,
+     "accuracy": [
+      0.6666666666666666,
+      0.4166666666666667,
+      0.9166666666666666
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.6666666666666666,
+       "f1": 0.8,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       8,
+       0,
+       4,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.5833333333333334,
+      0.3333333333333333,
+      0.8333333333333334
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.5833333333333334,
+       "f1": 0.7368421052631579,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Folk, World, & Country",
+      "other:Pop"
+     ],
+     "confusion_matrix": [
+      [
+       7,
+       0,
+       0,
+       1,
+       4
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop"
+     ],
+     "confusion_matrix": [
+      [
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "flicker_rate": {
+    "new_open": 0.37878787878787873,
+    "legacy": 0.1574074074074074
+   }
+  },
+  "phone_babble_0dB": {
+   "window": {
+    "new_open": {
+     "n": 144,
+     "accuracy": [
+      0.13194444444444445,
+      0.0763888888888889,
+      0.18767361111111094
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.13194444444444445,
+       "f1": 0.2331288343558282,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Children's",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Jazz",
+      "other:Latin",
+      "other:Pop",
+      "other:Rock"
+     ],
+     "confusion_matrix": [
+      [
+       19,
+       0,
+       0,
+       0,
+       2,
+       45,
+       3,
+       3,
+       35,
+       34,
+       3
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 144,
+     "accuracy": [
+      0.16666666666666666,
+      0.1111111111111111,
+      0.2361111111111111
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.16666666666666666,
+       "f1": 0.2857142857142857,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       24,
+       3,
+       39,
+       78
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 144,
+     "accuracy": [
+      0.13194444444444445,
+      0.0763888888888889,
+      0.18767361111111094
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.13194444444444445,
+       "f1": 0.2331288343558282,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Children's",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Jazz",
+      "other:Latin",
+      "other:Pop",
+      "other:Rock"
+     ],
+     "confusion_matrix": [
+      [
+       19,
+       0,
+       0,
+       2,
+       45,
+       3,
+       3,
+       35,
+       34,
+       3
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 120,
+     "accuracy": [
+      0.8166666666666667,
+      0.7416666666666667,
+      0.8916666666666667
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.8166666666666667,
+       "f1": 0.8990825688073395,
+       "support": 120
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:blues",
+      "other:hiphop",
+      "other:jazz"
+     ],
+     "confusion_matrix": [
+      [
+       98,
+       0,
+       0,
+       4,
+       2,
+       16
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "track": {
+    "new_open": {
+     "n": 12,
+     "accuracy": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 0.0,
+       "recall": 0.0,
+       "f1": 0.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic",
+      "other:Latin",
+      "other:Pop"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       5,
+       3,
+       4
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 12,
+     "accuracy": [
+      0.08333333333333333,
+      0.0,
+      0.25
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.08333333333333333,
+       "f1": 0.15384615384615385,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       1,
+       0,
+       4,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 0.0,
+       "recall": 0.0,
+       "f1": 0.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic",
+      "other:Latin",
+      "other:Pop"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       5,
+       3,
+       4
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.9166666666666666,
+      0.75,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9166666666666666,
+       "f1": 0.9565217391304348,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:jazz"
+     ],
+     "confusion_matrix": [
+      [
+       11,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "flicker_rate": {
+    "new_open": 0.6060606060606061,
+    "legacy": 0.3148148148148148
+   }
+  },
+  "phone_ambient_10dB": {
+   "window": {
+    "new_open": {
+     "n": 144,
+     "accuracy": [
+      0.4097222222222222,
+      0.3263888888888889,
+      0.4861111111111111
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4097222222222222,
+       "f1": 0.5812807881773399,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       59,
+       0,
+       0,
+       0,
+       69,
+       15,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 144,
+     "accuracy": [
+      0.4305555555555556,
+      0.3472222222222222,
+      0.5069444444444444
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4305555555555556,
+       "f1": 0.6019417475728155,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       62,
+       0,
+       1,
+       81
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 144,
+     "accuracy": [
+      0.4097222222222222,
+      0.3263888888888889,
+      0.4861111111111111
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4097222222222222,
+       "f1": 0.5812807881773399,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic",
+      "other:Folk, World, & Country",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       59,
+       0,
+       0,
+       69,
+       15,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 120,
+     "accuracy": [
+      0.825,
+      0.7583333333333333,
+      0.8916666666666667
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.825,
+       "f1": 0.9041095890410958,
+       "support": 120
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:blues",
+      "other:hiphop",
+      "other:jazz"
+     ],
+     "confusion_matrix": [
+      [
+       99,
+       0,
+       0,
+       1,
+       14,
+       6
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "track": {
+    "new_open": {
+     "n": 12,
+     "accuracy": [
+      0.4166666666666667,
+      0.16666666666666666,
+      0.6666666666666666
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4166666666666667,
+       "f1": 0.5882352941176471,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic",
+      "other:Folk, World, & Country"
+     ],
+     "confusion_matrix": [
+      [
+       5,
+       0,
+       0,
+       0,
+       6,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 12,
+     "accuracy": [
+      0.4166666666666667,
+      0.16666666666666666,
+      0.6666666666666666
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4166666666666667,
+       "f1": 0.5882352941176471,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       5,
+       0,
+       0,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.4166666666666667,
+      0.16666666666666666,
+      0.6666666666666666
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4166666666666667,
+       "f1": 0.5882352941176471,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic",
+      "other:Folk, World, & Country"
+     ],
+     "confusion_matrix": [
+      [
+       5,
+       0,
+       0,
+       6,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.9166666666666666,
+      0.75,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9166666666666666,
+       "f1": 0.9565217391304348,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:hiphop"
+     ],
+     "confusion_matrix": [
+      [
+       11,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "flicker_rate": {
+    "new_open": 0.37878787878787873,
+    "legacy": 0.25000000000000006
+   }
+  },
+  "phone_ambient_0dB": {
+   "window": {
+    "new_open": {
+     "n": 144,
+     "accuracy": [
+      0.05555555555555555,
+      0.020833333333333332,
+      0.09722222222222222
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.05555555555555555,
+       "f1": 0.10526315789473684,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic",
+      "other:Folk, World, & Country"
+     ],
+     "confusion_matrix": [
+      [
+       8,
+       0,
+       0,
+       0,
+       135,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 144,
+     "accuracy": [
+      0.05555555555555555,
+      0.020833333333333332,
+      0.09722222222222222
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.05555555555555555,
+       "f1": 0.10526315789473684,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       8,
+       0,
+       0,
+       136
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 144,
+     "accuracy": [
+      0.05555555555555555,
+      0.020833333333333332,
+      0.09722222222222222
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.05555555555555555,
+       "f1": 0.10526315789473684,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic",
+      "other:Folk, World, & Country"
+     ],
+     "confusion_matrix": [
+      [
+       8,
+       0,
+       0,
+       135,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 120,
+     "accuracy": [
+      0.39166666666666666,
+      0.30833333333333335,
+      0.475
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.39166666666666666,
+       "f1": 0.562874251497006,
+       "support": 120
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:hiphop",
+      "other:jazz",
+      "other:pop"
+     ],
+     "confusion_matrix": [
+      [
+       47,
+       0,
+       0,
+       27,
+       1,
+       45
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "track": {
+    "new_open": {
+     "n": 12,
+     "accuracy": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 0.0,
+       "recall": 0.0,
+       "f1": 0.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       12
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 12,
+     "accuracy": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 0.0,
+       "recall": 0.0,
+       "f1": 0.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       12
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 0.0,
+       "recall": 0.0,
+       "f1": 0.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       12
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.5,
+      0.25,
+      0.75
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.5,
+       "f1": 0.6666666666666666,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:hiphop",
+      "other:pop"
+     ],
+     "confusion_matrix": [
+      [
+       6,
+       0,
+       0,
+       2,
+       4
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "flicker_rate": {
+    "new_open": 0.07575757575757576,
+    "legacy": 0.5185185185185185
+   }
+  },
+  "phone_quiet": {
+   "window": {
+    "new_open": {
+     "n": 144,
+     "accuracy": [
+      0.4097222222222222,
+      0.3263888888888889,
+      0.4930555555555556
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4097222222222222,
+       "f1": 0.5812807881773399,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic",
+      "other:Rock",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       59,
+       0,
+       0,
+       0,
+       77,
+       1,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 144,
+     "accuracy": [
+      0.4236111111111111,
+      0.3402777777777778,
+      0.5069444444444444
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4236111111111111,
+       "f1": 0.5951219512195122,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       61,
+       1,
+       0,
+       82
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 144,
+     "accuracy": [
+      0.4097222222222222,
+      0.3263888888888889,
+      0.4930555555555556
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4097222222222222,
+       "f1": 0.5812807881773399,
+       "support": 144
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic",
+      "other:Rock",
+      "other:Stage & Screen"
+     ],
+     "confusion_matrix": [
+      [
+       59,
+       0,
+       0,
+       77,
+       1,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 120,
+     "accuracy": [
+      0.9833333333333333,
+      0.9583333333333334,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.9833333333333333,
+       "f1": 0.9915966386554622,
+       "support": 120
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:hiphop"
+     ],
+     "confusion_matrix": [
+      [
+       118,
+       0,
+       0,
+       2
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "track": {
+    "new_open": {
+     "n": 12,
+     "accuracy": [
+      0.4166666666666667,
+      0.16666666666666666,
+      0.6666666666666666
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4166666666666667,
+       "f1": 0.5882352941176471,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic",
+      "other:Electronic"
+     ],
+     "confusion_matrix": [
+      [
+       5,
+       0,
+       0,
+       0,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_closed": {
+     "n": 12,
+     "accuracy": [
+      0.4166666666666667,
+      0.16666666666666666,
+      0.6666666666666666
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4166666666666667,
+       "f1": 0.5882352941176471,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "electronic"
+     ],
+     "confusion_matrix": [
+      [
+       5,
+       0,
+       0,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "new_open_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      0.4166666666666667,
+      0.16666666666666666,
+      0.6666666666666666
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 0.4166666666666667,
+       "f1": 0.5882352941176471,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop",
+      "other:Electronic"
+     ],
+     "confusion_matrix": [
+      [
+       5,
+       0,
+       0,
+       7
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "legacy_on_comparable_classes": {
+     "n": 12,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "classical": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 12
+      }
+     },
+     "labels": [
+      "classical",
+      "rock",
+      "pop"
+     ],
+     "confusion_matrix": [
+      [
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    }
+   },
+   "flicker_rate": {
+    "new_open": 0.393939393939394,
+    "legacy": 0.037037037037037035
+   }
+  }
+ },
+ "emotion": {
+  "clean": {
+   "n_tracks": 12,
+   "expected_direction_checks": [
+    {
+     "model_output": "aggressive",
+     "gems": "tension",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.35026323416917315,
+      -0.39787420992795575,
+      0.927033555637242
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.35026323416917315,
+       -0.39787420992795575,
+       0.927033555637242
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "calmness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.8461538461538463,
+      -0.9926199261992622,
+      -0.42722993437657775
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.8461538461538463,
+       -0.9926199261992622,
+       -0.42722993437657775
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.6807059446478289,
+      0.0827585068256294,
+      0.9191541463155659
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.6807059446478289,
+       0.0827585068256294,
+       0.9191541463155659
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "power",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.614038867594691,
+      0.02195977746940195,
+      0.9128393794824479
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.614038867594691,
+       0.02195977746940195,
+       0.9128393794824479
+      ]
+     }
+    },
+    {
+     "model_output": "happy",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4947398876048652,
+      -0.05475207590918481,
+      0.899641577060932
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4947398876048652,
+       -0.05475207590918481,
+       0.899641577060932
+      ]
+     }
+    },
+    {
+     "model_output": "party",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.789478544050317,
+      0.2777992763653731,
+      0.9888769219130591
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.789478544050317,
+       0.2777992763653731,
+       0.9888769219130591
+      ]
+     }
+    },
+    {
+     "model_output": "relaxed",
+     "gems": "calmness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5594405594405596,
+      -0.09549372888595503,
+      0.8936264190662356
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5594405594405596,
+       -0.09549372888595503,
+       0.8936264190662356
+      ]
+     }
+    },
+    {
+     "model_output": "sad",
+     "gems": "sadness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      -0.05253948512537598,
+      -0.7204301075268817,
+      0.5915672582299552
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.05253948512537598,
+       -0.7204301075268817,
+       0.5915672582299552
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.7859697505212043,
+      0.2582467973652536,
+      0.9852967816121281
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.7859697505212043,
+       0.2582467973652536,
+       0.9852967816121281
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "sadness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.10507897025075195,
+      -0.7464673913043477,
+      0.6845904854696195
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.10507897025075195,
+       -0.7464673913043477,
+       0.6845904854696195
+      ]
+     }
+    }
+   ],
+   "legacy_on_its_validation_split": {
+    "note": "旧情感模型在其验证集(80 首)上评估。该验证集曾用于挑选最佳 epoch，因此结果略偏乐观。",
+    "top1_vs_argmax_gems": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "baseline_always_predict_training_mean": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "mean_spearman_pred_vs_gems_profile": 0.775
+   }
+  },
+  "phone_room_1m": {
+   "n_tracks": 12,
+   "expected_direction_checks": [
+    {
+     "model_output": "aggressive",
+     "gems": "tension",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.06304738215045116,
+      -0.6774193548387096,
+      0.7440260884145709
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.06304738215045116,
+       -0.6774193548387096,
+       0.7440260884145709
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "calmness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.8181818181818183,
+      -0.9772874035558539,
+      -0.41208027638678635
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.8181818181818183,
+       -0.9772874035558539,
+       -0.41208027638678635
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5122838552504279,
+      -0.1289351787170312,
+      0.8614409192787509
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5122838552504279,
+       -0.1289351787170312,
+       0.8614409192787509
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "power",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.540354203483328,
+      -0.06878982779650523,
+      0.9016205160715624
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.540354203483328,
+       -0.06878982779650523,
+       0.9016205160715624
+      ]
+     }
+    },
+    {
+     "model_output": "happy",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4561431587846275,
+      -0.23915585810849393,
+      0.8588455269537765
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4561431587846275,
+       -0.23915585810849393,
+       0.8588455269537765
+      ]
+     }
+    },
+    {
+     "model_output": "party",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.48421350701752763,
+      -0.13921345967637036,
+      0.8165167099555167
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.48421350701752763,
+       -0.13921345967637036,
+       0.8165167099555167
+      ]
+     }
+    },
+    {
+     "model_output": "relaxed",
+     "gems": "calmness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4125874125874127,
+      -0.27085730154322213,
+      0.833949951951796
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4125874125874127,
+       -0.27085730154322213,
+       0.833949951951796
+      ]
+     }
+    },
+    {
+     "model_output": "sad",
+     "gems": "sadness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.09807370556736847,
+      -0.527859778597786,
+      0.772340275190462
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.09807370556736847,
+       -0.527859778597786,
+       0.772340275190462
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5684245517162282,
+      -0.07181343713376839,
+      0.9244574946958759
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5684245517162282,
+       -0.07181343713376839,
+       0.9244574946958759
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "sadness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      0.01751316170845866,
+      -0.6277580813347238,
+      0.7764584486816659
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.01751316170845866,
+       -0.6277580813347238,
+       0.7764584486816659
+      ]
+     }
+    }
+   ],
+   "legacy_on_its_validation_split": {
+    "note": "旧情感模型在其验证集(80 首)上评估。该验证集曾用于挑选最佳 epoch，因此结果略偏乐观。",
+    "top1_vs_argmax_gems": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "baseline_always_predict_training_mean": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "mean_spearman_pred_vs_gems_profile": 0.7666666666666666
+   }
+  },
+  "phone_room_3m": {
+   "n_tracks": 12,
+   "expected_direction_checks": [
+    {
+     "model_output": "aggressive",
+     "gems": "tension",
+     "expected_sign": 1,
+     "spearman_overall": [
+      -0.03152369107522558,
+      -0.660861207079165,
+      0.6509219401539647
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.03152369107522558,
+       -0.660861207079165,
+       0.6509219401539647
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "calmness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.8041958041958043,
+      -0.9787234042553192,
+      -0.3130014719657435
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.8041958041958043,
+       -0.9787234042553192,
+       -0.3130014719657435
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5929861064200158,
+      -0.014875500246066289,
+      0.8885044866570764
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5929861064200158,
+       -0.014875500246066289,
+       0.8885044866570764
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "power",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.6035124870073534,
+      0.021801479938414258,
+      0.9123724415561397
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.6035124870073534,
+       0.021801479938414258,
+       0.9123724415561397
+      ]
+     }
+    },
+    {
+     "model_output": "happy",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5087750617213153,
+      -0.23428564604875815,
+      0.8288607953901221
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5087750617213153,
+       -0.23428564604875815,
+       0.8288607953901221
+      ]
+     }
+    },
+    {
+     "model_output": "party",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4912310940757527,
+      -0.07955474426354406,
+      0.8085533467929803
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4912310940757527,
+       -0.07955474426354406,
+       0.8085533467929803
+      ]
+     }
+    },
+    {
+     "model_output": "relaxed",
+     "gems": "calmness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5524475524475525,
+      -0.14495477797196107,
+      0.9076046586865092
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5524475524475525,
+       -0.14495477797196107,
+       0.9076046586865092
+      ]
+     }
+    },
+    {
+     "model_output": "sad",
+     "gems": "sadness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.1366026613259775,
+      -0.5405651925908211,
+      0.7834323201739063
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.1366026613259775,
+       -0.5405651925908211,
+       0.7834323201739063
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4000024623188272,
+      -0.33174591377372165,
+      0.8521099312373013
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4000024623188272,
+       -0.33174591377372165,
+       0.8521099312373013
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "sadness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.03502632341691732,
+      -0.6391143911439116,
+      0.7111913357400722
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.03502632341691732,
+       -0.6391143911439116,
+       0.7111913357400722
+      ]
+     }
+    }
+   ],
+   "legacy_on_its_validation_split": {
+    "note": "旧情感模型在其验证集(80 首)上评估。该验证集曾用于挑选最佳 epoch，因此结果略偏乐观。",
+    "top1_vs_argmax_gems": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "baseline_always_predict_training_mean": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "mean_spearman_pred_vs_gems_profile": 0.7666666666666666
+   }
+  },
+  "phone_babble_10dB": {
+   "n_tracks": 12,
+   "expected_direction_checks": [
+    {
+     "model_output": "aggressive",
+     "gems": "tension",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.08406317620060154,
+      -0.6879548257786001,
+      0.7361634390421886
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.08406317620060154,
+       -0.6879548257786001,
+       0.7361634390421886
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "calmness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.8111888111888113,
+      -0.9573029186524654,
+      -0.42852022529441886
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.8111888111888113,
+       -0.9573029186524654,
+       -0.42852022529441886
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.39298487526060216,
+      -0.26554291445048805,
+      0.8280167283572945
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.39298487526060216,
+       -0.26554291445048805,
+       0.8280167283572945
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "power",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4771959199593026,
+      -0.14543210807087031,
+      0.9051108454629095
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4771959199593026,
+       -0.14543210807087031,
+       0.9051108454629095
+      ]
+     }
+    },
+    {
+     "model_output": "happy",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.701758705822504,
+      0.15140128241769596,
+      0.9727469142278402
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.701758705822504,
+       0.15140128241769596,
+       0.9727469142278402
+      ]
+     }
+    },
+    {
+     "model_output": "party",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.37894970114415205,
+      -0.23086642599277976,
+      0.780419110459433
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.37894970114415205,
+       -0.23086642599277976,
+       0.780419110459433
+      ]
+     }
+    },
+    {
+     "model_output": "relaxed",
+     "gems": "calmness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4755244755244756,
+      -0.24312629399585917,
+      0.9008105369807496
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4755244755244756,
+       -0.24312629399585917,
+       0.9008105369807496
+      ]
+     }
+    },
+    {
+     "model_output": "sad",
+     "gems": "sadness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      -0.05253948512537598,
+      -0.663141264283348,
+      0.6956796421283942
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.05253948512537598,
+       -0.663141264283348,
+       0.6956796421283942
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.6070212805364659,
+      -0.08304780901345112,
+      0.858193109657982
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.6070212805364659,
+       -0.08304780901345112,
+       0.858193109657982
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "sadness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.08056054385890982,
+      -0.6301948318293683,
+      0.6846716998398535
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.08056054385890982,
+       -0.6301948318293683,
+       0.6846716998398535
+      ]
+     }
+    }
+   ],
+   "legacy_on_its_validation_split": {
+    "note": "旧情感模型在其验证集(80 首)上评估。该验证集曾用于挑选最佳 epoch，因此结果略偏乐观。",
+    "top1_vs_argmax_gems": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "baseline_always_predict_training_mean": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "mean_spearman_pred_vs_gems_profile": 0.7416666666666667
+   }
+  },
+  "phone_babble_0dB": {
+   "n_tracks": 12,
+   "expected_direction_checks": [
+    {
+     "model_output": "aggressive",
+     "gems": "tension",
+     "expected_sign": 1,
+     "spearman_overall": [
+      -0.2556921609434964,
+      -0.8494623655913979,
+      0.407873610880615
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.2556921609434964,
+       -0.8494623655913979,
+       0.407873610880615
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "calmness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.6853146853146854,
+      -0.9565334268349696,
+      -0.11666644707370429
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.6853146853146854,
+       -0.9565334268349696,
+       -0.11666644707370429
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.24210675350876382,
+      -0.5425543439022832,
+      0.7066468787384335
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.24210675350876382,
+       -0.5425543439022832,
+       0.7066468787384335
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "power",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5017574746630903,
+      -0.20180475003005827,
+      0.9163209819885835
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5017574746630903,
+       -0.20180475003005827,
+       0.9163209819885835
+      ]
+     }
+    },
+    {
+     "model_output": "happy",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5649157581871157,
+      -0.011110490347905799,
+      0.8948434544384828
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5649157581871157,
+       -0.011110490347905799,
+       0.8948434544384828
+      ]
+     }
+    },
+    {
+     "model_output": "party",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4666695393719651,
+      -0.10302891536765532,
+      0.8208744569979194
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4666695393719651,
+       -0.10302891536765532,
+       0.8208744569979194
+      ]
+     }
+    },
+    {
+     "model_output": "relaxed",
+     "gems": "calmness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.3706293706293707,
+      -0.35507488479262667,
+      0.7794406622311619
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.3706293706293707,
+       -0.35507488479262667,
+       0.7794406622311619
+      ]
+     }
+    },
+    {
+     "model_output": "sad",
+     "gems": "sadness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      -0.16112108771781963,
+      -0.720592786573027,
+      0.4627155425219939
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.16112108771781963,
+       -0.720592786573027,
+       0.4627155425219939
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.31228262409101426,
+      -0.354789561435237,
+      0.7523866292040322
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.31228262409101426,
+       -0.354789561435237,
+       0.7523866292040322
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "sadness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      0.08056054385890982,
+      -0.4730576047716214,
+      0.6267956440555718
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.08056054385890982,
+       -0.4730576047716214,
+       0.6267956440555718
+      ]
+     }
+    }
+   ],
+   "legacy_on_its_validation_split": {
+    "note": "旧情感模型在其验证集(80 首)上评估。该验证集曾用于挑选最佳 epoch，因此结果略偏乐观。",
+    "top1_vs_argmax_gems": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "baseline_always_predict_training_mean": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "mean_spearman_pred_vs_gems_profile": 0.8500000000000001
+   }
+  },
+  "phone_ambient_10dB": {
+   "n_tracks": 12,
+   "expected_direction_checks": [
+    {
+     "model_output": "aggressive",
+     "gems": "tension",
+     "expected_sign": 1,
+     "spearman_overall": [
+      -0.28021058733533855,
+      -0.8215450310559006,
+      0.5416374657764377
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.28021058733533855,
+       -0.8215450310559006,
+       0.5416374657764377
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "calmness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.7412587412587414,
+      -0.9782628315805997,
+      -0.25355533596837954
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.7412587412587414,
+       -0.9782628315805997,
+       -0.25355533596837954
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4456167781972899,
+      -0.206201375260139,
+      0.8750241228755727
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4456167781972899,
+       -0.206201375260139,
+       0.8750241228755727
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "power",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4491255717264025,
+      -0.19867234430585573,
+      0.8799210143421325
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4491255717264025,
+       -0.19867234430585573,
+       0.8799210143421325
+      ]
+     }
+    },
+    {
+     "model_output": "happy",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.6807059446478289,
+      0.1181848758900605,
+      0.9360460514305996
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.6807059446478289,
+       0.1181848758900605,
+       0.9360460514305996
+      ]
+     }
+    },
+    {
+     "model_output": "party",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.6842147381769412,
+      0.30215056941574,
+      0.8916947128645134
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.6842147381769412,
+       0.30215056941574,
+       0.8916947128645134
+      ]
+     }
+    },
+    {
+     "model_output": "relaxed",
+     "gems": "calmness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5944055944055945,
+      -0.032437275985663074,
+      0.9211469534050178
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5944055944055945,
+       -0.032437275985663074,
+       0.9211469534050178
+      ]
+     }
+    },
+    {
+     "model_output": "sad",
+     "gems": "sadness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.1366026613259775,
+      -0.48909419021197514,
+      0.676894589952769
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.1366026613259775,
+       -0.48909419021197514,
+       0.676894589952769
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5789509323035658,
+      -0.05705073634650491,
+      0.8913793580707629
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5789509323035658,
+       -0.05705073634650491,
+       0.8913793580707629
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "sadness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.2031526758181204,
+      -0.6968052482434689,
+      0.43985597745222843
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.2031526758181204,
+       -0.6968052482434689,
+       0.43985597745222843
+      ]
+     }
+    }
+   ],
+   "legacy_on_its_validation_split": {
+    "note": "旧情感模型在其验证集(80 首)上评估。该验证集曾用于挑选最佳 epoch，因此结果略偏乐观。",
+    "top1_vs_argmax_gems": {
+     "n": 2,
+     "accuracy": [
+      0.5,
+      0.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 0.5,
+       "f1": 0.6666666666666666,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       1,
+       0,
+       0,
+       1,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "baseline_always_predict_training_mean": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "mean_spearman_pred_vs_gems_profile": 0.6333333333333333
+   }
+  },
+  "phone_ambient_0dB": {
+   "n_tracks": 12,
+   "expected_direction_checks": [
+    {
+     "model_output": "aggressive",
+     "gems": "tension",
+     "expected_sign": 1,
+     "spearman_overall": [
+      -0.3642737635359401,
+      -0.9217151258171172,
+      0.3758674694710654
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.3642737635359401,
+       -0.9217151258171172,
+       0.3758674694710654
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "calmness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.6223776223776225,
+      -0.9565256631611991,
+      -0.09399068322981385
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.6223776223776225,
+       -0.9565256631611991,
+       -0.09399068322981385
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.357896939969477,
+      -0.24062972234377888,
+      0.7907669654502216
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.357896939969477,
+       -0.24062972234377888,
+       0.7907669654502216
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "power",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5122838552504279,
+      -0.08798699401394641,
+      0.8657385609604091
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5122838552504279,
+       -0.08798699401394641,
+       0.8657385609604091
+      ]
+     }
+    },
+    {
+     "model_output": "happy",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5719333452453407,
+      0.1019649202951218,
+      0.8851140746707494
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5719333452453407,
+       0.1019649202951218,
+       0.8851140746707494
+      ]
+     }
+    },
+    {
+     "model_output": "party",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4736871264301901,
+      -0.1315027259649582,
+      0.8021723422390055
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4736871264301901,
+       -0.1315027259649582,
+       0.8021723422390055
+      ]
+     }
+    },
+    {
+     "model_output": "relaxed",
+     "gems": "calmness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4895104895104896,
+      -0.23405791535448192,
+      0.9571428571428571
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4895104895104896,
+       -0.23405791535448192,
+       0.9571428571428571
+      ]
+     }
+    },
+    {
+     "model_output": "sad",
+     "gems": "sadness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.22767110220996253,
+      -0.44300655822212176,
+      0.7964189265482711
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.22767110220996253,
+       -0.44300655822212176,
+       0.7964189265482711
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.6315828352402535,
+      0.021622946207253628,
+      0.9946105627354105
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.6315828352402535,
+       0.021622946207253628,
+       0.9946105627354105
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "sadness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.3607711311942483,
+      -0.8036541501976283,
+      0.2165782608695647
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.3607711311942483,
+       -0.8036541501976283,
+       0.2165782608695647
+      ]
+     }
+    }
+   ],
+   "legacy_on_its_validation_split": {
+    "note": "旧情感模型在其验证集(80 首)上评估。该验证集曾用于挑选最佳 epoch，因此结果略偏乐观。",
+    "top1_vs_argmax_gems": {
+     "n": 2,
+     "accuracy": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 0.0,
+       "recall": 0.0,
+       "f1": 0.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       2,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "baseline_always_predict_training_mean": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "mean_spearman_pred_vs_gems_profile": -0.20833333333333331
+   }
+  },
+  "phone_quiet": {
+   "n_tracks": 12,
+   "expected_direction_checks": [
+    {
+     "model_output": "aggressive",
+     "gems": "tension",
+     "expected_sign": 1,
+     "spearman_overall": [
+      -0.234676366893346,
+      -0.8714513677811552,
+      0.5000472487165045
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.234676366893346,
+       -0.8714513677811552,
+       0.5000472487165045
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "calmness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.43356643356643365,
+      -0.8696002805049089,
+      0.25508256528417766
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.43356643356643365,
+       -0.8696002805049089,
+       0.25508256528417766
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.5578981711288906,
+      0.035878394058946404,
+      0.8532104602328733
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.5578981711288906,
+       0.035878394058946404,
+       0.8532104602328733
+      ]
+     }
+    },
+    {
+     "model_output": "arousal",
+     "gems": "power",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.19649243763030108,
+      -0.45341310934621293,
+      0.7276401243066918
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.19649243763030108,
+       -0.45341310934621293,
+       0.7276401243066918
+      ]
+     }
+    },
+    {
+     "model_output": "happy",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.6175476611238034,
+      -0.011307814462418943,
+      0.8432734643401024
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.6175476611238034,
+       -0.011307814462418943,
+       0.8432734643401024
+      ]
+     }
+    },
+    {
+     "model_output": "party",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.628074041711141,
+      0.0927295022295759,
+      0.844646995580898
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.628074041711141,
+       0.0927295022295759,
+       0.844646995580898
+      ]
+     }
+    },
+    {
+     "model_output": "relaxed",
+     "gems": "calmness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.6293706293706295,
+      -0.021747122762148335,
+      0.9340897369778236
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.6293706293706295,
+       -0.021747122762148335,
+       0.9340897369778236
+      ]
+     }
+    },
+    {
+     "model_output": "sad",
+     "gems": "sadness",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.07355527917552636,
+      -0.5741796861060284,
+      0.7445401260875747
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.07355527917552636,
+       -0.5741796861060284,
+       0.7445401260875747
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "joyful_activation",
+     "expected_sign": 1,
+     "spearman_overall": [
+      0.4947398876048652,
+      -0.06835899315738025,
+      0.8598582407640059
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       0.4947398876048652,
+       -0.06835899315738025,
+       0.8598582407640059
+      ]
+     }
+    },
+    {
+     "model_output": "valence",
+     "gems": "sadness",
+     "expected_sign": -1,
+     "spearman_overall": [
+      -0.4518395720782334,
+      -0.8686087132220133,
+      0.11985559566786938
+     ],
+     "spearman_within_genre": {
+      "classical": [
+       -0.4518395720782334,
+       -0.8686087132220133,
+       0.11985559566786938
+      ]
+     }
+    }
+   ],
+   "legacy_on_its_validation_split": {
+    "note": "旧情感模型在其验证集(80 首)上评估。该验证集曾用于挑选最佳 epoch，因此结果略偏乐观。",
+    "top1_vs_argmax_gems": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "baseline_always_predict_training_mean": {
+     "n": 2,
+     "accuracy": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "balanced_accuracy": null,
+     "macro_f1": null,
+     "per_class": {
+      "calmness": {
+       "precision": 1.0,
+       "recall": 1.0,
+       "f1": 1.0,
+       "support": 2
+      }
+     },
+     "labels": [
+      "amazement",
+      "solemnity",
+      "tenderness",
+      "nostalgia",
+      "calmness",
+      "power",
+      "joyful_activation",
+      "tension",
+      "sadness"
+     ],
+     "confusion_matrix": [
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       2,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ],
+     "chance_balanced_accuracy": 1.0
+    },
+    "mean_spearman_pred_vs_gems_profile": 0.7666666666666666
+   }
+  }
+ },
+ "nonmusic": {
+  "speech": {
+   "n_clips": 10,
+   "legacy_mean_top1_confidence": 0.8070663809776306,
+   "new_windows": 29,
+   "new_mean_top_genre_activation": 0.26480531589738254,
+   "new_fraction_windows_above_genre_threshold": 1.0
+  },
+  "ambient": {
+   "n_clips": 4,
+   "legacy_mean_top1_confidence": 0.8941730707883835,
+   "new_windows": 32,
+   "new_mean_top_genre_activation": 0.28680606419220567,
+   "new_fraction_windows_above_genre_threshold": 1.0
+  },
+  "silence": {
+   "n_clips": 1,
+   "legacy_mean_top1_confidence": 1.0,
+   "new_windows": 4,
+   "new_mean_top_genre_activation": 0.033867279067635536,
+   "new_fraction_windows_above_genre_threshold": 0.0
+  }
+ }
+}

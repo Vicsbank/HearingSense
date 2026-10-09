@@ -1,0 +1,120 @@
+digraph ProjectFlowchart {
+	newrank=true nodesep=0.8 rankdir=TB ranksep=1.2 splines=ortho
+	node [fillcolor=white fontname=SimHei shape=box style="rounded,filled"]
+	edge [fontname=SimHei]
+	subgraph cluster_part1 {
+		color=lightgrey fontname=SimHei fontsize=16 label="Part 1: 数据准备与模型训练 (离线)" style=filled
+		subgraph cluster_data_prep {
+			label="数据处理" rank=same style=dashed
+			D1 [label="原始音频文件 .mp3"]
+			D2 [label="情感标注 data.csv"]
+			P1 [label="文件ID映射"]
+			P2 [label="合并与聚合"]
+			P3 [label="processed_data.csv"]
+			D1 -> P1
+			D2 -> P1
+			P1 -> P2
+			P2 -> P3
+			D3 [label="GTZAN数据集"]
+			P4 [label="音频切片"]
+			P5 [label="创建文件路径与标签映射"]
+			P6 [label="gtzan_df.csv"]
+			D3 -> P4
+			P4 -> P5
+			P5 -> P6
+		}
+		subgraph cluster_training {
+			label="模型训练" style=dashed
+			T1 [label="加载数据
+MusicEmoDataset"]
+			T2 [label="EfficientNet模型"]
+			T3 [label="训练循环: 计算多标签AUC损失"]
+			M1 [label="保存 best_model_emo.pth" fillcolor="#c4f0c4" shape=cylinder]
+			T4 [label="加载数据
+AudioDataset"]
+			T5 [label="SpectrogramCNN_GRUNet模型"]
+			T6 [label="训练循环: 计算交叉熵损失"]
+			M2 [label="保存 DM_gtzan_best.pth" fillcolor="#c4f0c4" shape=cylinder]
+			T1 -> T2
+			T2 -> T3
+			T3 -> M1
+			T4 -> T5
+			T5 -> T6
+			T6 -> M2
+		}
+		P3 -> T1 [lhead=cluster_training ltail=cluster_data_prep]
+		P6 -> T4 [lhead=cluster_training ltail=cluster_data_prep]
+	}
+	subgraph cluster_part2 {
+		color=lightblue fontname=SimHei fontsize=16 label="Part 2: Web应用实时流程 (在线)" style=filled
+		C1 [label="用户" fillcolor="#f5f5f5" shape=ellipse]
+		C2 [label="1. 打开网页"]
+		C3 [label="2. 上传音频文件 .mp3/.wav"]
+		EP1 [label="3. /uploadfile/ API端点" fillcolor="#f9f" shape=house]
+		C1 -> C2
+		C2 -> C3
+		C3 -> EP1
+		subgraph cluster_backend {
+			color=white label="后端核心逻辑"
+			S1 [label="保存上传的临时文件"]
+			S2 [label="4. 调用推理模块 infer.py"]
+			EP1 -> S1 [lhead=cluster_backend]
+			S1 -> S2
+			subgraph cluster_inference {
+				label="模型推理" style=dashed
+				P7 [label="音频预处理: 转换为Mel频谱图"]
+				R1 [label="预测情感 Top3"]
+				R2 [label="预测流派"]
+				S2 -> P7 [lhead=cluster_inference]
+				P7 -> R1
+				P7 -> R2
+			}
+			subgraph cluster_genai {
+				label="AI内容生成" style=dashed
+				G1 [label="5. 构造歌词Prompt (基于情感)"]
+				G2 [label="调用OpenAI API" fillcolor="#ffc"]
+				R3 [label="返回生成的歌词"]
+				G3 [label="6. 构造音乐Prompt (基于流派+歌词)"]
+				G4 [label="调用ttapi.io/Suno API" fillcolor="#ffc"]
+				G5 [label="轮询查询生成状态"]
+				G6 [label="7. 下载生成的音乐文件"]
+				R4 [label="保存生成的.mp3文件" shape=cylinder]
+				G1 -> G2
+				G2 -> R3
+				R3 -> G3
+				G3 -> G4
+				G4 -> G5 [label="Job ID"]
+				G5 -> G6 [label="音频URL"]
+				G6 -> R4
+			}
+			R1 -> G1 [lhead=cluster_genai ltail=cluster_inference]
+			R2 -> G3 [lhead=cluster_genai ltail=cluster_inference]
+			EP2 [label="8. 整合所有结果"]
+			Resp [label="9. 返回JSON响应" fillcolor="#f5f5f5" shape=invhouse]
+			R1 -> EP2 [ltail=cluster_inference]
+			R2 -> EP2 [ltail=cluster_inference]
+			R3 -> EP2 [ltail=cluster_genai]
+			R4 -> EP2 [ltail=cluster_genai]
+			EP2 -> Resp
+		}
+		C5 [label="10. 前端解析JSON"]
+		C6 [label="11. 在界面上显示结果"]
+		Resp -> C5 [ltail=cluster_backend]
+		C5 -> C6
+		subgraph cluster_display {
+			color=white label="结果展示" rank=sink style=dashed
+			Dsp1 [label="情感分析列表"]
+			Dsp2 [label="情感分布图 (Chart.js)"]
+			Dsp3 [label="流派预测"]
+			Dsp4 [label="生成的歌词"]
+			Dsp5 [label="播放新生成音乐的链接"]
+		}
+		C6 -> Dsp1 [arrowhead=none]
+		C6 -> Dsp2 [arrowhead=none]
+		C6 -> Dsp3 [arrowhead=none]
+		C6 -> Dsp4 [arrowhead=none]
+		C6 -> Dsp5 [arrowhead=none]
+	}
+	M1 -> P7 [color=grey constraint=false lhead=cluster_part2 ltail=cluster_part1 style=dashed]
+	M2 -> P7 [color=grey constraint=false lhead=cluster_part2 ltail=cluster_part1 style=dashed]
+}

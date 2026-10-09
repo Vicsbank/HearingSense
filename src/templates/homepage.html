@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuitarMood - AI Music Emotion and Genre Recognition System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Dynamic background notes */
+        .floating-notes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .note {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 20px;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "🎸";
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main content area */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        /* Feature cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Tech stack */
+        .tech-stack {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .tech-stack h2 {
+            color: white;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .tech-tag {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Demo section */
+        .demo-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .demo-section h2 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .demo-section p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(238, 90, 82, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(238, 90, 82, 0.4);
+        }
+
+        /* Emotion labels display */
+        .emotion-labels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .emotion-label {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 80px 1rem 1rem;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        /* API status indicator */
+        .api-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            color: #00ff00;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .api-status::before {
+            content: "●";
+            color: #00ff00;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-notes" id="floating-notes"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">GuitarMood</a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#tech">Tech</a></li>
+                <li><a href="#api">API</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero">
+            <h1>GuitarMood</h1>
+            <p class="subtitle">AI-Powered Music Emotion and Genre Recognition System</p>
+            <p class="description">
+                Utilizing deep learning technology to analyze emotional features in guitar audio, intelligently identifying nine emotional dimensions,
+                and classifying the music genre from its Mel spectrogram.
+            </p>
+            
+            <div class="emotion-labels">
+                <span class="emotion-label">Amazement</span>
+                <span class="emotion-label">Solemnity</span>
+                <span class="emotion-label">Tenderness</span>
+                <span class="emotion-label">Nostalgia</span>
+                <span class="emotion-label">Calmness</span>
+                <span class="emotion-label">Power</span>
+                <span class="emotion-label">Joyful Activation</span>
+                <span class="emotion-label">Tension</span>
+                <span class="emotion-label">Sadness</span>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🎵</span>
+                <h3>Audio Emotion Recognition</h3>
+                <p>Using a CNN deep learning model to analyze guitar audio, extracting Mel spectrogram features to accurately identify nine emotional dimensions with industry-leading accuracy.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🎼</span>
+                <h3>Music Genre Recognition</h3>
+                <p>A CNN + GRU model reads the Mel spectrogram over time and classifies the music into one of ten GTZAN genres.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <span class="feature-icon">⚡</span>
+                <h3>Real-time Processing Capability</h3>
+                <p>The FastAPI backend architecture provides high-performance real-time audio processing capabilities, supporting rapid analysis of various audio formats such as MP3 and WAV.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🧠</span>
+                <h3>Deep Learning Engine</h3>
+                <p>A CNN neural network built on the PyTorch framework, trained on a large amount of music emotion data, with powerful feature extraction and classification capabilities.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🎯</span>
+                <h3>Multi-dimensional Emotion Analysis</h3>
+                <p>Supports the simultaneous recognition of nine emotional dimensions, providing a detailed emotional probability distribution to offer a clear picture of the music's emotional character.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🔄</span>
+                <h3>End-to-End Workflow</h3>
+                <p>From audio upload to emotion and genre recognition, results are shown in the browser in a single step.</p>
+            </div>
+        </section>
+
+        <section class="tech-stack" id="tech">
+            <h2>Core Tech Stack</h2>
+            <div class="tech-tags">
+                <span class="tech-tag">PyTorch</span>
+                <span class="tech-tag">CNN</span>
+                <span class="tech-tag">Librosa</span>
+                <span class="tech-tag">FastAPI</span>
+                <span class="tech-tag">Mel Spectrogram</span>
+                <span class="tech-tag">Multi-label Classification</span>
+                <span class="tech-tag">Audio Processing</span>
+                <span class="tech-tag">Deep Learning</span>
+            </div>
+        </section>
+
+        <section class="demo-section" id="demo">
+            <h2>Experience GuitarMood</h2>
+            <p>Upload your guitar audio file, let AI analyze its emotional features and genre.</p>
+            <a href="/app" class="cta-button">Get Started →</a>
+        </section>
+
+        <section class="tech-stack" id="api">
+            <h2>API Endpoints</h2>
+            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 10px; margin: 1rem 0; font-family: monospace;">
+                    <div style="color: #4CAF50;">POST</div>
+                    <div style="color: white; margin: 0.5rem 0;">/uploadfile/</div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Upload an audio file for emotion and genre analysis.</div>
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 10px; margin: 1rem 0; font-family: monospace;">
+                    <div style="color: #2196F3;">GET</div>
+                    <div style="color: white; margin: 0.5rem 0;">/health</div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Check the system's health status.</div>
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 10px; margin: 1rem 0; font-family: monospace;">
+                    <div style="color: #2196F3;">GET</div>
+                    <div style="color: white; margin: 0.5rem 0;">/model_status</div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Check the model's loading status.</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="api-status">
+        API Running
+    </div>
+
+    <script>
+        // Create floating notes
+        function createFloatingNotes() {
+            const notesContainer = document.getElementById('floating-notes');
+            const notes = ['♪', '♫', '♬', '🎵', '🎶'];
+            
+            setInterval(() => {
+                const note = document.createElement('div');
+                note.className = 'note';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                note.style.left = Math.random() * 100 + '%';
+                note.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                note.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                
+                notesContainer.appendChild(note);
+                
+                setTimeout(() => {
+                    if (note.parentNode) {
+                        note.parentNode.removeChild(note);
+                    }
+                }, 20000);
+            }, 2000);
+        }
+
+        // Scroll animations
+        function handleScrollAnimations() {
+            const cards = document.querySelectorAll('.feature-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    card.classList.add('fade-in');
+                }
+            });
+        }
+
+        // Navbar scroll effect
+        function handleNavbarScroll() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.15)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            createFloatingNotes();
+            handleScrollAnimations();
+            
+            window.addEventListener('scroll', () => {
+                handleScrollAnimations();
+                handleNavbarScroll();
+            });
+        });
+
+        // Check API status
+        async function checkAPIStatus() {
+            try {
+                const response = await fetch('/health');
+                const statusElement = document.querySelector('.api-status');
+                if (response.ok) {
+                    statusElement.style.borderColor = 'rgba(0, 255, 0, 0.3)';
+                    statusElement.style.background = 'rgba(0, 255, 0, 0.1)';
+                    statusElement.innerHTML = '<span style="color: #00ff00;">●</span> API Online';
+                } else {
+                    throw new Error('API not responding');
+                }
+            } catch (error) {
+                const statusElement = document.querySelector('.api-status');
+                statusElement.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+                statusElement.style.background = 'rgba(255, 0, 0, 0.1)';
+                statusElement.innerHTML = '<span style="color: #ff0000;">●</span> API Offline';
+            }
+        }
+
+        // Periodically check API status
+        checkAPIStatus();
+        setInterval(checkAPIStatus, 30000);
+    </script>
+</body>
+</html>
