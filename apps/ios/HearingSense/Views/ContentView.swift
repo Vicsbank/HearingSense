@@ -12,6 +12,8 @@ struct ContentView: View {
                     BrandHeader()
                     StatusCard(state: controller.state, format: controller.captureFormat)
                     ListeningButtons()
+                    RecognitionCard()
+                    RecentEventsCard()
                     LevelMeterView(level: controller.level, history: controller.levelHistory,
                                    capacity: ListeningController.historyLength,
                                    isActive: controller.state.isCapturing)
@@ -42,7 +44,7 @@ private struct BrandHeader: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Hearing Sense")
                     .font(.title.bold())
-                Text("Environmental awareness · Audio foundation")
+                Text("Environmental awareness · Sound recognition (debug)")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -165,6 +167,12 @@ private struct DiagnosticsLinks: View {
     var body: some View {
         Card {
             VStack(alignment: .leading, spacing: 12) {
+                NavigationLink {
+                    RecognitionDiagnosticsView()
+                } label: {
+                    Label("Recognition diagnostics", systemImage: "gauge.with.dots.needle.33percent")
+                }
+                Divider()
                 NavigationLink {
                     RouteDiagnosticsView()
                 } label: {

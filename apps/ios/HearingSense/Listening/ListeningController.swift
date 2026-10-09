@@ -8,7 +8,8 @@ import SwiftUI
 /// and hop to the main actor before touching any state here.
 ///
 /// Later windows attach analysis by adding `AudioStreamConsumer`s to `capture`; this type
-/// should stay an orchestrator and not grow classification or speech logic itself.
+/// should stay an orchestrator and not grow classification or speech logic itself. Window 2
+/// attaches `SoundRecognitionEngine` (owned by `recognition`).
 @Observable
 final class ListeningController {
     static let historyLength = 120  // about 10 s of level history at ~12 buffers/s
@@ -20,6 +21,10 @@ final class ListeningController {
     private(set) var route: AudioRouteSnapshot
     private(set) var log = DiagnosticEventLog(capacity: 300)
     private(set) var policy: AudioSessionPolicy = .recommended
+    /// Experiment for the start/stop media stall (AUDIO_ROUTING_FEASIBILITY §3): Stop removes the
+    /// tap and stops the engine (microphone off) but leaves the audio session active.
+    private(set) var keepsSessionActiveWhenStopped = false
+    let recognition = RecognitionController()
 
     @ObservationIgnored private var capture = MicrophoneCapture()
     @ObservationIgnored private let session = AudioSessionController()
@@ -30,6 +35,7 @@ final class ListeningController {
     init() {
         route = AudioRouteSnapshot.capture()
         connect(capture)
+        recognition.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         sessionObserver = AudioSessionObserver { [weak self] event in
             guard let self else { return }
             Task { @MainActor in self.handle(event) }
@@ -70,7 +76,7 @@ final class ListeningController {
 
     func stop() {
         guard state.canStop else { return }
-        endCapture()
+        endCapture(keepSession: keepsSessionActiveWhenStopped)
         state = .idle
         log.append(.lifecycle, "Listening stopped; microphone released")
         announce("Listening stopped")
@@ -93,6 +99,20 @@ final class ListeningController {
         refreshRoute()
     }
 
+    func setKeepsSessionActiveWhenStopped(_ value: Bool) {
+        keepsSessionActiveWhenStopped = value
+        log.append(.session, "Keep session active when stopped: \(value ? "on" : "off")")
+        if !value, !state.isCapturing, session.isActive {
+            do {
+                try session.deactivate()
+                log.append(.session, "Session deactivated (\(session.lastTrace.summary))")
+            } catch {
+                log.append(.error, "Session deactivation failed: \(error.localizedDescription)")
+            }
+            refreshRoute()
+        }
+    }
+
     func refreshRoute() {
         route = session.snapshot()
     }
@@ -107,12 +127,14 @@ final class ListeningController {
             isInBackground = true
             log.append(.lifecycle, "App entered background" + (state.isCapturing ? " while listening" : ""))
             if state.isCapturing { backgroundCheckpoint = capture.throughput.checkpoint(at: .now) }
+            recognition.enteredBackground()
         case .active:
             isInBackground = false
             if let checkpoint = backgroundCheckpoint {
                 logBackgroundCoverage(since: checkpoint)
                 backgroundCheckpoint = nil
             }
+            recognition.becameActive()
             refreshRoute()
         case .inactive:
             break
@@ -132,6 +154,8 @@ final class ListeningController {
             "",
             route.reportText(),
             "",
+            recognition.reportText(),
+            "",
             "Event log (oldest first):",
             log.exportText(),
         ].joined(separator: "\n")
@@ -147,14 +171,18 @@ final class ListeningController {
             let input = try session.activate(policy: policy)
             log.append(.session, "Session active (playAndRecord, \(policy.mode.rawValue), "
                 + "\(policy.options.map(\.rawValue).joined(separator: ", "))); preferred input: \(describe(input))")
+            log.append(.session, "Activation steps: \(session.lastTrace.summary)")
+            recognition.sessionWillStart()
+            let engineStart = ContinuousClock.now
             let format = try capture.start()
+            log.append(.capture, "Engine start took \(milliseconds(since: engineStart))")
             captureFormat = format
             state = .listening
             log.append(.capture, "Capture running: \(format.summary)")
             refreshRoute()
             return true
         } catch {
-            endCapture()
+            endCapture(keepSession: false)
             state = .failed(error.localizedDescription)
             log.append(.error, "Start failed: \(error.localizedDescription)")
             refreshRoute()
@@ -162,13 +190,22 @@ final class ListeningController {
         }
     }
 
-    /// Stops capture and deactivates the session so other apps can resume normally.
-    private func endCapture() {
+    /// Stops capture (microphone off) and, unless `keepSession`, deactivates the session so
+    /// other apps can resume normally.
+    private func endCapture(keepSession: Bool) {
+        let engineStop = ContinuousClock.now
         capture.stop()
-        do {
-            try session.deactivate()
-        } catch {
-            log.append(.error, "Session deactivation failed: \(error.localizedDescription)")
+        log.append(.capture, "Engine stop took \(milliseconds(since: engineStop))")
+        recognition.sessionDidEnd()
+        if keepSession {
+            log.append(.session, "Session kept active (microphone off)")
+        } else if session.isActive {
+            do {
+                try session.deactivate()
+                log.append(.session, "Session deactivated (\(session.lastTrace.summary))")
+            } catch {
+                log.append(.error, "Session deactivation failed: \(error.localizedDescription)")
+            }
         }
         captureFormat = nil
         level = .silence
@@ -177,6 +214,7 @@ final class ListeningController {
     }
 
     private func connect(_ capture: MicrophoneCapture) {
+        capture.addConsumer(recognition.engine)
         capture.setTickHandler { [weak self] tick in
             guard let self else { return }
             Task { @MainActor in self.receive(tick) }
@@ -205,6 +243,8 @@ final class ListeningController {
         case .interruptionBegan:
             guard state.isCapturing || state == .starting else { break }
             capture.stop()
+            recognition.sessionDidEnd()
+            session.noteDeactivatedBySystem()
             captureFormat = nil
             level = .silence
             state = .interrupted
@@ -227,6 +267,9 @@ final class ListeningController {
             capture.setTickHandler(nil)
             capture.setConfigurationChangeHandler(nil)
             capture.stop()
+            capture.removeAllConsumers()
+            recognition.sessionDidEnd()
+            session.noteDeactivatedBySystem()
             capture = MicrophoneCapture()
             connect(capture)
             captureFormat = nil
@@ -248,7 +291,7 @@ final class ListeningController {
             captureFormat = format
             log.append(.capture, "Capture restarted: \(format.summary)")
         } catch {
-            endCapture()
+            endCapture(keepSession: false)
             state = .failed("Capture could not restart after an audio route change: \(error.localizedDescription)")
             log.append(.error, "Restart failed: \(error.localizedDescription)")
         }
@@ -272,6 +315,12 @@ final class ListeningController {
         case .unavailable(let preference): "\(preference.rawValue) not available, using system default"
         case .systemDefault: "system default"
         }
+    }
+
+    private func milliseconds(since start: ContinuousClock.Instant) -> String {
+        let elapsed = (ContinuousClock.now - start).components
+        let ms = Double(elapsed.seconds) * 1000 + Double(elapsed.attoseconds) / 1e15
+        return ms.formatted(.number.precision(.fractionLength(1))) + " ms"
     }
 
     private func announce(_ message: String) {

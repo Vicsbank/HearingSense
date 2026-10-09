@@ -17,35 +17,37 @@ Delivered: audit, architecture, `HearingSenseAudio` module + tests, SwiftUI app 
 capture, level meter, route diagnostics, event log, four session policies, background-audio mode;
 device tests T1–T4 on iPhone 18 Pro + AirPods Pro + Spotify. See `PROJECT_HANDOFF.md`.
 
-## Window 2 — Real-Time Audio and Apple Sound Analysis
+## Window 2 — Real-Time Sound Analysis and Acoustic Event Detection ◐ (2026-10-09, code complete; device tests open)
 
-Goal: detect environmental sound events live, on device.
+Delivered (details: `docs/WINDOW2_SOUND_ANALYSIS_REPORT.md`):
 
-1. Create `HearingSenseDomain` (`AcousticEvent`, `EventCategory`, confidence, timing) — keep it small;
-   Window 4 depends on it.
-2. `SoundEventDetection`: an `AudioStreamConsumer` wrapping `SNAudioStreamAnalyzer` +
-   `SNClassifySoundRequest(.version1)` on a dedicated serial queue; recreate on format change.
-3. Enumerate `knownClassifications` **on the iPhone** and compare with
-   `docs/research/sound_analysis_labels_v1_macos27.txt`.
-4. Map the 303 labels to a small set of user-facing categories (speech, name-worthy voices,
-   alarms/sirens, vehicles/horns, doorbell/knock, baby crying, dog, music, other). Document the map.
-5. Choose window duration / overlap; measure detection latency and CPU on the device.
-6. Temporal smoothing (e.g. k-of-n windows) before emitting events; never emit raw per-window noise.
-7. Offline, forward-only evaluation on the Mac with existing data (DEMAND, LibriSpeech, MIT IR via
-   `ml/hearing_sense_ml/augment.py`); report with confidence intervals; no training.
-8. Fix or explicitly defer the 0.5 s start/stop stall (AUDIO_ROUTING_FEASIBILITY §3).
-9. Finish open device tests that affect audio: long background run (≥ 15 min), phone-call
-   interruption, AirPods disconnect, Apple Music.
+1. ✅ `HearingSenseDomain`: raw predictions, classification frames, categories, event kinds,
+   candidates, confirmed events, updates, environment status.
+2. ✅ `SoundEventDetection`: `SoundRecognitionEngine` (`AudioStreamConsumer` →
+   `SNAudioStreamAnalyzer` + `SNClassifySoundRequest(.version1)` on an actor-isolated serial queue;
+   new analyzer segment on format change), taxonomy, detection policy, temporal detector,
+   label catalog, diagnostics.
+3. ◐ Label inventory: macOS 27.2 and iOS 27.0 Simulator = 303 labels = taxonomy; **iPhone not yet**.
+4. ✅ 303 labels → 50 kinds → 11 categories (`docs/research/SOUND_CATEGORY_MAPPING.md`).
+5. ◐ Window 1.5 s / overlap 0.5 chosen offline (1.0/1.5/3.0 compared); latency/CPU measured in the
+   Simulator only.
+6. ✅ Temporal confirmation (k-of-n, single-window instant confirm, hysteresis, per-kind timeouts,
+   competing-label suppression); 37 deterministic tests.
+7. ✅ Offline forward-only evaluation (`hs-sound-eval`) on LibriSpeech/GTZAN/DEMAND with Wilson CIs;
+   no annotated environmental-event data → no accuracy for alerts/knocks/animals/weather.
+8. ◐ Start/stop stall: redundant session calls removed, keep-session experiment added, **not
+   measured on the device**.
+9. ❌ Open device tests (Window 1 list + Window 2 A–J, L, S): see `docs/testing/WINDOW2_DEVICE_TESTS.md`.
 
-Acceptance: live category events visible in the app on the iPhone with measured latency; label list
-verified on iOS; evaluation numbers with provenance.
+Carry-over before or at the start of Window 3: run the physical tests L, A, B, C, D, H, I, S (one step
+at a time) and calibrate the quiet threshold and alert rules from the results.
 
 ## Window 3 — Speech Recognition and Apple Foundation Models
 
 Goal: event-driven speech understanding with privacy controls.
 
-1. `SpeechPipeline`: pre-roll ring buffer (2–3 s), gate with `SpeechDetector` and/or the W2 `speech`
-   category, then run `SpeechAnalyzer` + `SpeechTranscriber` only for speech segments.
+1. `SpeechPipeline`: pre-roll ring buffer (2–3 s; W2 speech events confirm ≈ 2.25 s after onset),
+   gate with `SpeechDetector` and/or W2 `speech` events (`ConfirmedAcousticEvent.kind.id == "speech"`), then run `SpeechAnalyzer` + `SpeechTranscriber` only for speech segments.
 2. Locale/asset management with `AssetInventory`; handle "model not installed" states.
 3. Opt-in transcription toggle (off by default), in-memory transcripts with retention limit, delete-all.
 4. `SemanticSummary`: check `SystemLanguageModel.default.availability`; guided generation of 2–3 word
@@ -60,7 +62,8 @@ persisted unless the user opts in.
 
 Goal: decide what deserves attention, deterministically.
 
-1. `AttentionEngine` (Domain-only dependency): score = f(category priority, confidence, duration,
+1. `AttentionEngine` (Domain-only dependency) consuming `ConfirmedAcousticEvent` /
+   `AcousticEventUpdate`: score = f(category/kind priority, `EventQuality`, confidence, duration,
    novelty, repetition, recency, user preferences, context such as "media playing").
 2. Temporal confirmation, per-category cooldowns, rate limiting, quiet hours.
 3. Configuration as data (JSON/Codable) with a settings UI hook.
@@ -105,8 +108,8 @@ W1 ──▶ W2 ──▶ W3 ──┐
 
 ## Parallel development
 
-1. First initialize Git (needs the student's approval — see PROJECT_HANDOFF "Recommended next steps").
-2. One branch per window (`window-2-sound-analysis`, …) and, if two windows run at once, separate
+1. Git initialized in Window 2 (baseline commits on `main`; Window 2 on `feature/window2-sound-analysis`).
+2. One branch per window (`feature/window2-sound-analysis`, `feature/window3-…`, …) and, if two windows run at once, separate
    worktrees (`git worktree add ../hs-w4 window-4-attention`).
 3. Ownership to avoid conflicts: each window edits only its own module folder plus additive entries
    in `Package.swift`, the app's orchestration code, and its own section of the handoff.

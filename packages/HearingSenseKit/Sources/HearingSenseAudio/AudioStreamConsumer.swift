@@ -26,11 +26,14 @@ public struct CaptureFormat: Sendable, Equatable {
 
 /// Receives raw microphone buffers from `MicrophoneCapture`.
 ///
-/// This is the extension seam for later windows: Window 2 attaches an
-/// `SNAudioStreamAnalyzer`-backed consumer, Window 3 a speech detector.
+/// This is the extension seam for later windows: Window 2 attaches `SoundRecognitionEngine`
+/// (SoundEventDetection), Window 3 a speech detector.
 ///
 /// Threading contract:
-/// - All methods are called on the AVAudioEngine tap thread, never on the main thread.
+/// - `captureDidReceive` is called on the AVAudioEngine tap thread, never on the main thread.
+///   `captureDidStart` / `captureDidStop` are called from the context that starts and stops
+///   `MicrophoneCapture` (the app's main actor), and `captureDidStart` may arrive after the
+///   first buffers. Implementations must be thread-safe.
 /// - `captureDidReceive` must return quickly. Copy the buffer and hop to your own serial
 ///   queue for heavy work; the buffer is only guaranteed valid during the call.
 /// - Consumers must not write audio to disk unless the user explicitly enabled recording.

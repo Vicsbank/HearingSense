@@ -6,6 +6,8 @@ including with the screen locked?
 
 Status after Window 1 (2026-10-09): **the core scenario works on a real iPhone 18 Pro with AirPods
 Pro and Spotify**, for the durations tested. Details, evidence and the remaining gaps follow.
+Window 2 (same day) changed only redundant-call handling and added an opt-in experiment (§3); the
+session configuration is unchanged and **was not re-tested on the device** in Window 2.
 
 ---
 
@@ -107,15 +109,48 @@ Additional measurement: 397 buffers in 39.7 s = 10 buffers/s, i.e. iOS delivered
 
 ## 3. Known issue: ~0.5 s media stall at start/stop
 
-Observed in T3b. Probable cause (hypothesis, not verified): activating/deactivating a
-recording-capable session reconfigures the audio hardware (input path, IO buffer, Bluetooth link
-parameters), which briefly interrupts the shared output stream. Candidate mitigations for later
-windows:
+Observed in T3b (Window 1). Probable cause (hypothesis, **still not verified**): activating or
+deactivating a recording-capable session, or starting/stopping the input of the IO unit,
+reconfigures the audio hardware (duplex IO, buffer size, Bluetooth link parameters), which briefly
+interrupts the shared output stream.
 
-1. Keep the session active across short pauses instead of deactivating on every stop (but keep
-   “Stop” meaning microphone off: remove the tap and stop the engine).
-2. Avoid redundant `setCategory` / `setPreferredInput` calls when nothing changed.
-3. Measure whether `setPreferredIOBufferDuration` or a fixed preferred sample rate reduces the stall.
+### Window 2 investigation (code inspection + Simulator; no device measurement yet)
+
+Per Start, Window 1 called `setCategory` → `setActive(true)` → `setPreferredInput` → engine start;
+per Stop: engine stop → `setActive(false, .notifyOthersOnDeactivation)`. Each of these can trigger a
+route reconfiguration (Window 1's log showed a `routeConfigurationChange` at each start and stop).
+
+Changes (no change to the verified category/mode/options or to the A2DP route):
+
+1. `AudioSessionController.activate` skips `setCategory` when category, mode and options already
+   match, skips `setActive(true)` when this controller already activated the session, and skips
+   `setPreferredInput` when the same port is already preferred. Each step is logged with its
+   duration (log line format: "Activation steps: setCategory <ms> | skipped, setActive(true) <ms> | skipped,
+   setPreferredInput <ms>").
+   Engine start/stop durations are logged too.
+2. Experiment toggle **Recognition diagnostics → "Keep audio session active when stopped"**
+   (default off). With it on, Stop removes the tap and stops the engine (microphone off, orange
+   indicator off) but does not deactivate the session; the next Start then only starts the engine.
+   Turning the toggle off while stopped deactivates the session.
+
+What this can and cannot fix:
+
+- If the stall comes from session (de)activation or redundant reconfiguration, the toggle should
+  remove the stall at Stop and at the following Start.
+- If it comes from enabling/disabling the input of the IO unit (engine start/stop), it will remain;
+  that would be an iOS hardware route transition and should be documented as unavoidable rather
+  than worked around with unstable routing tricks.
+- iOS 27 adds `AVAudioSession.activate(options:completionHandler:)` /
+  `deactivate(options:completionHandler:)`. The Simulator logged a runtime "hang risk" warning for
+  the synchronous `setActive` on the main thread. Adopting the async API (behind `#available(iOS 27)`)
+  would remove main-thread blocking; there is no evidence it changes the audible stall. Not adopted
+  in Window 2.
+
+**Measurement still required (Test S, `docs/testing/WINDOW2_DEVICE_TESTS.md`)**: Spotify on AirPods;
+three Start/Stop cycles with the toggle off and three with it on; the student reports by ear whether
+the stall occurs at Start and at Stop; the event log provides the step timings. Until then, the
+default stays the Window 1 behaviour (deactivate on Stop), which is verified to hand audio back to
+other apps cleanly.
 
 ## 4. How to re-run the device tests
 

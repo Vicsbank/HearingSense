@@ -6,7 +6,7 @@ import Foundation
 /// recognized speech or transcripts here. The log is not persisted.
 public struct DiagnosticEventLog: Sendable, Equatable {
     public enum Kind: String, Sendable, Equatable {
-        case lifecycle, permission, session, route, interruption, capture, error
+        case lifecycle, permission, session, route, interruption, capture, recognition, error
     }
 
     public struct Entry: Sendable, Equatable, Identifiable {
