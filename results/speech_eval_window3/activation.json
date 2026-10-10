@@ -1,0 +1,127 @@
+{
+  "conditions" : [
+    {
+      "activated" : 500,
+      "activatedRate" : 1,
+      "activatedRateCI95" : [
+        0.9923756594190853,
+        1
+      ],
+      "activatedWithoutMusicRule" : 500,
+      "activationTime" : {
+        "count" : 500,
+        "maximum" : 1.5,
+        "mean" : 1.5,
+        "median" : 1.5,
+        "minimum" : 1.5,
+        "p90" : 1.5
+      },
+      "clips" : 500,
+      "confirmedBySoundDetector" : 499,
+      "earlierThanConfirmation" : {
+        "count" : 499,
+        "maximum" : 1.5,
+        "mean" : 0.751503006012024,
+        "median" : 0.75,
+        "minimum" : 0.75,
+        "p90" : 0.75
+      },
+      "name" : "speech (LibriSpeech)",
+      "speechWindowShare" : 0.9249173312585101,
+      "windowsSuppressedByMusic" : 0
+    },
+    {
+      "activated" : 170,
+      "activatedRate" : 0.5666666666666667,
+      "activatedRateCI95" : [
+        0.5100989215349749,
+        0.6215486822754948
+      ],
+      "activatedWithoutMusicRule" : 205,
+      "activationTime" : {
+        "count" : 170,
+        "maximum" : 30,
+        "mean" : 7.936756302521006,
+        "median" : 4.5,
+        "minimum" : 1.5,
+        "p90" : 19.5
+      },
+      "clips" : 300,
+      "confirmedBySoundDetector" : 130,
+      "earlierThanConfirmation" : {
+        "count" : 130,
+        "maximum" : 27.74997732426304,
+        "mean" : 3.265378335949765,
+        "median" : 0.750022675736961,
+        "minimum" : 0,
+        "p90" : 9
+      },
+      "name" : "music only (GTZAN)",
+      "speechWindowShare" : 0.12309943897877876,
+      "windowsSuppressedByMusic" : 779
+    },
+    {
+      "activated" : 200,
+      "activatedRate" : 1,
+      "activatedRateCI95" : [
+        0.9811546733310369,
+        0.9999999999999999
+      ],
+      "activatedWithoutMusicRule" : 200,
+      "activationTime" : {
+        "count" : 200,
+        "maximum" : 1.5,
+        "mean" : 1.5,
+        "median" : 1.5,
+        "minimum" : 1.5,
+        "p90" : 1.5
+      },
+      "clips" : 200,
+      "confirmedBySoundDetector" : 200,
+      "earlierThanConfirmation" : {
+        "count" : 200,
+        "maximum" : 0.75,
+        "mean" : 0.75,
+        "median" : 0.75,
+        "minimum" : 0.75,
+        "p90" : 0.75
+      },
+      "name" : "speech + music at 10 dB SNR",
+      "speechWindowShare" : 0.9150596877869606,
+      "windowsSuppressedByMusic" : 9
+    },
+    {
+      "activated" : 200,
+      "activatedRate" : 1,
+      "activatedRateCI95" : [
+        0.9811546733310369,
+        0.9999999999999999
+      ],
+      "activatedWithoutMusicRule" : 200,
+      "activationTime" : {
+        "count" : 200,
+        "maximum" : 2.25,
+        "mean" : 1.5075,
+        "median" : 1.5,
+        "minimum" : 1.5,
+        "p90" : 1.5
+      },
+      "clips" : 200,
+      "confirmedBySoundDetector" : 198,
+      "earlierThanConfirmation" : {
+        "count" : 198,
+        "maximum" : 0.75,
+        "mean" : 0.75,
+        "median" : 0.75,
+        "minimum" : 0.75,
+        "p90" : 0.75
+      },
+      "name" : "speech + music at 0 dB SNR",
+      "speechWindowShare" : 0.8709825528007347,
+      "windowsSuppressedByMusic" : 45
+    }
+  ],
+  "environment" : "macOS 27.2.0 (Mac hardware, not an iPhone)",
+  "note" : "Clips start with speech/music at t = 0 and are followed by 1.5 s of silence. Activation time is the end of the first qualifying 1.5 s window (audio clock); it includes the classifier's window length. GTZAN contains songs with vocals, so activations on music are not all errors.",
+  "policy" : "candidate ≥ 0.3; with music ≥ 0.5: speech ≥ 0.5; release 2.25 s"
+}
