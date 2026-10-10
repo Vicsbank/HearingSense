@@ -42,6 +42,10 @@ final class SpeechIntelligenceController {
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private var log: (DiagnosticEventLog.Kind, String) -> Void = { _, _ in }
     @ObservationIgnored private var listenTask: Task<Void, Never>?
+    /// Window 4: the engine's output stream has a single consumer (this controller), so results
+    /// are forwarded from here to the attention engine.
+    @ObservationIgnored private var forwardResult: (SpeechSemanticResult) -> Void = { _ in }
+    @ObservationIgnored private var forwardCleared: () -> Void = {}
 
     /// - Parameters:
     ///   - taxonomy: the label table of the sound classifier that feeds this pipeline.
@@ -79,6 +83,12 @@ final class SpeechIntelligenceController {
     /// Where pipeline lifecycle messages go (the app's diagnostic log).
     func setLogger(_ logger: @escaping (DiagnosticEventLog.Kind, String) -> Void) {
         log = logger
+    }
+
+    /// Receives every speech result in order, and a call when all speech events are discarded.
+    func setForwarding(result: @escaping (SpeechSemanticResult) -> Void, cleared: @escaping () -> Void) {
+        forwardResult = result
+        forwardCleared = cleared
     }
 
     /// The speech event to feature: the one in progress, otherwise the most recent.
@@ -158,12 +168,14 @@ final class SpeechIntelligenceController {
             capabilities = updated
         case .result(let result):
             apply(result)
+            forwardResult(result)
         case .activity(let report):
             guard isSessionActive else { return }
             activity = report
             diagnostics = report.diagnostics
         case .speechDataCleared:
             events.removeAll()
+            forwardCleared()
             log(.recognition, "Speech transcripts discarded (transcription off)")
         case .sessionEnded(let final):
             diagnostics = final

@@ -81,7 +81,7 @@ Delivered (details: `docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md`,
 
 Carry-over: the Window 2 device tests are still open as well (`docs/testing/WINDOW2_DEVICE_TESTS.md`).
 
-## Research window — Background Acoustic Inference and Model Benchmark ◐ (2026-10-10, Mac work complete; device tests not run)
+## Research window — Background Acoustic Inference and Model Benchmark ◐ (2026-10-10, Mac work complete; first device runs done, not replicated)
 
 Branch `experiment/background-acoustic-recognition`. Goal: recognize sounds while the iPhone is
 locked. Delivered: investigation of the built-in classifier's background failure; YAMNet,
@@ -89,27 +89,27 @@ EfficientAT MN10 and DyMN04 converted to Core ML and verified; a common benchmar
 `AcousticClassifierBackend` with Apple, Core ML (CPU only) and switching (hybrid) implementations;
 Debug-only device experiments. Provisional decision: hybrid (`docs/BACKGROUND_RECOGNITION_DECISION.md`).
 
-**Open, blocking:** every physical-iPhone experiment (`docs/testing/BACKGROUND_DEVICE_TESTS.md`):
-whether the Background-processing mode revives the built-in classifier (A2), and whether CPU-only
-Core ML keeps classifying on a locked phone (B). Then: threshold calibration for the background
-model. Window 5's acceptance criterion depends on these.
+**First device runs (2026-10-10, one each):** with the Background-processing mode the built-in
+classifier kept running in the background and locked (A2: 342 of ≈ 342 windows in 256.5 s); without
+it it failed (A1); CPU-only EfficientAT MN10 kept running but labelled 0 of 6 played clips
+(`docs/testing/BACKGROUND_DEVICE_TESTS.md` §7). Window 4 adopted the mode in the app's Info.plist.
+**Open:** a repeat (A1 → A2 → A1), the 10-minute run A3, off the charger, with AirPods and Spotify.
 
-## Window 4 — Attention Priority Engine
+## Window 4 — Context-Aware Attention Priority Engine ◐ (2026-10-10, code complete; synthetic evaluation only)
 
-Goal: decide what deserves attention, deterministically.
+Branch `feature/window4-attention-priority` (from the research branch; device results committed
+there first). Delivered: `Attention` module (deterministic engine: priority assessment with reason
+codes, three modes, preferences, temporal fusion, deduplication, cooldowns, presentation budget,
+scheduler decisions SHOW / UPDATE / SUPPRESS / DEFER / RESOLVE / EXPIRE), the output contract
+`AttentionEvent` / `AttentionPresentationIntent`, `AttentionReplay` + `hs-attention-eval` (18
+scripted scenes, generated long scene, baseline, metrics), app integration (`AttentionController`,
+attention card, settings, decisions screen with synthetic injection), 65 tests. The
+Background-processing mode from experiment A2 is now in the app's Info.plist.
+Report: `docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md`.
 
-1. `AttentionEngine` (Domain-only dependency) consuming `ConfirmedAcousticEvent` /
-   `AcousticEventUpdate` and (W3) `SpeechSemanticResult`: score = f(category/kind priority,
-   `EventQuality`, confidence, duration, novelty, repetition, recency, user preferences, context
-   such as "media playing"). For speech: `level`, `category`, `details`, `summary.reliability`,
-   `transcript.quality`, `acousticContext.relevance` (`possiblyMusic` → lowest priority), keyed by
-   `SpeechEventID`, notifying on `summaryRevision` changes only.
-2. Temporal confirmation, per-category cooldowns, rate limiting, quiet hours.
-3. Configuration as data (JSON/Codable) with a settings UI hook.
-4. Exhaustive unit tests with scripted event sequences (runs on the Mac via `swift test`).
-5. Optional: LLM output may add context but never overrides the deterministic decision.
-
-Acceptance: documented scoring table; tests covering cooldown, escalation and suppression.
+**Open:** no physical-iPhone test of Window 4; all evaluation input is synthetic. Before Window 5
+relies on the lock screen: repeat A1 → A2, run A3 (10 minutes locked) with the new default build,
+and one live session with real sounds (each needs the student's authorization).
 
 ## Window 5 — Dynamic Island and Native iOS Experience
 
@@ -125,9 +125,15 @@ Goal: present decisions without overwhelming the user.
 
 Acceptance: real events from W2–W4 appear on Lock Screen / Dynamic Island on the iPhone.
 
-Blocked by the background limitation found in Window 3's device tests: at the moment no events are
-produced while the screen is locked. Resolve that first (or restrict the acceptance criterion to
-the app in the foreground with Spotify's activity in the Island).
+Input: `AttentionController.onIntent` / `.presented` (Window 4; contract in
+`docs/research/ATTENTION_ENGINE_ARCHITECTURE.md` §8). Show `title` / `subtitle` on the lock screen;
+`privateDetail` only with the user's opt-in. The decisions screen can drive the presentation with
+synthetic events.
+
+Depends on background recognition: one device run (A2) showed the built-in classifier running on a
+locked iPhone with the Background-processing mode, which the app now declares. Repeat it and run A3
+before treating the lock screen as working (otherwise restrict the acceptance criterion to the
+foreground).
 
 ## Window 6 — Integration, Evaluation and Optimization
 

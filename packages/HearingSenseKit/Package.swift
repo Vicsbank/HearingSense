@@ -18,6 +18,11 @@
 // - hs-speech-eval (Window 3, macOS tool): forward-only evaluation of the speech pipeline.
 // - hs-model-bench (background-recognition research window, macOS tool): scores classifier
 //   backends (Apple SoundAnalysis, converted Core ML models) on a common manifest.
+// - Attention (Window 4): deterministic attention priority engine (priority assessment,
+//   temporal fusion, deduplication, cooldowns, scheduling). Depends on HearingSenseDomain only.
+// - AttentionReplay (Window 4): synthetic event builders, scripted scenarios and the replay
+//   harness that drive the production engine without a microphone.
+// - hs-attention-eval (Window 4, macOS tool): replays the scenarios and reports the metrics.
 //
 // Platform-independent logic is tested on the Mac with `swift test`. iOS-only code
 // (AVAudioSession) is compiled under `#if os(iOS)` and tested with xcodebuild on an
@@ -37,8 +42,9 @@ let package = Package(
         .library(name: "SpeechIntelligence", targets: ["SpeechIntelligence"]),
         .executable(name: "hs-speech-eval", targets: ["SpeechEvaluationTool"]),
         .executable(name: "hs-model-bench", targets: ["ModelBenchmarkTool"]),
-
-
+        .library(name: "Attention", targets: ["Attention"]),
+        .library(name: "AttentionReplay", targets: ["AttentionReplay"]),
+        .executable(name: "hs-attention-eval", targets: ["AttentionReplayTool"]),
     ],
     targets: [
         .target(name: "HearingSenseAudio"),
@@ -54,7 +60,13 @@ let package = Package(
                           dependencies: ["SpeechIntelligence", "SpeechPipeline", "SemanticSummary", "SoundEventDetection",
                                          "HearingSenseDomain"]),
         .executableTarget(name: "ModelBenchmarkTool", dependencies: ["SoundEventDetection", "HearingSenseDomain"]),
+        .target(name: "Attention", dependencies: ["HearingSenseDomain"]),
+        .target(name: "AttentionReplay", dependencies: ["Attention", "HearingSenseDomain", "SoundEventDetection"]),
+        .executableTarget(name: "AttentionReplayTool",
+                          dependencies: ["AttentionReplay", "Attention", "HearingSenseDomain", "HearingSenseAudio"]),
         .testTarget(name: "HearingSenseAudioTests", dependencies: ["HearingSenseAudio"]),
+        .testTarget(name: "AttentionTests",
+                    dependencies: ["Attention", "AttentionReplay", "HearingSenseDomain", "SoundEventDetection"]),
         .testTarget(name: "SoundEventDetectionTests", dependencies: ["SoundEventDetection", "HearingSenseDomain"]),
         .testTarget(name: "SpeechPipelineTests", dependencies: ["SpeechPipeline", "HearingSenseAudio", "HearingSenseDomain"]),
         .testTarget(name: "SemanticSummaryTests", dependencies: ["SemanticSummary", "HearingSenseDomain"]),

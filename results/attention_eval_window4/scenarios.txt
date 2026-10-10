@@ -1,0 +1,64 @@
+scenario                          mode      alerts  base  important  dup.suppr  unnec  b.unnec  SHOW/UPD/SUP/DEF/RES/EXP  p50 µs  p95 µs
+01-continuous-rain                quiet     0       2     0/0        1/1        0      2        0/0/116/0/0/0             10.2    15.7
+01-continuous-rain                balanced  0       2     0/0        1/1        0      2        0/0/116/0/0/0             9.0     9.6
+01-continuous-rain                sensitive 1       2     0/0        1/1        1      2        1/0/115/0/0/1             9.1     11.4
+02-repeated-music                 quiet     0       5     0/0        0/0        0      5        0/0/100/0/0/0             9.0     18.5
+02-repeated-music                 balanced  0       5     0/0        0/0        0      5        0/0/100/0/0/0             9.0     13.2
+02-repeated-music                 sensitive 0       5     0/0        0/0        0      5        0/0/100/0/0/0             8.1     12.8
+03-horn-during-rain               quiet     1       2     1/1        0/0        0      1        1/0/24/0/1/1              8.1     10.8
+03-horn-during-rain               balanced  1       2     1/1        0/0        0      1        1/0/24/0/1/1              8.0     10.4
+03-horn-during-rain               sensitive 2       2     1/1        0/0        1      1        2/0/23/0/1/2              8.3     10.6
+04-repeated-vs-independent-horns  quiet     3       6     3/3        3/3        0      3        3/3/0/0/6/3               9.1     12.8
+04-repeated-vs-independent-horns  balanced  3       6     3/3        3/3        0      3        3/3/0/0/6/3               8.6     11.8
+04-repeated-vs-independent-horns  sensitive 3       6     3/3        3/3        0      3        3/3/0/0/6/3               8.5     13.5
+05-siren-during-cooldown          quiet     5       7     3/3        1/1        0      1        5/0/7/0/5/5               9.9     16.6
+05-siren-during-cooldown          balanced  6       7     3/3        1/1        0      1        6/0/6/0/6/6               9.8     16.4
+05-siren-during-cooldown          sensitive 6       7     3/3        1/1        0      1        6/0/6/0/6/6               9.8     16.0
+06-knock-then-speech              quiet     1       3     1/1        0/0        0      0        1/2/0/0/1/1               10.5    55.3
+06-knock-then-speech              balanced  1       3     1/1        0/0        0      0        1/2/0/0/1/1               10.8    43.1
+06-knock-then-speech              sensitive 1       3     1/1        0/0        0      0        1/2/0/0/1/1               10.4    42.8
+07-unrelated-speech-near-knock    quiet     1       2     1/1        0/0        0      0        1/0/1/0/1/1               13.0    38.4
+07-unrelated-speech-near-knock    balanced  2       2     1/1        0/0        0      0        2/0/0/1/2/2               10.4    37.2
+07-unrelated-speech-near-knock    sensitive 2       2     1/1        0/0        0      0        2/0/0/0/2/2               11.4    36.7
+08-transcription-disabled         quiet     0       6     0/0        1/1        0      2        0/0/3/0/0/0               8.5     15.3
+08-transcription-disabled         balanced  2       6     0/0        1/1        0      2        2/0/1/3/2/2               8.7     16.8
+08-transcription-disabled         sensitive 2       6     0/0        1/1        0      2        2/0/2/0/2/2               8.6     12.6
+09-possible-lyrics                quiet     1       4     1/1        0/0        0      3        1/0/29/0/1/1              9.3     22.6
+09-possible-lyrics                balanced  1       4     1/1        0/0        0      3        1/0/29/0/1/1              9.9     20.6
+09-possible-lyrics                sensitive 1       4     1/1        0/0        0      3        1/0/29/0/1/1              8.5     20.6
+10-late-summary                   quiet     0       2     0/0        0/0        0      0        0/0/2/0/0/0               9.4     55.0
+10-late-summary                   balanced  1       2     0/0        0/0        0      0        1/1/0/1/1/1               9.8     53.6
+10-late-summary                   sensitive 1       2     0/0        0/0        0      0        1/1/0/0/1/1               10.8    52.6
+11-summary-revisions              quiet     0       5     0/0        0/0        0      0        0/0/3/0/0/0               50.7    53.7
+11-summary-revisions              balanced  2       5     0/0        0/0        0      0        1/3/1/2/1/1               47.3    56.8
+11-summary-revisions              sensitive 2       5     0/0        0/0        0      0        1/3/1/1/1/1               48.1    54.5
+12-simultaneous-high-priority     quiet     3       4     3/3        0/0        0      1        3/0/10/0/3/3              10.5    15.0
+12-simultaneous-high-priority     balanced  3       4     3/3        0/0        0      1        3/0/10/0/3/3              10.4    14.2
+12-simultaneous-high-priority     sensitive 3       4     3/3        0/0        0      1        3/0/10/0/3/3              10.3    14.2
+13-expiration-cleanup             quiet     4       3     3/3        0/0        0      0        3/1/28/0/2/3              8.5     10.8
+13-expiration-cleanup             balanced  4       3     3/3        0/0        0      0        3/1/28/0/2/3              8.5     11.2
+13-expiration-cleanup             sensitive 4       3     3/3        0/0        0      0        3/1/28/0/2/3              8.5     10.2
+14-rapid-burst                    quiet     4       44    3/3        0/0        0      28       4/0/40/0/4/4              19.7    26.3
+14-rapid-burst                    balanced  7       44    3/3        0/0        0      28       7/0/36/1/7/8              22.2    28.6
+14-rapid-burst                    sensitive 12      44    3/3        0/0        3      28       12/16/15/1/28/13          30.9    40.9
+15-mode-comparison                quiet     5       11    5/5        0/0        0      3        5/1/86/0/5/5              8.5     11.0
+15-mode-comparison                balanced  7       11    5/5        0/0        0      3        7/1/83/2/7/7              8.3     12.2
+15-mode-comparison                sensitive 9       11    5/5        0/0        2      3        9/1/82/0/7/9              8.5     11.6
+16-preference-changes             quiet     4       6     1/1        0/0        1      3        4/0/41/0/3/3              7.1     10.8
+16-preference-changes             balanced  4       6     1/1        0/0        1      3        4/0/41/0/3/3              7.0     10.8
+16-preference-changes             sensitive 4       6     1/1        0/0        1      3        4/0/35/0/3/4              7.0     10.3
+17-background-lifecycle           quiet     4       5     4/4        0/0        0      1        4/0/5/0/4/4               6.8     8.9
+17-background-lifecycle           balanced  4       5     4/4        0/0        0      1        4/0/5/0/4/4               6.8     8.4
+17-background-lifecycle           sensitive 5       5     4/4        0/0        1      1        5/0/4/0/4/5               6.7     9.0
+18-unavailable-models             quiet     1       4     1/1        0/0        0      0        1/0/5/0/1/1               7.6     33.4
+18-unavailable-models             balanced  4       4     1/1        0/0        0      0        4/0/0/3/4/4               7.1     32.4
+18-unavailable-models             sensitive 5       4     1/1        0/0        0      0        4/1/0/0/4/4               8.0     32.3
+
+Totals per mode (synthetic scenes):
+  quiet      important retained 30/30 (100.0 %); duplicates suppressed 6/6 (100.0 %); unnecessary alerts 1 vs baseline 53 (reduction 98.1 %); alerts 37 vs baseline 121; by label ambient 1, important 31, optional 5
+  balanced   important retained 30/30 (100.0 %); duplicates suppressed 6/6 (100.0 %); unnecessary alerts 1 vs baseline 53 (reduction 98.1 %); alerts 52 vs baseline 121; by label ambient 1, important 31, optional 20
+  sensitive  important retained 30/30 (100.0 %); duplicates suppressed 6/6 (100.0 %); unnecessary alerts 9 vs baseline 53 (reduction 83.0 %); alerts 63 vs baseline 121; by label ambient 9, important 32, optional 22
+
+Decision time per input (wall clock, this Mac, 2249 inputs): median 9.0 µs, p95 31.8 µs, max 247.0 µs
+
+Wrote ../../results/attention_eval_window4/scenarios_summary.json

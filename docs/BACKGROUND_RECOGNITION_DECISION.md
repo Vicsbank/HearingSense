@@ -3,6 +3,14 @@
 Research window between Window 3 and Window 4. Date: 2026-10-10.
 Branch `experiment/background-acoustic-recognition`.
 
+**Update, 2026-10-10 (after this record was written):** the first device runs were made
+(`docs/testing/BACKGROUND_DEVICE_TESTS.md` §7). A2 — the first row of the table in §3 — came out
+positive once: the built-in classifier kept running in the background and locked with the
+Background-processing mode, and CPU-only MN10 labelled 0 of 6 played clips. Window 4 therefore
+adopted the mode in the app's Info.plist and keeps Apple's classifier as the only default (Option
+A as the working assumption). A3 and a repeat are still open, so this is not a final decision; the
+text below is the record as written before the runs.
+
 **Status: provisional.** The Mac-side evidence is complete. The physical-iPhone experiments that
 decide whether *anything* classifies sound on a locked iPhone have **not been run**
 (`docs/testing/BACKGROUND_DEVICE_TESTS.md`). The recommendation below is what the available

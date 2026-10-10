@@ -1,0 +1,351 @@
+{
+  "generated" : "2026-10-10T18:59:04Z",
+  "labels" : {
+    "ambient" : "Background sound. Unwanted in Quiet and Balanced; Sensitive mentions it once at low priority by design.",
+    "duplicate" : "A repeat of something already reported.",
+    "important" : "Should lead to an alert in every mode (warning signal, knock, possible spoken warning, new independent occurrence).",
+    "irrelevant" : "Must never alert (music, probable lyrics, handling noise, muted categories).",
+    "optional" : "Depends on mode and context (dog, ordinary or informative speech). Neither required nor an error."
+  },
+  "note" : "Scripted synthetic input replayed through the production AttentionEngine. Not real-world accuracy.",
+  "processMemoryMBAfter" : 6.937980651855469,
+  "processMemoryMBBefore" : 4.2191619873046875,
+  "scenarios" : [
+    {
+      "id" : "soak-60min-seed20261010",
+      "modes" : [
+        {
+          "baselineUnnecessaryAlertsPerHour" : 93.84851458702984,
+          "duplicateSuppression" : 1,
+          "importantRetention" : 1,
+          "metrics" : {
+            "actions" : {
+              "DEFER" : 0,
+              "EXPIRE" : 22,
+              "RESOLVE" : 30,
+              "SHOW" : 22,
+              "SUPPRESS" : 1051,
+              "UPDATE" : 8
+            },
+            "baselineAlerts" : 180,
+            "baselineAlertsByLabel" : {
+              "ambient" : 29,
+              "duplicate" : 8,
+              "important" : 18,
+              "irrelevant" : 61,
+              "optional" : 64
+            },
+            "baselineUnnecessaryAlerts" : 98,
+            "duplicateSources" : 8,
+            "duplicatesSuppressed" : 8,
+            "engineAlerts" : 22,
+            "engineAlertsByLabel" : {
+              "important" : 18,
+              "optional" : 4
+            },
+            "engineDelayMedian" : 0,
+            "engineDelayP95" : 0,
+            "finalEpisodes" : 0,
+            "fusions" : 0,
+            "importantRetained" : 18,
+            "importantSources" : 18,
+            "inputs" : 1267,
+            "maximumDeferred" : 0,
+            "maximumEpisodes" : 7,
+            "processingMedianMicroseconds" : 9,
+            "processingP95Microseconds" : 20.666,
+            "simulatedSeconds" : 3759.2496967315674,
+            "sources" : {
+              "ambient" : 29,
+              "duplicate" : 8,
+              "important" : 18,
+              "irrelevant" : 61,
+              "optional" : 50
+            },
+            "unnecessaryAlerts" : 0
+          },
+          "mode" : "quiet",
+          "unnecessaryAlertReduction" : 1,
+          "unnecessaryAlertsPerHour" : 0
+        },
+        {
+          "baselineUnnecessaryAlertsPerHour" : 93.84851458702984,
+          "duplicateSuppression" : 1,
+          "importantRetention" : 1,
+          "metrics" : {
+            "actions" : {
+              "DEFER" : 20,
+              "EXPIRE" : 51,
+              "RESOLVE" : 60,
+              "SHOW" : 51,
+              "SUPPRESS" : 1010,
+              "UPDATE" : 19
+            },
+            "baselineAlerts" : 180,
+            "baselineAlertsByLabel" : {
+              "ambient" : 29,
+              "duplicate" : 8,
+              "important" : 18,
+              "irrelevant" : 61,
+              "optional" : 64
+            },
+            "baselineUnnecessaryAlerts" : 98,
+            "duplicateSources" : 8,
+            "duplicatesSuppressed" : 8,
+            "engineAlerts" : 51,
+            "engineAlertsByLabel" : {
+              "important" : 18,
+              "optional" : 33
+            },
+            "engineDelayMedian" : 0,
+            "engineDelayP95" : 2.5,
+            "finalEpisodes" : 0,
+            "fusions" : 0,
+            "importantRetained" : 18,
+            "importantSources" : 18,
+            "inputs" : 1267,
+            "maximumDeferred" : 1,
+            "maximumEpisodes" : 7,
+            "processingMedianMicroseconds" : 9.042,
+            "processingP95Microseconds" : 18.208,
+            "simulatedSeconds" : 3759.2496967315674,
+            "sources" : {
+              "ambient" : 29,
+              "duplicate" : 8,
+              "important" : 18,
+              "irrelevant" : 61,
+              "optional" : 50
+            },
+            "unnecessaryAlerts" : 0
+          },
+          "mode" : "balanced",
+          "unnecessaryAlertReduction" : 1,
+          "unnecessaryAlertsPerHour" : 0
+        },
+        {
+          "baselineUnnecessaryAlertsPerHour" : 93.84851458702984,
+          "duplicateSuppression" : 1,
+          "importantRetention" : 1,
+          "metrics" : {
+            "actions" : {
+              "DEFER" : 0,
+              "EXPIRE" : 86,
+              "RESOLVE" : 72,
+              "SHOW" : 86,
+              "SUPPRESS" : 976,
+              "UPDATE" : 19
+            },
+            "baselineAlerts" : 180,
+            "baselineAlertsByLabel" : {
+              "ambient" : 29,
+              "duplicate" : 8,
+              "important" : 18,
+              "irrelevant" : 61,
+              "optional" : 64
+            },
+            "baselineUnnecessaryAlerts" : 98,
+            "duplicateSources" : 8,
+            "duplicatesSuppressed" : 8,
+            "engineAlerts" : 86,
+            "engineAlertsByLabel" : {
+              "ambient" : 23,
+              "important" : 18,
+              "optional" : 45
+            },
+            "engineDelayMedian" : 0,
+            "engineDelayP95" : 0,
+            "finalEpisodes" : 0,
+            "fusions" : 0,
+            "importantRetained" : 18,
+            "importantSources" : 18,
+            "inputs" : 1267,
+            "maximumDeferred" : 0,
+            "maximumEpisodes" : 7,
+            "processingMedianMicroseconds" : 9.375,
+            "processingP95Microseconds" : 16.792,
+            "simulatedSeconds" : 3759.2496967315674,
+            "sources" : {
+              "ambient" : 29,
+              "duplicate" : 8,
+              "important" : 18,
+              "irrelevant" : 61,
+              "optional" : 50
+            },
+            "unnecessaryAlerts" : 23
+          },
+          "mode" : "sensitive",
+          "unnecessaryAlertReduction" : 0.7653061224489796,
+          "unnecessaryAlertsPerHour" : 22.025671790833535
+        }
+      ],
+      "summary" : "Seeded random mix of ambient, irrelevant, optional, important and repeated events.",
+      "title" : "Generated 60-minute scene"
+    }
+  ],
+  "tool" : "hs-attention-eval",
+  "totals" : [
+    {
+      "baselineUnnecessaryAlertsPerHour" : 93.84851458702984,
+      "duplicateSuppression" : 1,
+      "importantRetention" : 1,
+      "metrics" : {
+        "actions" : {
+          "DEFER" : 0,
+          "EXPIRE" : 22,
+          "RESOLVE" : 30,
+          "SHOW" : 22,
+          "SUPPRESS" : 1051,
+          "UPDATE" : 8
+        },
+        "baselineAlerts" : 180,
+        "baselineAlertsByLabel" : {
+          "ambient" : 29,
+          "duplicate" : 8,
+          "important" : 18,
+          "irrelevant" : 61,
+          "optional" : 64
+        },
+        "baselineUnnecessaryAlerts" : 98,
+        "duplicateSources" : 8,
+        "duplicatesSuppressed" : 8,
+        "engineAlerts" : 22,
+        "engineAlertsByLabel" : {
+          "important" : 18,
+          "optional" : 4
+        },
+        "engineDelayMedian" : 0,
+        "engineDelayP95" : 0,
+        "finalEpisodes" : 0,
+        "fusions" : 0,
+        "importantRetained" : 18,
+        "importantSources" : 18,
+        "inputs" : 1267,
+        "maximumDeferred" : 0,
+        "maximumEpisodes" : 7,
+        "processingMedianMicroseconds" : 9,
+        "processingP95Microseconds" : 20.666,
+        "simulatedSeconds" : 3759.2496967315674,
+        "sources" : {
+          "ambient" : 29,
+          "duplicate" : 8,
+          "important" : 18,
+          "irrelevant" : 61,
+          "optional" : 50
+        },
+        "unnecessaryAlerts" : 0
+      },
+      "mode" : "quiet",
+      "unnecessaryAlertReduction" : 1,
+      "unnecessaryAlertsPerHour" : 0
+    },
+    {
+      "baselineUnnecessaryAlertsPerHour" : 93.84851458702984,
+      "duplicateSuppression" : 1,
+      "importantRetention" : 1,
+      "metrics" : {
+        "actions" : {
+          "DEFER" : 20,
+          "EXPIRE" : 51,
+          "RESOLVE" : 60,
+          "SHOW" : 51,
+          "SUPPRESS" : 1010,
+          "UPDATE" : 19
+        },
+        "baselineAlerts" : 180,
+        "baselineAlertsByLabel" : {
+          "ambient" : 29,
+          "duplicate" : 8,
+          "important" : 18,
+          "irrelevant" : 61,
+          "optional" : 64
+        },
+        "baselineUnnecessaryAlerts" : 98,
+        "duplicateSources" : 8,
+        "duplicatesSuppressed" : 8,
+        "engineAlerts" : 51,
+        "engineAlertsByLabel" : {
+          "important" : 18,
+          "optional" : 33
+        },
+        "engineDelayMedian" : 0,
+        "engineDelayP95" : 2.5,
+        "finalEpisodes" : 0,
+        "fusions" : 0,
+        "importantRetained" : 18,
+        "importantSources" : 18,
+        "inputs" : 1267,
+        "maximumDeferred" : 1,
+        "maximumEpisodes" : 7,
+        "processingMedianMicroseconds" : 9.042,
+        "processingP95Microseconds" : 18.208,
+        "simulatedSeconds" : 3759.2496967315674,
+        "sources" : {
+          "ambient" : 29,
+          "duplicate" : 8,
+          "important" : 18,
+          "irrelevant" : 61,
+          "optional" : 50
+        },
+        "unnecessaryAlerts" : 0
+      },
+      "mode" : "balanced",
+      "unnecessaryAlertReduction" : 1,
+      "unnecessaryAlertsPerHour" : 0
+    },
+    {
+      "baselineUnnecessaryAlertsPerHour" : 93.84851458702984,
+      "duplicateSuppression" : 1,
+      "importantRetention" : 1,
+      "metrics" : {
+        "actions" : {
+          "DEFER" : 0,
+          "EXPIRE" : 86,
+          "RESOLVE" : 72,
+          "SHOW" : 86,
+          "SUPPRESS" : 976,
+          "UPDATE" : 19
+        },
+        "baselineAlerts" : 180,
+        "baselineAlertsByLabel" : {
+          "ambient" : 29,
+          "duplicate" : 8,
+          "important" : 18,
+          "irrelevant" : 61,
+          "optional" : 64
+        },
+        "baselineUnnecessaryAlerts" : 98,
+        "duplicateSources" : 8,
+        "duplicatesSuppressed" : 8,
+        "engineAlerts" : 86,
+        "engineAlertsByLabel" : {
+          "ambient" : 23,
+          "important" : 18,
+          "optional" : 45
+        },
+        "engineDelayMedian" : 0,
+        "engineDelayP95" : 0,
+        "finalEpisodes" : 0,
+        "fusions" : 0,
+        "importantRetained" : 18,
+        "importantSources" : 18,
+        "inputs" : 1267,
+        "maximumDeferred" : 0,
+        "maximumEpisodes" : 7,
+        "processingMedianMicroseconds" : 9.375,
+        "processingP95Microseconds" : 16.792,
+        "simulatedSeconds" : 3759.2496967315674,
+        "sources" : {
+          "ambient" : 29,
+          "duplicate" : 8,
+          "important" : 18,
+          "irrelevant" : 61,
+          "optional" : 50
+        },
+        "unnecessaryAlerts" : 23
+      },
+      "mode" : "sensitive",
+      "unnecessaryAlertReduction" : 0.7653061224489796,
+      "unnecessaryAlertsPerHour" : 22.025671790833535
+    }
+  ]
+}

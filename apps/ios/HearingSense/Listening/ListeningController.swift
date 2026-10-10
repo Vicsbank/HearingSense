@@ -1,4 +1,6 @@
+import Attention
 import HearingSenseAudio
+import HearingSenseDomain
 import Observation
 import SoundEventDetection
 import SpeechIntelligence
@@ -13,6 +15,8 @@ import SwiftUI
 /// should stay an orchestrator and not grow classification or speech logic itself. Window 2
 /// attaches `SoundRecognitionEngine` (owned by `recognition`), Window 3 the speech pipeline's
 /// audio tap (owned by `speech`), which shares the same input tap instead of recording separately.
+/// Window 4 attaches no audio consumer at all: the attention engine (owned by `attention`) only
+/// receives the confirmed sound events and speech results the two pipelines already publish.
 @Observable
 final class ListeningController {
     static let historyLength = 120  // about 10 s of level history at ~12 buffers/s
@@ -30,6 +34,8 @@ final class ListeningController {
     let recognition: RecognitionController
     /// Window 3: speech transcription and summaries, fed by the same capture and by `recognition`.
     let speech: SpeechIntelligenceController
+    /// Window 4: decides which sound events and speech results deserve attention.
+    let attention = AttentionController()
 
     @ObservationIgnored private var capture = MicrophoneCapture()
     @ObservationIgnored private let session = AudioSessionController()
@@ -74,8 +80,14 @@ final class ListeningController {
         connect(capture)
         recognition.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         speech.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
+        attention.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         recognition.setForwarding(frame: { [engine = speech.engine] in engine.process($0) },
-                                  event: { [engine = speech.engine] in engine.process($0) })
+                                  event: { [engine = speech.engine, attention] update in
+                                      engine.process(update)
+                                      attention.receive(update)
+                                  })
+        speech.setForwarding(result: { [attention] in attention.receive($0) },
+                             cleared: { [attention] in attention.speechDataCleared() })
         sessionObserver = AudioSessionObserver { [weak self] event in
             guard let self else { return }
             Task { @MainActor in self.handle(event) }
@@ -208,6 +220,8 @@ final class ListeningController {
             "",
             speech.reportText(),
             "",
+            attention.reportText(),
+            "",
             "Event log (oldest first):",
             log.exportText(),
         ].joined(separator: "\n")
@@ -226,6 +240,7 @@ final class ListeningController {
             log.append(.session, "Activation steps: \(session.lastTrace.summary)")
             recognition.sessionWillStart()
             speech.sessionWillStart()
+            attention.sessionWillStart()
             let engineStart = ContinuousClock.now
             let format = try capture.start()
             log.append(.capture, "Engine start took \(milliseconds(since: engineStart))")
@@ -251,6 +266,7 @@ final class ListeningController {
         log.append(.capture, "Engine stop took \(milliseconds(since: engineStop))")
         recognition.sessionDidEnd()
         speech.sessionDidEnd()
+        attention.sessionDidEnd()
         if keepSession {
             log.append(.session, "Session kept active (microphone off)")
         } else if session.isActive {
@@ -300,6 +316,7 @@ final class ListeningController {
             capture.stop()
             recognition.sessionDidEnd()
             speech.sessionDidEnd()
+            attention.sessionDidEnd()
             session.noteDeactivatedBySystem()
             captureFormat = nil
             level = .silence
@@ -326,6 +343,7 @@ final class ListeningController {
             capture.removeAllConsumers()
             recognition.sessionDidEnd()
             speech.sessionDidEnd()
+            attention.sessionDidEnd()
             session.noteDeactivatedBySystem()
             capture = MicrophoneCapture()
             connect(capture)

@@ -17,6 +17,13 @@ not replicated yet.
 Simulator and Mac runs are not a substitute: other developers report that the background failure
 does not occur in the Simulator.
 
+**Update, Window 4 (2026-10-10): the app's default Info.plist is now the A2 configuration**
+(`audio` + `processing`, `apps/ios/Config/HearingSense-Info.plist`). A plain build therefore
+reproduces A2; for A1 build with
+`INFOPLIST_FILE=Config/Experiments/HearingSense-Info-audio-only.plist`. The runs in §7 were made
+before this change, with the commands as they were then (default = `audio`, A2 via
+`HearingSense-Info-processing.plist`). No device run has been made since the change.
+
 ---
 
 ## 1. Rules for these tests
@@ -40,7 +47,8 @@ does not occur in the Simulator.
 | `--hs-classifier yamnet \| mn10 \| dymn04` | run a converted third-party model through `CoreMLSoundClassifierBackend` (Core ML, CPU only) instead of Apple's classifier |
 | `--hs-classifier hybrid-mn10 \| hybrid-yamnet \| hybrid-dymn04` | Apple's classifier in the foreground, the third-party model in the background (`SwitchingClassifierBackend`); the heartbeat's `model=` field shows which one produced the latest window |
 | `tools/experiments/audio_models/install_app_models.sh` | copy the converted models into the app before building (they are not in the repository) |
-| `apps/ios/Config/Experiments/HearingSense-Info-processing.plist` | Info.plist variant with the Background-processing mode, used with `xcodebuild INFOPLIST_FILE=…` |
+| `apps/ios/Config/Experiments/HearingSense-Info-processing.plist` | Info.plist variant with the Background-processing mode, used with `xcodebuild INFOPLIST_FILE=…` (since Window 4 identical to the default) |
+| `apps/ios/Config/Experiments/HearingSense-Info-audio-only.plist` | (since Window 4) Info.plist variant with `audio` alone, for A1 |
 
 Each 5-second heartbeat line carries: app state, lock state, classifier windows, analyzer
 segments, classifier failures, mean model inference time, dropped buffers, largest backlog,
@@ -52,8 +60,9 @@ D=<UDID>                                    # xcrun devicectl list devices
 tools/experiments/audio_models/install_app_models.sh
 xcodebuild -project apps/ios/HearingSense.xcodeproj -scheme HearingSense -configuration Debug \
   -destination "id=$D" -derivedDataPath <dir> -allowProvisioningUpdates build
+#   since Window 4 this default build is A2; for A1 add: INFOPLIST_FILE=Config/Experiments/HearingSense-Info-audio-only.plist
 xcrun devicectl device install app --device $D <dir>/Build/Products/Debug-iphoneos/HearingSense.app
-# A1: shipping configuration + probe
+# A1 (audio only) or A2 (audio + processing), depending on the build, + probe
 xcrun devicectl device process launch --device $D --terminate-existing org.hearingsense.HearingSense \
   --hs-autostart --hs-export-diagnostics --hs-bg-probe
 # put the app in the background from the Mac (the phone must be unlocked)

@@ -1,7 +1,21 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-09, end of **Window 3** (On-Device Speech Intelligence and Apple Foundation Models).
-Window 3 status: **code complete; verified on the Mac (unit tests, real recognizer and language
+Last updated: 2026-10-10, end of **Window 4** (Context-Aware Attention Priority Engine).
+
+**Window 4 status: code complete on `feature/window4-attention-priority` (branched from the
+research branch `experiment/background-acoustic-recognition`); verified on the Mac (256 package
+tests: 255 passed, 1 opt-in skipped) and on the iPhone 18 Pro Simulator (261 tests: 257 passed, 4
+skipped; app builds Debug and Release; attention screens checked with synthetic events, microphone
+off). All evaluation input is scripted and synthetic. No physical-iPhone test of Window 4 was
+run.** The app's Info.plist now declares `audio` + `processing` (the configuration of device run
+A2). Read `docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md`, then
+`docs/research/ATTENTION_ENGINE_ARCHITECTURE.md` and `docs/testing/WINDOW4_TEST_RESULTS.md`.
+Next window: **Window 5 — Dynamic Island and Native iOS Experience** (not started; do not start it
+without the student's instruction).
+
+Earlier status paragraphs follow unchanged, oldest first.
+
+Window 3 status (2026-10-09): **code complete; verified on the Mac (unit tests, real recognizer and language
 model on files), on the iPhone 18 Pro Simulator (unit tests, app build, level-1 live check) and,
 after the student authorized it on 2026-10-09, on the physical iPhone 18 Pro with the screen on
 (live transcript and validated summary ≈ 2 s after the speech).** Two defects found on the device
@@ -9,13 +23,15 @@ were fixed. **Open problem found on the device: with the screen locked or the ap
 background Apple's built-in sound classifier fails, so neither sounds nor speech are recognized
 there** (§8, first row; `docs/testing/WINDOW3_TEST_RESULTS.md` §10.6). Window 2's device tests
 (`docs/testing/WINDOW2_DEVICE_TESTS.md`) are still open.
-Next window: **Window 4 — Attention Priority Engine** (not started; do not start it without the
-student's instruction).
+(Window 4 has since been done; see the first paragraph.)
 
 Git: `main` = reconstructed Window 1 baseline (`7905f0b`, `679494e`); Window 2 on
 `feature/window2-sound-analysis` (`6f41d90`); Window 3 on `feature/window3-speech-intelligence`,
-branched from the Window 2 branch. Nothing is merged or pushed; there is no remote. Merging is the
-student's decision.
+branched from the Window 2 branch; the research window on
+`experiment/background-acoustic-recognition` (`0d6236d`, device results `be7e8de`), branched from
+the Window 3 branch; Window 4 on `feature/window4-attention-priority`, branched from the research
+branch. The history is linear: each branch contains the ones before it. Nothing is merged or
+pushed; there is no remote. Merging is the student's decision.
 
 **Research window (2026-10-10), branch `experiment/background-acoustic-recognition`** (from the
 Window 3 branch): background sound recognition. Mac work complete and committed; **no
@@ -46,8 +62,11 @@ locked (32.8 ms per window) but labelled 0 of 6 played clips correctly; (4) the 
 test the GPU hypothesis, because the iPhone places the probe model on the CPU under every compute
 unit setting. One run per configuration, on USB and charging: **not replicated, no 10-minute run
 (A3), no battery data.** The shipping Info.plist is unchanged (`audio` only) and
-`docs/BACKGROUND_RECOGNITION_DECISION.md` (hybrid with MN10) predates these runs; whether to adopt
-the Background-processing mode instead is the student's decision. Next: §7.7 of the device test
+`docs/BACKGROUND_RECOGNITION_DECISION.md` (hybrid with MN10) predates these runs. (Update, Window 4:
+the student's Window 4 brief named Apple's classifier as the preferred one and asked for the A2
+fix to be part of the baseline; the mode is now in `apps/ios/Config/HearingSense-Info.plist`, and
+`Config/Experiments/HearingSense-Info-audio-only.plist` reproduces A1. These result files were
+committed as `be7e8de`.) Next: §7.7 of the device test
 document (repeat A1 → A2, then A3), each needing the student's microphone authorization. The
 iPhone was driven with iphone-use (approved by the student; rules in the session memory) and
 `devicectl`. The app's "Transcribe nearby speech" switch persists between launches and was found
@@ -166,6 +185,34 @@ Full report: `docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md`; architecture:
 9. Tools/data: `tools/make_speech_test_signals.sh` + `tools/speech_test_sentences.tsv` (20 synthetic
    sentences in `data/test_signals/window3/`, not committed).
 
+## 4d. Completed in Window 4
+
+Full report: `docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md`; architecture:
+`docs/research/ATTENTION_ENGINE_ARCHITECTURE.md`; numbers and methods:
+`docs/testing/WINDOW4_TEST_RESULTS.md`.
+
+1. Baseline: device results of the research window committed on its branch (`be7e8de`); Window 4
+   branched from there; `UIBackgroundModes` = `audio` + `processing` adopted in the app's Info.plist.
+2. `HearingSenseDomain/Attention.swift`: `AttentionEventID`, `AttentionPriority` (ambient, low,
+   normal, high, urgent), `AttentionCategory` (15), `AttentionReason` (reason codes),
+   `AttentionLifecycle`, `AttentionSourceRecord`, `AttentionPrivateContent`, `AttentionEvent`,
+   `AttentionPresentationIntent` (the brief's "PresentationIntent"), `PresentationAction`,
+   `PresentationInterruption`.
+3. `Attention` (Domain only): `AttentionEngine` (value type; `process(_:)`, `nextDeadline`,
+   `snapshot`), `AttentionInput`, `AttentionDecision`, `AttentionAction`, `AttentionMode`,
+   `AttentionPreferences`, `AttentionConfiguration.standard` (policy table for all 50 sound kinds,
+   mode tunings, speech rules, fusion pairs, bounds), `SpeechAssessment`, `SemanticSignature`.
+4. `AttentionReplay`: `SyntheticSoundEvent`, `SyntheticSpeech`, `ScenarioBuilder`,
+   `ScenarioLibrary` (18 scenes, `soak`, single-event scenes), `AttentionReplayer` (baseline,
+   labels, metrics), playback into a running engine. `hs-attention-eval` (macOS).
+5. App: `Attention/AttentionController` (owned by `ListeningController`), `Views/AttentionViews`
+   (card with mode switch, settings, decisions screen with synthetic injection);
+   `RecognitionController` and `SpeechIntelligenceController` forward their outputs;
+   `DebugDiagnosticsExporter` adds attention counters; two new package products linked in
+   `project.pbxproj`.
+6. Tests: `AttentionTests` (65 test functions). Results: `results/attention_eval_window4/`.
+   Screenshots: `docs/device-tests/window4-simulator/`.
+
 ## 5. Repository structure (current)
 
 ```
@@ -173,20 +220,28 @@ apps/ios/                      iOS app (Xcode 27 project, synchronized folders)
   HearingSense/HearingSenseApp.swift   @main entry point
   HearingSense/Listening/      ListeningController (orchestrator), ListeningState, DeviceInfo
   HearingSense/Recognition/    RecognitionController (W2: engine outputs → UI state; W3: forwards to speech)
-  HearingSense/Speech/         SpeechIntelligenceController (W3: speech engine outputs → UI state, privacy)
+  HearingSense/Speech/         SpeechIntelligenceController (W3: speech engine outputs → UI state, privacy; W4: forwards results)
+  HearingSense/Attention/      AttentionController (W4: attention engine, preferences, deadline timer, injection)
+  HearingSense/Experiments/    research window: background probe, experimental classifier switch (Debug)
+  HearingSense/Diagnostics/    DebugDiagnosticsExporter (Debug)
   HearingSense/Views/          ContentView, StatusCard, LevelMeterView, RouteDiagnosticsView, DiagnosticLogView,
-                               RecognitionViews (W2), SpeechIntelligenceViews (W3)
+                               RecognitionViews (W2), SpeechIntelligenceViews (W3), AttentionViews (W4)
   HearingSense/Assets.xcassets AppIcon (placeholder), AccentColor
-  Config/HearingSense-Info.plist  UIBackgroundModes=audio (other Info keys are build settings)
+  Config/HearingSense-Info.plist  UIBackgroundModes=audio+processing since W4 (other Info keys are build settings)
+  Config/Experiments/          Info.plist variants for device experiments (audio-only = A1, processing = A2)
 packages/HearingSenseKit/      Swift package (iOS 26, macOS 26): Sources/{HearingSenseAudio, HearingSenseDomain,
                                SoundEventDetection, SoundEvaluationTool, SpeechPipeline, SemanticSummary,
-                               SpeechIntelligence, SpeechEvaluationTool}, Tests/{HearingSenseAudioTests,
+                               SpeechIntelligence, SpeechEvaluationTool, ModelBenchmarkTool, Attention,
+                               AttentionReplay, AttentionReplayTool}, Tests/{HearingSenseAudioTests,
                                SoundEventDetectionTests, SpeechPipelineTests, SemanticSummaryTests,
-                               SpeechIntelligenceTests}
+                               SpeechIntelligenceTests, AttentionTests}
 docs/                          this handoff, architecture, audit, feasibility, roadmap, WINDOW2 and WINDOW3 reports,
                                device-tests/, research/, testing/
 results/sound_eval_window2/    W2 offline evaluation summaries (JSON)
 results/speech_eval_window3/   W3 evaluation summaries (JSON; no music transcripts)
+results/background_benchmark/  research window: model benchmark summaries
+results/device_background/     research window: metadata-only diagnostics of the first iPhone runs (A1, A2, MN10)
+results/attention_eval_window4/ W4 replay output (synthetic scenes; JSON summaries and tables)
 tools/                         + make_speech_test_signals.sh, speech_test_sentences.tsv (W3)
 src/ ml/ tools/ models/ results/ data/ app/   legacy & research assets (unchanged)
 ```
@@ -227,6 +282,18 @@ Full list: `docs/IOS_ARCHITECTURE.md` §9. Most important:
   session generation. Tests drive it with `drivesItself: false`, `pump()` and `drain()`.
 - (W3) All speech thresholds live in `SpeechIntelligenceConfiguration` (`activation`, `relevance`,
   `summary`, endpoint and conversation timings); provisional until device data exists.
+- (W4) Background modes `audio` + `processing` (device run A2, once); Apple's classifier is the
+  only default. The hybrid / third-party path stays Debug-only research code.
+- (W4) The attention engine is a value type; inputs carry their time; the host sends one `.tick`
+  at `nextDeadline`. Never give it a clock or a timer of its own (determinism, replay).
+- (W4) Priority = policy table per sound kind and mode (`AttentionConfiguration.standard`) plus
+  preferences; classifier scores are not read; evidence quality only gates. Change policy there,
+  not in the engine.
+- (W4) Titles and subtitles are generic and lock-screen safe; speech-derived text is
+  `privateContent` / `privateDetail`, never encoded, logged or exported. Keep it that way.
+- (W4) Contract type is `AttentionPresentationIntent` (Foundation owns the name `PresentationIntent`).
+- (W4) New package products need `project.pbxproj` entries (Attention, AttentionReplay were added
+  by hand with ids `4A5E…003A`–`003D`).
 
 ## 7. Verification results (Window 1)
 
@@ -302,11 +369,34 @@ Details and methods: `docs/testing/WINDOW3_TEST_RESULTS.md`. All measurements ar
 | Music from a loudspeaker | **Physical iPhone** | 3 clips: sung pop → nothing or one text-less "Nearby Speech"; rap → "Speech Unclear" without a summary; relevance labels differ from the file-based evaluation |
 | Noisy place, 15 min battery/thermal, text removed after Stop | Physical iPhone | **Not run** |
 
+## 7d. Verification results (Window 4)
+
+Details and methods: `docs/testing/WINDOW4_TEST_RESULTS.md`. All evaluation input is scripted and
+synthetic; none of it is real-world accuracy.
+
+| Check | Environment | Result |
+|---|---|---|
+| `swift test` (package) | macOS 27.2, Swift 6.4 | **255 passed, 1 skipped** of 256 (65 new + 191 earlier) |
+| `xcodebuild test -scheme HearingSenseKit-Package` | iOS 27.0 Simulator, iPhone 18 Pro | **257 passed, 4 skipped** of 261 |
+| App build, Debug / Release unsigned | Simulator / generic iOS device | **Succeeded**, 0 Swift warnings; built Info.plist has `audio`, `processing` |
+| 18 scripted scenes, three modes | Mac, `hs-attention-eval scenarios` | Important retained 30/30 in every mode; duplicates suppressed 6/6; alerts 37 / 52 / 63 (Quiet / Balanced / Sensitive) vs 121 for "show every confirmed event"; unnecessary alerts 1 / 1 / 9 vs 53 |
+| Generated one-hour scene (seed 20261010) | Mac, `hs-attention-eval soak` | Important 18/18, duplicates 8/8; unnecessary alerts per hour 0 / 0 / 22 vs 93.8; at most 7 episodes; none left |
+| Decision time per input | Mac, release build | median 9 µs, p95 17–32 µs |
+| Determinism | Mac | 3 880 decisions, two replays identical |
+| Attention card, settings, decisions screen, injection of synthetic events | Simulator, microphone off | Works (fusion "Door or knock · Nearby speech afterwards", alarm escalation, lyrics suppressed); screenshots in `docs/device-tests/window4-simulator/` |
+| Live microphone → attention engine | Simulator / iPhone | **Not run** |
+| Anything on the physical iPhone, including the new default background mode | iPhone 18 Pro | **Not run in Window 4** |
+
 ## 8. Known issues
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
-| **(W2+W3) Nothing is recognized in the background or with the screen locked** | Measured on the iPhone 18 Pro (iOS 27.2): `SNClassifySoundRequest(.version1)` fails with `com.apple.SoundAnalysis` error 2 from 0.44 s after the app enters the background until it returns; capture continues. No sound events, no speech activation. Blocks the pocket / lock-screen use case and Window 5's purpose. Other developers report the same (Apple forums 811582, 757715, 765376; GPU work not permitted in the background — unverified here) | **The student has to choose** (not decided): (a) a speech trigger that does not need the classifier in the background, e.g. signal level or the Speech framework's voice-activity module, with the recognizer as the check — speech only, no music gate, more recognizer use; (b) a different sound classifier as a Core ML model on CPU / Neural Engine — needs a model (download or training, both need approval) and forum reports say even CPU-only custom models failed for some; (c) accept foreground-only for now and say so; (d) file Feedback with Apple. `SpeechTranscriber` and Foundation Models did run in the background in one trial (model 6.1 s instead of 0.7 s). **Update 2026-10-10 (device, one run):** adding the Background-processing mode to `UIBackgroundModes` made the built-in classifier run in the background and when locked; not replicated yet and not adopted — see `docs/testing/BACKGROUND_DEVICE_TESTS.md` §7 |
+| **(W4) No real-world validation of the attention engine** | Policy table, cooldowns, thresholds and the phrase list are defaults checked only on hand-written scenes | One live session with real sounds (authorization needed), then adjust `AttentionConfiguration.standard`; full list in `docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md` §7 |
+| (W4) The adopted Background-processing mode rests on one device run | If the classifier stops in the background after all, the attention engine ends its episodes as stale after 20 s and shows nothing new | Repeat A1 → A2 → A1 and run A3 with the default build (`docs/testing/BACKGROUND_DEVICE_TESTS.md` §7.7); App Review implications of the declared mode not checked |
+| (W4) Importance of speech is keyword- and category-based | English phrase list; a recognition error can create or hide a warning | Titles say "Possible Spoken Warning"; keep the transcript reachable; extend rules per language if needed |
+| (W4) With transcription off and music playing, nearby speech is not presented | Without a transcript there is no speech-or-lyrics estimate | By design; revisit if Window 3 gains a relevance estimate without transcription |
+| (W4) Release build contains the debug screens and synthetic scenes | App size and surface | Gate with `#if DEBUG` or remove before a release |
+| **(W2+W3) Nothing is recognized in the background or with the screen locked** (see the W4 row above: `processing` is now declared) | Measured on the iPhone 18 Pro (iOS 27.2): `SNClassifySoundRequest(.version1)` fails with `com.apple.SoundAnalysis` error 2 from 0.44 s after the app enters the background until it returns; capture continues. No sound events, no speech activation. Blocks the pocket / lock-screen use case and Window 5's purpose. Other developers report the same (Apple forums 811582, 757715, 765376; GPU work not permitted in the background — unverified here) | **The student has to choose** (not decided): (a) a speech trigger that does not need the classifier in the background, e.g. signal level or the Speech framework's voice-activity module, with the recognizer as the check — speech only, no music gate, more recognizer use; (b) a different sound classifier as a Core ML model on CPU / Neural Engine — needs a model (download or training, both need approval) and forum reports say even CPU-only custom models failed for some; (c) accept foreground-only for now and say so; (d) file Feedback with Apple. `SpeechTranscriber` and Foundation Models did run in the background in one trial (model 6.1 s instead of 0.7 s). **Update 2026-10-10 (device, one run):** adding the Background-processing mode to `UIBackgroundModes` made the built-in classifier run in the background and when locked; not replicated yet and not adopted — see `docs/testing/BACKGROUND_DEVICE_TESTS.md` §7 |
 | (W3) Device validation is thin | A few sessions, one speaker near the phone, loudspeaker playback, on a charger | Open: P7, P8, P9 in `docs/testing/WINDOW3_TEST_RESULTS.md` §9; other speakers need their consent |
 | (W3) A recognition error reversed the meaning once on the iPhone ("not" → "now") | The validator cannot catch errors made before the summary | Keep the transcript visible with every summary; Window 4 must not treat a headline as fact; show recognition quality |
 | (W3) Relevance-gate labels differ on the device | Speech over a pop song was labelled plain "nearby speech"; a rap clip was not labelled "possibly music" (it ended as "Speech Unclear") | Re-calibrate with recordings made by the phone (needs authorization to record) |
@@ -343,8 +433,9 @@ Window 2 (physical iPhone, one step at a time): label inventory (L), quiet room 
 (B, C, D, G), AirPods + Spotify (H), lock screen ≥ 1 min then ≥ 15 min (I), start/stop stall with
 the keep-session toggle off/on (S), playback rain/wind/horn (E, F), interruptions (J, ask first);
 plus Window 1's open items (calls, AirPods disconnect, Apple Music, battery/thermal).
-Then Window 4 (Attention Priority Engine), which consumes `ConfirmedAcousticEvent`s and
-`SpeechSemanticResult`s (contract: `docs/research/SPEECH_INTELLIGENCE_ARCHITECTURE.md` §11).
+Window 4 is done (§4d). Open from it: the device checks in
+`docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md` §8. Then Window 5 (presentation), which consumes
+`AttentionPresentationIntent` (contract: `docs/research/ATTENTION_ENGINE_ARCHITECTURE.md` §8).
 
 ## 10. How to build, test and run
 
@@ -370,7 +461,17 @@ swift run -c release hs-speech-eval transcribe --libri 200  # WER on LibriSpeech
 swift run -c release hs-speech-eval summarize --repeat 2    # Foundation Models on 38 sentences (~4 min)
 swift run -c release hs-speech-eval pipeline --set tts      # real-time end to end, 20 sentences (~4 min)
 HS_RUN_MODEL_TESTS=1 swift test --filter realModel          # opt-in real language-model test
+
+# Window 4: attention engine on scripted scenes (synthetic input; seconds each)
+swift test --filter AttentionTests
+swift run -c release hs-attention-eval scenarios            # 18 scenes × 3 modes, baseline, metrics
+swift run -c release hs-attention-eval trace 06-knock-then-speech --mode balanced   # decision by decision
+swift run -c release hs-attention-eval soak --hours 1       # generated long scene
+swift run -c release hs-attention-eval determinism
 ```
+
+In the app the same scenes can be injected without the microphone: Attention card → "Attention
+decisions (debug)" → "Inject synthetic events".
 
 Recognizer tests need macOS (they are reported as skipped in the Simulator) and the synthetic
 test signals; without the signals they are skipped too.
@@ -416,7 +517,14 @@ Share** exports the route snapshot and event log as text.
 7. `docs/testing/WINDOW2_DEVICE_TESTS.md` — open device tests
 8. `docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md`, `docs/research/SPEECH_INTELLIGENCE_ARCHITECTURE.md`,
    `docs/testing/WINDOW3_TEST_RESULTS.md` — speech pipeline, measurements, limitations, pending device tests
-9. Code (W3): `Sources/HearingSenseDomain/SpeechSemantics.swift`, `Sources/SpeechIntelligence/
+9. `docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md`, `docs/research/ATTENTION_ENGINE_ARCHITECTURE.md`,
+   `docs/testing/WINDOW4_TEST_RESULTS.md` — attention engine, policy, Window 5 interface, results, limits.
+   Code (W4): `Sources/HearingSenseDomain/Attention.swift`, `Sources/Attention/{AttentionEngine,
+   AttentionPolicy, AttentionPreferences, SpeechAssessment, AttentionTypes}.swift`,
+   `Sources/AttentionReplay/{ScenarioLibrary, AttentionReplayer}.swift`,
+   `apps/ios/HearingSense/Attention/AttentionController.swift`, `Views/AttentionViews.swift`.
+   Also `docs/BACKGROUND_RECOGNITION_DECISION.md` and `docs/testing/BACKGROUND_DEVICE_TESTS.md`.
+9b. Code (W3): `Sources/HearingSenseDomain/SpeechSemantics.swift`, `Sources/SpeechIntelligence/
    {SpeechIntelligenceEngine, SpeechActivityTracker, SpeechRelevanceGate, SpeechIntelligenceTypes}.swift`,
    `Sources/SpeechPipeline/{PreRollAudioBuffer, AppleSpeechTranscriber}.swift`, `Sources/SemanticSummary/
    {SpeechSemanticAnalyzer, SummaryValidator, FoundationModelInterpreter}.swift`,
@@ -429,12 +537,15 @@ Share** exports the route snapshot and event log as text.
 
 ## 12. Recommended next steps
 
-1. Student decides whether to merge `feature/window2-sound-analysis` and
-   `feature/window3-speech-intelligence` into `main` (not done automatically; nothing is pushed).
+0. (After Window 4) With the student's microphone authorization: repeat A1 → A2 and run A3 with the
+   default build; one live session with real sounds and the Attention decisions screen open; then
+   adjust `AttentionConfiguration.standard` if needed. Start Window 5 only when the student asks,
+   on a new branch from `feature/window4-attention-priority`.
+1. Student decides whether to merge the feature branches into `main` (linear history:
+   window 2 → window 3 → research → window 4; not done automatically; nothing is pushed).
 2. When the student authorizes device testing: Window 3 tests P0–P9 and the open Window 2 tests,
    one step per message, screenshots only with the app in the foreground, the student decides what
    is spoken.
 3. Re-tune `SpeechIntelligenceConfiguration` and `DetectionPolicy.standard` from device results and
    re-run `hs-speech-eval` / `hs-sound-eval` to check nothing regressed.
-4. Start Window 4 in a new session only when the student asks, on a new branch from the Window 3
-   branch (or from `main` after merging).
+4. (Done.) Window 4 was started on 2026-10-10 at the student's request.

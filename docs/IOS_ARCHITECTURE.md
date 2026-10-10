@@ -1,6 +1,6 @@
 # Hearing Sense iOS 2.0 — Architecture
 
-Status: Window 3 (2026-10-09; Windows 1 and 2 earlier the same day). Sections marked **Implemented** exist in code; **Planned** sections
+Status: Window 4 (2026-10-10; Windows 1–3 on 2026-10-09, background research window on 2026-10-10). Sections marked **Implemented** exist in code; **Planned** sections
 are contracts for later windows and may be refined by them (record changes here).
 
 Goal: on-device environmental awareness for people wearing noise-cancelling headphones. The iPhone
@@ -18,7 +18,8 @@ Music Recognition/
 │   └── ios/                         NEW  iOS app (Xcode project)
 │       ├── HearingSense.xcodeproj       file-system-synchronized groups (Xcode 16+ format)
 │       ├── HearingSense/                app target sources: App, Listening/, Views/, Assets
-│       └── Config/HearingSense-Info.plist   only UIBackgroundModes; other keys are build settings
+│       └── Config/HearingSense-Info.plist   UIBackgroundModes audio + processing (W4, from experiment A2);
+│                                            other keys are build settings; Config/Experiments/ holds test variants
 ├── packages/
 │   └── HearingSenseKit/             NEW  local Swift package (iOS 26 + macOS 15)
 │       ├── Sources/HearingSenseAudio/   Window 1 module (+ ProcessResourceUsage, W2)
@@ -29,12 +30,16 @@ Music Recognition/
 │       ├── Sources/SemanticSummary/     Window 3: Foundation Models interpretation, validation, fallback
 │       ├── Sources/SpeechIntelligence/  Window 3: coordinator, speech activity, relevance gate
 │       ├── Sources/SpeechEvaluationTool/ Window 3: hs-speech-eval (macOS, forward-only)
+│       ├── Sources/Attention/           Window 4: attention priority engine (Domain only)
+│       ├── Sources/AttentionReplay/     Window 4: synthetic events, scripted scenes, replay harness
+│       ├── Sources/AttentionReplayTool/ Window 4: hs-attention-eval (macOS)
 │       └── Tests/{HearingSenseAudioTests, SoundEventDetectionTests, SpeechPipelineTests,
-│                  SemanticSummaryTests, SpeechIntelligenceTests}/
+│                  SemanticSummaryTests, SpeechIntelligenceTests, AttentionTests}/
 ├── docs/                            existing docs kept; new iOS docs added
 │   ├── device-tests/2026-10-09/         device screenshots (evidence, W1)
 │   ├── device-tests/window2-simulator/  Simulator screenshots (W2)
 │   ├── device-tests/window3-simulator/  Simulator screenshots (W3)
+│   ├── device-tests/window4-simulator/  Simulator screenshots (W4, synthetic events)
 │   ├── testing/                         device test protocols (W2), W3 test results
 │   └── research/                        label inventories, category mapping, speech architecture (W3)
 ├── app/                             LEGACY macOS Swift scaffold (does not build; untouched)
@@ -77,13 +82,14 @@ Optional, reversible later moves (not executed; only after Git exists and with a
 | `SemanticSummary` | 3 | `FoundationModelInterpreter` (`SystemLanguageModel`, guided generation), `SpeechSemanticAnalyzer` (unclear check → model → validation → retry → fallback), `SummaryValidator`, `RuleBasedInterpreter` | FoundationModels, Domain | **Implemented** |
 | `SpeechIntelligence` | 3 | `SpeechIntelligenceEngine` (event-driven coordinator on a serial command queue), `SpeechActivityTracker` (speech candidates, music context), `SpeechRelevanceGate` (speech vs. lyrics), conversation model, diagnostics | SpeechPipeline, SemanticSummary, SoundEventDetection, Audio, Domain | **Implemented** |
 | `hs-speech-eval` (executable, macOS) | 3 | Forward-only evaluation: WER, summaries, activation, relevance gate, real-time end-to-end replay | all of the above | **Implemented** |
-| `AttentionEngine` | 4 | Deterministic scoring, cooldowns, confirmation windows, user preferences | Domain only | Planned |
-| App target `HearingSense` | 1→5 | Orchestration (`ListeningController`), SwiftUI screens, settings; W3: `SpeechIntelligenceController`, speech card and diagnostics | all modules | Implemented (foundation, W2 recognition, W3 speech) |
+| `Attention` | 4 | `AttentionEngine` (value-type state machine: priority assessment with reason codes, temporal fusion, rejoin and deduplication, cooldowns, presentation budget, escalation, expiration), three modes, `AttentionPreferences`, `AttentionConfiguration` (policy as data), speech rules. Output types `AttentionEvent` / `AttentionPresentationIntent` live in Domain | Domain only | **Implemented** |
+| `AttentionReplay`, `hs-attention-eval` (executable, macOS) | 4 | Synthetic event builders, 18 scripted scenes with labels, replay harness, baseline and metrics, playback into a running engine | Attention, Domain, SoundEventDetection (kind names) | **Implemented** |
+| App target `HearingSense` | 1→5 | Orchestration (`ListeningController`), SwiftUI screens, settings; W3: `SpeechIntelligenceController`, speech card and diagnostics; W4: `AttentionController`, attention card, settings, decisions screen with synthetic injection | all modules | Implemented (foundation, W2 recognition, W3 speech, W4 attention) |
 | Widget extension target (Live Activity) | 5 | ActivityKit `ActivityAttributes`, Lock Screen + Dynamic Island views | ActivityKit, WidgetKit, Domain | Planned |
 
 Rules: modules communicate through `HearingSenseDomain` types and small protocols; only the app
-target knows about all of them. `AttentionEngine` must not import Apple ML frameworks, so it stays
-fast to unit-test on the Mac.
+target knows about all of them. `Attention` imports no Apple ML, UI or ActivityKit framework, so it
+stays fast to unit-test on the Mac.
 
 ## 3. Implemented: `HearingSenseAudio`
 
@@ -195,6 +201,28 @@ SpeechIntelligenceController (main actor) → SwiftUI card + diagnostics
 - The iOS Simulator has no `SpeechTranscriber` (level 1 only there); transcription is verified on
   the Mac with `swift test` / `hs-speech-eval`; the iPhone is pending.
 
+## 3d. Implemented: Window 4 attention priority engine
+
+Full description: `docs/research/ATTENTION_ENGINE_ARCHITECTURE.md`. In short:
+
+```
+RecognitionController ─ AcousticEventUpdate ──┐
+SpeechIntelligenceController ─ SpeechSemanticResult ─┴─▶ AttentionController (main actor, owned by
+                                                          ListeningController; one deadline timer)
+   AttentionEngine.process(input): advance time → attach to an episode (existing / rejoined / fused /
+   new) → assess priority with reason codes → SHOW · UPDATE · SUPPRESS · DEFER · RESOLVE · EXPIRE
+     → AttentionDecision (+ AttentionPresentationIntent when something shown changes) → onIntent (W5)
+```
+
+- Deterministic: every input carries its time, ids are assigned in order, no clock is read; a
+  recorded sequence replays to the same decisions (`hs-attention-eval determinism`).
+- No audio consumer, no classifier, no transcriber and no language-model call of its own.
+- Three modes (Quiet, Balanced, Sensitive), per-category settings and speech attention, stored as
+  JSON in `UserDefaults`.
+- Titles are generic and lock-screen safe; speech-derived text is carried separately and is never
+  encoded, logged or exported.
+- All state bounded (48 episodes, 8 sources per episode); stale sources are ended after 20 s.
+
 ## 4. Contracts for later windows
 
 ```swift
@@ -241,11 +269,25 @@ public struct SpeechSemanticResult: Identifiable, Hashable, Sendable, Codable {
 // Producer: SpeechIntelligenceEngine.outputs (single consumer: the app's SpeechIntelligenceController,
 // which keeps the latest revision of each event in `events`). Window 4 should read from the app layer.
 
-// Window 4 (planned; consumes ConfirmedAcousticEvent instead of the old AcousticEvent sketch).
-public protocol AttentionPolicy: Sendable {
-    func evaluate(_ event: ConfirmedAcousticEvent, context: AttentionContext) -> AttentionDecision
+// Implemented in Window 4 (HearingSenseDomain/Attention.swift, module Attention) — full
+// description: docs/research/ATTENTION_ENGINE_ARCHITECTURE.md.
+public enum AttentionInput { case sessionStarted(at:), sessionEnded(at:), sound(AcousticEventUpdate),
+                             speech(SpeechSemanticResult), preferences(AttentionPreferences, at:),
+                             speechDataCleared(at:), tick(at:) }          // every input carries its time
+public struct AttentionEngine: Sendable {                                // value type, no clock, no I/O
+    public mutating func process(_ input: AttentionInput) -> [AttentionDecision]
+    public var nextDeadline: Date? { get }                                // host sends .tick then
+    public var snapshot: AttentionSnapshot { get }
 }
-public enum AttentionDecision: Sendable { case ignore, log, surfaceInApp, updateLiveActivity, alert(reason: String) }
+public struct AttentionDecision { id, action (SHOW/UPDATE/SUPPRESS/DEFER/RESOLVE/EXPIRE), event: AttentionEvent,
+                                  intent: AttentionPresentationIntent?, reasons: [AttentionReason], decidedAt, trigger }
+public struct AttentionPresentationIntent {                               // the brief's "PresentationIntent"
+    id: AttentionEventID, revision, action (present/update/dismiss), interruption, priority, category,
+    title, subtitle, symbolName,                                          // generic, lock-screen safe
+    timestamp, expiresAt, isUncertain, reasons, hasPrivateDetail,
+    privateDetail: String?                                                // speech-derived, never encoded
+}
+// Producer for Window 5: AttentionController.onIntent (main actor) and AttentionController.presented.
 ```
 
 Consumer guidance (applied in Window 2): `SNAudioStreamAnalyzer.analyze(_:atAudioFramePosition:)`
@@ -358,3 +400,12 @@ there. The test iPhone runs iOS 27.2.
 | D34 | (research window) Third-party models are converted as waveform → scores (STFT and mel inside the Core ML graph, float32) | One feature implementation for the benchmark and the phone; verified to 10⁻⁶ against the references |
 | D35 | (research window) Resampling with `AVAudioConverter`, mastering algorithm, maximum quality | The default algorithm lowered 5–8 kHz and changed YAMNet's top class in 12 % of windows (measured against soxr) |
 | D36 | (research window) Provisional: hybrid — Apple in the foreground, EfficientAT MN10 (2 s window repeated into its 10 s input, CPU only) in the background; YAMNet as fallback | Apple is the most accurate at 1–2 s; MN10 + tile matches it on alert events; **pending device tests** |
+| D37 | (W4) `UIBackgroundModes` = `audio` + `processing` in the app's Info.plist; Apple's classifier stays the only default | Device run A2 (2026-10-10): the built-in classifier produced 342 of ≈ 342 windows in 256.5 s in the background and locked with this mode, and failed without it; CPU-only MN10 labelled 0 of 6 played clips. One run, not replicated: supersedes D36 as the working assumption, not as a conclusion |
+| D38 | (W4) Attention engine is a `Sendable` value type whose inputs carry their own time; it exposes `nextDeadline` instead of owning a timer | Deterministic replay, tests without clocks, event-driven host (one pending timer, no polling) |
+| D39 | (W4) Priority comes from a policy table per sound kind and mode; classifier scores are not read; the ordinal evidence quality only gates (`urgent` needs more than weak evidence, conditional sounds need sustained evidence) | Confidence is not importance |
+| D40 | (W4) Every decision carries reason codes with stable raw values | Explainable decisions; evaluation and debugging read the same codes |
+| D41 | (W4) Fusion is a rule on onset order and proximity for listed pairs; the first event is never delayed, later events attach; wording says "afterwards" | Related events become one episode without claiming causation |
+| D42 | (W4) Warning signals, `urgent` episodes and possible spoken warnings ignore cooldowns and the presentation budget | A global limit must not hide an independent urgent event |
+| D43 | (W4) Summary revisions are compared by content words, polarity and numbers; a polarity or number change is shown at once, a rewording is not, anything unmatched counts as a change | "Has not arrived" and "has now arrived" must never be merged; no language-model call for the comparison |
+| D44 | (W4) The intent type separates generic title/subtitle from speech-derived `privateDetail`, which is excluded from `Codable` | Lock-screen text can never contain what people said by accident |
+| D45 | (W4) Contract type named `AttentionPresentationIntent` | Foundation already defines `PresentationIntent` |

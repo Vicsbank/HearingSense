@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Experiment only (docs/testing/BACKGROUND_DEVICE_TESTS.md, experiment A1): the configuration
+     the app shipped with through Window 3, `audio` alone. With it Apple's built-in classifier
+     failed in the background on the iPhone. Kept so that the A1 → A2 → A1 comparison can be
+     repeated: `xcodebuild INFOPLIST_FILE=Config/Experiments/HearingSense-Info-audio-only.plist …`.
+     The app's real Info.plist is Config/HearingSense-Info.plist (audio + processing). -->
+<plist version="1.0">
+<dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
+</dict>
+</plist>

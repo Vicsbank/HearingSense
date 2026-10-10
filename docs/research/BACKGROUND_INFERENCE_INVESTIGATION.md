@@ -41,7 +41,7 @@ capabilities, and the first says nothing about the second.
 
 | Item | Value | Source |
 |---|---|---|
-| `UIBackgroundModes` | `audio` only | `apps/ios/Config/HearingSense-Info.plist` |
+| `UIBackgroundModes` | `audio` only (at the time of this investigation; `audio` + `processing` since Window 4) | `apps/ios/Config/HearingSense-Info.plist` |
 | Entitlements file | none | `project.pbxproj` (no `CODE_SIGN_ENTITLEMENTS`) |
 | BackgroundTasks usage | none | no `BGTaskScheduler` call in the app |
 | Audio session | `playAndRecord`, mode `default`, `mixWithOthers` + `allowBluetoothA2DP` + `defaultToSpeaker`, built-in microphone preferred | `AudioSessionPolicy.recommended` |

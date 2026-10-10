@@ -12,6 +12,7 @@ struct ContentView: View {
                     BrandHeader()
                     StatusCard(state: controller.state, format: controller.captureFormat)
                     ListeningButtons()
+                    AttentionCard()
                     RecognitionCard()
                     SpeechIntelligenceCard()
                     RecentEventsCard()
@@ -45,7 +46,7 @@ private struct BrandHeader: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Hearing Sense")
                     .font(.title.bold())
-                Text("Environmental awareness · Sound and speech (debug)")
+                Text("Environmental awareness · Sound, speech and attention (debug)")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

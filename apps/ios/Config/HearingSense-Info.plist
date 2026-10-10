@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Background modes of the shipping app.
+     `audio`: microphone capture continues in the background (Window 1).
+     `processing`: adopted in Window 4 from experiment A2 of the background-recognition research
+     (docs/testing/BACKGROUND_DEVICE_TESTS.md §7). On the iPhone 18 Pro (iOS 27.2) Apple's built-in
+     sound classifier failed in the background with `audio` alone and kept running with this mode
+     added: 342 of ~342 windows in 256.5 s in the background and locked, one run, on USB power.
+     Not replicated yet and no long run: see the open items in that document. The two keys are
+     exactly the configuration that was tested; no BGProcessingTask is registered or scheduled.
+     For an A1 comparison run build with
+     INFOPLIST_FILE=Config/Experiments/HearingSense-Info-audio-only.plist. -->
 <plist version="1.0">
 <dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
+		<string>processing</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>org.hearingsense.HearingSense.experiment.processing</string>
 	</array>
 </dict>
 </plist>

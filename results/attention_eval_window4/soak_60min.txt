@@ -1,0 +1,18 @@
+Generated 60-minute scene (seed 20261010): 166 scripted sources, 1267 inputs
+Sources by label: ambient 29, duplicate 8, important 18, irrelevant 61, optional 50
+scenario                          mode      alerts  base  important  dup.suppr  unnec  b.unnec  SHOW/UPD/SUP/DEF/RES/EXP  p50 µs  p95 µs
+soak-60min-seed20261010           quiet     22      180   18/18      8/8        0      98       22/8/1051/0/30/22         9.0     20.7
+soak-60min-seed20261010           balanced  51      180   18/18      8/8        0      98       51/19/1010/20/60/51       9.0     18.2
+soak-60min-seed20261010           sensitive 86      180   18/18      8/8        23     98       86/19/976/0/72/86         9.4     16.8
+
+  quiet      important 100.0 %; duplicates suppressed 100.0 %; unnecessary alerts/h 0.0 (baseline 93.8); alerts/h 22.0 (baseline 180.0); max episodes 7, max deferred 0, left at the end 0; engine delay p50/p95 0.00/0.00 s
+             alerts by label: important 18, optional 4
+  balanced   important 100.0 %; duplicates suppressed 100.0 %; unnecessary alerts/h 0.0 (baseline 93.8); alerts/h 51.0 (baseline 180.0); max episodes 7, max deferred 1, left at the end 0; engine delay p50/p95 0.00/2.50 s
+             alerts by label: important 18, optional 33
+  sensitive  important 100.0 %; duplicates suppressed 100.0 %; unnecessary alerts/h 22.0 (baseline 93.8); alerts/h 86.0 (baseline 180.0); max episodes 7, max deferred 0, left at the end 0; engine delay p50/p95 0.00/0.00 s
+             alerts by label: ambient 23, important 18, optional 45
+
+Decision time per input (wall clock, this Mac, 3982 inputs): median 9.1 µs, p95 18.8 µs, max 92.3 µs
+Process memory: 4.2 MB before, 6.9 MB after the three runs
+
+Wrote ../../results/attention_eval_window4/soak_60min_summary.json
