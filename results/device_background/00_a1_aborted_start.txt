@@ -1,0 +1,84 @@
+Hearing Sense debug diagnostics (metadata only: no audio, no transcripts, no summaries)
+Device: iPhone19,2, iOS 27.2
+Launched 17:35:10.575, written 17:35:25.902
+
+== Heartbeats (every 5 s) ==
+17:35:10.821 app=inactive unlocked=true state=listening windows=0 segments=0 classifierFailures=0 speechWindows=0 activations=0 utterances=0/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0 model=- inferenceMs=0.00 dropped=0 backlogMax=0 cpu=71.7% mem=34MB thermal=nominal battery=100%(charging) probePhase=foreground 
+17:35:15.841 app=active unlocked=true state=listening windows=5 segments=1 classifierFailures=0 speechWindows=0 activations=0 utterances=0/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0 model=apple.SoundAnalysis.version1 inferenceMs=0.00 dropped=0 backlogMax=1 cpu=24.9% mem=70MB thermal=nominal battery=100%(charging) probePhase=foreground SoundAnalysis_custom/cpuAndGPU=9/0 SoundAnalysis_custom/cpuOnly=9/0 direct/all=5/0 direct/cpuAndGPU=5/0 direct/cpuAndNeuralEngine=5/0 direct/cpuOnly=5/0
+17:35:20.881 app=active unlocked=true state=listening windows=12 segments=1 classifierFailures=0 speechWindows=0 activations=0 utterances=0/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0 model=apple.SoundAnalysis.version1 inferenceMs=0.00 dropped=0 backlogMax=1 cpu=19.4% mem=68MB thermal=nominal battery=100%(charging) probePhase=foreground SoundAnalysis_custom/cpuAndGPU=19/0 SoundAnalysis_custom/cpuOnly=19/0 direct/all=10/0 direct/cpuAndGPU=10/0 direct/cpuAndNeuralEngine=10/0 direct/cpuOnly=10/0
+17:35:25.901 app=active unlocked=true state=listening windows=19 segments=1 classifierFailures=0 speechWindows=0 activations=0 utterances=0/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0 model=apple.SoundAnalysis.version1 inferenceMs=0.00 dropped=0 backlogMax=1 cpu=17.3% mem=68MB thermal=nominal battery=100%(charging) probePhase=foreground SoundAnalysis_custom/cpuAndGPU=29/0 SoundAnalysis_custom/cpuOnly=29/0 direct/all=15/0 direct/cpuAndGPU=15/0 direct/cpuAndNeuralEngine=15/0 direct/cpuOnly=15/0
+
+== Event log ==
+17:35:10.524 [lifecycle] App launched on iPhone19,2, iOS 27.2. Microphone permission: granted
+17:35:10.607 [session] Session active (playAndRecord, default, mixWithOthers, allowBluetoothA2DP, defaultToSpeaker); preferred input: iPhone Microphone [MicrophoneBuiltIn]
+17:35:10.607 [session] Activation steps: setCategory 0.6 ms, setActive(true) 26.1 ms, setPreferredInput 5.2 ms
+17:35:10.779 [capture] Engine start took 171.5 ms
+17:35:10.779 [capture] Capture running: 48 kHz · 1 ch
+17:35:10.789 [lifecycle] Listening started with policy “iPhone mic + AirPods media”
+17:35:10.831 [recognition] Speech capabilities: transcription Available (on device); language model Available (on device); level 3
+17:35:10.831 [route] Route changed: categoryChange; previous in [] out [Speaker]
+17:35:10.922 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+
+== Reports ==
+Sound recognition
+SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+
+Window 1.5 s, overlap 50%, input 48 kHz
+Audio analyzed: 15.0 s in 150 buffers (1 analyzer segment)
+Dropped buffers: 0; input gaps: 0 frames; max backlog: 1
+Results: 19; stale discarded: 0; failures: 0
+analyze() per buffer: mean 2.4 ms, max 41.2 ms
+analyze() with a result (≈ inference): mean 15.2 ms, p95 17.3 ms, max 17.3 ms
+Result delay after window end: mean 15.3 ms, p95 17.4 ms, max 17.4 ms
+Analysis CPU: 0.33 s (2.2% of audio time, one core)
+Observer callbacks: 0 on analysis queue, 19 elsewhere
+Detector: 19 windows, 0 candidates, 0 rejected, 0 confirmed, 0 ended
+Process: CPU 18.1%, memory 68 MB, thermal nominal
+
+Confirmed events (newest first):
+
+Speech intelligence
+Transcription switch: on · language en-US
+Transcription: Available (on device)
+Language model: Available (on device)
+Best available level: 3 (1 detection, 2 transcript, 3 summary)
+
+Classifier windows: 19; speech windows: 0; suppressed by music: 0
+Activations: 0; utterances started: 0, finished: 0, empty: 0, ended by endpoint: 0, by duration: 0
+Audio transcribed: 0.0 s; pre-roll shortfalls: 0; overrun frames: 0
+Transcription failures: 0; finalization timeouts: 0; recognizer start retries: 0 (recovered 0); classifier stalls: 0
+Final segments: 0; duplicate transcripts dropped: 0
+Speech relevance: 0 over music, 0 possibly music; model calls avoided: 0
+Conversations: 0 started, 0 completed
+Semantic requests: 0 (model attempts 0); summaries: 0; duplicates suppressed: 0; fallbacks: 0; unclear: 0; rejections: 0; stale dropped: 0
+Pre-roll buffer: 5.0 of 5 s, 937 KB, resets 0
+
+Speech events (newest first; text omitted):
+
+Background inference probe (random-weight model: counts executions, not recognition)
+BGTaskScheduler.supportedResources: rawValue 0, gpu false
+compute plan all: cpu ×16
+compute plan cpuAndGPU: cpu ×16
+compute plan cpuAndNeuralEngine: cpu ×16
+compute plan cpuOnly: cpu ×16
+-- foreground: 151 microphone buffers
+   SoundAnalysis custom/cpuAndGPU: ok 29, failed 0, mean 0.00 ms, max 0.00 ms
+   SoundAnalysis custom/cpuOnly: ok 29, failed 0, mean 0.00 ms, max 0.00 ms
+   direct/all: ok 15, failed 0, mean 4.43 ms, max 5.48 ms
+   direct/cpuAndGPU: ok 15, failed 0, mean 5.10 ms, max 6.17 ms
+   direct/cpuAndNeuralEngine: ok 15, failed 0, mean 4.64 ms, max 5.24 ms
+   direct/cpuOnly: ok 15, failed 0, mean 7.52 ms, max 10.41 ms
+-- background: 0 microphone buffers
+   SoundAnalysis custom/cpuAndGPU: no attempts
+   SoundAnalysis custom/cpuOnly: no attempts
+   direct/all: no attempts
+   direct/cpuAndGPU: no attempts
+   direct/cpuAndNeuralEngine: no attempts
+   direct/cpuOnly: no attempts
+-- locked: 0 microphone buffers
+   SoundAnalysis custom/cpuAndGPU: no attempts
+   SoundAnalysis custom/cpuOnly: no attempts
+   direct/all: no attempts
+   direct/cpuAndGPU: no attempts
+   direct/cpuAndNeuralEngine: no attempts
+   direct/cpuOnly: no attempts

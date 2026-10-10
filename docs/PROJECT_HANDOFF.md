@@ -34,6 +34,25 @@ decision: hybrid. Third-party models and ESC-50 are downloaded under `models/thi
 `install_app_models.sh` before building. Tests: `swift test` 191 (190 passed, 1 opt-in skipped).
 Do not start Window 4 before the device tests unless the student says so.
 
+**Research window, second session (2026-10-10): first device runs** — A1, A2 and a short CPU-only
+run, once each, on the iPhone 18 Pro (`docs/testing/BACKGROUND_DEVICE_TESTS.md` §7, raw
+diagnostics in `results/device_background/`; documentation and result files only, no code change,
+not committed at the time of writing). Results: (1) with `UIBackgroundModes = audio` the built-in
+classifier fails in the background and when locked, as in Window 3; (2) **with `audio` +
+`processing` (experiment build, `INFOPLIST_FILE=Config/Experiments/HearingSense-Info-processing.plist`)
+it kept running in both — 342 of ≈ 342 windows in 256 s — and recognized a dog bark, a siren and a
+knock played while the phone was locked**; (3) the CPU-only EfficientAT MN10 keeps running when
+locked (32.8 ms per window) but labelled 0 of 6 played clips correctly; (4) the probe could not
+test the GPU hypothesis, because the iPhone places the probe model on the CPU under every compute
+unit setting. One run per configuration, on USB and charging: **not replicated, no 10-minute run
+(A3), no battery data.** The shipping Info.plist is unchanged (`audio` only) and
+`docs/BACKGROUND_RECOGNITION_DECISION.md` (hybrid with MN10) predates these runs; whether to adopt
+the Background-processing mode instead is the student's decision. Next: §7.7 of the device test
+document (repeat A1 → A2, then A3), each needing the student's microphone authorization. The
+iPhone was driven with iphone-use (approved by the student; rules in the session memory) and
+`devicectl`. The app's "Transcribe nearby speech" switch persists between launches and was found
+on: check that it is off before any run that is meant to be without transcription.
+
 Each Claude Code window starts without memory of earlier windows. Read this file first, then the
 files listed in §11. Update this file at the end of every window.
 
@@ -287,7 +306,7 @@ Details and methods: `docs/testing/WINDOW3_TEST_RESULTS.md`. All measurements ar
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
-| **(W2+W3) Nothing is recognized in the background or with the screen locked** | Measured on the iPhone 18 Pro (iOS 27.2): `SNClassifySoundRequest(.version1)` fails with `com.apple.SoundAnalysis` error 2 from 0.44 s after the app enters the background until it returns; capture continues. No sound events, no speech activation. Blocks the pocket / lock-screen use case and Window 5's purpose. Other developers report the same (Apple forums 811582, 757715, 765376; GPU work not permitted in the background — unverified here) | **The student has to choose** (not decided): (a) a speech trigger that does not need the classifier in the background, e.g. signal level or the Speech framework's voice-activity module, with the recognizer as the check — speech only, no music gate, more recognizer use; (b) a different sound classifier as a Core ML model on CPU / Neural Engine — needs a model (download or training, both need approval) and forum reports say even CPU-only custom models failed for some; (c) accept foreground-only for now and say so; (d) file Feedback with Apple. `SpeechTranscriber` and Foundation Models did run in the background in one trial (model 6.1 s instead of 0.7 s) |
+| **(W2+W3) Nothing is recognized in the background or with the screen locked** | Measured on the iPhone 18 Pro (iOS 27.2): `SNClassifySoundRequest(.version1)` fails with `com.apple.SoundAnalysis` error 2 from 0.44 s after the app enters the background until it returns; capture continues. No sound events, no speech activation. Blocks the pocket / lock-screen use case and Window 5's purpose. Other developers report the same (Apple forums 811582, 757715, 765376; GPU work not permitted in the background — unverified here) | **The student has to choose** (not decided): (a) a speech trigger that does not need the classifier in the background, e.g. signal level or the Speech framework's voice-activity module, with the recognizer as the check — speech only, no music gate, more recognizer use; (b) a different sound classifier as a Core ML model on CPU / Neural Engine — needs a model (download or training, both need approval) and forum reports say even CPU-only custom models failed for some; (c) accept foreground-only for now and say so; (d) file Feedback with Apple. `SpeechTranscriber` and Foundation Models did run in the background in one trial (model 6.1 s instead of 0.7 s). **Update 2026-10-10 (device, one run):** adding the Background-processing mode to `UIBackgroundModes` made the built-in classifier run in the background and when locked; not replicated yet and not adopted — see `docs/testing/BACKGROUND_DEVICE_TESTS.md` §7 |
 | (W3) Device validation is thin | A few sessions, one speaker near the phone, loudspeaker playback, on a charger | Open: P7, P8, P9 in `docs/testing/WINDOW3_TEST_RESULTS.md` §9; other speakers need their consent |
 | (W3) A recognition error reversed the meaning once on the iPhone ("not" → "now") | The validator cannot catch errors made before the summary | Keep the transcript visible with every summary; Window 4 must not treat a headline as fact; show recognition quality |
 | (W3) Relevance-gate labels differ on the device | Speech over a pop song was labelled plain "nearby speech"; a rap clip was not labelled "possibly music" (it ended as "Speech Unclear") | Re-calibrate with recordings made by the phone (needs authorization to record) |
