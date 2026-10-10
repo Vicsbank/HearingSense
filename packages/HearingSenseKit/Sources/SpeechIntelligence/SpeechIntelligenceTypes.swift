@@ -34,6 +34,16 @@ public struct SpeechIntelligenceConfiguration: Hashable, Sendable {
     public var finalizationTimeout: TimeInterval = 3
     /// After this many transcription failures in a row the session falls back to detection only.
     public var maximumConsecutiveFailures = 3
+    /// Times a recognizer start is retried (on the next classifier window, or as soon as an
+    /// earlier recognizer has finished) before it counts as a failure. The system limits how
+    /// many recognizers exist at once; the audio waits in the pre-roll buffer meanwhile.
+    public var maximumRecognizerStartRetries = 6
+    /// Audio seconds without a classifier window after which ongoing speech activity is ended.
+    /// Observed on an iPhone 18 Pro (iOS 27.2): Apple's built-in sound classifier stops
+    /// delivering windows while the app is in the background, although capture continues.
+    /// Without this limit the last "speech is active" state would persist and everything the
+    /// microphone hears would be transcribed until the app returns to the foreground.
+    public var classifierStallTimeout: TimeInterval = 3
     /// Wall-clock interval at which live audio is handed to the recognizer.
     public var feedInterval: TimeInterval = 0.06
     public var summary = SummaryPolicy.standard
@@ -82,6 +92,11 @@ public struct SpeechIntelligenceDiagnostics: Hashable, Sendable {
     public var utterancesEndedByDuration = 0
     public var finalizationTimeouts = 0
     public var transcriptionFailures = 0
+    /// Recognizer starts that failed and were tried again, and those that then succeeded.
+    public var recognizerStartRetries = 0
+    public var recognizerStartsRecovered = 0
+    /// Speech activity ended because the sound classifier stopped delivering windows.
+    public var classifierStalls = 0
     public var lastTranscriptionFailure: String?
     public var audioSecondsTranscribed: TimeInterval = 0
     /// Activations for which the pre-roll buffer no longer held the estimated onset.
@@ -128,7 +143,9 @@ public struct SpeechIntelligenceDiagnostics: Hashable, Sendable {
                 + "empty: \(emptyUtterances), ended by endpoint: \(utterancesEndedByEndpoint), by duration: \(utterancesEndedByDuration)",
             "Audio transcribed: \(audioSecondsTranscribed.formatted(sec)) s; pre-roll shortfalls: \(preRollShortfalls); "
                 + "overrun frames: \(overrunFrames)",
-            "Transcription failures: \(transcriptionFailures); finalization timeouts: \(finalizationTimeouts)",
+            "Transcription failures: \(transcriptionFailures); finalization timeouts: \(finalizationTimeouts); "
+                + "recognizer start retries: \(recognizerStartRetries) (recovered \(recognizerStartsRecovered)); "
+                + "classifier stalls: \(classifierStalls)",
             "Final segments: \(finalSegments); duplicate transcripts dropped: \(duplicateTranscriptsDropped)",
             "Speech relevance: \(utterancesOverMusic) over music, \(utterancesPossiblyMusic) possibly music; "
                 + "model calls avoided: \(modelCallsAvoidedForMusic)",

@@ -15,8 +15,12 @@ import Speech
 /// - One `SpeechAnalyzer` per utterance. Measured on macOS 27.2 (M1 Max): creating and preparing
 ///   an analyzer takes ≈ 0.24 s the first time and ≈ 5 ms afterwards while the model is retained,
 ///   whereas reusing one analyzer across a gap in its timeline, or after a mid-stream
-///   `finalize`, corrupted the next final result. `prepare()` keeps one prepared analyzer alive so
-///   the model stays loaded between utterances.
+///   `finalize`, corrupted the next final result.
+/// - The system limits how many recognizers an app holds at once. Observed on an iPhone 18 Pro
+///   (iOS 27.2): with a prepared standby analyzer, one finishing utterance and one new utterance,
+///   the third failed with "Maximum number of recognizers reached". `prepare()` therefore loads
+///   the model with a short-lived analyzer and relies on `.processLifetime` retention (ended in
+///   `releaseResources()`) instead of keeping a standby analyzer alive.
 public final class AppleSpeechTranscriber: SpeechTranscribing {
     public let locale: Locale
     private let keeper = ModelKeeper()
@@ -104,30 +108,26 @@ public final class AppleSpeechTranscriber: SpeechTranscribing {
                           attributeOptions: [.audioTimeRange, .transcriptionConfidence])
     }
 
-    static let analyzerOptions = SpeechAnalyzer.Options(priority: .userInitiated, modelRetention: .lingering)
+    /// The model stays loaded until `SpeechModels.endRetention()` (see `ModelKeeper.release()`).
+    static let analyzerOptions = SpeechAnalyzer.Options(priority: .userInitiated, modelRetention: .processLifetime)
 }
 
-/// Holds one prepared, idle analyzer so the recognition model stays in memory while listening.
+/// Loads the recognition model once per listening session without occupying a recognizer slot.
 private actor ModelKeeper {
-    private var analyzer: SpeechAnalyzer?
+    private var isWarm = false
 
     func warmUp(locale: Locale) async {
-        guard analyzer == nil else { return }
+        guard !isWarm else { return }
         let module = AppleSpeechTranscriber.makeModule(locale: locale)
         guard let format = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [module]) else { return }
         let analyzer = SpeechAnalyzer(modules: [module], options: AppleSpeechTranscriber.analyzerOptions)
-        do {
-            try await analyzer.prepareToAnalyze(in: format)
-            self.analyzer = analyzer
-        } catch {
-            // Warm-up is an optimization; the first utterance reports real failures.
-        }
+        // Warm-up is an optimization; the first utterance reports real failures.
+        isWarm = (try? await analyzer.prepareToAnalyze(in: format)) != nil
+        await analyzer.cancelAndFinishNow()
     }
 
     func release() async {
-        guard let analyzer else { return }
-        self.analyzer = nil
-        await analyzer.cancelAndFinishNow()
+        isWarm = false
         await SpeechModels.endRetention()
     }
 }

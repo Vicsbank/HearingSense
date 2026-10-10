@@ -13,7 +13,7 @@ Evidence classes are kept apart:
 | **Simulator** | Xcode iPhone 18 Pro Simulator, iOS 27.0, on the same Mac |
 | **Recorded file** | Human speech from LibriSpeech dev-clean with reference transcripts; GTZAN music; DEMAND noise |
 | **Synthetic** | macOS text-to-speech (`tools/make_speech_test_signals.sh`), or scripted test doubles in unit tests. Shows that code paths work; says nothing about accuracy on people |
-| **Physical iPhone** | iPhone 18 Pro, iOS 27.2. **Nothing in this document was measured on it** |
+| **Physical iPhone** | iPhone 18 Pro, iOS 27.2. Only §10 was measured on it (2026-10-09, after the student authorized device tests); §2–§6 are Mac results |
 
 Kinds of checking are kept apart too:
 
@@ -37,17 +37,18 @@ Commands: header of `packages/HearingSenseKit/Sources/SpeechEvaluationTool/main.
 | `SoundEventDetectionTests` (W2) | 37 | Taxonomy, detector, stream clock, engine | deterministic + real classifier |
 | `SpeechPipelineTests` | 27 | `PreRollAudioBuffer` (14), `SpeechAudioTap` (2), `TranscriptAssembler` (7), `AppleSpeechTranscriber` (4, of which 3 need the real recognizer) | deterministic; 3 real model on synthetic speech |
 | `SemanticSummaryTests` | 37 | `UtteranceAnalysis` (4), `SummaryValidator` (14), `RuleBasedInterpreter` (3), `SpeechSemanticAnalyzer` with a scripted model (11), `FoundationModelInterpreter` (5, of which 1 opt-in real-model test) | deterministic; 1 opt-in real model |
-| `SpeechIntelligenceTests` | 39 | `SpeechActivityTracker` (6), `SpeechRelevanceGate` (7), `SpeechIntelligenceEngine` with a scripted recognizer and model (26) | deterministic |
+| `SpeechIntelligenceTests` | 42 | `SpeechActivityTracker` (6), `SpeechRelevanceGate` (7), `SpeechIntelligenceEngine` with a scripted recognizer and model (29; three added after the device tests: recognizer-start retry ×2, classifier stall) | deterministic |
 
-Results of the final code (2026-10-09):
+Results of the final code (2026-10-09, after the fixes from the device tests in §10):
 
 | Run | Environment | Total | Passed | Skipped | Failed |
 |---|---|---|---|---|---|
-| `swift test` | Mac | 161 | 160 | 1 — `realModelSummariesKeepNegations` (opt-in, needs `HS_RUN_MODEL_TESTS=1`) | 0 |
+| `swift test` | Mac | 164 | 163 | 1 — `realModelSummariesKeepNegations` (opt-in, needs `HS_RUN_MODEL_TESTS=1`) | 0 |
 | `HS_RUN_MODEL_TESTS=1 swift test --filter realModel` | Mac, real language model | 1 | 1 | 0 | 0 |
-| `xcodebuild test -scheme HearingSenseKit-Package`, iPhone 18 Pro | Simulator | 166 | 162 | 4 — the opt-in test above and three recognizer tests (`transcribesAnUtteranceOnTheSessionAudioClock`, `aCancelledUtteranceDeliversNothingMore`, `finishingWithoutAudioEndsCleanly`): **`SpeechTranscriber` is not supported in the Simulator** | 0 |
+| `xcodebuild test -scheme HearingSenseKit-Package`, iPhone 18 Pro | Simulator | 169 | 165 | 4 — the opt-in test above and three recognizer tests (`transcribesAnUtteranceOnTheSessionAudioClock`, `aCancelledUtteranceDeliversNothingMore`, `finishingWithoutAudioEndsCleanly`): **`SpeechTranscriber` is not supported in the Simulator** | 0 |
 | App build, Debug | Simulator | — | ✅, 0 Swift warnings | | |
-| App build, Release, unsigned, generic iOS device | Mac (compile only) | — | ✅, 0 Swift warnings | | |
+| App build, Release, unsigned, generic iOS device | Mac (compile only) | — | ✅, 0 Swift warnings; the Debug-only diagnostics exporter is not in the Release binary | | |
+| App build, Debug, signed (Personal Team), installed and run | **Physical iPhone** | — | ✅ (§10) | | |
 
 The Mac suite was run three times in a row with the same result. The three recognizer tests are
 declared with `.enabled(if: AppleSpeechTranscriber.isSupportedOnThisDevice …)`, so the test log
@@ -363,14 +364,16 @@ clips (205 without any music rule, 170 with the first rule).
 
 ## 8. Not done / not measured
 
-- Anything on the physical iPhone (see §9).
-- Live microphone transcription anywhere (files only).
+- On the physical iPhone: only what §10 lists. Not done there: noisy place (P7), 15-minute
+  battery/thermal run (P8), "text disappears after Stop" (P9), other people's voices, far field.
 - Battery, thermal behaviour, memory of the system model processes.
 - Category accuracy (no labels), summary quality by independent human raters.
 - Chinese or any language other than en-US.
 - Conversational, overlapping, distant or accented speech; real rooms.
 
-## 9. Pending physical-device tests (iPhone 18 Pro, iOS 27.2, AirPods Pro, Spotify)
+## 9. Physical-device test plan (iPhone 18 Pro, iOS 27.2, AirPods Pro, Spotify)
+
+Status after 2026-10-09: P0–P6 run (results in §10); **P7, P8 and P9 still open**.
 
 To be run only when the student authorizes them, one step per message. Screenshots only while
 Hearing Sense is in the foreground. The student decides what is spoken; nobody else's conversation
@@ -388,3 +391,167 @@ is transcribed.
 | P7 | Noisy place | Transcript quality, false activations |
 | P8 | 15 min listening with transcription on | Diagnostics → Process (CPU, memory, thermal), battery drop; share the report |
 | P9 | Stop listening | Transcript text disappears from the list (unless "Keep transcripts" is on) |
+
+## 10. Physical iPhone results — iPhone 18 Pro, iOS 27.2, 2026-10-09
+
+Authorized by the student on 2026-10-09. Debug build, Personal Team signing, installed with
+`devicectl`. All speech was either the student's own voice or synthetic sentences / dataset clips
+played through the MacBook's speakers (volume 50 %, phone ≈ 30–50 cm away); nobody else's
+conversation was transcribed. The phone was on a charger, so there is no battery data.
+
+How results were read:
+
+- **Screenshot**: `devicectl device capture screenshot` while the app was in the foreground. Four
+  screenshots without any transcript text are kept in `docs/device-tests/window3-iphone/`;
+  screenshots that show what the student said were not stored in the repository.
+- **Diagnostics file**: a Debug-only exporter (launch argument `--hs-export-diagnostics`) writes
+  counters, timings, app/lock state and the event log (no transcripts, no summaries) every 5 s; it
+  is copied with `devicectl device copy from`. Kept in `results/device_window3/`.
+- **Student-reported**: what the student said they did or heard.
+
+Small numbers of trials throughout: these are observations, not rates.
+
+### 10.1 Availability (P0) — screenshot
+
+| Check | Result |
+|---|---|
+| Foundation Models | "Available (on device)" |
+| `SpeechTranscriber`, en-US | "Ready (on device, en-US)" as soon as the switch was turned on; no download needed |
+| Output level | 3 (transcript and AI summary) |
+| Permission prompts when turning the switch on / starting to listen | none reported by the student (microphone permission had been granted in Window 1) |
+
+`docs/device-tests/window3-iphone/01_models_available_text_on.jpg`
+
+### 10.2 Defect found: "Maximum number of recognizers reached" — screenshot, fixed
+
+Build `36c5433`, first listening session (≈ 3 min, the student talking): the speech card showed
+"Last recognition error: Maximum number of recognizers reached" (`02_session1_pipeline_recognizer_limit.jpg`).
+The design could hold three `SpeechAnalyzer`s at once (a prepared standby analyzer, an utterance
+that is finishing, a new utterance). Two had coexisted before the failure, so the limit on this
+iPhone is inferred to be two; it was not measured directly, and the Mac never hit it.
+
+Fix (this commit):
+
+1. No standby analyzer. `prepare()` loads the model with a short-lived analyzer; analyzers use
+   `modelRetention: .processLifetime`, ended by `SpeechModels.endRetention()` when listening stops.
+2. A failed recognizer start is retried on the next classifier window or when an earlier
+   recognizer finishes (up to 6 times); the audio waits in the pre-roll buffer.
+
+After the fix, a 19-minute session (23 utterances, 22 final segments, including continuous
+speech): transcription failures 0, start retries 0 — removing the standby analyzer was enough; the
+retry path was never needed (`04_session2_pipeline_counters.jpg`). Mac regression of the 20-sentence
+pipeline run: unchanged (WER 10.6 %, first word 18/20, summary median 3.10 s vs 3.14 s; the stored
+result file is the earlier run).
+
+### 10.3 Latency on the iPhone, screen on — screenshot / diagnostics file
+
+Student's own speech, fixed build (`03_session2_pipeline_timings.jpg`, `04_…counters.jpg`):
+
+| Measure | Mean | Max | n |
+|---|---|---|---|
+| Activation → transcription running | 18 ms | 20 ms | 15 |
+| Pre-roll audio used | 2.02 s | 2.30 s | 15 |
+| End of speech → final transcript | 0.81 s | 1.30 s | 22 |
+| Language model (semantic processing) | 0.68 s | 1.00 s | 15 |
+| End of speech → summary | 2.00 s | 4.06 s | 14 |
+
+First session (build `36c5433`, n = 12): final transcript 0.83 s, model 0.69 s, summary 1.71 s
+(mean). Three synthetic sentences from the Mac speakers: summary 1.54–1.72 s after the speech,
+model 0.68–0.72 s (`results/device_window3/01_screen_on_control.txt`). The language model is
+about three times faster in the app on the iPhone than inside the pipeline on the Mac (≈ 2.3 s).
+
+App process (one reading per session, short sessions): CPU 8.5–10 %, memory 52–60 MB, thermal
+state nominal. System model processes are not included.
+
+### 10.4 Behaviour on real speech, screen on — screenshot
+
+| Test | Observation |
+|---|---|
+| P1, a spoken question and statement | Transcribed and summarized (level 3); summary 2.67 s after the speech |
+| P2, "Yes." … "Watch out!" | Both in the transcript; summary "Watch Out", category warning |
+| A single "Oh," | "Speech Unclear" (level 2), no summary |
+| Faithfulness validator on unscripted speech | In one session of 21 requests: 18 summaries, 3 model outputs rejected for words that are not in the transcript, 1 fallback to the transcript, 2 unclear |
+| P3, AirPods Pro (noise cancellation) + Spotify playing, "Your package has not arrived." said twice | Transcript: "Your package has **now** arrived. Your package has not arrived." Summary "Package Not Arrived", 1.41 s. **One of the two repetitions was recognized with the opposite meaning.** The validator cannot catch this: it only compares the summary with the transcript |
+| P3, 20 s of silence while Spotify played on the AirPods | No speech event (one observation) |
+| P3, Spotify playback | No stutter (student-reported) |
+
+### 10.5 Music from a speaker (P4, P5) — screenshot
+
+GTZAN clips from the MacBook speakers, nobody talking unless stated.
+
+| Clip | Sound recognition | Speech intelligence |
+|---|---|---|
+| `pop.00051` (sung), 30 s, first playback | Music event (0.74) | no speech event |
+| `hiphop.00051` (rap), 30 s | Music, plus a 4.5 s Speech event (0.55) | one event: "Speech Unclear", level 2, recognition poor, two short recognized phrases, no summary. One utterance was held as "possibly music" (1 model call avoided); the event itself was labelled "nearby speech" |
+| `pop.00051`, second playback, the student says "Your package has not arrived." after ≈ 8 s | — | "Package Not Arrived", validated, 1.77 s; labelled "nearby speech", **not** "speech over music" |
+| `pop.00001` (sung), 30 s | — | one level-1 "Nearby Speech" event with 0 utterances (the vocals activated speech detection; the recognizer returned nothing) |
+
+On the Mac the same hip-hop clip, replayed as a file, was summarized as a conversation; here it was
+not, because recognition confidence was poor. The relevance labels behaved differently from the
+file-based evaluation: music picked up acoustically by the phone gives other classifier scores
+than a digital mix. Three clips are not a basis for changing thresholds; they need to be
+re-calibrated with device recordings.
+
+### 10.6 Locked screen / background (P6) — diagnostics file — **major limitation**
+
+Same three synthetic sentences, same position and volume:
+
+| | Screen on | Locked |
+|---|---|---|
+| Sentences detected and summarized | 3/3 | **0/3** |
+| Classifier windows | ≈ 7 per 5 s | 0 in 48 s |
+| Classifier failures | 0 | one every ≈ 0.8 s (56 logged) |
+
+(`01_screen_on_control.txt`, `02_locked.txt`.) Earlier, by voice: one locked sentence produced
+nothing; of two more, one was transcribed and summarized (2.53 s) — why that one got through is
+not explained.
+
+Cause: **Apple's built-in sound classifier (`SNClassifySoundRequest(.version1)`) stops working
+when the app is in the background.** 0.44 s after `App entered background` the request fails with
+"Error during analysis" (`com.apple.SoundAnalysis` code 2, `operationFailed`, no underlying
+error), and every new analyzer fails again. Microphone capture continues (coverage 100 %). With the
+app in the background for 87 s (not locked): 1 classifier window instead of ≈ 116. It recovers
+when the app returns to the foreground. Other developers report the same on Apple's forums
+(threads 811582, 757715, 765376), attributing it to GPU work not being permitted in the
+background; the built-in classifier offers no compute-unit setting. That explanation is from forum
+posts, not from Apple documentation, and was not verified here.
+
+Consequences:
+
+- Speech intelligence depends on the classifier for "someone is speaking", so in the background
+  it does not start.
+- All Window 2 sound events (knock, alarm, …) are equally unavailable in the background.
+- This is the situation Window 5 (Dynamic Island, lock screen) is meant for.
+
+What does work in the background (one run, `03_background_before_fix.txt`): `SpeechTranscriber`
+kept transcribing (8 utterances) and the language model produced a validated summary, but took
+6.13 s for one request instead of ≈ 0.7 s.
+
+### 10.7 Second defect found: transcription did not stop when the classifier stopped — fixed
+
+If speech was active at the moment the app went to the background, no classifier window arrived
+to end it, so **everything the microphone heard in the background was transcribed** (102.6 s of
+audio transcribed in the session with the 87 s background interval above). That contradicts
+"transcribe only detected speech".
+
+Fix (this commit): after 3 s of audio without a classifier window the engine ends the speech
+activity and finishes the utterance (`classifierStallTimeout`, deterministic test). The
+classifier is retried with a back-off (1, 2, 4 s) instead of with every buffer, the UI error is
+cleared on recovery, and the failure is logged once per run.
+
+Verified on the iPhone (`04_background_after_fix.txt`): background 37.7 s → 1 classifier stall,
+17.9 s of audio transcribed in the whole session (speech before the stall plus one foreground
+sentence), 9 classifier failures instead of one every 0.8 s, recovery 2.3 s after returning to the
+foreground, next sentence summarized 1.38 s after it ended. A sentence played while the app was in
+the background was not detected — the limitation itself remains.
+
+### 10.8 Still open on the device
+
+- A way to detect speech (and sounds) in the background: design decision pending (options in
+  `docs/PROJECT_HANDOFF.md` §8).
+- P7 noisy place, P8 15 minutes with battery/thermal readings (off the charger), P9 text removed
+  after Stop.
+- Speech of other people, far field, several speakers — needs their consent.
+- Relevance-gate thresholds on device recordings.
+- Whether the recognizer limit is really two (inferred).
+

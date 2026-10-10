@@ -60,7 +60,7 @@ and calls `sessionWillStart()` / `sessionDidEnd()` wherever it does so for sound
 | `AssetInventory.status(forModules:)`, `.assetInstallationRequest(supporting:)`, `AssetInstallationRequest.downloadAndInstall()` | Model assets | An installed model reports `.supported` until `assetInstallationRequest` is called (it returns nil when nothing needs downloading, after which the status is `.installed`). Downloading only happens in `AppleSpeechTranscriber.installModel()`, on a user action |
 | `SpeechAnalyzer(modules:options:)`, `prepareToAnalyze(in:)`, `start(inputSequence:)`, `finalizeAndFinishThroughEndOfInput()`, `cancelAndFinishNow()` | Streaming analysis | See §4 for the behaviours that shaped the design |
 | `SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith:)` | Input format | 16 kHz mono Int16 on macOS 27.2; microphone audio is converted with `AVAudioConverter` |
-| `SpeechAnalyzer.Options(priority:modelRetention: .lingering)`, `SpeechModels.endRetention()` | Model lifetime | One prepared idle analyzer keeps the model loaded while listening |
+| `SpeechAnalyzer.Options(priority:modelRetention: .processLifetime)`, `SpeechModels.endRetention()` | Model lifetime | `prepare()` loads the model with a short-lived analyzer; it stays loaded until `endRetention()` when listening stops. No standby analyzer: on the iPhone 18 Pro a third simultaneous recognizer failed with "Maximum number of recognizers reached" (limit inferred to be two); a failed start is retried from the pre-roll buffer |
 | `AnalyzerInput(buffer:bufferStartTime:)` | Timestamps | Contiguous timeline starting at 0 per analyzer |
 | `SystemLanguageModel.default`, `.availability`, `.supportsLocale(_:)` | Language model availability | Available on macOS 27.2 and in the iOS 27.0 Simulator (which uses the Mac's model). `PrivateCloudComputeLanguageModel` is never referenced |
 | `LanguageModelSession(model:instructions:)`, `prewarm()`, `respond(to:generating:options:)` | Guided generation | One session per request; `GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 100)` |
@@ -299,3 +299,24 @@ Consume `SpeechIntelligenceOutput.result(SpeechSemanticResult)` from the app lay
 - Do not persist `transcript` or show it outside the app without the user's opt-in.
 - The engine has no notion of importance, of who is speaking, or of whether speech is addressed
   to the user.
+
+## Addendum (2026-10-09): findings from the physical iPhone
+
+Details: `docs/testing/WINDOW3_TEST_RESULTS.md` §10.
+
+- **Recognizer limit.** See the model-lifetime row in the API table above (decision D29).
+- **The activation signal disappears in the background.** `SNClassifySoundRequest(.version1)` fails
+  while the app is in the background or the screen is locked; capture, `SpeechTranscriber` and
+  Foundation Models keep working (one trial; the language model was about nine times slower).
+  The pipeline's first stage therefore has no input there. The engine ends speech activity after
+  `classifierStallTimeout` (3 s) without a classifier window, so it stops transcribing instead of
+  transcribing everything (D30).
+- **A background trigger is an open design question.** Candidates: signal-level onset detection or
+  the Speech framework's voice-activity module in front of the recognizer (speech only; no music
+  scores, so the relevance gate would have only transcript confidence to work with), or a custom
+  Core ML sound classifier that is allowed to run in the background (needs a model). Not decided,
+  not implemented.
+- **Relevance gate on acoustic playback.** Thresholds were set on digital mixes; music recorded
+  by the phone from a loudspeaker produced different scores (speech over a pop song was labelled
+  plain nearby speech). Needs device recordings.
+

@@ -526,6 +526,63 @@ import Testing
         #expect(harness.recorder.capabilities.allSatisfy { $0.transcription == .available })
     }
 
+    /// Observed on an iPhone 18 Pro: a recognizer start can fail with "Maximum number of
+    /// recognizers reached" while an earlier recognizer is still finishing.
+    @Test func aFailedRecognizerStartIsRetriedAndTheBufferedSpeechIsNotLost() async throws {
+        var behaviour = ScriptedTranscriber.Behaviour()
+        behaviour.failingBegins = 2
+        let harness = Harness(speech: [SpokenUtterance("your package has not arrived", at: 2.0)], behaviour: behaviour)
+        await harness.start()
+        await harness.run(until: 14)
+        await harness.stop()
+
+        let final = try #require(harness.recorder.latestResults.first)
+        #expect(final.state == .completed && final.transcript?.text == "your package has not arrived.")
+        #expect(final.failure == nil)
+        let diagnostics = try #require(harness.recorder.sessionDiagnostics.first)
+        #expect(diagnostics.recognizerStartRetries == 2 && diagnostics.recognizerStartsRecovered == 1)
+        #expect(diagnostics.transcriptionFailures == 0)
+        #expect(harness.transcriber.count.begins == diagnostics.utterancesStarted + 2)
+    }
+
+    @Test func aStartThatOnlySucceedsAfterTheSpeechEndedStillTranscribesTheBufferedWords() async throws {
+        var behaviour = ScriptedTranscriber.Behaviour()
+        behaviour.failingBegins = 5
+        let harness = Harness(speech: [SpokenUtterance("watch out", at: 2.0)], behaviour: behaviour)
+        await harness.start()
+        await harness.run(until: 14)
+        await harness.stop()
+
+        let final = try #require(harness.recorder.latestResults.first)
+        #expect(harness.recorder.latestResults.count == 1)
+        #expect(final.state == .completed && final.transcript?.text == "watch out.")
+        let diagnostics = try #require(harness.recorder.sessionDiagnostics.first)
+        #expect(diagnostics.recognizerStartRetries == 5 && diagnostics.recognizerStartsRecovered == 1)
+        #expect(diagnostics.transcriptionFailures == 0)
+    }
+
+    /// Observed on an iPhone 18 Pro: in the background the sound classifier delivers no windows
+    /// while capture continues. The engine must not keep transcribing on the stale "speech is
+    /// active" state.
+    @Test func whenTheClassifierStopsDeliveringWindowsSpeechActivityEndsInsteadOfTranscribingForever() async throws {
+        let harness = Harness(speech: [SpokenUtterance("your package has arrived", at: 2.0),
+                                       SpokenUtterance("this is said while the classifier is not running", at: 12.0)])
+        harness.classifierStopsAt = 3.0  // in the middle of the first sentence
+        await harness.start()
+        await harness.run(until: 40)
+
+        await harness.recorder.settle()
+        let final = try #require(harness.recorder.latestResults.first)
+        #expect(harness.recorder.latestResults.count == 1)
+        #expect(final.state == .completed && final.transcript?.text == "your package has arrived.")
+        await harness.stop()
+
+        let diagnostics = try #require(harness.recorder.sessionDiagnostics.first)
+        #expect(diagnostics.classifierStalls == 1)
+        // Only the audio up to the stall (plus the timeout) was given to the recognizer.
+        #expect(diagnostics.audioSecondsTranscribed < 8)
+    }
+
     @Test func repeatedRecognizerFailuresDegradeToDetectionOnlyUntilAvailabilityIsRefreshed() async throws {
         var behaviour = ScriptedTranscriber.Behaviour()
         behaviour.failingBegins = 100
@@ -538,8 +595,9 @@ import Testing
         #expect(events.count == 4)
         #expect(events.prefix(3).allSatisfy { $0.state == .failed && $0.failure?.hasPrefix("Transcription failed") == true })
         #expect(events.allSatisfy { $0.level == .detection && $0.headline == "Nearby Speech" })
-        // After three failures in a row the recognizer is not tried again.
-        #expect(harness.transcriber.count.begins == 3)
+        // After three failures in a row (each start retried six times) the recognizer is not
+        // tried again.
+        #expect(harness.transcriber.count.begins == 3 * 7)
         #expect(events[3].state == .completed)
         guard case .failed = harness.recorder.capabilities.last?.transcription else {
             Issue.record("expected transcription to be marked failed")

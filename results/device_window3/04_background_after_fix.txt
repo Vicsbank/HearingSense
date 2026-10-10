@@ -1,0 +1,101 @@
+Hearing Sense debug diagnostics (metadata only: no audio, no transcripts, no summaries)
+Device: iPhone19,2, iOS 27.2
+Launched 05:27:27.586, written 05:28:38.988
+
+== Heartbeats (every 5 s) ==
+05:27:27.806 app=inactive unlocked=true state=listening windows=0 segments=0 classifierFailures=0 speechWindows=0 activations=0 utterances=0/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:27:32.849 app=active unlocked=true state=listening windows=5 segments=1 classifierFailures=0 speechWindows=0 activations=0 utterances=0/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:27:37.860 app=active unlocked=true state=listening windows=12 segments=1 classifierFailures=0 speechWindows=2 activations=1 utterances=1/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:27:42.876 app=background unlocked=true state=listening windows=19 segments=1 classifierFailures=0 speechWindows=9 activations=1 utterances=1/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:27:48.145 app=background unlocked=true state=listening windows=19 segments=1 classifierFailures=0 speechWindows=9 activations=1 utterances=1/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:27:53.340 app=background unlocked=true state=listening windows=19 segments=1 classifierFailures=0 speechWindows=9 activations=1 utterances=1/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:27:58.366 app=background unlocked=true state=listening windows=19 segments=1 classifierFailures=0 speechWindows=9 activations=1 utterances=1/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:28:03.441 app=background unlocked=true state=listening windows=19 segments=1 classifierFailures=0 speechWindows=9 activations=1 utterances=1/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:28:08.578 app=background unlocked=true state=listening windows=19 segments=1 classifierFailures=0 speechWindows=9 activations=1 utterances=1/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:28:13.598 app=background unlocked=true state=listening windows=19 segments=1 classifierFailures=0 speechWindows=9 activations=1 utterances=1/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:28:18.909 app=background unlocked=true state=listening windows=19 segments=1 classifierFailures=0 speechWindows=9 activations=1 utterances=1/0 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=0 semantic=0 summaries=0
+05:28:23.924 app=active unlocked=true state=listening windows=21 segments=10 classifierFailures=9 speechWindows=9 activations=1 utterances=1/1 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=1 semantic=1 summaries=1
+05:28:28.946 app=active unlocked=true state=listening windows=28 segments=10 classifierFailures=9 speechWindows=11 activations=2 utterances=2/1 empty=0 transcriptionFailures=0 startRetries=0 segmentsFinal=1 semantic=1 summaries=1
+05:28:33.961 app=active unlocked=true state=listening windows=34 segments=10 classifierFailures=9 speechWindows=13 activations=2 utterances=3/3 empty=1 transcriptionFailures=0 startRetries=0 segmentsFinal=2 semantic=2 summaries=2
+05:28:38.987 app=active unlocked=true state=listening windows=41 segments=10 classifierFailures=9 speechWindows=13 activations=2 utterances=3/3 empty=1 transcriptionFailures=0 startRetries=0 segmentsFinal=2 semantic=2 summaries=2
+
+== Event log ==
+05:27:27.536 [lifecycle] App launched on iPhone19,2, iOS 27.2. Microphone permission: granted
+05:27:27.605 [session] Session active (playAndRecord, default, mixWithOthers, allowBluetoothA2DP, defaultToSpeaker); preferred input: iPhone Microphone [MicrophoneBuiltIn]
+05:27:27.605 [session] Activation steps: setCategory 0.7 ms, setActive(true) 13.1 ms, setPreferredInput 4.8 ms
+05:27:27.761 [capture] Engine start took 155.7 ms
+05:27:27.761 [capture] Capture running: 48 kHz · 1 ch
+05:27:27.764 [lifecycle] Listening started with policy “iPhone mic + AirPods media”
+05:27:27.815 [recognition] Speech capabilities: transcription Available (on device); language model Available (on device); level 3
+05:27:27.815 [route] Route changed: categoryChange; previous in [] out [Speaker]
+05:27:27.883 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:27:36.789 [recognition] Speech event started (level 1 possible: 3)
+05:27:38.266 [recognition] Event confirmed: Speech [speech] peak 0.63, 2 windows, latency 2.25 s audio
+05:27:42.567 [lifecycle] App entered background while listening
+05:27:43.561 [error] Sound analysis: Not available in the background (Error during analysis (com.apple.SoundAnalysis 2))
+05:27:44.717 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:27:46.662 [recognition] Speech event summarized: level 3, 1 utterance(s), 17 words in the last, quality fair, category casualConversation, context nearbySpeech, summary 2 words (validated), end of speech → summary 0.92 s
+05:27:46.664 [recognition] Speech event completed: level 3, 1 utterance(s), 17 words in the last, quality fair, category casualConversation, context nearbySpeech, summary 2 words (validated), end of speech → summary 0.92 s
+05:27:47.517 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:27:52.419 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:27:57.237 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:28:02.018 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:28:06.816 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:28:11.631 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:28:16.436 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:28:20.313 [capture] Background interval 37.7 s: captured 37.7 s of audio in 377 buffers (coverage 100%)
+05:28:20.313 [recognition] Background interval 37.7 s: 1 classifier windows (≈ 50 expected), 0 events confirmed
+05:28:21.330 [recognition] Sound analyzer started: SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+05:28:22.656 [recognition] Event ended: Speech, observed 6.8 s
+05:28:22.661 [recognition] Sound analysis recovered after 9 failures
+05:28:27.985 [recognition] Speech event started (level 1 possible: 3)
+05:28:28.660 [recognition] Event confirmed: Speech [speech] peak 0.93, 2 windows, latency 2.25 s audio
+05:28:31.235 [recognition] Speech event summarized: level 3, 1 utterance(s), 6 words in the last, quality good, category request, context nearbySpeech, summary 2 words (validated), end of speech → summary 1.38 s
+05:28:33.167 [recognition] Event ended: Speech, observed 3.8 s
+05:28:38.467 [recognition] Speech event completed: level 3, 1 utterance(s), 6 words in the last, quality good, category request, context nearbySpeech, summary 2 words (validated), end of speech → summary 1.38 s
+
+== Reports ==
+Sound recognition
+SNClassifySoundRequest(.version1), window 1.5 s, overlap 50%, input 48000 Hz → mono channel 0
+
+Window 1.5 s, overlap 50%, input 48 kHz
+Audio analyzed: 39.5 s in 395 buffers (10 analyzer segments)
+Dropped buffers: 0; input gaps: 0 frames; max backlog: 1
+Results: 41; stale discarded: 0; failures: 9
+analyze() per buffer: mean 2.4 ms, max 42.8 ms
+analyze() with a result (≈ inference): mean 16.4 ms, p95 23.7 ms, max 26.2 ms
+Result delay after window end: mean 15.0 ms, p95 17.3 ms, max 17.6 ms
+Analysis CPU: 0.88 s (2.2% of audio time, one core)
+Observer callbacks: 0 on analysis queue, 41 elsewhere
+Last failure: Error during analysis (com.apple.SoundAnalysis 2)
+Detector: 41 windows, 2 candidates, 0 rejected, 2 confirmed, 2 ended
+Process: CPU 9.6%, memory 52 MB, thermal nominal
+
+Confirmed events (newest first):
+05:28:28.659 speech [speech] ended peak 0.93 windows 4 quality strong latency 2.25 s duration 3.8 s labels speech×4
+05:27:38.265 speech [speech] ended peak 0.92 windows 8 quality strong latency 2.25 s duration 6.8 s labels speech×8
+
+Speech intelligence
+Transcription switch: on · language en-US
+Transcription: Available (on device)
+Language model: Available (on device)
+Best available level: 3 (1 detection, 2 transcript, 3 summary)
+
+Classifier windows: 41; speech windows: 13; suppressed by music: 0
+Activations: 2; utterances started: 3, finished: 3, empty: 1, ended by endpoint: 1, by duration: 0
+Audio transcribed: 17.9 s; pre-roll shortfalls: 0; overrun frames: 0
+Transcription failures: 0; finalization timeouts: 0; recognizer start retries: 0 (recovered 0); classifier stalls: 1
+Final segments: 2; duplicate transcripts dropped: 0
+Speech relevance: 0 over music, 0 possibly music; model calls avoided: 0
+Conversations: 2 started, 2 completed
+Semantic requests: 2 (model attempts 2); summaries: 2; duplicates suppressed: 0; fallbacks: 0; unclear: 0; rejections: 0; stale dropped: 0
+Activation → transcription running: mean 18 ms, p95 18 ms, max 18 ms (n = 2)
+Pre-roll audio used per activation: mean 2,275 ms, p95 2,300 ms, max 2,300 ms (n = 2)
+End of speech → final transcript: mean 479 ms, p95 776 ms, max 776 ms (n = 2)
+Semantic processing: mean 675 ms, p95 742 ms, max 742 ms (n = 2)
+End of speech → summary: mean 1,154 ms, p95 1,384 ms, max 1,384 ms (n = 2)
+Pre-roll buffer: 5.0 of 5 s, 937 KB, resets 0
+
+Speech events (newest first; text omitted):
+05:28:26.402 completed level 3 category request utterances 1 quality good summary 2w/validated context nearbySpeech (music 0%, strong speech 75%) sound-events 1 start-delay 0.02 s pre-roll 2.30 s final 0.78 s model 0.61 s summary-after-speech 1.38 s
+05:27:35.254 completed level 3 category casualConversation utterances 1 quality fair summary 2w/validated context nearbySpeech (music 0%, strong speech 22%) sound-events 1 start-delay 0.02 s pre-roll 2.25 s final 0.18 s model 0.74 s summary-after-speech 0.92 s

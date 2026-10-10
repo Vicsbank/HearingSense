@@ -183,6 +183,12 @@ private actor Core {
         var countedDuplicates = 0
     }
 
+    private struct PendingStart {
+        var from: TimeInterval
+        var trigger: Date?
+        var retry: Int
+    }
+
     private struct FinalUtterance {
         var index: Int
         var text: String
@@ -233,6 +239,8 @@ private actor Core {
     private var conversation: Conversation?
     private var utterance: ActiveUtterance?
     private var finishing: [Int: ActiveUtterance] = [:]
+    /// A recognizer start that failed and is tried again; its audio waits in the pre-roll buffer.
+    private var pendingStart: PendingStart?
     private var activeSoundEvents: [AcousticEventID: TimeInterval] = [:]
     private var nextToken = 0
     /// Audio up to this session time has been given to a recognizer and is never given again.
@@ -376,6 +384,7 @@ private actor Core {
         for entry in finishing.values { await entry.session.cancel() }
         utterance = nil
         finishing = [:]
+        pendingStart = nil
     }
 
     private func resetSessionState() {
@@ -404,7 +413,7 @@ private actor Core {
             diagnostics.activations += 1
             ensureConversation(startingAt: onset)
             conversation?.closeAt = nil
-            if canTranscribe, utterance == nil {
+            if canTranscribe, utterance == nil, pendingStart == nil {
                 await startUtterance(from: onset - configuration.activation.leadIn, trigger: frame.producedAt)
             }
             publish()
@@ -414,6 +423,7 @@ private actor Core {
         case nil:
             break
         }
+        await retryPendingStart()
 
         if conversation?.needsSummary == true { scheduleSemantic(now: lastFrameTime, force: false) }
         completeConversationIfDue()
@@ -440,7 +450,7 @@ private actor Core {
 
     /// Starts a recognizer on buffered audio beginning at `requested` (clamped to audio that is
     /// still buffered and has not been transcribed yet), then keeps feeding live audio.
-    private func startUtterance(from requested: TimeInterval, trigger: Date?) async {
+    private func startUtterance(from requested: TimeInterval, trigger: Date?, retry: Int = 0) async {
         let wanted = max(requested, transcribedThrough, 0)
         guard let cursor = buffer.cursor(at: wanted), let start = buffer.time(of: cursor) else { return }
         if start - wanted > 0.05 { diagnostics.preRollShortfalls += 1 }
@@ -455,9 +465,15 @@ private actor Core {
                 post(.transcription(generation: generation, token: token, event))
             }
         } catch {
-            noteTranscriptionFailure(error.localizedDescription)
+            if retry < configuration.maximumRecognizerStartRetries {
+                diagnostics.recognizerStartRetries += 1
+                pendingStart = PendingStart(from: wanted, trigger: trigger, retry: retry + 1)
+            } else {
+                noteTranscriptionFailure(error.localizedDescription)
+            }
             return
         }
+        if retry > 0 { diagnostics.recognizerStartsRecovered += 1 }
         utterance = ActiveUtterance(token: token, session: session, cursor: cursor, startTime: start,
                                     fedThrough: start, lastTextChange: start)
         diagnostics.utterancesStarted += 1
@@ -474,7 +490,22 @@ private actor Core {
             Task { await analyzer.prewarm() }
         }
         await pump()
+        if retry > 0, utterance != nil, !tracker.isActive {
+            // The speech ended while the start was being retried: everything buffered has been
+            // fed, so ask for the final result now.
+            await finishUtterance(continueIfSpeechActive: false)
+        }
         if utterance != nil { startPumpTimer() }
+    }
+
+    /// Tries a failed recognizer start again. Called on every classifier window and whenever an
+    /// earlier recognizer has finished (which frees a recognizer slot).
+    private func retryPendingStart() async {
+        guard let pending = pendingStart else { return }
+        pendingStart = nil
+        guard canTranscribe, utterance == nil else { return }
+        await startUtterance(from: pending.from, trigger: pending.trigger, retry: pending.retry)
+        publish()
     }
 
     /// Feeds everything captured since the last call and decides whether the utterance is over.
@@ -499,7 +530,15 @@ private actor Core {
         }
         utterance = current
 
-        if streamRestarted {
+        if tracker.isActive, current.fedThrough - lastFrameTime >= configuration.classifierStallTimeout {
+            // No classifier window for a while (the classifier is not running, e.g. in the
+            // background on iPhone): nothing confirms that speech is still going on, so stop
+            // transcribing instead of transcribing everything the microphone hears.
+            diagnostics.classifierStalls += 1
+            tracker.reset()
+            conversation?.closeAt = lastFrameTime
+            await finishUtterance(continueIfSpeechActive: false)
+        } else if streamRestarted {
             // Capture restarted (route change): the recognizer's timeline cannot continue.
             await finishUtterance(continueIfSpeechActive: true)
         } else if !current.assembler.isEmpty,
@@ -581,6 +620,7 @@ private actor Core {
                 diagnostics.utterancesFinished += 1
                 if done.assembler.isEmpty { diagnostics.emptyUtterances += 1 }
                 consecutiveFailures = 0
+                await retryPendingStart()
                 publish()
                 completeConversationIfDue()
             case .failed(let message):
@@ -588,6 +628,7 @@ private actor Core {
                 done.assembler.promoteVolatile()
                 commitFinalSegments(of: &done)
                 noteTranscriptionFailure(message)
+                await retryPendingStart()
                 publish()
                 completeConversationIfDue()
             }
@@ -611,6 +652,7 @@ private actor Core {
         await late.session.cancel()
         late.assembler.promoteVolatile()
         commitFinalSegments(of: &late)
+        await retryPendingStart()
         publish()
         completeConversationIfDue()
     }
@@ -835,7 +877,7 @@ private actor Core {
     /// pending for it.
     private func completeConversationIfDue() {
         guard let current = conversation, let closeAt = current.closeAt, lastFrameTime >= closeAt,
-              utterance == nil, finishing.isEmpty, !current.semanticInFlight
+              utterance == nil, finishing.isEmpty, pendingStart == nil, !current.semanticInFlight
         else { return }
         if current.needsSummary {
             scheduleSemantic(now: lastFrameTime, force: true)

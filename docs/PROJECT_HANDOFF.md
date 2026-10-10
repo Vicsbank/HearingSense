@@ -1,11 +1,14 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
 Last updated: 2026-10-09, end of **Window 3** (On-Device Speech Intelligence and Apple Foundation Models).
-Window 3 status: **code complete and verified on the Mac (unit tests, real recognizer and language
-model on files) and on the iPhone 18 Pro Simulator (unit tests, app build, level-1 live check).
-Nothing in Window 3 has run on the physical iPhone**; device tests wait for the student's
-explicit authorization (`docs/testing/WINDOW3_TEST_RESULTS.md` §9). Window 2's device tests
-(`docs/testing/WINDOW2_DEVICE_TESTS.md`) are still open too.
+Window 3 status: **code complete; verified on the Mac (unit tests, real recognizer and language
+model on files), on the iPhone 18 Pro Simulator (unit tests, app build, level-1 live check) and,
+after the student authorized it on 2026-10-09, on the physical iPhone 18 Pro with the screen on
+(live transcript and validated summary ≈ 2 s after the speech).** Two defects found on the device
+were fixed. **Open problem found on the device: with the screen locked or the app in the
+background Apple's built-in sound classifier fails, so neither sounds nor speech are recognized
+there** (§8, first row; `docs/testing/WINDOW3_TEST_RESULTS.md` §10.6). Window 2's device tests
+(`docs/testing/WINDOW2_DEVICE_TESTS.md`) are still open.
 Next window: **Window 4 — Attention Priority Engine** (not started; do not start it without the
 student's instruction).
 
@@ -258,21 +261,27 @@ Details and methods: `docs/testing/WINDOW3_TEST_RESULTS.md`. All measurements ar
 | Speech relevance gate, holdout clips | Recorded files (Mac) | Songs with anything sent to the language model 170/299 → 18/299; spoken words kept 99 % at +10 and +5 dB over music, 84 % at 0 dB; clean speech unchanged |
 | Complete pipeline in real time with music | Recorded files (Mac) | 1 of 20 songs treated as conversation; 12/15 summaries for speech over music at +10 dB, 10/15 at 0 dB |
 | Live microphone, transcription off | Simulator | "Nearby Speech" (level 1) shown; screenshots in `docs/device-tests/window3-simulator/` |
-| Live transcription of real speech | anywhere | **Not run** (needs authorization) |
-| Anything on the physical iPhone | iPhone 18 Pro | **Not run in Window 3** |
+| Live transcription and summary, screen on | **Physical iPhone** | Works: final transcript 0.81 s, language model 0.68 s, summary 2.00 s after the speech (means; n = 22 / 15 / 14); first words of "Yes." / "Watch out!" kept; AirPods Pro + Spotify fine |
+| Locked screen / app in background | **Physical iPhone** | **0 of 3 sentences detected** (3 of 3 with the screen on): the built-in sound classifier fails in the background |
+| Music from a loudspeaker | **Physical iPhone** | 3 clips: sung pop → nothing or one text-less "Nearby Speech"; rap → "Speech Unclear" without a summary; relevance labels differ from the file-based evaluation |
+| Noisy place, 15 min battery/thermal, text removed after Stop | Physical iPhone | **Not run** |
 
 ## 8. Known issues
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
-| (W3) No physical-device validation of speech intelligence | Unknown on the iPhone: availability of the speech model and of Foundation Models, latency, CPU/memory/battery, behaviour with the screen locked (the language model may be rate-limited for background apps) | Run `docs/testing/WINDOW3_TEST_RESULTS.md` §9 when authorized; P0 and P6 first |
+| **(W2+W3) Nothing is recognized in the background or with the screen locked** | Measured on the iPhone 18 Pro (iOS 27.2): `SNClassifySoundRequest(.version1)` fails with `com.apple.SoundAnalysis` error 2 from 0.44 s after the app enters the background until it returns; capture continues. No sound events, no speech activation. Blocks the pocket / lock-screen use case and Window 5's purpose. Other developers report the same (Apple forums 811582, 757715, 765376; GPU work not permitted in the background — unverified here) | **The student has to choose** (not decided): (a) a speech trigger that does not need the classifier in the background, e.g. signal level or the Speech framework's voice-activity module, with the recognizer as the check — speech only, no music gate, more recognizer use; (b) a different sound classifier as a Core ML model on CPU / Neural Engine — needs a model (download or training, both need approval) and forum reports say even CPU-only custom models failed for some; (c) accept foreground-only for now and say so; (d) file Feedback with Apple. `SpeechTranscriber` and Foundation Models did run in the background in one trial (model 6.1 s instead of 0.7 s) |
+| (W3) Device validation is thin | A few sessions, one speaker near the phone, loudspeaker playback, on a charger | Open: P7, P8, P9 in `docs/testing/WINDOW3_TEST_RESULTS.md` §9; other speakers need their consent |
+| (W3) A recognition error reversed the meaning once on the iPhone ("not" → "now") | The validator cannot catch errors made before the summary | Keep the transcript visible with every summary; Window 4 must not treat a headline as fact; show recognition quality |
+| (W3) Relevance-gate labels differ on the device | Speech over a pop song was labelled plain "nearby speech"; a rap clip was not labelled "possibly music" (it ended as "Speech Unclear") | Re-calibrate with recordings made by the phone (needs authorization to record) |
 | (W3) Simulator cannot transcribe | Levels 2–3 cannot be exercised in the Simulator; recognizer tests are skipped there | Use the Mac for recognizer tests; optionally run the app as "My Mac (Designed for iPhone)" (needs the Mac registered in the student's developer account — their decision) |
-| (W3) ≈ 3 s from the end of a sentence to its summary (Mac) | Slower than a glance-and-go alert | ≈ 1 s is the wait for the final transcript, ≈ 2 s the language model; consider showing the transcript-level result first, or a shorter endpoint, after device measurements |
+| (W3) ≈ 2 s from the end of a sentence to its summary on the iPhone (≈ 3 s on the Mac) | Slower than a glance-and-go alert | ≈ 0.8 s is the wait for the final transcript, ≈ 0.7 s the language model; consider showing the transcript-level result first, or a shorter endpoint |
 | (W3) Summaries can be incomplete or ambiguous although validated | 3 of 37 manually reviewed headlines were ambiguous ("Store Won't Open Ten") | Keep the transcript reachable from any summary; Window 4 should not treat a headline as fact |
 | (W3) Speech vs. music is an estimate | ≈ 6 % of songs still produce something for the language model (mostly rap); ≈ 16 % of spoken words at 0 dB over music are held as "possibly music"; TV/podcast speech counts as nearby speech | Window 4: lowest priority for `possiblyMusic`, lower for `speechOverMusic`; re-tune with device recordings |
 | (W3) English only; validator rules are English keyword rules | Other languages get no validated summaries | Add per-language rules or restrict the feature to English; Chinese needs the speech model downloaded |
 | (W3) Categories are often debatable (model overuses "reminder") | Weak signal for prioritization | Prefer rule-based `details` (negation, question, time) and keywords in Window 4 |
-| (W3) `NSSpeechRecognitionUsageDescription` added defensively | Unknown whether iOS prompts for it with `SpeechAnalyzer` | Check in P0 |
+| (W3) `NSSpeechRecognitionUsageDescription` added defensively | The student reported no prompt on the iPhone | Keep the key |
+| (W3) Recognizer limit on the iPhone | "Maximum number of recognizers reached" with three analyzers; limit inferred to be two | Fixed by dropping the standby analyzer and retrying starts; do not add further concurrent analyzers (e.g. a second language) without testing on the device |
 | (W3) Thresholds chosen on read/synthetic speech and GTZAN, on the Mac | May not transfer to a phone on a table or in a pocket | Re-run `hs-speech-eval` after collecting device data (with authorization) |
 | ~0.5 s media stall at Start/Stop listening | Noticeable but acceptable for manual start/stop | W2: redundant calls skipped + keep-session experiment added; **effect not measured** — device Test S (feasibility §3) |
 | No physical-device validation of Window 2 | Thresholds, quiet level, latency, CPU on iPhone unknown | Run `docs/testing/WINDOW2_DEVICE_TESTS.md` (L, A, B, C, D, H, I, S first) |
@@ -291,8 +300,9 @@ Details and methods: `docs/testing/WINDOW3_TEST_RESULTS.md`. All measurements ar
 
 ## 9. Remaining tasks (by window)
 
-See `docs/IOS_DEVELOPMENT_ROADMAP.md`. Carried over from Window 3 (physical iPhone, only when the
-student authorizes it): P0–P9 in `docs/testing/WINDOW3_TEST_RESULTS.md` §9. Carried over from
+See `docs/IOS_DEVELOPMENT_ROADMAP.md`. First: the student's decision on background detection (§8,
+first row). Carried over from Window 3 (physical iPhone): P7–P9 in
+`docs/testing/WINDOW3_TEST_RESULTS.md` §9. Carried over from
 Window 2 (physical iPhone, one step at a time): label inventory (L), quiet room (A, calibrate quiet threshold), speech/knock/music/overlap
 (B, C, D, G), AirPods + Spotify (H), lock screen ≥ 1 min then ≥ 15 min (I), start/stop stall with
 the keep-session toggle off/on (S), playback rain/wind/horn (E, F), interruptions (J, ask first);
@@ -331,6 +341,27 @@ test signals; without the signals they are skipped too.
 
 In the Simulator the app listens through the Mac's microphone; results are Simulator evidence,
 not iPhone evidence.
+
+Device tests from the Mac without touching the phone (Debug builds; the phone must be unlocked for
+`launch`):
+
+```bash
+D=<UDID>   # xcrun devicectl list devices
+xcodebuild -project apps/ios/HearingSense.xcodeproj -scheme HearingSense -configuration Debug \
+  -destination "id=$D" -derivedDataPath <dir> -allowProvisioningUpdates build
+xcrun devicectl device install app --device $D <dir>/Build/Products/Debug-iphoneos/HearingSense.app
+# start listening right after launch and export metadata-only diagnostics every 5 s
+xcrun devicectl device process launch --device $D --terminate-existing org.hearingsense.HearingSense \
+  --hs-autostart --hs-export-diagnostics
+xcrun devicectl device copy from --device $D --domain-type appDataContainer \
+  --domain-identifier org.hearingsense.HearingSense \
+  --source Documents/hearing-sense-diagnostics.txt --destination diag.txt   # works while locked
+xcrun devicectl device process launch --device $D --terminate-existing org.hearingsense.HearingSense  # mic off
+```
+
+The export (`apps/ios/HearingSense/Diagnostics/DebugDiagnosticsExporter.swift`, `#if DEBUG`) holds
+states, counters, timings and the event log — no audio, no transcripts, no summaries. Locking,
+unlocking and tapping still need the student. Ask before playing sounds through the Mac speakers.
 
 On the iPhone: open `apps/ios/HearingSense.xcodeproj` in Xcode, Signing & Capabilities → Team =
 the student's Personal Team, select the iPhone as destination, Run. Device screenshots:

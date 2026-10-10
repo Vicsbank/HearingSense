@@ -42,7 +42,13 @@ Delivered (details: `docs/WINDOW2_SOUND_ANALYSIS_REPORT.md`):
 Carry-over before or at the start of Window 3: run the physical tests L, A, B, C, D, H, I, S (one step
 at a time) and calibrate the quiet threshold and alert rules from the results.
 
-## Window 3 — Speech Recognition and Apple Foundation Models ◐ (2026-10-09, code complete; physical-iPhone tests pending)
+## Window 3 — Speech Recognition and Apple Foundation Models ◐ (2026-10-09, code complete; works on the iPhone with the screen on; background detection is an open problem)
+
+Device result (2026-10-09, `docs/testing/WINDOW3_TEST_RESULTS.md` §10): live transcript and validated
+summary ≈ 2 s after the speech on the iPhone 18 Pro with the screen on. **With the screen locked or
+the app in the background Apple's built-in sound classifier fails, so neither Window 2 events nor
+speech are detected.** A decision on background detection (options in `docs/PROJECT_HANDOFF.md` §8)
+is needed before Window 5 can meet its acceptance criterion.
 
 Delivered (details: `docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md`,
 `docs/research/SPEECH_INTELLIGENCE_ARCHITECTURE.md`, `docs/testing/WINDOW3_TEST_RESULTS.md`):
@@ -105,6 +111,10 @@ Goal: present decisions without overwhelming the user.
 5. App icon/branding refresh (current icon is a placeholder).
 
 Acceptance: real events from W2–W4 appear on Lock Screen / Dynamic Island on the iPhone.
+
+Blocked by the background limitation found in Window 3's device tests: at the moment no events are
+produced while the screen is locked. Resolve that first (or restrict the acceptance criterion to
+the app in the foreground with Spotify's activity in the Island).
 
 ## Window 6 — Integration, Evaluation and Optimization
 

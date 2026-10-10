@@ -300,6 +300,8 @@ final class Harness {
     var vocalScore = 0.0
     /// Speech score of windows that contain scripted speech (default: a clear 0.9).
     var speechScoreWhenSpeaking = 0.9
+    /// From this time on no classifier window is delivered (the classifier is not running).
+    var classifierStopsAt: TimeInterval?
     private(set) var time: TimeInterval = 0
     private var sequence = 0
     private var samplePosition: Int64 = 0
@@ -370,6 +372,7 @@ final class Harness {
     private func frameIfWindowEnds() -> ClassificationFrame? {
         let position = (time - 1.5) / 0.75
         guard time >= 1.5 - 1e-9, abs(position - position.rounded()) < 1e-6 else { return nil }
+        if let classifierStopsAt, time >= classifierStopsAt { return nil }
         let range = AudioTimeRange(start: time - 1.5, duration: 1.5)
         var scores: [SoundLabel: Double] = [:]
         let speechScore = speechScore(in: range.start ... range.end)

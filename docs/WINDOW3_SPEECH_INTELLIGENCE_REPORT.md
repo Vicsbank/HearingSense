@@ -12,8 +12,9 @@ pretrained on-device speech recognizer, sound classifier and language model.
 - *Recorded file* — LibriSpeech dev-clean (human read speech with reference transcripts, CC BY 4.0),
   GTZAN (music), DEMAND (scene noise).
 - *Synthetic speech* — macOS text-to-speech of 20 known sentences (`tools/speech_test_sentences.tsv`).
-- *Physical iPhone* — **nothing in Window 3 has run on the iPhone.** Device tests stay pending until
-  the student authorizes them (protocol: `docs/testing/WINDOW3_TEST_RESULTS.md` §9).
+- *Physical iPhone* — iPhone 18 Pro, iOS 27.2. The student authorized device tests on 2026-10-09
+  after the Mac evaluation; what was run is in §3.7 (details:
+  `docs/testing/WINDOW3_TEST_RESULTS.md` §10). Everything in §3.1–§3.6 is Mac evidence.
 
 Details: architecture in `docs/research/SPEECH_INTELLIGENCE_ARCHITECTURE.md`; every number below
 with its method in `docs/testing/WINDOW3_TEST_RESULTS.md`; raw summaries in
@@ -159,42 +160,92 @@ It also found two that keyword rules cannot catch and that remain: "…the attac
 a way, its main purpose failed" → "Attack Failed", and "I wish he had never been to school" →
 "Never Been To School".
 
+## 3.7 Physical iPhone (iPhone 18 Pro, iOS 27.2, 2026-10-09)
+
+Small numbers of trials; the student's own voice, or synthetic sentences and dataset clips played
+through the MacBook speakers. Full tables: `docs/testing/WINDOW3_TEST_RESULTS.md` §10.
+
+**Works, screen on**
+
+| Item | Result |
+|---|---|
+| Models | `SpeechTranscriber` (en-US) and Foundation Models both available on the device, no download |
+| Live speech → transcript → validated summary | Yes (level 3) |
+| End of speech → final transcript | 0.81 s mean, 1.30 s max (n = 22) |
+| Language model per request | 0.68 s mean, 1.00 s max (n = 15) — about three times faster than inside the pipeline on the Mac |
+| End of speech → summary | 2.00 s mean, 4.06 s max (n = 14) |
+| "Yes." / "Watch out!" | First words kept |
+| AirPods Pro + Spotify | Sentence transcribed and summarized; no stutter (student-reported); 20 s of music on the AirPods alone caused no speech event |
+| Validator on unscripted speech | 3 model outputs of 21 requests rejected for words not in the transcript |
+| App process | CPU 8.5–10 %, 52–60 MB, thermal nominal (short sessions, on a charger) |
+
+**Defects found on the device and fixed**
+
+1. *"Maximum number of recognizers reached."* The iPhone allows fewer simultaneous recognizers
+   than the Mac (inferred: two). Fixed by not keeping a standby analyzer (model retention for the
+   process lifetime instead) and by retrying a failed start from the pre-roll buffer.
+2. *Transcription did not stop when the classifier stopped.* In the background everything the
+   microphone heard was transcribed. Fixed: speech activity ends after 3 s without a classifier
+   window. Verified on the device.
+
+**Limitation found on the device (not fixed)**
+
+Apple's built-in sound classifier fails as soon as the app is in the background
+(`com.apple.SoundAnalysis` error 2; capture continues; recovery in the foreground). Locked screen:
+0 of 3 sentences detected, against 3 of 3 with the screen on. Because speech detection — and every
+Window 2 sound event — depends on that classifier, **the app currently recognizes nothing with the
+screen locked or another app in front.** The recognizer and the language model themselves did run
+in the background in one trial (the model took 6.1 s instead of ≈ 0.7 s).
+
+**Other observations**
+
+- One of two repetitions of "Your package has not arrived." was transcribed as "…has **now**
+  arrived" — the opposite meaning, at the recognition stage, where the validator cannot help.
+- Speech-versus-music labels behaved differently from the file-based evaluation: a rap clip from
+  a loudspeaker ended as "Speech Unclear" (no summary) rather than "Speech Or Music"; speech over
+  a pop song was labelled plain "nearby speech"; sung vocals once produced a text-less "Nearby
+  Speech" event.
+
 ## 4. What is verified where
 
 | Item | Mac | Simulator | Physical iPhone |
 |---|---|---|---|
-| Package tests | ✅ | ✅ (recognizer tests skipped: no `SpeechTranscriber`) | — |
-| App build (Swift 6, 0 Swift warnings) | — | ✅ | not built for device in W3 |
+| Package tests | ✅ | ✅ (recognizer tests skipped: no `SpeechTranscriber`) | — (package tests do not run on a device) |
+| App build (Swift 6, 0 Swift warnings) | — | ✅ | ✅ Debug, signed, installed |
 | Pre-roll buffer, assembler, validator, tracker, gate, engine logic | ✅ unit tests | ✅ unit tests | — |
-| Real transcription | ✅ files (§3.1–3.3) | ❌ unavailable | ❌ not run |
-| Real language model | ✅ (§3.3–3.4) | ✅ availability only | ❌ not run |
-| Live microphone → level 1 ("Nearby Speech", transcription off) | — | ✅ | ❌ |
-| Live microphone → transcript / summary | ❌ not attempted (no transcription of real conversations without authorization) | ❌ impossible | ❌ |
-| AirPods + Spotify, lock screen, background, battery | — | — | ❌ |
+| Real transcription | ✅ files (§3.1–3.3) | ❌ unavailable | ✅ live, screen on (§3.7) |
+| Real language model | ✅ (§3.3–3.4) | ✅ availability only | ✅ live, screen on (§3.7) |
+| Live microphone → level 1 ("Nearby Speech", transcription off) | — | ✅ | not run with the switch off |
+| Live microphone → transcript / summary | ❌ not attempted | ❌ impossible | ✅ the student's own voice and synthetic sentences |
+| AirPods + Spotify | — | — | ✅ one sentence pair (§3.7) |
+| Lock screen / background | — | — | ❌ **does not work** (classifier fails in the background) |
+| Noisy place, 15-minute battery / thermal, other speakers | — | — | ❌ not run |
 
 ## 5. Known limitations
 
-1. **No iPhone validation.** Model availability, latency, CPU, memory, battery and thermal
-   behaviour on the iPhone 18 Pro are unknown. Whether `SpeechTranscriber` and Foundation Models
-   keep running with the screen locked, and whether iOS rate-limits language-model requests of a
-   backgrounded app, is unknown and decisive for the product.
-2. **Live speech was never transcribed**, only files. Distance, room acoustics, overlapping
-   talkers and conversational speech are untested.
+1. **Nothing is recognized with the screen locked or the app in the background** (§3.7): Apple's
+   built-in sound classifier fails there, and speech detection depends on it. This is the most
+   important open problem for the product and for Window 5.
+2. **Limited iPhone validation.** A few sessions with one speaker close to the phone and
+   loudspeaker playback. Not tested: other speakers, distance, overlapping talkers, noisy places,
+   battery and thermal behaviour over time.
 3. **English only** (`en-US`). The validator's rules are English keyword rules. Chinese is
    supported by the recognizer but its model is not installed on this Mac.
 4. **A summary is never better than its transcript**, and passing validation does not make it
    correct: 3 of 37 reviewed headlines of everyday sentences were ambiguous or misleading, and 2 of
    12 headlines of literary sentences changed the meaning. The model's safety guardrail also
    refused one harmless sentence (about frying food), which then stays at transcript level.
-5. **Latency**: ≈ 3 s from the end of a sentence to its summary on the Mac; ≈ 1 s of it is the
-   wait for the final transcript, ≈ 2 s the language model.
+5. **Latency**: ≈ 2 s from the end of a sentence to its summary on the iPhone with the screen on
+   (≈ 3 s on the Mac); ≈ 0.8 s of it is the wait for the final transcript. In the background one
+   language-model request took 6.1 s.
 6. **Speech vs. music** is an estimate (§3.5). Recorded speech without music (TV, podcasts) is
    treated as nearby speech. Nothing identifies the speaker or the addressee.
 7. **Categories** are advisory and often debatable.
 8. **Thresholds are provisional**: activation, endpoint, relevance and quality thresholds were
    chosen from Mac measurements on read speech, synthetic speech and GTZAN.
-9. **Speech-recognition permission**: `NSSpeechRecognitionUsageDescription` was added defensively;
-   whether iOS prompts is unverified.
+9. **Recognition errors can reverse the meaning** ("not" heard as "now" once on the iPhone); the
+   validator only compares summary and transcript. **Speech-recognition permission**: the student
+   reported no prompt on the iPhone.
 10. Model downloads: the speech model is a system asset; if it is missing on the iPhone the app
     offers a download button and stays at level 1 until then.
 11. Window 2's open device tests are still open.
@@ -213,7 +264,7 @@ a way, its main purpose failed" → "Attack Failed", and "I wish he had never be
 
 ## 7. Remaining work
 
-Physical iPhone, when authorized, in this order (one step per message): model availability on the
-device; speech near the phone with transcription on; a short sentence; the same with AirPods Pro +
-Spotify; lock screen; noisy place; CPU / memory / battery over 15 minutes. Then re-tune the
-thresholds from device data.
+Decide how to detect speech (and sounds) in the background — see `docs/PROJECT_HANDOFF.md` §8.
+Physical iPhone, still open: noisy place; CPU / memory / battery over 15 minutes off the charger;
+transcript text removed after Stop; other speakers (with consent). Then re-tune the thresholds
+from device data.

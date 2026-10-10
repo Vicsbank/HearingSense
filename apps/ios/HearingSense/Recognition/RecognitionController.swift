@@ -23,6 +23,7 @@ final class RecognitionController {
     private(set) var detectorStatistics = SoundEventDetector.Statistics()
     private(set) var analyzerDescription: String?
     private(set) var lastFailure: String?
+    @ObservationIgnored private var failuresInARow = 0
     private(set) var isSessionActive = false
     private(set) var resources: ResourceReading?
     private(set) var configuration: ClassifierConfiguration = .standard
@@ -79,6 +80,7 @@ final class RecognitionController {
         candidates = []
         activeEvents = []
         lastFailure = nil
+        failuresInARow = 0
         isSessionActive = true
         resourceBaseline = ProcessResourceUsage.sample()
         resources = nil
@@ -127,6 +129,11 @@ final class RecognitionController {
             forwardEvent(update)
         case .frame(let report):
             guard isSessionActive else { return }
+            if lastFailure != nil {
+                log(.recognition, "Sound analysis recovered after \(failuresInARow) failure\(failuresInARow == 1 ? "" : "s")")
+                lastFailure = nil
+                failuresInARow = 0
+            }
             forwardFrame(report.frame)
             latestFrame = report.frame
             status = report.status
@@ -143,8 +150,11 @@ final class RecognitionController {
             log(.recognition, "Recognition session ended: \(final.results) windows, "
                 + "\(detectorStatistics.eventsConfirmed) events confirmed, \(final.chunksDropped) buffers dropped")
         case .failure(let message):
-            lastFailure = message
-            log(.error, "Sound analysis: \(message)")
+            // Observed on iPhone: Apple's built-in classifier fails for as long as the app is in
+            // the background. Log the first failure of a run, not every retry.
+            failuresInARow += 1
+            lastFailure = backgroundStart == nil ? message : "Not available in the background (\(message))"
+            if failuresInARow == 1 { log(.error, "Sound analysis: \(lastFailure ?? message)") }
         }
     }
 

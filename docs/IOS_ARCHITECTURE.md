@@ -269,6 +269,10 @@ there. The test iPhone runs iOS 27.2.
   current documentation.
 - Starting a Live Activity is expected to require the app in the foreground; plan to start it when
   the user taps Start Listening, then update it from the running background session (verify).
+- **Measured on the iPhone 18 Pro (iOS 27.2, 2026-10-09): the built-in sound classifier does not
+  run while the app is in the background or the screen is locked** (`com.apple.SoundAnalysis`
+  error 2; capture, `SpeechTranscriber` and Foundation Models continue to work). Until background
+  detection is solved there are no events to present on the Lock Screen.
 
 ## 7. Privacy design
 
@@ -328,3 +332,7 @@ there. The test iPhone runs iOS 27.2.
 | D26 | (W3) Two-stage speech relevance gate with an explicit `possiblyMusic` outcome | Vocal music scores as speech; scores cannot separate voices, so uncertainty is reported instead of hidden |
 | D27 | (W3) Engine state behind one serial command queue; background results tagged with the session generation | Deterministic ordering, no actor re-entrancy, stale results dropped |
 | D28 | (W3) Transcription opt-in, memory only, text never logged | Nearby conversations are private |
+| D29 | (W3, from device tests) No standby `SpeechAnalyzer`; model kept with `.processLifetime` retention until listening stops; failed recognizer starts are retried from the pre-roll buffer | The iPhone refused a third simultaneous recognizer ("Maximum number of recognizers reached"); the Mac did not |
+| D30 | (W3, from device tests) Speech activity ends after 3 s of audio without a classifier window | The built-in classifier stops in the background while capture continues; a stale "speech is active" state would transcribe everything |
+| D31 | (W2, from device tests) After a classifier failure a new analyzer is created with a 1–4 s back-off; the failure is logged once per run | In the background every new analyzer fails again ≈ 0.8 s later |
+| D32 | (W3) Debug-only diagnostics export and autostart launch arguments | Device tests can be driven and read from the Mac; metadata only, absent from Release builds |

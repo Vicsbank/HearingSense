@@ -47,6 +47,14 @@ actor SoundAnalysisWorker {
     private var configuration: ClassifierConfiguration
     private var detector: SoundEventDetector
     private var analysis: ActiveAnalysis?
+    /// After a classifier failure: the audio time before which no new analyzer is created, and
+    /// the next delay. Observed on iPhone: the built-in classifier fails for as long as the app
+    /// is in the background, so restarting it with every buffer only wastes work.
+    private var retryNotBefore: TimeInterval?
+    private var retryDelay = SoundAnalysisWorker.initialRetryDelay
+    private var latestChunkEnd: TimeInterval = 0
+    static let initialRetryDelay: TimeInterval = 1
+    static let maximumRetryDelay: TimeInterval = 4
     private var generation = 0
     private var sequence = 0
     private var levelMarks: [LevelMark] = []
@@ -78,8 +86,10 @@ actor SoundAnalysisWorker {
             diagnostics.staleResultsDiscarded += 1
             return
         }
-        if analysis?.segmentID != chunk.placement.segmentID {
-            finishSegment()
+        latestChunkEnd = chunk.endTime
+        if let current = analysis, current.segmentID != chunk.placement.segmentID { finishSegment() }
+        if analysis == nil, chunk.startTime >= retryNotBefore ?? 0 {
+            retryNotBefore = nil
             startSegment(for: chunk.placement)
         }
         diagnostics.chunksDropped = chunk.droppedChunksSoFar
@@ -109,11 +119,18 @@ actor SoundAnalysisWorker {
     /// Capture stopped or is restarting: flush the analyzer's pending window(s).
     func endSegment() {
         finishSegment()
+        resetRetry()
+    }
+
+    private func resetRetry() {
+        retryNotBefore = nil
+        retryDelay = Self.initialRetryDelay
     }
 
     /// The user stopped listening (or iOS interrupted it): end all events, start a new session.
     func endSession(at date: Date, nextGeneration: Int) {
         finishSegment()
+        resetRetry()
         for update in detector.finish(at: date) { continuation.yield(.event(update)) }
         continuation.yield(.sessionEnded(diagnostics))
         generation = nextGeneration
@@ -131,7 +148,9 @@ actor SoundAnalysisWorker {
                 guard resultGeneration == generation else { continue }
                 diagnostics.failures += 1
                 diagnostics.lastFailure = message
-                analysis = nil  // the request is terminal; a new analyzer starts with the next segment
+                analysis = nil  // the request is terminal; a new analyzer starts after `retryDelay`
+                retryNotBefore = latestChunkEnd + retryDelay
+                retryDelay = min(retryDelay * 2, Self.maximumRetryDelay)
                 continuation.yield(.failure(message))
             }
         }
@@ -207,6 +226,7 @@ actor SoundAnalysisWorker {
                                         inputLevel: level(over: audioTime))
         sequence += 1
         diagnostics.results += 1
+        retryDelay = Self.initialRetryDelay
         if let delay = frame.resultDelay { diagnostics.resultDelay.record(delay) }
 
         let output = detector.process(frame)
@@ -344,8 +364,19 @@ final class ResultObserver: NSObject, SNResultsObserving, Sendable {
         if !onQueue { worker.enqueue { $0.drainInbox() } }
     }
 
+    /// Message with the error domain, code and underlying error: SoundAnalysis reports most
+    /// failures only as "Error during analysis".
+    static func describe(_ error: any Error) -> String {
+        let error = error as NSError
+        var text = "\(error.localizedDescription) (\(error.domain) \(error.code))"
+        if let underlying = error.userInfo[NSUnderlyingErrorKey] as? NSError {
+            text += " ← \(underlying.localizedDescription) (\(underlying.domain) \(underlying.code))"
+        }
+        return text
+    }
+
     func request(_ request: SNRequest, didFailWithError error: any Error) {
-        inbox.append(.failure(error.localizedDescription, generation: generation))
+        inbox.append(.failure(Self.describe(error), generation: generation))
         if DispatchQueue.getSpecific(key: queueKey) != true { worker.enqueue { $0.drainInbox() } }
     }
 }
