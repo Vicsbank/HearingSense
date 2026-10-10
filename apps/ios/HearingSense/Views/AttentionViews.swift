@@ -3,8 +3,8 @@ import AttentionReplay
 import HearingSenseDomain
 import SwiftUI
 
-/// What the attention engine currently wants shown, and the mode switch. Temporary in-app
-/// presentation for Window 4; the Live Activity and Dynamic Island are Window 5.
+/// What the attention engine currently wants shown, and the mode switch. The in-app view of
+/// what Window 5 presents outside the app (`LiveActivityCard`, the Live Activity).
 struct AttentionCard: View {
     @Environment(ListeningController.self) private var controller
 

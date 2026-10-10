@@ -15,7 +15,7 @@ import SwiftUI
 /// decision takes microseconds and no audio callback ever reaches this type.
 ///
 /// It presents nothing outside the app: `onIntent` is the hand-over point for Window 5
-/// (Live Activity / Dynamic Island). No notification is sent here.
+/// (`LiveActivityController`: Live Activity / Dynamic Island). No notification is sent here.
 ///
 /// Privacy: preferences are the only thing stored (`UserDefaults`, JSON). The decision log is in
 /// memory, bounded, and holds metadata only — speech-derived text is removed before a decision is
@@ -44,6 +44,9 @@ final class AttentionController {
 
     /// Window 5 attaches here. Called on the main actor for every presentation change.
     @ObservationIgnored var onIntent: ((AttentionPresentationIntent) -> Void)?
+    /// Synthetic sound events of the debug injection, for consumers that normally get sound events
+    /// from the recognition pipeline (Window 5's ambient icons). Never called for real events.
+    @ObservationIgnored var onInjectedSound: ((AcousticEventUpdate) -> Void)?
 
     @ObservationIgnored private var engine: AttentionEngine
     @ObservationIgnored private let defaults: UserDefaults
@@ -224,6 +227,7 @@ final class AttentionController {
             for item in inputs {
                 try? await Task.sleep(until: start + .seconds(item.offset), clock: .continuous)
                 guard !Task.isCancelled, let self else { return }
+                if case .sound(let update) = item.input { self.onInjectedSound?(update) }
                 self.process(item.input)
             }
             guard let self else { return }

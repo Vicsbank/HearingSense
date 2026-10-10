@@ -111,7 +111,23 @@ Report: `docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md`.
 relies on the lock screen: repeat A1 → A2, run A3 (10 minutes locked) with the new default build,
 and one live session with real sounds (each needs the student's authorization).
 
-## Window 5 — Dynamic Island and Native iOS Experience
+## Window 5 — Dynamic Island and Native iOS Experience ◐ (2026-10-10, code complete; Mac and Simulator with synthetic events only)
+
+Branch `feature/window5-dynamic-island` (from the Window 4 branch). Delivered, following the
+student's two briefs of 2026-10-10 (two-channel presentation; never wake a locked screen):
+`IslandPresentation` (SF Symbol catalog for all 303 labels, `AmbientIconStream`, `IslandPipeline`,
+`AlertGate`), `IslandViews` (activity attributes and the shared SwiftUI pieces), the widget
+extension target `HearingSenseWidgets`, `LiveActivityController` with settings, an in-app mirror
+and mic-free demo scenes, `hs-attention-eval island`, 47 tests. Ordinary sounds are an icon;
+attention episodes carry text in the expanded island; the Lock Screen is icon-only; updates are
+silent; automatic expansion is off by default because the lock state can only be estimated.
+Report: `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`; results and device protocol:
+`docs/testing/WINDOW5_TEST_RESULTS.md`.
+
+**Open:** nothing was run on the physical iPhone, so the acceptance criterion below is not met yet
+(device steps D1–D8). Not done from the list below: haptics (left out on purpose), app icon.
+
+Original scope:
 
 Goal: present decisions without overwhelming the user.
 

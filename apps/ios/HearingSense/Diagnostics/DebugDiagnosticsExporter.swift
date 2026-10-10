@@ -106,6 +106,7 @@ final class DebugDiagnosticsExporter {
             "dropped=\(sound.chunksDropped)",
             "backlogMax=\(sound.maxBacklog)",
             controller.attention.heartbeat,
+            controller.liveActivity.heartbeat,
         ].joined(separator: " ") + " " + resourceFields().joined(separator: " ") + " " + extraHeartbeat()
     }
 
@@ -121,7 +122,7 @@ final class DebugDiagnosticsExporter {
         lines += ["", "== Event log =="]
         lines += controller.log.entries.map { "\(Self.time($0.date)) [\($0.kind.rawValue)] \($0.message)" }
         lines += ["", "== Reports ==", controller.recognition.reportText(), "", controller.speech.reportText(), "",
-                  controller.attention.reportText(), "", extraReport()]
+                  controller.attention.reportText(), "", controller.liveActivity.reportText(), "", extraReport()]
         return lines.joined(separator: "\n")
     }
 

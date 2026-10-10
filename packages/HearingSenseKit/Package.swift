@@ -23,6 +23,11 @@
 // - AttentionReplay (Window 4): synthetic event builders, scripted scenarios and the replay
 //   harness that drive the production engine without a microphone.
 // - hs-attention-eval (Window 4, macOS tool): replays the scenarios and reports the metrics.
+// - IslandPresentation (Window 5): what the Live Activity shows — SF Symbol catalog for sounds,
+//   the ambient icon stream, the pipeline that joins it with the attention engine's intents, and
+//   the gate for expansion requests. Depends on HearingSenseDomain only.
+// - IslandViews (Window 5): the activity attributes and the SwiftUI pieces of the Dynamic Island
+//   and Lock Screen presentations, shared by the app and its widget extension.
 //
 // Platform-independent logic is tested on the Mac with `swift test`. iOS-only code
 // (AVAudioSession) is compiled under `#if os(iOS)` and tested with xcodebuild on an
@@ -45,6 +50,8 @@ let package = Package(
         .library(name: "Attention", targets: ["Attention"]),
         .library(name: "AttentionReplay", targets: ["AttentionReplay"]),
         .executable(name: "hs-attention-eval", targets: ["AttentionReplayTool"]),
+        .library(name: "IslandPresentation", targets: ["IslandPresentation"]),
+        .library(name: "IslandViews", targets: ["IslandViews"]),
     ],
     targets: [
         .target(name: "HearingSenseAudio"),
@@ -61,12 +68,19 @@ let package = Package(
                                          "HearingSenseDomain"]),
         .executableTarget(name: "ModelBenchmarkTool", dependencies: ["SoundEventDetection", "HearingSenseDomain"]),
         .target(name: "Attention", dependencies: ["HearingSenseDomain"]),
-        .target(name: "AttentionReplay", dependencies: ["Attention", "HearingSenseDomain", "SoundEventDetection"]),
+        .target(name: "IslandPresentation", dependencies: ["HearingSenseDomain"]),
+        .target(name: "IslandViews", dependencies: ["IslandPresentation", "HearingSenseDomain"]),
+        .target(name: "AttentionReplay",
+                dependencies: ["Attention", "HearingSenseDomain", "SoundEventDetection", "IslandPresentation"]),
         .executableTarget(name: "AttentionReplayTool",
-                          dependencies: ["AttentionReplay", "Attention", "HearingSenseDomain", "HearingSenseAudio"]),
+                          dependencies: ["AttentionReplay", "Attention", "HearingSenseDomain", "HearingSenseAudio",
+                                         "IslandPresentation", "SoundEventDetection"]),
         .testTarget(name: "HearingSenseAudioTests", dependencies: ["HearingSenseAudio"]),
         .testTarget(name: "AttentionTests",
                     dependencies: ["Attention", "AttentionReplay", "HearingSenseDomain", "SoundEventDetection"]),
+        .testTarget(name: "IslandPresentationTests",
+                    dependencies: ["IslandPresentation", "IslandViews", "Attention", "AttentionReplay", "HearingSenseDomain",
+                                   "SoundEventDetection"]),
         .testTarget(name: "SoundEventDetectionTests", dependencies: ["SoundEventDetection", "HearingSenseDomain"]),
         .testTarget(name: "SpeechPipelineTests", dependencies: ["SpeechPipeline", "HearingSenseAudio", "HearingSenseDomain"]),
         .testTarget(name: "SemanticSummaryTests", dependencies: ["SemanticSummary", "HearingSenseDomain"]),

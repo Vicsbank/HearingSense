@@ -1,8 +1,19 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-10, end of **Window 4** (Context-Aware Attention Priority Engine).
+Last updated: 2026-10-10, end of **Window 5** (Dynamic Island and Live Activity).
 
-**Window 4 status: code complete on `feature/window4-attention-priority` (branched from the
+**Window 5 status: code complete on `feature/window5-dynamic-island` (branched from the Window 4
+branch; not committed at the time of writing unless the student asked, not merged, not pushed);
+verified on the Mac (303 package tests: 302 passed, 1 opt-in skipped) and on the iPhone 18 Pro
+Simulator (308 tests: 304 passed, 4 skipped; app + widget extension build Debug and Release; the
+Live Activity checked with synthetic demo scenes, microphone off). No physical-iPhone test of
+Window 5 was run: the roadmap's acceptance criterion (real events on the iPhone's Lock Screen /
+Dynamic Island) is not met yet.** Read `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`, then
+`docs/testing/WINDOW5_TEST_RESULTS.md` (§6 is the device protocol, the next thing to do).
+Next window: **Window 6 — Integration, Evaluation and Optimization** (not started; do not start it
+without the student's instruction).
+
+Window 4 status (2026-10-10, earlier the same day): code complete on `feature/window4-attention-priority` (branched from the
 research branch `experiment/background-acoustic-recognition`); verified on the Mac (256 package
 tests: 255 passed, 1 opt-in skipped) and on the iPhone 18 Pro Simulator (261 tests: 257 passed, 4
 skipped; app builds Debug and Release; attention screens checked with synthetic events, microphone
@@ -10,8 +21,7 @@ off). All evaluation input is scripted and synthetic. No physical-iPhone test of
 run.** The app's Info.plist now declares `audio` + `processing` (the configuration of device run
 A2). Read `docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md`, then
 `docs/research/ATTENTION_ENGINE_ARCHITECTURE.md` and `docs/testing/WINDOW4_TEST_RESULTS.md`.
-Next window: **Window 5 — Dynamic Island and Native iOS Experience** (not started; do not start it
-without the student's instruction).
+(Window 5 has since been done; see the first paragraph.)
 
 Earlier status paragraphs follow unchanged, oldest first.
 
@@ -30,7 +40,7 @@ Git: `main` = reconstructed Window 1 baseline (`7905f0b`, `679494e`); Window 2 o
 branched from the Window 2 branch; the research window on
 `experiment/background-acoustic-recognition` (`0d6236d`, device results `be7e8de`), branched from
 the Window 3 branch; Window 4 on `feature/window4-attention-priority`, branched from the research
-branch. The history is linear: each branch contains the ones before it. Nothing is merged or
+branch; Window 5 on `feature/window5-dynamic-island`, branched from the Window 4 branch. The history is linear: each branch contains the ones before it. Nothing is merged or
 pushed; there is no remote. Merging is the student's decision.
 
 **Research window (2026-10-10), branch `experiment/background-acoustic-recognition`** (from the
@@ -213,6 +223,30 @@ Full report: `docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md`; architecture:
 6. Tests: `AttentionTests` (65 test functions). Results: `results/attention_eval_window4/`.
    Screenshots: `docs/device-tests/window4-simulator/`.
 
+## 4e. Completed in Window 5
+
+Full report: `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`; numbers, methods and the device protocol:
+`docs/testing/WINDOW5_TEST_RESULTS.md`. The student's two briefs (two-channel presentation; never
+wake a locked screen) are summarized in §1 of the report.
+
+1. `IslandPresentation` (Domain only): `SoundSymbolCatalog` (303 labels → SF Symbols; table in
+   `docs/research/sound_symbol_mapping_v1.tsv`), `AmbientIconStream` + `AmbientIconPolicy.standard`,
+   `IslandContent` (the activity's content state), `IslandSettings`, `IslandPipeline` +
+   `IslandPolicy.standard`, `AlertGate`, `DeviceLockEstimate`.
+2. `IslandViews`: `HearingSenseActivityAttributes`, the compact / minimal / expanded / Lock Screen
+   view pieces.
+3. Xcode: new app-extension target `HearingSenseWidgets` (`apps/ios/HearingSenseWidgets/`,
+   `Config/HearingSenseWidgets-Info.plist`, bundle id `org.hearingsense.HearingSense.Widgets`),
+   embedded in the app; `NSSupportsLiveActivities` as a build setting; package products
+   IslandPresentation and IslandViews linked to both targets (ids `4A5E…0040`–`0066`).
+4. App: `Presentation/LiveActivityController` (owned by `ListeningController`), `Views/
+   LiveActivityViews` (card, settings, preview/debug with demo scenes), `Resources/hs-silence.wav`;
+   `ListeningController` forwards sound events, intents, session start / pause / end;
+   `AttentionController.onInjectedSound`; diagnostics export and report extended.
+5. `AttentionReplay/IslandReplayer` and `hs-attention-eval island | island-trace | island-symbols`.
+   Results: `results/island_eval_window5/`. Screenshots: `docs/device-tests/window5-simulator/`.
+6. Tests: `IslandPresentationTests` (47).
+
 ## 5. Repository structure (current)
 
 ```
@@ -222,19 +256,25 @@ apps/ios/                      iOS app (Xcode 27 project, synchronized folders)
   HearingSense/Recognition/    RecognitionController (W2: engine outputs → UI state; W3: forwards to speech)
   HearingSense/Speech/         SpeechIntelligenceController (W3: speech engine outputs → UI state, privacy; W4: forwards results)
   HearingSense/Attention/      AttentionController (W4: attention engine, preferences, deadline timer, injection)
+  HearingSense/Presentation/   LiveActivityController (W5: the one Live Activity, lock estimate, settings, demo scenes)
+  HearingSense/Resources/      hs-silence.wav (W5: silent alert sound)
+  HearingSenseWidgets/         W5 widget extension target: HearingSenseWidgetBundle, HearingSenseLiveActivity
   HearingSense/Experiments/    research window: background probe, experimental classifier switch (Debug)
   HearingSense/Diagnostics/    DebugDiagnosticsExporter (Debug)
   HearingSense/Views/          ContentView, StatusCard, LevelMeterView, RouteDiagnosticsView, DiagnosticLogView,
-                               RecognitionViews (W2), SpeechIntelligenceViews (W3), AttentionViews (W4)
+                               RecognitionViews (W2), SpeechIntelligenceViews (W3), AttentionViews (W4),
+                               LiveActivityViews (W5)
   HearingSense/Assets.xcassets AppIcon (placeholder), AccentColor
   Config/HearingSense-Info.plist  UIBackgroundModes=audio+processing since W4 (other Info keys are build settings)
+  Config/HearingSenseWidgets-Info.plist  NSExtension dictionary of the widget extension (W5)
   Config/Experiments/          Info.plist variants for device experiments (audio-only = A1, processing = A2)
 packages/HearingSenseKit/      Swift package (iOS 26, macOS 26): Sources/{HearingSenseAudio, HearingSenseDomain,
                                SoundEventDetection, SoundEvaluationTool, SpeechPipeline, SemanticSummary,
                                SpeechIntelligence, SpeechEvaluationTool, ModelBenchmarkTool, Attention,
-                               AttentionReplay, AttentionReplayTool}, Tests/{HearingSenseAudioTests,
-                               SoundEventDetectionTests, SpeechPipelineTests, SemanticSummaryTests,
-                               SpeechIntelligenceTests, AttentionTests}
+                               AttentionReplay, AttentionReplayTool, IslandPresentation, IslandViews},
+                               Tests/{HearingSenseAudioTests, SoundEventDetectionTests, SpeechPipelineTests,
+                               SemanticSummaryTests, SpeechIntelligenceTests, AttentionTests,
+                               IslandPresentationTests}
 docs/                          this handoff, architecture, audit, feasibility, roadmap, WINDOW2 and WINDOW3 reports,
                                device-tests/, research/, testing/
 results/sound_eval_window2/    W2 offline evaluation summaries (JSON)
@@ -242,6 +282,7 @@ results/speech_eval_window3/   W3 evaluation summaries (JSON; no music transcrip
 results/background_benchmark/  research window: model benchmark summaries
 results/device_background/     research window: metadata-only diagnostics of the first iPhone runs (A1, A2, MN10)
 results/attention_eval_window4/ W4 replay output (synthetic scenes; JSON summaries and tables)
+results/island_eval_window5/   W5 replay output: Live Activity commands over the W4 scenes (synthetic)
 tools/                         + make_speech_test_signals.sh, speech_test_sentences.tsv (W3)
 src/ ml/ tools/ models/ results/ data/ app/   legacy & research assets (unchanged)
 ```
@@ -294,6 +335,25 @@ Full list: `docs/IOS_ARCHITECTURE.md` §9. Most important:
 - (W4) Contract type is `AttentionPresentationIntent` (Foundation owns the name `PresentationIntent`).
 - (W4) New package products need `project.pbxproj` entries (Attention, AttentionReplay were added
   by hand with ids `4A5E…003A`–`003D`).
+- (W5) One Live Activity with two channels: ordinary sounds as an icon (`AmbientIconStream`, fed by
+  every confirmed event), attention episodes with text (only from `AttentionController.onIntent`).
+  Never create an alert from the icon channel and never show text for it.
+- (W5) `IslandPipeline` is a value type without a clock, like the attention engine; change rules in
+  `IslandPolicy.standard` / `AmbientIconPolicy.standard`, not in the controller.
+- (W5) **Never wake a locked screen**: plain `Activity.update`, no notifications, Lock Screen view
+  icon-only at every priority. An alert configuration is attached only through `AlertGate`;
+  "Expand for important events" is off by default. Do not turn it on by default without device
+  evidence (D4 in the test protocol).
+- (W5) The lock state is an estimate (passcode + protected data + "signal observed on this
+  installation"). The Simulator reports a passcode and available data while locked.
+- (W5) Speech summaries go into the activity content only with `showsSpeechSummaries`; never into
+  the Lock Screen view, alert texts, logs or exports (`IslandContent.redactedSummary`).
+- (W5) The widget extension only places views from `IslandViews`; keep logic out of it. A new
+  symbol name must pass `SoundSymbolCatalogTests.everySymbolNameExistsOnThisSystem`.
+- (W5) `Activity` is not Sendable under Swift 6: hold it on the main actor and bind it to a
+  `nonisolated(unsafe)` local before awaiting its methods (see `LiveActivityController.perform`).
+- (W5) `xcrun simctl io screenshot` often omits the Dynamic Island; capture through the Simulator
+  itself. The app's own activity is not shown in the island while the app is on screen.
 
 ## 7. Verification results (Window 1)
 
@@ -387,10 +447,32 @@ synthetic; none of it is real-world accuracy.
 | Live microphone → attention engine | Simulator / iPhone | **Not run** |
 | Anything on the physical iPhone, including the new default background mode | iPhone 18 Pro | **Not run in Window 4** |
 
+## 7e. Verification results (Window 5)
+
+Details and methods: `docs/testing/WINDOW5_TEST_RESULTS.md`. All input is scripted and synthetic.
+
+| Check | Environment | Result |
+|---|---|---|
+| `swift test` (package) | macOS 27.2, Swift 6.4 | **302 passed, 1 skipped** of 303 (47 new + 256 earlier) |
+| `xcodebuild test -scheme HearingSenseKit-Package` | iOS 27.0 Simulator, iPhone 18 Pro | **304 passed, 4 skipped** of 308 |
+| App + widget extension build, Debug / Release unsigned | Simulator / generic iOS device | **Succeeded**, 0 Swift warnings; extension embedded |
+| Engine + pipeline over 18 scenes × 3 modes and a generated hour | Mac, `hs-attention-eval island` | 0 rule violations in 57 runs; 105 / 123 / 133 updates per hour (scenes), 163 / 226 / 291 (generated hour) |
+| Compact island: ordinary sound = icon, attention = coloured icon + mark | Simulator, demo scenes, microphone off | Works; screenshots in `docs/device-tests/window5-simulator/` |
+| Expanded island with text (knock; speech summary) | Simulator, `--hs-assume-unlocked` | Works |
+| Lock Screen entry icon-only | Simulator | Works |
+| Lock estimate | Simulator | First version said "unlocked" on a locked Simulator and sent an expansion request; final version: `unknown`, silent update |
+| Anything on the physical iPhone | iPhone 18 Pro | **Not run in Window 5** |
+
 ## 8. Known issues
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
+| **(W5) No physical-iPhone validation of the Live Activity** | Unknown: that silent updates leave a locked screen off, Always-On appearance, the island next to Spotify, update throttling, battery cost, the 8-hour end, extension signing with the Personal Team | Device protocol D1–D8 in `docs/testing/WINDOW5_TEST_RESULTS.md` §6 (D1–D4 need no microphone) |
+| (W5) The lock state cannot be detected reliably | With "Expand for important events" on, an event in the first seconds after locking can light up the screen | Off by default; measure the lag in D4; an undocumented Darwin notification (`com.apple.springboard.lockstate`) could serve as an extra veto — the student's decision, not adopted |
+| (W5) Automatic expansion is off by default | The island never expands by itself unless the user turns the setting on; text needs a touch and hold | By the student's rule (no screen wake first); revisit after D4 |
+| (W5) Activity update rate is unmeasured on a device | iOS may throttle; energy cost unknown | D6 / D7; lower `AmbientIconPolicy.maximumChangesPerMinute` or raise `minimumDisplay` if needed |
+| (W5) Attention episodes use category-level icons | "Door or knock" and a doorbell share an icon | Carry the kind or label in `AttentionPresentationIntent` if wanted (a Window 4 contract change) |
+| (W5) Haptics and the app icon refresh were not done | Roadmap items 3 and 5 partly open | Haptics conflict with the no-vibration requirement when locked; decide with the student |
 | **(W4) No real-world validation of the attention engine** | Policy table, cooldowns, thresholds and the phrase list are defaults checked only on hand-written scenes | One live session with real sounds (authorization needed), then adjust `AttentionConfiguration.standard`; full list in `docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md` §7 |
 | (W4) The adopted Background-processing mode rests on one device run | If the classifier stops in the background after all, the attention engine ends its episodes as stale after 20 s and shows nothing new | Repeat A1 → A2 → A1 and run A3 with the default build (`docs/testing/BACKGROUND_DEVICE_TESTS.md` §7.7); App Review implications of the declared mode not checked |
 | (W4) Importance of speech is keyword- and category-based | English phrase list; a recognition error can create or hide a warning | Titles say "Possible Spoken Warning"; keep the transcript reachable; extend rules per language if needed |
@@ -434,8 +516,8 @@ Window 2 (physical iPhone, one step at a time): label inventory (L), quiet room 
 the keep-session toggle off/on (S), playback rain/wind/horn (E, F), interruptions (J, ask first);
 plus Window 1's open items (calls, AirPods disconnect, Apple Music, battery/thermal).
 Window 4 is done (§4d). Open from it: the device checks in
-`docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md` §8. Then Window 5 (presentation), which consumes
-`AttentionPresentationIntent` (contract: `docs/research/ATTENTION_ENGINE_ARCHITECTURE.md` §8).
+`docs/WINDOW4_ATTENTION_PRIORITY_REPORT.md` §8. Window 5 is done in code (§4e). Open from it: the
+device protocol D1–D8 (`docs/testing/WINDOW5_TEST_RESULTS.md` §6). Then Window 6.
 
 ## 10. How to build, test and run
 
@@ -468,6 +550,18 @@ swift run -c release hs-attention-eval scenarios            # 18 scenes × 3 mod
 swift run -c release hs-attention-eval trace 06-knock-then-speech --mode balanced   # decision by decision
 swift run -c release hs-attention-eval soak --hours 1       # generated long scene
 swift run -c release hs-attention-eval determinism
+
+# Window 5: Live Activity presentation (synthetic input; seconds each)
+swift test --filter IslandPresentationTests
+swift run -c release hs-attention-eval island              # engine + pipeline over all scenes: update counts, rule checks
+swift run -c release hs-attention-eval island-trace 06-knock-then-speech
+swift run -c release hs-attention-eval island-symbols      # label → kind → category → SF Symbol (TSV)
+
+# Window 5 in the Simulator without a microphone (Debug build; the island shows the activity only
+# while the app is not on screen, so go to the Home Screen a few seconds after launch)
+xcrun simctl launch --terminate-running-process booted org.hearingsense.HearingSense \
+  --hs-island-demo knock            # idle | ambient | knock | siren | speech
+#   add --hs-assume-unlocked to see the automatic expansion (layout checks only)
 ```
 
 In the app the same scenes can be injected without the microphone: Attention card → "Attention
@@ -524,6 +618,11 @@ Share** exports the route snapshot and event log as text.
    `Sources/AttentionReplay/{ScenarioLibrary, AttentionReplayer}.swift`,
    `apps/ios/HearingSense/Attention/AttentionController.swift`, `Views/AttentionViews.swift`.
    Also `docs/BACKGROUND_RECOGNITION_DECISION.md` and `docs/testing/BACKGROUND_DEVICE_TESTS.md`.
+9a. `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`, `docs/testing/WINDOW5_TEST_RESULTS.md` — Live Activity
+   design, the no-screen-wake rules, results, device protocol. Code (W5): `Sources/IslandPresentation/
+   {IslandPipeline, AmbientIconStream, AlertGate, IslandContent, SoundSymbolCatalog}.swift`,
+   `Sources/IslandViews/IslandViews.swift`, `apps/ios/HearingSenseWidgets/HearingSenseLiveActivity.swift`,
+   `apps/ios/HearingSense/Presentation/LiveActivityController.swift`, `Views/LiveActivityViews.swift`.
 9b. Code (W3): `Sources/HearingSenseDomain/SpeechSemantics.swift`, `Sources/SpeechIntelligence/
    {SpeechIntelligenceEngine, SpeechActivityTracker, SpeechRelevanceGate, SpeechIntelligenceTypes}.swift`,
    `Sources/SpeechPipeline/{PreRollAudioBuffer, AppleSpeechTranscriber}.swift`, `Sources/SemanticSummary/
@@ -537,6 +636,11 @@ Share** exports the route snapshot and event log as text.
 
 ## 12. Recommended next steps
 
+00. (After Window 5) Device protocol D1–D8 of `docs/testing/WINDOW5_TEST_RESULTS.md` §6, one step
+   per message: D1–D4 use the demo scenes and no microphone (still the student's go-ahead to use
+   the iPhone); D5–D8 need microphone authorization and can be combined with A1 → A2 → A3 below.
+   Decide after D4 whether "Expand for important events" can be on by default. Window 6 only when
+   the student asks, on a new branch from `feature/window5-dynamic-island`.
 0. (After Window 4) With the student's microphone authorization: repeat A1 → A2 and run A3 with the
    default build; one live session with real sounds and the Attention decisions screen open; then
    adjust `AttentionConfiguration.standard` if needed. Start Window 5 only when the student asks,

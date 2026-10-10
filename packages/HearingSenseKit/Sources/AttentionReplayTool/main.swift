@@ -6,6 +6,10 @@
 //   hs-attention-eval soak [--hours 1] [--seed N] [--json <file>]
 //   hs-attention-eval determinism                    replays everything twice and compares
 //   hs-attention-eval list
+//   hs-attention-eval island [--hours 1] [--json <file>]   Window 5: what the Live Activity would be
+//                                                    asked to do (scenes and a generated long scene)
+//   hs-attention-eval island-trace <scenario-id> [--mode …]
+//   hs-attention-eval island-symbols                 label → kind → category → SF Symbol (TSV)
 //
 // Every number printed here describes scripted, synthetic input (model id `synthetic.replay`).
 // It shows how the engine's rules behave; it is not a measurement of real-world accuracy.
@@ -15,6 +19,8 @@ import AttentionReplay
 import Foundation
 import HearingSenseAudio
 import HearingSenseDomain
+import IslandPresentation
+import SoundEventDetection
 
 let arguments = Array(CommandLine.arguments.dropFirst())
 let command = arguments.first ?? "scenarios"
@@ -242,7 +248,107 @@ case "determinism":
     print("Replayed every scene twice in every mode: \(compared) decisions compared, \(differences) runs differ")
     exit(differences == 0 ? 0 : 1)
 
+case "island":
+    // Engine and Live Activity pipeline together, as the app wires them. Counts commands the
+    // pipeline produces; what iOS does with them (throttling, expansion) is not modelled.
+    struct IslandRow: Codable {
+        var scenario: String
+        var mode: String
+        var durationSeconds: Double
+        var updates: Int
+        var keepAlives: Int
+        var updatesPerHour: Double
+        var iconChanges: Int
+        var attentionEpisodes: Int
+        var alertRequests: Int
+        var coalesced: Int
+        var secondsAttention: Double
+        var secondsAmbient: Double
+        var secondsListening: Double
+        var violations: [String]
+
+        init(_ run: IslandReplayRun) {
+            scenario = run.scenario.id
+            mode = run.mode.rawValue
+            durationSeconds = run.duration
+            updates = run.statistics.updates
+            keepAlives = run.statistics.keepAlives
+            updatesPerHour = run.updatesPerHour
+            iconChanges = run.ambient.changes
+            attentionEpisodes = run.statistics.attentionEpisodes
+            alertRequests = run.alertRequests
+            coalesced = run.statistics.coalesced
+            secondsAttention = run.secondsAttention
+            secondsAmbient = run.secondsAmbient
+            secondsListening = run.secondsListening
+            violations = run.violations
+        }
+    }
+    func islandLine(_ row: IslandRow) -> String {
+        pad(row.scenario, 30) + pad(row.mode, 11) + pad(number(row.durationSeconds, 0), 8) + pad("\(row.updates)", 8)
+            + pad(number(row.updatesPerHour, 0), 10) + pad("\(row.iconChanges)", 7) + pad("\(row.attentionEpisodes)", 9)
+            + pad("\(row.alertRequests)", 8) + pad(number(row.secondsAttention, 0), 8) + pad(number(row.secondsAmbient, 0), 8)
+            + pad(number(row.secondsListening, 0), 8) + (row.violations.isEmpty ? "ok" : "VIOLATIONS \(row.violations.count)")
+    }
+    let hours = option("--hours").flatMap(Double.init) ?? 1
+    print("Synthetic input. Columns: seconds, activity updates, updates per hour, ambient icon changes, attention")
+    print("episodes shown, expansion requests (before the lock-state gate), seconds in attention / icon / idle.\n")
+    print(pad("scenario", 30) + pad("mode", 11) + pad("s", 8) + pad("updates", 8) + pad("upd/h", 10) + pad("icons", 7)
+        + pad("episodes", 9) + pad("expand", 8) + pad("att s", 8) + pad("icon s", 8) + pad("idle s", 8) + "rules")
+    var rows: [IslandRow] = []
+    for scenario in ScenarioLibrary.all + [ScenarioLibrary.soak(hours: hours)] {
+        for mode in AttentionMode.allCases {
+            let row = IslandRow(IslandReplayer.run(scenario, preferences: preferences(mode)))
+            rows.append(row)
+            print(islandLine(row))
+        }
+    }
+    let broken = rows.filter { !$0.violations.isEmpty }
+    print("\n\(rows.count) runs, \(broken.count) with rule violations")
+    for row in broken { print("  \(row.scenario) \(row.mode): \(row.violations.joined(separator: "; "))") }
+    if let path = option("--json") {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        do {
+            let url = URL(fileURLWithPath: path)
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try encoder.encode(rows).write(to: url)
+            print("Wrote \(path)")
+        } catch {
+            print("Could not write \(path): \(error.localizedDescription)")
+        }
+    }
+    exit(broken.isEmpty ? 0 : 1)
+
+case "island-trace":
+    guard arguments.count > 1, let scenario = ScenarioLibrary.scenario(id: arguments[1]) else {
+        print("Usage: hs-attention-eval island-trace <scenario-id> [--mode quiet|balanced|sensitive]")
+        exit(2)
+    }
+    let mode = option("--mode").flatMap(AttentionMode.init(rawValue:)) ?? .balanced
+    let run = IslandReplayer.run(scenario, preferences: preferences(mode))
+    print("\(scenario.title) — \(mode.rawValue). Speech-derived text is shown as <speech summary>.\n")
+    for item in run.commands {
+        let seconds = pad(number(item.date.timeIntervalSince(scenario.start), 1), 8)
+        let name = switch item.command {
+        case .start: "START "
+        case .update: "UPDATE"
+        case .end: "END   "
+        }
+        print("\(seconds) \(name) \(item.content.redactedSummary)" + (item.alert.map { "  ⇢ expansion requested (“\($0.title)”)" } ?? ""))
+    }
+
+case "island-symbols":
+    // The icon of every classifier label, and which table it came from.
+    let taxonomy = SoundTaxonomy.appleV1
+    print("label\tkind\tcategory\tsf_symbol\tlevel")
+    for label in taxonomy.mappedLabels.sorted() {
+        let kind = taxonomy.definition(for: label).kind
+        let symbol = SoundSymbolCatalog.symbol(label: label, kindID: kind.id, category: kind.category)
+        print("\(label)\t\(kind.id)\t\(kind.category.rawValue)\t\(symbol.name)\t\(symbol.level.rawValue)")
+    }
+
 default:
-    print("Unknown command \(command). Commands: scenarios, trace, soak, determinism, list")
+    print("Unknown command \(command). Commands: scenarios, trace, soak, determinism, list, island, island-trace, island-symbols")
     exit(2)
 }

@@ -12,6 +12,7 @@ struct ContentView: View {
                     BrandHeader()
                     StatusCard(state: controller.state, format: controller.captureFormat)
                     ListeningButtons()
+                    LiveActivityCard()
                     AttentionCard()
                     RecognitionCard()
                     SpeechIntelligenceCard()
@@ -200,7 +201,8 @@ private struct PrivacyNote: View {
         Label {
             Text("Audio is processed on this iPhone, in memory only. Hearing Sense does not record, "
                 + "store or upload audio. Speech is transcribed only while “Transcribe nearby speech” is on; "
-                + "transcripts stay in memory. It is not a safety or emergency alert system.")
+                + "transcripts stay in memory. While listening, a Live Activity shows icons outside the app; "
+                + "it does not wake the screen. It is not a safety or emergency alert system.")
         } icon: {
             Image(systemName: "lock.shield")
         }

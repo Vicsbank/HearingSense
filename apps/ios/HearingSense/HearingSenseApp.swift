@@ -28,6 +28,10 @@ struct HearingSenseApp: App {
                         self.exporter = exporter
                     }
                     if DebugDiagnosticsExporter.isAutostartRequested { await controller.start() }
+                    // Presentation check without a microphone; see LiveActivityController.
+                    if let scene = LiveActivityController.requestedDemo {
+                        controller.liveActivity.runDemo(scene, attention: controller.attention)
+                    }
                 }
                 #endif
         }

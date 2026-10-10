@@ -85,7 +85,9 @@ Optional, reversible later moves (not executed; only after Git exists and with a
 | `Attention` | 4 | `AttentionEngine` (value-type state machine: priority assessment with reason codes, temporal fusion, rejoin and deduplication, cooldowns, presentation budget, escalation, expiration), three modes, `AttentionPreferences`, `AttentionConfiguration` (policy as data), speech rules. Output types `AttentionEvent` / `AttentionPresentationIntent` live in Domain | Domain only | **Implemented** |
 | `AttentionReplay`, `hs-attention-eval` (executable, macOS) | 4 | Synthetic event builders, 18 scripted scenes with labels, replay harness, baseline and metrics, playback into a running engine | Attention, Domain, SoundEventDetection (kind names) | **Implemented** |
 | App target `HearingSense` | 1→5 | Orchestration (`ListeningController`), SwiftUI screens, settings; W3: `SpeechIntelligenceController`, speech card and diagnostics; W4: `AttentionController`, attention card, settings, decisions screen with synthetic injection | all modules | Implemented (foundation, W2 recognition, W3 speech, W4 attention) |
-| Widget extension target (Live Activity) | 5 | ActivityKit `ActivityAttributes`, Lock Screen + Dynamic Island views | ActivityKit, WidgetKit, Domain | Planned |
+| `IslandPresentation` | 5 | `SoundSymbolCatalog` (303 labels → SF Symbols, label → kind → category), `AmbientIconStream` (confirmed events → one icon; value type), `IslandPipeline` (icon + attention intents → `IslandContent`, start/update/end commands, expansion requests), `AlertGate` / `DeviceLockEstimate`, `IslandSettings` | Domain only | **Implemented** |
+| `IslandViews` | 5 | `HearingSenseActivityAttributes` (content state = `IslandContent`), SwiftUI pieces of the compact, minimal, expanded and Lock Screen presentations | IslandPresentation, SwiftUI, ActivityKit (iOS) | **Implemented** |
+| Widget extension target `HearingSenseWidgets` | 5 | `ActivityConfiguration`: places the `IslandViews` pieces; decides nothing | ActivityKit, WidgetKit, IslandViews | **Implemented** (Simulator only) |
 
 Rules: modules communicate through `HearingSenseDomain` types and small protocols; only the app
 target knows about all of them. `Attention` imports no Apple ML, UI or ActivityKit framework, so it
@@ -319,6 +321,11 @@ there. The test iPhone runs iOS 27.2.
 
 ## 6. Presentation constraints (honest expectations for Window 5)
 
+(Window 5 update, 2026-10-10: implemented as described in `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`.
+Apple's limits were checked: 8 hours active plus up to 4 on the Lock Screen, 4 KB of data, start in
+the foreground, update from the background, no documented budget for app-made updates. The points
+below are the expectations written in Window 1; device behaviour is still unmeasured.)
+
 - Live Activities need a separate widget extension target and user permission (Settings toggle).
 - The app cannot force the Dynamic Island to expand. The system chooses compact/minimal/expanded
   presentations; an update with an `AlertConfiguration` may be shown prominently, at the system's
@@ -409,3 +416,10 @@ there. The test iPhone runs iOS 27.2.
 | D43 | (W4) Summary revisions are compared by content words, polarity and numbers; a polarity or number change is shown at once, a rewording is not, anything unmatched counts as a change | "Has not arrived" and "has now arrived" must never be merged; no language-model call for the comparison |
 | D44 | (W4) The intent type separates generic title/subtitle from speech-derived `privateDetail`, which is excluded from `Codable` | Lock-screen text can never contain what people said by accident |
 | D45 | (W4) Contract type named `AttentionPresentationIntent` | Foundation already defines `PresentationIntent` |
+| D46 | (W5) Two channels in one Live Activity: `AmbientIconStream` on the Window 2 events (icon only) and the attention engine's intents (text when expanded); an attention episode always has precedence | Ordinary sounds stay visible without becoming alerts; Window 4 remains the only source of alerts |
+| D47 | (W5) `IslandPipeline` and `AmbientIconStream` are value types without a clock, driven like the attention engine (`nextDeadline`, `.tick`) | Deterministic replay; the Window 4 scenes test the presentation too |
+| D48 | (W5) Updates are silent `Activity.update` calls; the Lock Screen view is icon-only at every priority; no notifications | Student's requirement: never wake a locked screen |
+| D49 | (W5) Automatic expansion (alert configuration) is off by default and, when on, needs a lock estimate of `unlocked` whose signal was observed on this installation | iOS has no lock query; the Simulator showed the data-protection estimate saying "unlocked" while locked |
+| D50 | (W5) Speech summaries enter the activity content only with "Show speech summaries" on, never the Lock Screen view, never an alert's title or body | The content leaves the app's memory; Window 4's rule for `privateDetail` |
+| D51 | (W5) The first summary of a presented speech episode asks for one expansion although the engine suggests none | The summary is only readable expanded; switch: `IslandPolicy.alertsOnFirstSummary` |
+| D52 | (W5) Views live in the package (`IslandViews`) and are used by the extension and by the in-app mirror | iOS does not show an app's own activity while the app is on screen |

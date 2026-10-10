@@ -17,6 +17,9 @@ import SwiftUI
 /// audio tap (owned by `speech`), which shares the same input tap instead of recording separately.
 /// Window 4 attaches no audio consumer at all: the attention engine (owned by `attention`) only
 /// receives the confirmed sound events and speech results the two pipelines already publish.
+/// Window 5 adds the presentation outside the app (owned by `liveActivity`): it gets the same
+/// confirmed sound events for its icon-only channel and the attention engine's intents for the
+/// important one.
 @Observable
 final class ListeningController {
     static let historyLength = 120  // about 10 s of level history at ~12 buffers/s
@@ -36,6 +39,8 @@ final class ListeningController {
     let speech: SpeechIntelligenceController
     /// Window 4: decides which sound events and speech results deserve attention.
     let attention = AttentionController()
+    /// Window 5: the Live Activity (Dynamic Island and Lock Screen) of the listening session.
+    let liveActivity = LiveActivityController()
 
     @ObservationIgnored private var capture = MicrophoneCapture()
     @ObservationIgnored private let session = AudioSessionController()
@@ -81,11 +86,16 @@ final class ListeningController {
         recognition.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         speech.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         attention.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
+        liveActivity.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         recognition.setForwarding(frame: { [engine = speech.engine] in engine.process($0) },
-                                  event: { [engine = speech.engine, attention] update in
+                                  event: { [engine = speech.engine, attention, liveActivity] update in
                                       engine.process(update)
                                       attention.receive(update)
+                                      // Every confirmed event, whatever the attention engine decides.
+                                      liveActivity.receive(update)
                                   })
+        attention.onIntent = { [liveActivity] in liveActivity.receive($0) }
+        attention.onInjectedSound = { [liveActivity] in liveActivity.receive($0) }
         speech.setForwarding(result: { [attention] in attention.receive($0) },
                              cleared: { [attention] in attention.speechDataCleared() })
         sessionObserver = AudioSessionObserver { [weak self] event in
@@ -197,6 +207,7 @@ final class ListeningController {
                 backgroundCheckpoint = nil
             }
             recognition.becameActive()
+            liveActivity.appBecameActive()
             refreshRoute()
         case .inactive:
             break
@@ -222,6 +233,8 @@ final class ListeningController {
             "",
             attention.reportText(),
             "",
+            liveActivity.reportText(),
+            "",
             "Event log (oldest first):",
             log.exportText(),
         ].joined(separator: "\n")
@@ -241,6 +254,7 @@ final class ListeningController {
             recognition.sessionWillStart()
             speech.sessionWillStart()
             attention.sessionWillStart()
+            liveActivity.sessionWillStart()
             let engineStart = ContinuousClock.now
             let format = try capture.start()
             log.append(.capture, "Engine start took \(milliseconds(since: engineStart))")
@@ -267,6 +281,7 @@ final class ListeningController {
         recognition.sessionDidEnd()
         speech.sessionDidEnd()
         attention.sessionDidEnd()
+        liveActivity.sessionDidEnd()
         if keepSession {
             log.append(.session, "Session kept active (microphone off)")
         } else if session.isActive {
@@ -317,6 +332,8 @@ final class ListeningController {
             recognition.sessionDidEnd()
             speech.sessionDidEnd()
             attention.sessionDidEnd()
+            // The session is expected to resume: the activity stays and shows "paused".
+            liveActivity.sessionPaused()
             session.noteDeactivatedBySystem()
             captureFormat = nil
             level = .silence
@@ -344,6 +361,7 @@ final class ListeningController {
             recognition.sessionDidEnd()
             speech.sessionDidEnd()
             attention.sessionDidEnd()
+            liveActivity.sessionDidEnd()
             session.noteDeactivatedBySystem()
             capture = MicrophoneCapture()
             connect(capture)
