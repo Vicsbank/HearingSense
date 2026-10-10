@@ -1,6 +1,7 @@
 import AVFAudio
 import Accelerate
 import Foundation
+import HearingSenseAudio
 
 /// A Sendable copy of one microphone buffer, prepared on the tap thread for the analysis queue.
 ///
@@ -42,74 +43,6 @@ struct AudioChunk: Sendable {
     }
 }
 
-/// Assigns monotonic positions to incoming buffers.
-///
-/// - Session audio clock: seconds of input since the listening session began (see
-///   `AudioTimeRange`). It advances by every buffer, including buffers dropped under backlog,
-///   and by input gaps detected from `AVAudioTime.sampleTime`, so timestamps track real input.
-/// - Segments: a new analyzer segment (frame position restarting at 0) begins after a capture
-///   restart or a sample-rate change, because `SNAudioStreamAnalyzer` is bound to one format.
-struct StreamClock: Sendable {
-    struct Placement: Sendable, Hashable {
-        var generation: Int
-        var segmentID: Int
-        var segmentStart: TimeInterval
-        var sampleRate: Double
-        /// Frame position within the segment, passed to `analyze(_:atAudioFramePosition:)`.
-        var framePosition: Int64
-
-        var startTime: TimeInterval { segmentStart + Double(framePosition) / sampleRate }
-    }
-
-    private(set) var generation = 0
-    private(set) var segmentID = 0
-    private(set) var gapFrames: Int64 = 0
-    private var segmentStart: TimeInterval = 0
-    private var segmentFrames: Int64 = 0
-    private var sampleRate: Double = 0
-    private var nextSampleTime: Int64?
-    private var needsNewSegment = true
-
-    /// Session audio clock position after the last placed buffer.
-    var currentTime: TimeInterval {
-        sampleRate > 0 ? segmentStart + Double(segmentFrames) / sampleRate : segmentStart
-    }
-
-    /// Next buffer starts a new analyzer segment (capture started, stopped or restarted).
-    mutating func markDiscontinuity() {
-        needsNewSegment = true
-    }
-
-    /// Starts a new listening session: clock back to 0, results of older sessions become stale.
-    mutating func resetSession() {
-        generation += 1
-        gapFrames = 0
-        segmentStart = 0
-        segmentFrames = 0
-        sampleRate = 0
-        nextSampleTime = nil
-        needsNewSegment = true
-    }
-
-    /// - Parameter sampleTime: the buffer's `AVAudioTime.sampleTime` if valid.
-    mutating func place(frameCount: Int, sampleRate rate: Double, sampleTime: Int64?) -> Placement {
-        if needsNewSegment || rate != sampleRate {
-            segmentStart = currentTime
-            segmentID += 1
-            segmentFrames = 0
-            sampleRate = rate
-            nextSampleTime = nil
-            needsNewSegment = false
-        }
-        if let sampleTime, let expected = nextSampleTime, sampleTime > expected {
-            let gap = sampleTime - expected
-            segmentFrames += gap
-            gapFrames += gap
-        }
-        let placement = Placement(generation: generation, segmentID: segmentID, segmentStart: segmentStart,
-                                  sampleRate: rate, framePosition: segmentFrames)
-        segmentFrames += Int64(frameCount)
-        if let sampleTime { nextSampleTime = sampleTime + Int64(frameCount) }
-        return placement
-    }
-}
+/// The session audio clock is shared with the speech pipeline (Window 3), so it lives in
+/// HearingSenseAudio as `AudioStreamClock`.
+typealias StreamClock = AudioStreamClock

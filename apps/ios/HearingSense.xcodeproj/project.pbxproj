@@ -10,6 +10,9 @@
 		4A5E10000000000000000014 /* HearingSenseAudio in Frameworks */ = {isa = PBXBuildFile; productRef = 4A5E10000000000000000016 /* HearingSenseAudio */; };
 		4A5E10000000000000000030 /* HearingSenseDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 4A5E10000000000000000031 /* HearingSenseDomain */; };
 		4A5E10000000000000000032 /* SoundEventDetection in Frameworks */ = {isa = PBXBuildFile; productRef = 4A5E10000000000000000033 /* SoundEventDetection */; };
+		4A5E10000000000000000034 /* SpeechPipeline in Frameworks */ = {isa = PBXBuildFile; productRef = 4A5E10000000000000000035 /* SpeechPipeline */; };
+		4A5E10000000000000000036 /* SemanticSummary in Frameworks */ = {isa = PBXBuildFile; productRef = 4A5E10000000000000000037 /* SemanticSummary */; };
+		4A5E10000000000000000038 /* SpeechIntelligence in Frameworks */ = {isa = PBXBuildFile; productRef = 4A5E10000000000000000039 /* SpeechIntelligence */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +36,9 @@
 				4A5E10000000000000000014 /* HearingSenseAudio in Frameworks */,
 				4A5E10000000000000000030 /* HearingSenseDomain in Frameworks */,
 				4A5E10000000000000000032 /* SoundEventDetection in Frameworks */,
+				4A5E10000000000000000034 /* SpeechPipeline in Frameworks */,
+				4A5E10000000000000000036 /* SemanticSummary in Frameworks */,
+				4A5E10000000000000000038 /* SpeechIntelligence in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +93,9 @@
 				4A5E10000000000000000016 /* HearingSenseAudio */,
 				4A5E10000000000000000031 /* HearingSenseDomain */,
 				4A5E10000000000000000033 /* SoundEventDetection */,
+				4A5E10000000000000000035 /* SpeechPipeline */,
+				4A5E10000000000000000037 /* SemanticSummary */,
+				4A5E10000000000000000039 /* SpeechIntelligence */,
 			);
 			productName = HearingSense;
 			productReference = 4A5E10000000000000000004 /* HearingSense.app */;
@@ -283,6 +292,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Hearing Sense";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Hearing Sense uses the microphone to measure sounds around you so it can make you aware of them. Audio is processed on this iPhone and is never recorded or uploaded.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "When you turn on speech transcription, Hearing Sense transcribes nearby speech on this iPhone to show short summaries. Audio and transcripts are not recorded or uploaded.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -317,6 +327,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Hearing Sense";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Hearing Sense uses the microphone to measure sounds around you so it can make you aware of them. Audio is processed on this iPhone and is never recorded or uploaded.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "When you turn on speech transcription, Hearing Sense transcribes nearby speech on this iPhone to show short summaries. Audio and transcripts are not recorded or uploaded.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -379,6 +390,18 @@
 		4A5E10000000000000000033 /* SoundEventDetection */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SoundEventDetection;
+		};
+		4A5E10000000000000000035 /* SpeechPipeline */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpeechPipeline;
+		};
+		4A5E10000000000000000037 /* SemanticSummary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SemanticSummary;
+		};
+		4A5E10000000000000000039 /* SpeechIntelligence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpeechIntelligence;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

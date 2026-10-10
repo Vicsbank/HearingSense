@@ -32,6 +32,10 @@ final class RecognitionController {
     @ObservationIgnored private var backgroundStart: (date: Date, windows: Int, events: Int)?
     @ObservationIgnored private var resourceBaseline: ProcessResourceUsage?
     @ObservationIgnored private var listenTask: Task<Void, Never>?
+    /// Window 3: the engine's output stream has a single consumer (this controller), so classifier
+    /// windows and event updates are forwarded from here to the speech pipeline.
+    @ObservationIgnored private var forwardFrame: (ClassificationFrame) -> Void = { _ in }
+    @ObservationIgnored private var forwardEvent: (AcousticEventUpdate) -> Void = { _ in }
 
     struct ResourceReading: Equatable {
         var cpuUtilization: Double?
@@ -59,6 +63,12 @@ final class RecognitionController {
     /// Where pipeline lifecycle messages go (the app's diagnostic log).
     func setLogger(_ logger: @escaping (DiagnosticEventLog.Kind, String) -> Void) {
         log = logger
+    }
+
+    /// Receives every classifier window and every confirmed-event update, in order.
+    func setForwarding(frame: @escaping (ClassificationFrame) -> Void, event: @escaping (AcousticEventUpdate) -> Void) {
+        forwardFrame = frame
+        forwardEvent = event
     }
 
     // MARK: - Lifecycle (called by ListeningController)
@@ -114,8 +124,10 @@ final class RecognitionController {
             log(.recognition, "Sound analyzer started: \(analyzerDescription ?? "")")
         case .event(let update):
             apply(update)
+            forwardEvent(update)
         case .frame(let report):
             guard isSessionActive else { return }
+            forwardFrame(report.frame)
             latestFrame = report.frame
             status = report.status
             candidates = report.candidates

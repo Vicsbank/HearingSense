@@ -13,6 +13,7 @@ struct ContentView: View {
                     StatusCard(state: controller.state, format: controller.captureFormat)
                     ListeningButtons()
                     RecognitionCard()
+                    SpeechIntelligenceCard()
                     RecentEventsCard()
                     LevelMeterView(level: controller.level, history: controller.levelHistory,
                                    capacity: ListeningController.historyLength,
@@ -44,7 +45,7 @@ private struct BrandHeader: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Hearing Sense")
                     .font(.title.bold())
-                Text("Environmental awareness · Sound recognition (debug)")
+                Text("Environmental awareness · Sound and speech (debug)")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -197,7 +198,8 @@ private struct PrivacyNote: View {
     var body: some View {
         Label {
             Text("Audio is processed on this iPhone, in memory only. Hearing Sense does not record, "
-                + "store or upload audio. It is not a safety or emergency alert system.")
+                + "store or upload audio. Speech is transcribed only while “Transcribe nearby speech” is on; "
+                + "transcripts stay in memory. It is not a safety or emergency alert system.")
         } icon: {
             Image(systemName: "lock.shield")
         }

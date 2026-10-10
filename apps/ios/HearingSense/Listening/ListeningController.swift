@@ -1,5 +1,6 @@
 import HearingSenseAudio
 import Observation
+import SpeechIntelligence
 import SwiftUI
 
 /// Coordinates permission, the audio session, microphone capture and diagnostics for the UI.
@@ -9,7 +10,8 @@ import SwiftUI
 ///
 /// Later windows attach analysis by adding `AudioStreamConsumer`s to `capture`; this type
 /// should stay an orchestrator and not grow classification or speech logic itself. Window 2
-/// attaches `SoundRecognitionEngine` (owned by `recognition`).
+/// attaches `SoundRecognitionEngine` (owned by `recognition`), Window 3 the speech pipeline's
+/// audio tap (owned by `speech`), which shares the same input tap instead of recording separately.
 @Observable
 final class ListeningController {
     static let historyLength = 120  // about 10 s of level history at ~12 buffers/s
@@ -25,6 +27,8 @@ final class ListeningController {
     /// tap and stops the engine (microphone off) but leaves the audio session active.
     private(set) var keepsSessionActiveWhenStopped = false
     let recognition = RecognitionController()
+    /// Window 3: speech transcription and summaries, fed by the same capture and by `recognition`.
+    let speech = SpeechIntelligenceController()
 
     @ObservationIgnored private var capture = MicrophoneCapture()
     @ObservationIgnored private let session = AudioSessionController()
@@ -36,6 +40,9 @@ final class ListeningController {
         route = AudioRouteSnapshot.capture()
         connect(capture)
         recognition.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
+        speech.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
+        recognition.setForwarding(frame: { [engine = speech.engine] in engine.process($0) },
+                                  event: { [engine = speech.engine] in engine.process($0) })
         sessionObserver = AudioSessionObserver { [weak self] event in
             guard let self else { return }
             Task { @MainActor in self.handle(event) }
@@ -143,8 +150,8 @@ final class ListeningController {
         }
     }
 
-    /// Text for sharing device test results: device, route snapshot and event log.
-    /// Contains no audio and no transcripts.
+    /// Text for sharing device test results: device, route snapshot, recognition and speech
+    /// pipeline metadata and the event log. Contains no audio, no transcripts and no summaries.
     func diagnosticsReport() -> String {
         [
             "Device: \(DeviceInfo.summary)",
@@ -155,6 +162,8 @@ final class ListeningController {
             route.reportText(),
             "",
             recognition.reportText(),
+            "",
+            speech.reportText(),
             "",
             "Event log (oldest first):",
             log.exportText(),
@@ -173,6 +182,7 @@ final class ListeningController {
                 + "\(policy.options.map(\.rawValue).joined(separator: ", "))); preferred input: \(describe(input))")
             log.append(.session, "Activation steps: \(session.lastTrace.summary)")
             recognition.sessionWillStart()
+            speech.sessionWillStart()
             let engineStart = ContinuousClock.now
             let format = try capture.start()
             log.append(.capture, "Engine start took \(milliseconds(since: engineStart))")
@@ -197,6 +207,7 @@ final class ListeningController {
         capture.stop()
         log.append(.capture, "Engine stop took \(milliseconds(since: engineStop))")
         recognition.sessionDidEnd()
+        speech.sessionDidEnd()
         if keepSession {
             log.append(.session, "Session kept active (microphone off)")
         } else if session.isActive {
@@ -215,6 +226,7 @@ final class ListeningController {
 
     private func connect(_ capture: MicrophoneCapture) {
         capture.addConsumer(recognition.engine)
+        capture.addConsumer(speech.engine.audioTap)
         capture.setTickHandler { [weak self] tick in
             guard let self else { return }
             Task { @MainActor in self.receive(tick) }
@@ -244,6 +256,7 @@ final class ListeningController {
             guard state.isCapturing || state == .starting else { break }
             capture.stop()
             recognition.sessionDidEnd()
+            speech.sessionDidEnd()
             session.noteDeactivatedBySystem()
             captureFormat = nil
             level = .silence
@@ -269,6 +282,7 @@ final class ListeningController {
             capture.stop()
             capture.removeAllConsumers()
             recognition.sessionDidEnd()
+            speech.sessionDidEnd()
             session.noteDeactivatedBySystem()
             capture = MicrophoneCapture()
             connect(capture)
