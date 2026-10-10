@@ -24,6 +24,8 @@ public struct SoundAnalysisDiagnostics: Hashable, Sendable {
     /// Subset: analyze calls during which at least one result was delivered. Their duration is
     /// an upper bound for the model inference latency of one window.
     public var inferenceCalls = TimingStatistics()
+    /// Duration of the model call alone, for backends that measure it (Core ML).
+    public var modelInference = TimingStatistics()
     /// Thread CPU time spent inside analyze calls.
     public var analysisCPUSeconds: Double = 0
 
@@ -68,6 +70,10 @@ public struct SoundAnalysisDiagnostics: Hashable, Sendable {
             lines.append("analyze() with a result (≈ inference): mean \(ms(inferenceCalls.mean)), "
                 + "p95 \(ms(inferenceCalls.p95)), max \(ms(inferenceCalls.max))")
         }
+        if modelInference.count > 0 {
+            lines.append("Model inference: mean \(ms(modelInference.mean)), median \(ms(modelInference.median)), "
+                + "p95 \(ms(modelInference.p95)), max \(ms(modelInference.max)) (\(modelInference.count) windows)")
+        }
         if resultDelay.count > 0 {
             lines.append("Result delay after window end: mean \(ms(resultDelay.mean)), p95 \(ms(resultDelay.p95)), "
                 + "max \(ms(resultDelay.max))")
@@ -104,10 +110,15 @@ public struct TimingStatistics: Hashable, Sendable {
     public var mean: Double { count > 0 ? total / Double(count) : 0 }
 
     /// 95th percentile of the last 256 samples (nearest-rank).
-    public var p95: Double {
+    public var p95: Double { percentile(0.95) }
+
+    /// Median of the last 256 samples (nearest-rank).
+    public var median: Double { percentile(0.5) }
+
+    private func percentile(_ fraction: Double) -> Double {
         guard !recent.isEmpty else { return 0 }
         let sorted = recent.sorted()
-        let rank = Int((0.95 * Double(sorted.count)).rounded(.up)) - 1
+        let rank = Int((fraction * Double(sorted.count)).rounded(.up)) - 1
         return sorted[Swift.min(Swift.max(rank, 0), sorted.count - 1)]
     }
 }

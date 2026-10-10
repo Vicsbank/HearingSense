@@ -1,6 +1,7 @@
 #if DEBUG
 import Foundation
 import HearingSenseAudio
+import HearingSenseDomain
 import SoundEventDetection
 import SpeechIntelligence
 import UIKit
@@ -28,6 +29,9 @@ final class DebugDiagnosticsExporter {
     private var heartbeats: [String] = []
     private var task: Task<Void, Never>?
     private let launchDate = Date.now
+    /// Experiments append their own heartbeat fields and report sections (metadata only).
+    var extraHeartbeat: () -> String = { "" }
+    var extraReport: () -> String = { "" }
 
     init(controller: ListeningController) {
         self.controller = controller
@@ -49,6 +53,25 @@ final class DebugDiagnosticsExporter {
         guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         // Written without file protection so the export keeps working while the iPhone is locked.
         try? Data(report().utf8).write(to: directory.appending(path: Self.fileName), options: [.atomic, .noFileProtection])
+    }
+
+    private var resourceBaseline = ProcessResourceUsage.sample()
+
+    /// CPU since the previous heartbeat (100 % = one core), memory footprint, thermal state, battery.
+    private func resourceFields() -> [String] {
+        let now = ProcessResourceUsage.sample()
+        let cpu = now.cpuUtilization(since: resourceBaseline).map { ($0 * 100).formatted(.number.precision(.fractionLength(1))) } ?? "-"
+        resourceBaseline = now
+        let device = UIDevice.current
+        device.isBatteryMonitoringEnabled = true
+        let battery = device.batteryLevel >= 0 ? "\(Int((device.batteryLevel * 100).rounded()))" : "-"
+        let charging = switch device.batteryState {
+        case .charging, .full: "charging"
+        case .unplugged: "unplugged"
+        default: "unknown"
+        }
+        return ["cpu=\(cpu)%", "mem=\(now.memoryFootprintMB.map { "\(Int($0))" } ?? "-")MB", "thermal=\(now.thermalDescription)",
+                "battery=\(battery)%(\(charging))"]
     }
 
     private func heartbeat() -> String {
@@ -78,7 +101,11 @@ final class DebugDiagnosticsExporter {
             "segmentsFinal=\(speech.finalSegments)",
             "semantic=\(speech.semanticRequests)",
             "summaries=\(speech.summariesProduced)",
-        ].joined(separator: " ")
+            "model=\(controller.recognition.latestFrame?.model.rawValue ?? "-")",
+            "inferenceMs=\((sound.modelInference.mean * 1000).formatted(.number.precision(.fractionLength(2))))",
+            "dropped=\(sound.chunksDropped)",
+            "backlogMax=\(sound.maxBacklog)",
+        ].joined(separator: " ") + " " + resourceFields().joined(separator: " ") + " " + extraHeartbeat()
     }
 
     private func report() -> String {
@@ -92,7 +119,7 @@ final class DebugDiagnosticsExporter {
         lines += heartbeats
         lines += ["", "== Event log =="]
         lines += controller.log.entries.map { "\(Self.time($0.date)) [\($0.kind.rawValue)] \($0.message)" }
-        lines += ["", "== Reports ==", controller.recognition.reportText(), "", controller.speech.reportText()]
+        lines += ["", "== Reports ==", controller.recognition.reportText(), "", controller.speech.reportText(), "", extraReport()]
         return lines.joined(separator: "\n")
     }
 

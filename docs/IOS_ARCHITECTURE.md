@@ -143,6 +143,24 @@ MicrophoneCapture tap thread                      analysis queue (actor SoundAna
   ongoing events survive; Stop / interruption end the session (`.ended` for every active event).
 - No audio is persisted; buffers live until analyzed (≤ 50 × 100 ms). Outputs are metadata.
 
+### Classifier backends (background-recognition research window, 2026-10-10)
+
+The worker no longer talks to SoundAnalysis directly. It owns one `AcousticClassifierBackend`
+(created on its queue by a `ClassifierBackendFactory`) and receives window results and failures
+through a sink; everything after that (frames, detector, outputs) is unchanged.
+
+| Backend | Runs | State |
+|---|---|---|
+| `AppleSoundAnalysisBackend` | `SNClassifySoundRequest(.version1)`; **default**, behaviour as in Window 2–3 | shipping path |
+| `CoreMLSoundClassifierBackend` | a converted model (waveform in, scores out) through Core ML with explicit compute units, CPU only by default; `StreamResampler` (AVAudioConverter, mastering algorithm) → `WindowAssembler` → `MLModel.prediction`; optional short analysis window repeated into a longer model input | experimental, Mac-verified |
+| `SwitchingClassifierBackend` | two backends, one continuous segment: primary in the foreground, secondary while `ClassifierBackendSelection.prefersSecondary` or after the primary failed | experimental, Mac-verified |
+
+`SoundTaxonomy.audioSet(model:)` maps AudioSet class names (kept verbatim) to the same 50 kinds;
+`SoundTaxonomy.merged` reads both label sets so an event survives a backend switch. Frames and
+events carry the `SoundModelID` of the model that produced them. Thresholds for the AudioSet
+models are not calibrated. Why this exists and what is still unproven on the iPhone:
+`docs/BACKGROUND_RECOGNITION_DECISION.md`.
+
 ### Threading model
 
 - Package targets: Swift 6 language mode, no default actor isolation.
@@ -336,3 +354,7 @@ there. The test iPhone runs iOS 27.2.
 | D30 | (W3, from device tests) Speech activity ends after 3 s of audio without a classifier window | The built-in classifier stops in the background while capture continues; a stale "speech is active" state would transcribe everything |
 | D31 | (W2, from device tests) After a classifier failure a new analyzer is created with a 1–4 s back-off; the failure is logged once per run | In the background every new analyzer fails again ≈ 0.8 s later |
 | D32 | (W3) Debug-only diagnostics export and autostart launch arguments | Device tests can be driven and read from the Mac; metadata only, absent from Release builds |
+| D33 | (research window) Classifier behind `AcousticClassifierBackend`; Apple's classifier stays the default | The built-in classifier fails in the background and offers no compute-unit setting; a replacement must be testable without touching the detector or the speech pipeline |
+| D34 | (research window) Third-party models are converted as waveform → scores (STFT and mel inside the Core ML graph, float32) | One feature implementation for the benchmark and the phone; verified to 10⁻⁶ against the references |
+| D35 | (research window) Resampling with `AVAudioConverter`, mastering algorithm, maximum quality | The default algorithm lowered 5–8 kHz and changed YAMNet's top class in 12 % of windows (measured against soxr) |
+| D36 | (research window) Provisional: hybrid — Apple in the foreground, EfficientAT MN10 (2 s window repeated into its 10 s input, CPU only) in the background; YAMNet as fallback | Apple is the most accurate at 1–2 s; MN10 + tile matches it on alert events; **pending device tests** |

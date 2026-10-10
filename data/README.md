@@ -21,6 +21,7 @@
 | `noise/mit_rir/` | MIT IR Survey：270 个日常场所的实测房间脉冲响应 | 真实房间混响 | 未核实，按学术研究使用 |
 | `test_signals/` | macOS `say` 生成的合成语音 | 没有真实语音时的替代品 | 本机生成 |
 | `test_signals/window3/` | Window 3 的 20 句合成语音（`tools/make_speech_test_signals.sh` 生成，句子见 `tools/speech_test_sentences.tsv`） | 语音转写 → 摘要流水线的端到端检查（含否定句）；**合成语音，不能代表真人语音的准确率** | 本机生成，不入库 |
+| `esc50/` | ESC-50：2000 段 5 秒环境声，50 类，5 折（2026-10-10 经用户批准下载，约 646 MB；压缩包在 `downloads/esc50/`） | 后台识别研究窗口的跨模型基准（`docs/research/BACKGROUND_MODEL_BENCHMARK.md`） | CC BY-NC 3.0，仅限非商业研究 |
 | `samples/` | 原科学展的测试歌曲 | 无标签，只观察稳定性 | — |
 
 ## 注意事项

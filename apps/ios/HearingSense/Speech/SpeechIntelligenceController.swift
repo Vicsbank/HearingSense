@@ -2,6 +2,7 @@ import HearingSenseAudio
 import HearingSenseDomain
 import Observation
 import SemanticSummary
+import SoundEventDetection
 import SpeechIntelligence
 import SpeechPipeline
 import SwiftUI
@@ -42,11 +43,18 @@ final class SpeechIntelligenceController {
     @ObservationIgnored private var log: (DiagnosticEventLog.Kind, String) -> Void = { _, _ in }
     @ObservationIgnored private var listenTask: Task<Void, Never>?
 
-    init(defaults: UserDefaults = .standard) {
+    /// - Parameters:
+    ///   - taxonomy: the label table of the sound classifier that feeds this pipeline.
+    ///   - vocalMusicLabels: that classifier's labels for a voice making music; nil keeps the
+    ///     defaults (Apple's labels).
+    init(defaults: UserDefaults = .standard, taxonomy: SoundTaxonomy = .appleV1, vocalMusicLabels: Set<SoundLabel>? = nil) {
         self.defaults = defaults
         let isEnabled = defaults.bool(forKey: Self.enabledKey)
         let transcriber = AppleSpeechTranscriber(locale: Locale(identifier: "en-US"))
+        var configuration = SpeechIntelligenceConfiguration.standard
+        if let vocalMusicLabels { configuration.activation.vocalMusicLabels = vocalMusicLabels }
         let engine = SpeechIntelligenceEngine(transcriber: transcriber, interpreter: FoundationModelInterpreter(),
+                                              configuration: configuration, taxonomy: taxonomy,
                                               isTranscriptionEnabled: isEnabled)
         self.transcriber = transcriber
         self.engine = engine

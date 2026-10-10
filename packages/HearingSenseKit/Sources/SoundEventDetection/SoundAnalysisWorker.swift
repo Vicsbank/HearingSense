@@ -1,9 +1,6 @@
-import AVFAudio
-import CoreMedia
 import Darwin
 import Foundation
 import HearingSenseDomain
-import SoundAnalysis
 import os
 
 /// Everything a pipeline consumer receives, in order.
@@ -30,12 +27,12 @@ public struct FrameReport: Sendable {
     public var diagnostics: SoundAnalysisDiagnostics
 }
 
-/// Owns the `SNAudioStreamAnalyzer` and the event detector.
+/// Owns the classifier backend (Apple SoundAnalysis or a Core ML model) and the event detector.
 ///
 /// Isolation: an actor whose executor is a private serial dispatch queue. The tap thread
 /// enqueues work with `queue.async { worker.assumeIsolated { … } }`, which keeps FIFO order
 /// (unlike creating a Task per buffer) and lets the compiler check that the non-Sendable
-/// SoundAnalysis objects are only touched on that queue. `analyze` may block for backpressure,
+/// backend objects are only touched on that queue. `analyze` may block for backpressure,
 /// which is why it never runs on the audio tap thread.
 actor SoundAnalysisWorker {
     nonisolated let queue: DispatchSerialQueue
@@ -46,7 +43,11 @@ actor SoundAnalysisWorker {
     private let taxonomy: SoundTaxonomy
     private var configuration: ClassifierConfiguration
     private var detector: SoundEventDetector
+    private let backendFactory: ClassifierBackendFactory
+    /// Created on first use and kept for the worker's lifetime (a Core ML model loads once).
+    private var backend: (any AcousticClassifierBackend)?
     private var analysis: ActiveAnalysis?
+    private let queueKey = DispatchSpecificKey<Bool>()
     /// After a classifier failure: the audio time before which no new analyzer is created, and
     /// the next delay. Observed on iPhone: the built-in classifier fails for as long as the app
     /// is in the background, so restarting it with every buffer only wastes work.
@@ -61,9 +62,11 @@ actor SoundAnalysisWorker {
     private var diagnostics = SoundAnalysisDiagnostics()
 
     init(configuration: ClassifierConfiguration, taxonomy: SoundTaxonomy, policy: DetectionPolicy,
-         continuation: AsyncStream<SoundRecognitionOutput>.Continuation)
+         backend: ClassifierBackendFactory, continuation: AsyncStream<SoundRecognitionOutput>.Continuation)
     {
         queue = DispatchSerialQueue(label: "org.hearingsense.sound-analysis", qos: .userInitiated)
+        queue.setSpecific(key: queueKey, value: true)
+        backendFactory = backend
         self.configuration = configuration
         self.taxonomy = taxonomy
         detector = SoundEventDetector(taxonomy: taxonomy, policy: policy)
@@ -97,14 +100,12 @@ actor SoundAnalysisWorker {
         diagnostics.maxBacklog = max(diagnostics.maxBacklog, chunk.backlogAtEnqueue)
         levelMarks.append(LevelMark(start: chunk.startTime, end: chunk.endTime, capturedAt: chunk.capturedAt,
                                     power: chunk.rms * chunk.rms, peak: chunk.peak))
-        guard let analyzer = analysis?.analyzer, let format = analysis?.format,
-              let buffer = Self.makeBuffer(chunk.samples, format: format)
-        else { return }
+        guard analysis != nil, let backend else { return }
 
         let resultsBefore = inbox.deliveredCount
         let cpuStart = clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID)
         let wallStart = ContinuousClock.now
-        analyzer.analyze(buffer, atAudioFramePosition: chunk.placement.framePosition)
+        backend.analyze(chunk.samples, framePosition: chunk.placement.framePosition)
         let wall = Self.seconds(ContinuousClock.now - wallStart)
         let cpu = Double(clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID) - cpuStart) / 1e9
 
@@ -159,38 +160,54 @@ actor SoundAnalysisWorker {
     // MARK: - Analyzer lifecycle
 
     private func startSegment(for placement: StreamClock.Placement) {
-        let format = AVAudioFormat(standardFormatWithSampleRate: placement.sampleRate, channels: 1)
-        guard let format else {
-            reportFailure("Unsupported sample rate \(placement.sampleRate) Hz")
-            return
-        }
         do {
-            let request = try SNClassifySoundRequest(classifierIdentifier: .version1)
-            request.windowDuration = CMTime(seconds: configuration.windowDuration, preferredTimescale: 48_000)
-            request.overlapFactor = configuration.overlapFactor
-            let observer = ResultObserver(
-                inbox: inbox, worker: self, generation: generation, segmentStart: placement.segmentStart)
-            let analyzer = SNAudioStreamAnalyzer(format: format)
-            try analyzer.add(request, withObserver: observer)
-            analysis = ActiveAnalysis(segmentID: placement.segmentID, format: format, analyzer: analyzer,
-                                      request: request, observer: observer)
+            let backend = try self.backend ?? backendFactory.make()
+            self.backend = backend
+            try backend.startSegment(sampleRate: placement.sampleRate, configuration: configuration,
+                                     sink: makeSink(segmentStart: placement.segmentStart))
+            analysis = ActiveAnalysis(segmentID: placement.segmentID)
             diagnostics.segments += 1
             diagnostics.sampleRate = placement.sampleRate
-            diagnostics.windowDuration = request.windowDuration.seconds
-            diagnostics.overlapFactor = request.overlapFactor
+            diagnostics.windowDuration = backend.windowDuration
+            diagnostics.overlapFactor = backend.overlapFactor
             continuation.yield(.analyzerStarted(sampleRate: placement.sampleRate,
-                                                windowDuration: request.windowDuration.seconds,
-                                                overlapFactor: request.overlapFactor))
+                                                windowDuration: backend.windowDuration,
+                                                overlapFactor: backend.overlapFactor))
         } catch {
             reportFailure("Could not create the sound classifier: \(error.localizedDescription)")
+            retryNotBefore = latestChunkEnd + retryDelay
+            retryDelay = min(retryDelay * 2, Self.maximumRetryDelay)
         }
     }
 
+    /// Backend output arrives on any thread; it is stamped with the session generation and the
+    /// segment's start and handed to the worker queue. If the backend calls back synchronously
+    /// inside `analyze` (on the worker queue), the worker drains the inbox right after that
+    /// call, preserving order; otherwise a drain is scheduled.
+    private func makeSink(segmentStart: TimeInterval) -> ClassifierBackendSink {
+        let inbox = self.inbox
+        let generation = self.generation
+        let queueKey = self.queueKey
+        return ClassifierBackendSink(
+            result: { [weak self] result in
+                let onQueue = DispatchQueue.getSpecific(key: queueKey) == true
+                inbox.append(.result(AnalyzerResult(
+                    generation: generation, segmentStart: segmentStart, windowStart: result.windowStart,
+                    windowDuration: result.windowDuration, classifications: result.classifications,
+                    deliveredAt: result.deliveredAt, onAnalysisQueue: onQueue,
+                    inferenceSeconds: result.inferenceSeconds, model: result.model)))
+                if !onQueue { self?.enqueue { $0.drainInbox() } }
+            },
+            failure: { [weak self] message in
+                inbox.append(.failure(message, generation: generation))
+                if DispatchQueue.getSpecific(key: queueKey) != true { self?.enqueue { $0.drainInbox() } }
+            })
+    }
+
     private func finishSegment() {
-        guard let current = analysis else { return }
-        current.analyzer.completeAnalysis()
+        guard analysis != nil else { return }
+        backend?.finishSegment()
         drainInbox()
-        current.analyzer.removeAllRequests()
         analysis = nil
     }
 
@@ -214,7 +231,7 @@ actor SoundAnalysisWorker {
         }
         let audioTime = AudioTimeRange(start: result.segmentStart + result.windowStart, duration: result.windowDuration)
         let capturedAt = levelMarks.first { $0.end >= audioTime.end - 1e-3 }?.capturedAt
-        let model = SoundModelID.appleSoundClassifierV1
+        let model = result.model ?? backendFactory.metadata.model
         let predictions = result.classifications
             .lazy
             .filter { $0.score >= self.configuration.reportingFloor }
@@ -228,6 +245,7 @@ actor SoundAnalysisWorker {
         diagnostics.results += 1
         retryDelay = Self.initialRetryDelay
         if let delay = frame.resultDelay { diagnostics.resultDelay.record(delay) }
+        if let inference = result.inferenceSeconds { diagnostics.modelInference.record(inference) }
 
         let output = detector.process(frame)
         for update in output.updates { continuation.yield(.event(update)) }
@@ -249,18 +267,6 @@ actor SoundAnalysisWorker {
 
     // MARK: - Helpers
 
-    private static func makeBuffer(_ samples: [Float], format: AVAudioFormat) -> AVAudioPCMBuffer? {
-        guard !samples.isEmpty,
-              let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(samples.count)),
-              let destination = buffer.floatChannelData?[0]
-        else { return nil }
-        samples.withUnsafeBufferPointer { source in
-            destination.update(from: source.baseAddress!, count: samples.count)
-        }
-        buffer.frameLength = AVAudioFrameCount(samples.count)
-        return buffer
-    }
-
     private static func decibels(_ amplitude: Float) -> Float {
         amplitude > 1e-6 ? max(20 * log10(amplitude), -120) : -120
     }
@@ -275,11 +281,6 @@ actor SoundAnalysisWorker {
 
 private struct ActiveAnalysis {
     let segmentID: Int
-    let format: AVAudioFormat
-    let analyzer: SNAudioStreamAnalyzer
-    let request: SNClassifySoundRequest
-    /// The analyzer holds its observer weakly; this keeps it alive.
-    let observer: ResultObserver
 }
 
 private struct LevelMark {
@@ -299,9 +300,11 @@ struct AnalyzerResult: Sendable {
     var classifications: [(label: String, score: Double)]
     var deliveredAt: Date
     var onAnalysisQueue: Bool
+    var inferenceSeconds: TimeInterval?
+    var model: SoundModelID?
 }
 
-/// Thread-safe hand-off from the observer (whatever thread SoundAnalysis uses) to the worker.
+/// Thread-safe hand-off from the backend's sink (whatever thread it is called on) to the worker.
 final class ResultInbox: Sendable {
     enum Item: Sendable {
         case result(AnalyzerResult)
@@ -329,54 +332,5 @@ final class ResultInbox: Sendable {
             defer { state.items.removeAll() }
             return state.items
         }
-    }
-}
-
-/// Receives SoundAnalysis callbacks. Holds only immutable Sendable state.
-///
-/// If SoundAnalysis calls back synchronously inside `analyze` (on the worker queue), the worker
-/// drains the inbox right after that call, preserving order. Otherwise a drain is scheduled on
-/// the worker queue.
-final class ResultObserver: NSObject, SNResultsObserving, Sendable {
-    private let inbox: ResultInbox
-    private let worker: SoundAnalysisWorker
-    private let generation: Int
-    private let segmentStart: TimeInterval
-    private let queueKey = DispatchSpecificKey<Bool>()
-
-    init(inbox: ResultInbox, worker: SoundAnalysisWorker, generation: Int, segmentStart: TimeInterval) {
-        self.inbox = inbox
-        self.worker = worker
-        self.generation = generation
-        self.segmentStart = segmentStart
-        super.init()
-        worker.queue.setSpecific(key: queueKey, value: true)
-    }
-
-    func request(_ request: SNRequest, didProduce result: SNResult) {
-        guard let result = result as? SNClassificationResult else { return }
-        let onQueue = DispatchQueue.getSpecific(key: queueKey) == true
-        inbox.append(.result(AnalyzerResult(
-            generation: generation, segmentStart: segmentStart,
-            windowStart: result.timeRange.start.seconds, windowDuration: result.timeRange.duration.seconds,
-            classifications: result.classifications.map { ($0.identifier, $0.confidence) },
-            deliveredAt: .now, onAnalysisQueue: onQueue)))
-        if !onQueue { worker.enqueue { $0.drainInbox() } }
-    }
-
-    /// Message with the error domain, code and underlying error: SoundAnalysis reports most
-    /// failures only as "Error during analysis".
-    static func describe(_ error: any Error) -> String {
-        let error = error as NSError
-        var text = "\(error.localizedDescription) (\(error.domain) \(error.code))"
-        if let underlying = error.userInfo[NSUnderlyingErrorKey] as? NSError {
-            text += " ← \(underlying.localizedDescription) (\(underlying.domain) \(underlying.code))"
-        }
-        return text
-    }
-
-    func request(_ request: SNRequest, didFailWithError error: any Error) {
-        inbox.append(.failure(Self.describe(error), generation: generation))
-        if DispatchQueue.getSpecific(key: queueKey) != true { worker.enqueue { $0.drainInbox() } }
     }
 }

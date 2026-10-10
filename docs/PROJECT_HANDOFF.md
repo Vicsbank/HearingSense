@@ -17,6 +17,23 @@ Git: `main` = reconstructed Window 1 baseline (`7905f0b`, `679494e`); Window 2 o
 branched from the Window 2 branch. Nothing is merged or pushed; there is no remote. Merging is the
 student's decision.
 
+**Research window (2026-10-10), branch `experiment/background-acoustic-recognition`** (from the
+Window 3 branch): background sound recognition. Mac work complete and committed; **no
+physical-iPhone test of this window has been run** (approved by the student "for later"; the
+phone was not connected). Read `docs/BACKGROUND_RECOGNITION_DECISION.md` first, then
+`docs/testing/BACKGROUND_DEVICE_TESTS.md` (the next thing to do), `docs/research/
+BACKGROUND_INFERENCE_INVESTIGATION.md`, `AUDIO_MODEL_COMPARISON.md`, `BACKGROUND_MODEL_BENCHMARK.md`.
+Summary: Apple's classifier is still the default and still fails in the background; a CPU-only
+Core ML backend (YAMNet / EfficientAT) and a hybrid switching backend exist behind
+`AcousticClassifierBackend` and are selectable in Debug builds with `--hs-classifier`; on recorded
+files Apple is the most accurate at 1–2 s, EfficientAT MN10 needs a 2 s window repeated into its
+10 s input to work at all on short audio and then matches Apple on alert events. Provisional
+decision: hybrid. Third-party models and ESC-50 are downloaded under `models/third_party/` and
+`data/esc50/` (not committed); regenerate the Core ML models with
+`tools/experiments/audio_models/convert_coreml.py` and copy them into the app with
+`install_app_models.sh` before building. Tests: `swift test` 191 (190 passed, 1 opt-in skipped).
+Do not start Window 4 before the device tests unless the student says so.
+
 Each Claude Code window starts without memory of earlier windows. Read this file first, then the
 files listed in §11. Update this file at the end of every window.
 

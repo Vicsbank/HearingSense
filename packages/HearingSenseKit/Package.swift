@@ -16,6 +16,8 @@
 // - SpeechIntelligence (Window 3): event-driven coordinator (speech activity → transcription →
 //   interpretation → SpeechSemanticResult).
 // - hs-speech-eval (Window 3, macOS tool): forward-only evaluation of the speech pipeline.
+// - hs-model-bench (background-recognition research window, macOS tool): scores classifier
+//   backends (Apple SoundAnalysis, converted Core ML models) on a common manifest.
 //
 // Platform-independent logic is tested on the Mac with `swift test`. iOS-only code
 // (AVAudioSession) is compiled under `#if os(iOS)` and tested with xcodebuild on an
@@ -34,6 +36,7 @@ let package = Package(
         .library(name: "SemanticSummary", targets: ["SemanticSummary"]),
         .library(name: "SpeechIntelligence", targets: ["SpeechIntelligence"]),
         .executable(name: "hs-speech-eval", targets: ["SpeechEvaluationTool"]),
+        .executable(name: "hs-model-bench", targets: ["ModelBenchmarkTool"]),
 
 
     ],
@@ -50,6 +53,7 @@ let package = Package(
         .executableTarget(name: "SpeechEvaluationTool",
                           dependencies: ["SpeechIntelligence", "SpeechPipeline", "SemanticSummary", "SoundEventDetection",
                                          "HearingSenseDomain"]),
+        .executableTarget(name: "ModelBenchmarkTool", dependencies: ["SoundEventDetection", "HearingSenseDomain"]),
         .testTarget(name: "HearingSenseAudioTests", dependencies: ["HearingSenseAudio"]),
         .testTarget(name: "SoundEventDetectionTests", dependencies: ["SoundEventDetection", "HearingSenseDomain"]),
         .testTarget(name: "SpeechPipelineTests", dependencies: ["SpeechPipeline", "HearingSenseAudio", "HearingSenseDomain"]),

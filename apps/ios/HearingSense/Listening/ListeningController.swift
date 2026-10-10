@@ -1,5 +1,6 @@
 import HearingSenseAudio
 import Observation
+import SoundEventDetection
 import SpeechIntelligence
 import SwiftUI
 
@@ -26,18 +27,50 @@ final class ListeningController {
     /// Experiment for the start/stop media stall (AUDIO_ROUTING_FEASIBILITY §3): Stop removes the
     /// tap and stops the engine (microphone off) but leaves the audio session active.
     private(set) var keepsSessionActiveWhenStopped = false
-    let recognition = RecognitionController()
+    let recognition: RecognitionController
     /// Window 3: speech transcription and summaries, fed by the same capture and by `recognition`.
-    let speech = SpeechIntelligenceController()
+    let speech: SpeechIntelligenceController
 
     @ObservationIgnored private var capture = MicrophoneCapture()
     @ObservationIgnored private let session = AudioSessionController()
     @ObservationIgnored private var sessionObserver: AudioSessionObserver?
     @ObservationIgnored private var isInBackground = false
+    /// Hybrid classifier experiment: tells the switching backend which classifier should run.
+    /// Unused (and harmless) with a single classifier.
+    @ObservationIgnored private let backendSelection = ClassifierBackendSelection()
     @ObservationIgnored private var backgroundCheckpoint: CaptureThroughput.Checkpoint?
 
     init() {
         route = AudioRouteSnapshot.capture()
+        var backendNote: (DiagnosticEventLog.Kind, String)?
+        var experimental: (RecognitionController, SpeechIntelligenceController)?
+        #if DEBUG
+        // Research switch: a converted third-party classifier on the CPU instead of Apple's.
+        if let choice = ExperimentalClassifier.requested {
+            do {
+                var factory = try choice.model.factory()
+                var policy = DetectionPolicy.standardAudioSet
+                var vocalLabels = SoundTaxonomy.audioSetVocalMusicLabels
+                if choice.isHybrid {
+                    // Apple's classifier in the foreground, the CPU model while in the background.
+                    factory = SwitchingClassifierBackend.factory(primary: AppleSoundAnalysisBackend.factory,
+                                                                 secondary: factory, selection: backendSelection)
+                    policy = .standardHybrid
+                    vocalLabels.formUnion(SpeechActivationPolicy.standard.vocalMusicLabels)
+                }
+                experimental = (
+                    RecognitionController(engine: SoundRecognitionEngine(policy: policy, backend: factory)),
+                    SpeechIntelligenceController(taxonomy: factory.taxonomy, vocalMusicLabels: vocalLabels))
+                backendNote = (.recognition, "Experimental classifier backend: \(factory.metadata.summary)")
+            } catch {
+                backendNote = (.error, "Experimental classifier \(choice.model.rawValue) unavailable "
+                    + "(\(error.localizedDescription)); using Apple SoundAnalysis")
+            }
+        }
+        #endif
+        recognition = experimental?.0 ?? RecognitionController()
+        speech = experimental?.1 ?? SpeechIntelligenceController()
+        if let backendNote { log.append(backendNote.0, backendNote.1) }
         connect(capture)
         recognition.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         speech.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
@@ -124,6 +157,14 @@ final class ListeningController {
         route = session.snapshot()
     }
 
+    #if DEBUG
+    /// Experiment seam (BackgroundInferenceProbe): an extra consumer of the same microphone tap.
+    /// Not re-attached if iOS resets the media services.
+    func attachExperimentConsumer(_ consumer: any AudioStreamConsumer) {
+        capture.addConsumer(consumer)
+    }
+    #endif
+
     func clearLog() {
         log.removeAll()
     }
@@ -132,11 +173,13 @@ final class ListeningController {
         switch phase {
         case .background:
             isInBackground = true
+            backendSelection.prefersSecondary = true
             log.append(.lifecycle, "App entered background" + (state.isCapturing ? " while listening" : ""))
             if state.isCapturing { backgroundCheckpoint = capture.throughput.checkpoint(at: .now) }
             recognition.enteredBackground()
         case .active:
             isInBackground = false
+            backendSelection.prefersSecondary = false
             if let checkpoint = backgroundCheckpoint {
                 logBackgroundCoverage(since: checkpoint)
                 backgroundCheckpoint = nil

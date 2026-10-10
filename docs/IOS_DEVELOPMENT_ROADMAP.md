@@ -81,6 +81,19 @@ Delivered (details: `docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md`,
 
 Carry-over: the Window 2 device tests are still open as well (`docs/testing/WINDOW2_DEVICE_TESTS.md`).
 
+## Research window — Background Acoustic Inference and Model Benchmark ◐ (2026-10-10, Mac work complete; device tests not run)
+
+Branch `experiment/background-acoustic-recognition`. Goal: recognize sounds while the iPhone is
+locked. Delivered: investigation of the built-in classifier's background failure; YAMNet,
+EfficientAT MN10 and DyMN04 converted to Core ML and verified; a common benchmark on 2 280 clips;
+`AcousticClassifierBackend` with Apple, Core ML (CPU only) and switching (hybrid) implementations;
+Debug-only device experiments. Provisional decision: hybrid (`docs/BACKGROUND_RECOGNITION_DECISION.md`).
+
+**Open, blocking:** every physical-iPhone experiment (`docs/testing/BACKGROUND_DEVICE_TESTS.md`):
+whether the Background-processing mode revives the built-in classifier (A2), and whether CPU-only
+Core ML keeps classifying on a locked phone (B). Then: threshold calibration for the background
+model. Window 5's acceptance criterion depends on these.
+
 ## Window 4 — Attention Priority Engine
 
 Goal: decide what deserves attention, deterministically.

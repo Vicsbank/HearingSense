@@ -8,7 +8,8 @@ import os
 ///
 /// ```
 /// MicrophoneCapture tap ─▶ captureDidReceive (copy channel 0, stamp position, enqueue; never blocks)
-///                       ─▶ analysis queue: SNAudioStreamAnalyzer + SNClassifySoundRequest(.version1)
+///                       ─▶ analysis queue: AcousticClassifierBackend (default: Apple SoundAnalysis,
+///                          SNClassifySoundRequest(.version1); alternative: a Core ML model on CPU)
 ///                       ─▶ ClassificationFrame ─▶ SoundEventDetector ─▶ outputs (AsyncStream)
 /// ```
 ///
@@ -35,9 +36,17 @@ public final class SoundRecognitionEngine: AudioStreamConsumer {
     private let continuation: AsyncStream<SoundRecognitionOutput>.Continuation
     private let tap: OSAllocatedUnfairLock<TapState>
 
-    public init(configuration: ClassifierConfiguration = .standard, taxonomy: SoundTaxonomy = .appleV1,
-                policy: DetectionPolicy = .standard)
+    /// The classifier behind this engine (model, runtime, compute units).
+    public let backend: ClassifierBackendMetadata
+
+    /// - Parameters:
+    ///   - backend: which classifier runs. Its labels must be the ones `taxonomy` maps, so pass
+    ///     the factory's own taxonomy unless you have a reason not to (nil does that).
+    public init(configuration: ClassifierConfiguration = .standard, taxonomy: SoundTaxonomy? = nil,
+                policy: DetectionPolicy = .standard, backend: ClassifierBackendFactory = AppleSoundAnalysisBackend.factory)
     {
+        let taxonomy = taxonomy ?? backend.taxonomy
+        self.backend = backend.metadata
         let (stream, continuation) = AsyncStream.makeStream(of: SoundRecognitionOutput.self,
                                                             bufferingPolicy: .bufferingNewest(1_000))
         outputs = stream
@@ -46,7 +55,7 @@ public final class SoundRecognitionEngine: AudioStreamConsumer {
         self.policy = policy
         tap = OSAllocatedUnfairLock(initialState: TapState(backlogLimit: configuration.backlogLimit))
         worker = SoundAnalysisWorker(configuration: configuration, taxonomy: taxonomy, policy: policy,
-                                     continuation: continuation)
+                                     backend: backend, continuation: continuation)
     }
 
     deinit {

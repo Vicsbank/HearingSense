@@ -110,7 +110,10 @@ final class RecognitionController {
         backgroundStart = nil
         let seconds = Date.now.timeIntervalSince(start.date)
         let windows = diagnostics.results - start.windows
-        let expected = seconds / max(configuration.hop, 0.01)
+        // The backend's own window and overlap (a Core ML model fixes its window length).
+        let hop = diagnostics.windowDuration > 0 ? diagnostics.windowDuration * (1 - diagnostics.overlapFactor)
+            : configuration.hop
+        let expected = seconds / max(hop, 0.01)
         log(.recognition, "Background interval \(seconds.formatted(.number.precision(.fractionLength(1)))) s: "
             + "\(windows) classifier windows (≈ \(Int(expected.rounded())) expected), "
             + "\(detectorStatistics.eventsConfirmed - start.events) events confirmed")
@@ -121,7 +124,7 @@ final class RecognitionController {
     private func handle(_ output: SoundRecognitionOutput) {
         switch output {
         case .analyzerStarted(let sampleRate, let window, let overlap):
-            analyzerDescription = "SNClassifySoundRequest(.version1), window \(window.formatted()) s, "
+            analyzerDescription = "\(engine.backend.summary), window \(window.formatted()) s, "
                 + "overlap \(overlap.formatted(.percent)), input \(Int(sampleRate)) Hz → mono channel 0"
             log(.recognition, "Sound analyzer started: \(analyzerDescription ?? "")")
         case .event(let update):

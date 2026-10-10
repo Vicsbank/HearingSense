@@ -29,16 +29,19 @@ public struct SoundTaxonomy: Sendable {
     public let model: SoundModelID
     public let definitions: [SoundKindDefinition]
     public let silenceLabel: SoundLabel
+    /// Every label that means "no sound" (more than one when two label sets are merged).
+    public let silenceLabels: Set<SoundLabel>
     public let unmappedKind: SoundKindDefinition
     private let byLabel: [SoundLabel: SoundKindDefinition]
     private let displayNames: [SoundLabel: String]
 
     init(model: SoundModelID, definitions: [SoundKindDefinition], silenceLabel: SoundLabel,
-         displayNames: [SoundLabel: String])
+         displayNames: [SoundLabel: String], additionalSilenceLabels: Set<SoundLabel> = [])
     {
         self.model = model
         self.definitions = definitions
         self.silenceLabel = silenceLabel
+        silenceLabels = additionalSilenceLabels.union([silenceLabel])
         self.displayNames = displayNames
         unmappedKind = SoundKindDefinition(
             kind: SoundEventKind(id: "unmapped", displayName: "Unrecognized label", category: .other),
@@ -51,6 +54,21 @@ public struct SoundTaxonomy: Sendable {
             }
         }
         byLabel = index
+    }
+
+    /// One table for two classifiers whose label sets do not overlap (Apple's snake_case
+    /// identifiers and AudioSet's class names): every kind is fed by the labels of both, so a
+    /// pipeline can switch classifier mid-session and an ongoing event of a kind continues.
+    public static func merged(_ first: SoundTaxonomy, _ second: SoundTaxonomy, model: SoundModelID) -> SoundTaxonomy {
+        let secondByKind = Dictionary(uniqueKeysWithValues: second.definitions.map { ($0.kind.id, $0) })
+        let definitions = first.definitions.map { definition in
+            SoundKindDefinition(kind: definition.kind, profile: definition.profile,
+                                labels: definition.labels + (secondByKind[definition.kind.id]?.labels ?? []),
+                                producesEvents: definition.producesEvents)
+        }
+        return SoundTaxonomy(model: model, definitions: definitions, silenceLabel: first.silenceLabel,
+                             displayNames: first.displayNames.merging(second.displayNames) { name, _ in name },
+                             additionalSilenceLabels: second.silenceLabels)
     }
 
     /// All labels the table maps explicitly.

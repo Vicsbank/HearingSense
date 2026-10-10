@@ -201,11 +201,11 @@ public struct SoundEventDetector: Sendable {
     private func status(for frame: ClassificationFrame) -> EnvironmentStatus {
         let active = activeEvents
         if !active.isEmpty { return .recognized(active) }
-        let silenceOnTop = frame.top.map { $0.label == taxonomy.silenceLabel && $0.score.rawValue >= 0.5 } ?? false
+        let silenceOnTop = frame.top.map { taxonomy.silenceLabels.contains($0.label) && $0.score.rawValue >= 0.5 } ?? false
         let belowQuiet = frame.inputLevel.map { $0.rmsDBFS < policy.quietThresholdDBFS } ?? false
         if silenceOnTop || belowQuiet { return .quiet }
         if let top = frame.predictions.first(where: {
-            $0.label != taxonomy.silenceLabel && $0.score.rawValue >= policy.displayFloor
+            !taxonomy.silenceLabels.contains($0.label) && $0.score.rawValue >= policy.displayFloor
         }) {
             return .uncertain(top)
         }

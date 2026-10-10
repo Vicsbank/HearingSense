@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Experiment only (docs/research/BACKGROUND_INFERENCE_INVESTIGATION.md, experiment A2):
+     adds the "Background processing" mode that some developers reported as changing
+     SoundAnalysis behaviour. Used with `xcodebuild INFOPLIST_FILE=...`; the app's real
+     Info.plist is Config/HearingSense-Info.plist. No BGProcessingTask is ever scheduled. -->
+<plist version="1.0">
+<dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>processing</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>org.hearingsense.HearingSense.experiment.processing</string>
+	</array>
+</dict>
+</plist>
