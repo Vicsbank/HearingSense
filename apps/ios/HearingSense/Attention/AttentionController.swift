@@ -227,8 +227,9 @@ final class AttentionController {
             for item in inputs {
                 try? await Task.sleep(until: start + .seconds(item.offset), clock: .continuous)
                 guard !Task.isCancelled, let self else { return }
-                if case .sound(let update) = item.input { self.onInjectedSound?(update) }
+                // Same order as real events: the engine first, then the other consumers.
                 self.process(item.input)
+                if case .sound(let update) = item.input { self.onInjectedSound?(update) }
             }
             guard let self else { return }
             self.injectionTasks[id] = nil

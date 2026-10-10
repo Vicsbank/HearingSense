@@ -10,8 +10,12 @@ import Foundation
 ///   place (measured in Window 5: a locked Simulator reported a passcode and available data).
 ///   The estimate is therefore `unknown` until this installation has seen protected data become
 ///   unavailable at least once (`lockSignalObserved`);
-/// - for a few seconds after locking the estimate can still say `unlocked`. Nothing here can
-///   close that gap, which is why automatic expansion is off unless the user turns it on.
+/// - protected data stays available for some seconds after locking (measured on the iPhone 18
+///   Pro, iOS 27.2: unavailable 4–12 s after the lock button). iOS posts "protected data will
+///   become unavailable" earlier: in the two instrumented runs it arrived at the moment of
+///   locking, about 1.4 s before the app entered the background. While that notice is pending
+///   (`lockNoticePending`) the estimate is `locked`. Two observations are not a guarantee, which
+///   is why automatic expansion stays off unless the user turns it on.
 public enum DeviceLockEstimate: String, Hashable, Sendable, Codable {
     case unlocked
     case locked
@@ -22,11 +26,13 @@ public enum DeviceLockEstimate: String, Hashable, Sendable, Codable {
     ///   - protectedDataAvailable: `UIApplication.isProtectedDataAvailable`.
     ///   - lockSignalObserved: this installation has seen protected data become unavailable
     ///     before, so "available" carries information on this device.
-    public static func estimate(passcodeSet: Bool?, protectedDataAvailable: Bool, lockSignalObserved: Bool)
-        -> DeviceLockEstimate
+    ///   - lockNoticePending: "protected data will become unavailable" arrived and neither
+    ///     "did become available" nor the app coming to the front has followed.
+    public static func estimate(passcodeSet: Bool?, protectedDataAvailable: Bool, lockSignalObserved: Bool,
+                                lockNoticePending: Bool = false) -> DeviceLockEstimate
     {
         guard passcodeSet == true else { return .unknown }
-        guard protectedDataAvailable else { return .locked }
+        guard protectedDataAvailable, !lockNoticePending else { return .locked }
         return lockSignalObserved ? .unlocked : .unknown
     }
 }

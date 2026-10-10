@@ -3,8 +3,10 @@
 Date: 2026-10-10. Branch `feature/window5-dynamic-island`.
 
 **Evidence levels.** Mac = package tests and the replay tool. Simulator = iPhone 18 Pro Simulator,
-iOS 27.0, on the Mac. **No physical-iPhone test was run** (the iPhone was not connected). Every
-input was scripted and synthetic (`synthetic.replay`); the microphone was never used. Numbers below
+iOS 27.0, on the Mac. Physical iPhone = §5 (D1–D4, run later the same day). Every input was
+scripted and synthetic (`synthetic.replay`); the microphone was never used. §1–§3 were written
+before the device session; the test counts in §1 are from then (the package now has 49 tests in
+`IslandPresentationTests`). Numbers below
 describe the presentation rules, not recognition accuracy and not what iOS does with the updates.
 
 ## 1. Automated tests
@@ -35,6 +37,9 @@ New tests (`Tests/IslandPresentationTests`, 47):
   default; settings decoding.
 
 ## 2. Replay of the Window 4 scenes through engine + pipeline
+
+(Numbers of the first implementation. After the change described in §5, point 1, the update rates
+are lower; the current output is in `results/island_eval_window5/`.)
 
 `swift run -c release hs-attention-eval island` — output in `results/island_eval_window5/`.
 "Updates" are `Activity.update` calls the app would make (start and end not counted). "Expansion
@@ -93,30 +98,169 @@ end from the background; an alert shows the expanded island on iPhone (banner wi
 and uses title and body on Apple Watch; **nothing about the effect of an alert on a locked iPhone;
 no update budget for app-made updates is stated.**
 
-## 5. Not verified
+## 5. Physical iPhone: D1–D4 (2026-10-10, synthetic events, microphone off)
 
-Everything on the physical iPhone: Lock Screen and Always-On appearance; that silent updates do
-not wake the screen; the lag of the data-protection signal; an alert on a locked iPhone; the island
-next to Spotify's Now Playing; update throttling; battery and thermal cost; the 8-hour end and the
-restart; VoiceOver on the activity; signing the extension with the Personal Team; real sounds and
-real speech (needs microphone authorization).
+iPhone 18 Pro, iOS 27.2 (24B5099f), USB, Developer Mode on, charging. Debug build with the widget
+extension, signed with the Personal Team (the profile for `org.hearingsense.HearingSense.Widgets`
+was created automatically by `xcodebuild -allowProvisioningUpdates`). Authorized by the student for
+this session; the phone was driven with `devicectl` and iphone-use; locking, unlocking and watching
+the screen were done by the student, one step per message. Every event was scripted
+(`--hs-island-demo`); the microphone was never started.
 
-## 6. Device test protocol (pending; one step per message)
+Two kinds of evidence, kept apart:
 
-No microphone (demo scenes, `devicectl … launch … --hs-island-demo <scene> --hs-export-diagnostics`):
+- **Captured**: screenshots of the top strip of the screen only (status bar and Dynamic Island) with
+  Settings in front, in `docs/device-tests/2026-10-10-window5/`; full screenshots were deleted at
+  once. Metadata-only diagnostics exports in `results/device_window5/`.
+- **Student-observed**: what the student saw, heard and felt, reported in chat. One observation
+  each unless stated.
+
+| # | Check | Captured / logged | Student-observed |
+|---|---|---|---|
+| D1 | Install and run with the extension | Installed and launched; activity started; "ended a leftover activity of an earlier launch" at every relaunch, never two | — |
+| D1 | Compact island, ordinary sound | Ear left, mint sound icon right (rain, bird); no text (`d1_compact_ambient_*.png`) | — |
+| D1 | Compact island, attention episode | Icon in the priority colour, mark, tinted outline: dog = yellow paw + dot, knock = orange door + "!" (`d1_compact_attention_*.png`) | — |
+| D1 | Icon changes over a 50 s scene (one frame every 0.55–1 s) | 3 changes (rain → dog episode → bird), one cross-fade frame, no alternation (`d1_ambient_scene_timeline.png`) | — |
+| D1 | Expanded island (touch and hold) | "Door or knock" with mark, timer, secondary rain icon; “Biology Test Tomorrow” / Nearby Speech (`d1_expanded_*.png`) | — |
+| D1 | Privacy of logs | 0 occurrences of the summary text in every export; update log shows `<speech summary>` | — |
+| D1 | Spotify playing | Island split in two: Hearing Sense on the left with both compact icons, Spotify's Now Playing on the right, its level animation running (`d1_spotify_split_island.png`, album art pixelated). The minimal presentation was not shown | Whether the music was audibly unaffected: not asked yet |
+| D2 | Lock by hand; rain 1.1 s and knock 10.1 s after locking; default settings | Both updates sent while locked; "silent update … (disabled_in_settings)" | **Screen did not wake, no sound, no vibration.** Lock Screen entry after waking: door icon, "Hearing Sense", "Listening", no event title |
+| D2 | Same after an automatic lock (3 minutes) | Both updates sent while locked | Nobody was watching |
+| D3 | Always-On display | — | Always-On is enabled; the display did not brighten. Whether the icon visibly changed on the dimmed screen was not reported |
+| D4 | "Expand for important events" on, unlocked, Home Screen | "expansion requested"; expanded frame captured (`d4a_auto_expanded_knock.png`) | **Expanded by itself for about 4 s, readable, no sound, no vibration** (silent sound file) |
+| D4 | Same, knock 2.2 s after locking | Estimate still "unlocked": **the expansion request was sent to iOS** | **Screen did not light up, no sound, no vibration** |
+| D4 | Same, knock 20 s after locking | "silent update … (device_locked)": request held back | No wake, no sound, no vibration |
+| D4 | Forced request 20 s after locking (`--hs-assume-unlocked`, worst case) | Request sent while the estimate was "locked" | **Nothing: no wake, no sound, no vibration** |
+
+Measured on the device:
+
+- **Data-protection lag.** Protected data was reported unavailable between 7–12 s, 3.6–8.8 s,
+  4.9–10.2 s and 4.3–9.7 s after the lock (four runs; heartbeat every 5 s, hence the ranges).
+- **Early lock notice.** `protectedDataWillBecomeUnavailableNotification` arrived at the moment of
+  locking while the data was still available: 1.4 s before the app entered the background in the
+  one run with a timestamp, and before the first heartbeat after the lock in another. Based on it
+  the estimate now treats a pending notice as `locked` (unit-tested; **not yet exercised in a
+  device run**).
+- **Update calls.** `Activity.update` returned in 1.8–120 ms (most under 10 ms).
+- **Suspension.** Without a listening session iOS suspended the app 26–27 s after it left the
+  screen ("background time is over" in the log). The island then stays on its last content: in the
+  first long capture the bird icon was still shown 20 s after the scene would have removed it. With
+  a listening session the audio background mode keeps the app running; an app that crashes or is
+  terminated leaves its last icon until the stale date (15 minutes).
+
+Screenshot caveat: in the capture series of the automatic expansion the island was expanded in one
+frame and compact again 0.6 s later, while the student saw about 4 s without captures running. The
+student's observation is the result; the capture probably disturbs the presentation.
+
+Found and changed during the device session:
+
+1. Updates that only changed a secondary detail of an attention episode (the small ambient icon,
+   "+N more") were 26–35 % of all updates in the replay. They are no longer sent by themselves
+   (§2 shows the numbers before; after: 73 / 82 / 88 per hour for the 18 scenes and
+   127 / 168 / 188 for the generated hour, Quiet / Balanced / Sensitive).
+2. The demo injection delivered a sound to the icon channel before the attention engine, the
+   reverse of real events, which produced two updates 8 ms apart on the device. The order now
+   matches production.
+3. Demo scenes can be timed from the moment the app leaves the screen
+   (`--hs-demo-after-background`, `--hs-demo-key-at <s>`), because a locked-screen check cannot be
+   timed from a chat message.
+4. Per-update log in the diagnostics export (time, redacted content, call duration).
+5. Lock estimate: pending lock notice counts as locked (above).
+
+The real update frequency during listening is still unknown: these runs sent two to four scripted
+updates each. It needs the microphone (D6).
+
+## 6. Physical iPhone: D5–D6 with the real microphone (2026-10-10)
+
+Authorized by the student for D5 and D6 only (D7 battery and D8 transcription are postponed).
+Sound classification only: "Transcribe nearby speech" was checked to be off before the first run.
+Test clips (ESC-50, 5 s each) were played from the Mac's speakers at 75 % with the student's
+approval. The student has no AirPods, so in D5b Spotify played through the iPhone's own speaker.
+The room was in normal use: the classifier heard people (speech, laughter, coughing, glasses).
+Objective data only is reported as a result; exports in `results/device_window5/d5*`, `d6*`.
+
+| Run | Conditions | Logged / captured |
+|---|---|---|
+| D5a | Unlocked, Settings in front, 8 clips in 2 minutes | 163 classifier windows, 0 failures. Island (strip captures, `d5a_real_sounds_timeline.png`): dog icon → Dog episode → Nearby Speech → Door or knock (orange "!") → Siren (red "!!") → Horn → ordinary icons; about 10 visible changes in 110 s, no alternation. 14 updates in 114 s; 43 secondary-only changes not sent; 3 high-priority episodes, all silent updates. iOS's own orange microphone indicator sits beside the island |
+| D5b | Same, Spotify playing on the iPhone speaker, 3 clips | Island split: Hearing Sense left, Spotify right, its level animation running throughout (`d5b_spotify_real_timeline.png`, album art pixelated). Music recognized (note icon); siren recognized; **dog and knock not recognized** — the music from the phone's own speaker covered them; a "Shouting" episode from the song's vocals. Student: the music did not stop or change volume when listening started |
+| D6 | Locked, 8 clips at about 68 s intervals; the session ran 34.9 minutes in all because it was stopped by the student later | **2 793 classifier windows, 0 failures** over 34.9 minutes locked. First 10 minutes: 44 updates (258 per hour), 131 secondary-only changes not sent, 16 episodes, 9 high-priority episodes all sent as silent updates, CPU 4–5.5 % of one core, 44 MB, thermal nominal, on USB power. Whole session: 150 updates in 2 093.6 s (**256 per hour**), `Activity.update` 9.1 ms mean, 27 ms max; lock notice at the moment of locking again |
+
+**Not verified in D6** (the student did not watch): what the Lock Screen entry showed, and whether
+the screen lit up, or the phone made a sound or vibrated, at any time in those 35 minutes. These
+are not counted as passed. (The same checks were student-observed for the short runs in §5.)
+
+Recognition of the played clips (one clip per class, through a loudspeaker; a classifier matter,
+not a presentation one), without music: dog 2 of 3, knock 3 of 3, siren 2 of 2, birds 2 of 2, car
+horn 1 of 2, rain 0 of 2 as rain (heard as water, once also as train), footsteps 0 of 1 (heard as
+handling objects), glass breaking 0 of 1 (heard as door / glass clink). With Spotify on the phone
+speaker: siren 1 of 1, dog 0 of 1, knock 0 of 1.
+
+### 6.1 What the real session showed, and what was changed
+
+**False alerts.** In the first 10 minutes of D6 the engine raised 9 high-priority episodes; 3 were
+played clips (two knocks, a siren). The other 6 were room sounds: 5 "Door or knock" from the label
+`door` and one "Screaming" from a single window at 0.90 among laughter. Over all microphone runs
+the label `door` was confirmed 12 times and none was a knock (one coincided with the glass-breaking
+clip), while the label `knock` was confirmed 3 times, each a played knock.
+
+- The kind `door` ("Door or knock") now holds `knock`, `door_bell`, `door_slam`, `tap`. The labels
+  `door` and `door_sliding` are a new kind `door_movement` ("Door"): an ordinary sound with an
+  icon, never an alert in Quiet or Balanced, and confirmed by two windows only (4 of the 12 came
+  from one window). 51 kinds now.
+- `screaming` needs two windows or one window at 0.95, like the other warning signals.
+- Not changed: "Nearby Speech" episodes (12 in the last 17 minutes of D6, real speech in the room,
+  transcription off) — see the icon rules below; and the misrecognitions listed above.
+
+These rules rest on one room and one evening. They could not be replayed on the recorded audio
+(none is kept); the effect on the recorded sessions follows from the labels and window counts in
+the log: all 12 `door` events and the one `screaming` event would no longer be alerts.
+
+**Icons too few and too slow** (the student's observation during D6: a strong sneeze did not
+appear). Cause: the first rules let the highest-ranked sound that was still going on — speech,
+almost always — keep the icon, and "Nearby Speech" episodes held the island as attention content.
+
+- The icon channel now shows the **newest** confirmed sound for 5 s whatever its rank, then goes
+  back to the highest-ranked sound still going on. Minimum display 2 s (was 4).
+- A sound that has ended does not get the icon late; the plain glyph waits 5 s, so a sound that
+  follows replaces the previous icon directly.
+- Only a high-priority episode or one showing a speech summary is protected from ordinary sounds
+  (the wording of the student's brief). A lower-priority episode gives way to a newer sound.
+- A resolved episode does not return to the front after another one.
+
+Replay of the recorded events through the icon channel (`hs-attention-eval island-device-trace`,
+output in `results/device_window5/icon_channel_trace_replay.txt`; confirmation and end times from
+the export, the rest rebuilt, attention engine not included):
+
+| Recording | Rules | Icon changes per hour | Confirmed sounds that became the icon | Delay, 90th percentile |
+|---|---|---|---|---|
+| D6, first 10 min (73 events) | first | 295 | 44 of 73 | 5.8 s |
+| | current | 477 | 68 of 73 | 1.8 s |
+| D6, last 22 min (104 events) | first | 200 | 72 of 104 | 4.2 s |
+| | current | 319 | 104 of 104 | 0.5 s |
+
+The model reproduces the device: 50 icon changes for the first 10 minutes against 52 counted on
+the iPhone. **The price of the faster icons is more updates** — in a room this lively roughly
+300–480 icon changes per hour, bounded by 12 per minute. The new rules are unit-tested and
+replayed; **they have not run on the iPhone yet** (the build is installed; no listening run was
+made with it).
+
+## 7. Not verified
+
+- The current icon and alert rules on the device (§6.1): a retest with the microphone is needed.
+- D6's subjective checks (above).
+- An expansion request with "Play the alert sound" on (all runs used the silent file).
+- More than one observation of each locked-screen case; the phone was on USB power throughout.
+- iOS's "Allow Live Activities?" prompt: not confirmed whether it appeared.
+- The minimal presentation on the device; VoiceOver on the activity.
+- Update throttling by iOS (no sign of it in 150 updates, but nothing measures it directly),
+  battery and thermal cost off the charger, the 8-hour end and the restart.
+- Speech text in the island with real speech (D8), battery (D7): postponed by the student.
+
+## 8. Remaining device steps (each needs microphone authorization)
 
 | # | Step | Looks for |
 |---|---|---|
-| D1 | Install the Debug build; launch `ambient`; go to the Home Screen | Extension signs and runs; compact island as in S2/S3; answer iOS's Live Activities prompt |
-| D2 | Launch `knock`, lock the iPhone before the knock (9 s), keep the screen off | **Screen stays off, no sound, no vibration**; after waking: icon-only Lock Screen entry |
-| D3 | Same with the Always-On display | Dimmed icon updates without waking |
-| D4 | Turn "Expand for important events" on; `knock` unlocked; then `knock` locked at 2 s, 8 s and 20 s after locking | Expansion when unlocked; whether a request shortly after locking wakes the screen; when `lock=` in the export turns `locked` |
-
-With the microphone (needs the student's authorization each time):
-
-| # | Step | Looks for |
-|---|---|---|
-| D5 | Start Listening with AirPods and Spotify playing; play sounds | Island beside Now Playing (minimal presentation expected); Spotify unaffected |
-| D6 | 10 minutes locked (together with A3 of the background tests) | Icons keep following sounds; export: updates, `classifierFailures` |
-| D7 | 30–60 minutes off the charger with the activity on, then off | Battery and thermal difference |
-| D8 | Real knock / speech with transcription on | Episode text; summary only in the expanded island |
+| R1 | Retest of §6.1: 5 minutes unlocked with Settings in front, clips including a sneeze, a door creak, footsteps, a knock, a dog, with the room as it is | A new sound becomes the icon within about 2 s; no "Door or knock" from door sounds; update log |
+| R2 | The same locked, with the student watching the screen | No wake, no sound, no vibration (D6's unverified items) |
+| D7 | 30–60 minutes off the charger with the activity on, then off | Battery and thermal difference (postponed) |
+| D8 | Real knock / speech with transcription on | Episode text; summary only in the expanded island (postponed) |

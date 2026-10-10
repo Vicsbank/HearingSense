@@ -10,6 +10,9 @@
 //                                                    asked to do (scenes and a generated long scene)
 //   hs-attention-eval island-trace <scenario-id> [--mode …]
 //   hs-attention-eval island-symbols                 label → kind → category → SF Symbol (TSV)
+//   hs-attention-eval island-device-trace <export.txt>   replays the confirmed sound events of a
+//                                                    device diagnostics export through the icon
+//                                                    channel, first-version rules against current
 //
 // Every number printed here describes scripted, synthetic input (model id `synthetic.replay`).
 // It shows how the engine's rules behave; it is not a measurement of real-world accuracy.
@@ -348,7 +351,124 @@ case "island-symbols":
         print("\(label)\t\(kind.id)\t\(kind.category.rawValue)\t\(symbol.name)\t\(symbol.level.rawValue)")
     }
 
+case "island-device-trace":
+    // Real events, recorded on a device as metadata (time, label, peak, windows; no audio). The
+    // export logs when an event was confirmed and when it ended; what happened in between is
+    // rebuilt (an update every 5 s), so this is an approximation of the icon channel only: the
+    // attention engine is not replayed (speech results are not in the export).
+    guard arguments.count > 1, let text = try? String(contentsOfFile: arguments[1], encoding: .utf8) else {
+        print("Usage: hs-attention-eval island-device-trace <diagnostics export>")
+        exit(2)
+    }
+    struct TraceEvent {
+        var event: ConfirmedAcousticEvent
+        var confirmed: Date
+        var ended: Date?
+    }
+    let taxonomy = SoundTaxonomy.appleV1
+    let base = Date(timeIntervalSince1970: 1_800_000_000)
+    func clock(_ stamp: Substring) -> Date? {
+        let parts = stamp.split(separator: ":").compactMap { Double($0) }
+        guard parts.count == 3 else { return nil }
+        return base.addingTimeInterval(parts[0] * 3600 + parts[1] * 60 + parts[2])
+    }
+    var traced: [TraceEvent] = []
+    var open: [String: Int] = [:]
+    var lastStamp = base
+    let confirmedPattern = /^(\d\d:\d\d:\d\d\.\d+) \[recognition\] Event confirmed: (.+) \[([a-z_]+)\] peak ([0-9.]+), (\d+) windows/
+    let endedPattern = /^(\d\d:\d\d:\d\d\.\d+) \[recognition\] Event ended: (.+), observed/
+    for line in text.split(separator: "\n") {
+        if let match = line.firstMatch(of: confirmedPattern), let date = clock(match.1), let peak = Double(match.4),
+           let windows = Int(match.5)
+        {
+            lastStamp = max(lastStamp, date)
+            let label = SoundLabel(String(match.3))
+            let evidence = EventEvidence(supportingWindows: windows, observedWindows: windows, peakScore: ClassifierScore(peak),
+                                         scoreSum: peak * Double(windows))
+            let event = ConfirmedAcousticEvent(
+                kind: taxonomy.definition(for: label).kind, source: .soundClassifier(.appleSoundClassifierV1),
+                primaryLabel: label, phase: .confirmed, audioStart: 0, audioConfirmed: 0, audioLastObserved: 0,
+                startDate: date, confirmedDate: date, lastObservedDate: date, evidence: evidence,
+                quality: EventQuality.assess(evidence))
+            open[String(match.2)] = traced.count
+            traced.append(TraceEvent(event: event, confirmed: date))
+        } else if let match = line.firstMatch(of: endedPattern), let date = clock(match.1), let index = open[String(match.2)] {
+            lastStamp = max(lastStamp, date)
+            traced[index].ended = date
+            open[String(match.2)] = nil
+        }
+    }
+    guard let first = traced.first else {
+        print("No confirmed events in \(arguments[1])")
+        exit(1)
+    }
+    var timeline: [(date: Date, update: AcousticEventUpdate)] = []
+    for item in traced {
+        let end = item.ended ?? lastStamp
+        var event = item.event
+        timeline.append((item.confirmed, .started(event)))
+        var time = item.confirmed.addingTimeInterval(5)
+        while time < end {
+            event.phase = .ongoing
+            event.lastObservedDate = time
+            event.evidence.supportingWindows += 6
+            event.evidence.observedWindows += 6
+            event.quality = EventQuality.assess(event.evidence)
+            timeline.append((time, .updated(event)))
+            time = time.addingTimeInterval(5)
+        }
+        event.phase = .ended
+        event.endedDate = end
+        timeline.append((end, .ended(event)))
+    }
+    timeline.sort { $0.date < $1.date }
+    let span = lastStamp.timeIntervalSince(first.confirmed)
+    print("\(traced.count) confirmed events over \(number(span, 0)) s from \(arguments[1])")
+    print("Icon channel only; rebuilt from the export's event log (confirmation and end times).\n")
+    print(pad("rules", 16) + pad("icon changes", 14) + pad("per hour", 10) + pad("events shown", 14) + pad("delay p50 s", 13)
+        + pad("delay p90 s", 13) + pad("shown < 2 s", 12))
+    for (name, policy) in [("first version", AmbientIconPolicy.firstVersion), ("current", AmbientIconPolicy.standard)] {
+        var stream = AmbientIconStream(policy: policy)
+        var changes: [AmbientIconStream.Change] = []
+        stream.process(.sessionStarted(at: first.confirmed.addingTimeInterval(-1)))
+        func drain(until limit: Date) {
+            while let deadline = stream.nextDeadline, deadline <= limit {
+                if let change = stream.process(.tick(at: deadline)) { changes.append(change) }
+            }
+        }
+        for item in timeline {
+            drain(until: item.date)
+            if let change = stream.process(.sound(item.update)) { changes.append(change) }
+        }
+        drain(until: lastStamp.addingTimeInterval(60))
+        // Which events became the icon, and how long after their confirmation.
+        var delays: [Double] = []
+        var eligible = 0
+        for item in traced where !policy.excludedKindIDs.contains(item.event.kind.id) {
+            eligible += 1
+            let until = (item.ended ?? lastStamp).addingTimeInterval(policy.linger)
+            let before = changes.last { $0.date <= item.confirmed }
+            if before?.icon?.kindID == item.event.kind.id {
+                delays.append(0)
+            } else if let shown = changes.first(where: { $0.date > item.confirmed && $0.date <= until
+                    && $0.icon?.kindID == item.event.kind.id }) {
+                delays.append(shown.date.timeIntervalSince(item.confirmed))
+            }
+        }
+        delays.sort()
+        var shortest = 0
+        for (index, change) in changes.enumerated() where change.icon != nil && index + 1 < changes.count {
+            if changes[index + 1].date.timeIntervalSince(change.date) < 2 { shortest += 1 }
+        }
+        func quantile(_ fraction: Double) -> Double? {
+            delays.isEmpty ? nil : delays[min(Int(Double(delays.count) * fraction), delays.count - 1)]
+        }
+        print(pad(name, 16) + pad("\(changes.count)", 14) + pad(number(Double(changes.count) / max(span, 1) * 3600, 0), 10)
+            + pad("\(delays.count) of \(eligible)", 14) + pad(number(quantile(0.5), 1), 13) + pad(number(quantile(0.9), 1), 13)
+            + pad("\(shortest)", 12))
+    }
+
 default:
-    print("Unknown command \(command). Commands: scenarios, trace, soak, determinism, list, island, island-trace, island-symbols")
+    print("Unknown command \(command). Commands: scenarios, trace, soak, determinism, list, island, island-trace, island-symbols, island-device-trace")
     exit(2)
 }

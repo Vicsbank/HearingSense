@@ -77,6 +77,19 @@ final class LiveActivityController {
     private(set) var endedBySystem = 0
     private(set) var activityStartedAt: Date?
     private(set) var isDemoRunning = false
+    /// Every update handed to ActivityKit in this launch (bounded), for measuring the real update
+    /// rate on a device. Metadata only: `summary` is `IslandContent.redactedSummary`.
+    private(set) var updateLog: [UpdateRecord] = []
+
+    struct UpdateRecord: Equatable {
+        var date: Date
+        var summary: String
+        var requestedExpansion: Bool
+        /// How long `Activity.update` took to return.
+        var milliseconds: Double
+    }
+
+    static let updateLogCapacity = 400
 
     @ObservationIgnored private var pipeline: IslandPipeline
     @ObservationIgnored private var activity: Activity<HearingSenseActivityAttributes>?
@@ -84,6 +97,10 @@ final class LiveActivityController {
     @ObservationIgnored private var passcodeSet: Bool?
     @ObservationIgnored private var lockSignalObserved: Bool
     @ObservationIgnored private var protectedDataTask: Task<Void, Never>?
+    @ObservationIgnored private var protectedDataAvailableTask: Task<Void, Never>?
+    /// When the "protected data will become unavailable" notice last arrived without an
+    /// "available" notice (or the app coming to the front) since. While set, the estimate is `locked`.
+    @ObservationIgnored private var willLockNoticeAt: Date?
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private var deadlineTask: Task<Void, Never>?
     @ObservationIgnored private var stateTask: Task<Void, Never>?
@@ -124,6 +141,12 @@ final class LiveActivityController {
                 self?.protectedDataBecameUnavailable()
             }
         }
+        protectedDataAvailableTask = Task { [weak self] in
+            let name = UIApplication.protectedDataDidBecomeAvailableNotification
+            for await _ in NotificationCenter.default.notifications(named: name).map({ _ in () }) {
+                self?.protectedDataBecameAvailable()
+            }
+        }
         refreshLockEstimate(checkPasscode: true)
         jobs.yield(.cleanUp)
     }
@@ -132,9 +155,18 @@ final class LiveActivityController {
         if !lockSignalObserved {
             lockSignalObserved = true
             defaults.set(true, forKey: Self.lockSignalKey)
-            log(.lifecycle, "Live Activity: lock signal observed on this iPhone (protected data became unavailable)")
         }
+        willLockNoticeAt = .now
+        // Measured on the iPhone 18 Pro: how long before the data is actually unavailable this arrives.
+        log(.lifecycle, "Lock signal: protected data will become unavailable (data available right now: "
+            + "\(UIApplication.shared.isProtectedDataAvailable))")
         lockEstimate = .locked
+    }
+
+    private func protectedDataBecameAvailable() {
+        willLockNoticeAt = nil
+        log(.lifecycle, "Lock signal: protected data became available")
+        refreshLockEstimate(checkPasscode: false)
     }
 
     deinit {
@@ -143,6 +175,7 @@ final class LiveActivityController {
         worker?.cancel()
         jobs.finish()
         protectedDataTask?.cancel()
+        protectedDataAvailableTask?.cancel()
     }
 
     /// Where lifecycle messages go (the app's diagnostic log). Metadata only.
@@ -179,6 +212,8 @@ final class LiveActivityController {
     }
 
     func appBecameActive() {
+        // On screen means unlocked: a lock notice without its "available" counterpart is over.
+        willLockNoticeAt = nil
         refreshLockEstimate(checkPasscode: true)
         // An activity can only be requested while the app is on screen.
         if needsStart, pipeline.isLive { jobs.yield(.start) }
@@ -256,7 +291,8 @@ final class LiveActivityController {
             defaults.set(true, forKey: Self.lockSignalKey)
         }
         lockEstimate = DeviceLockEstimate.estimate(passcodeSet: passcodeSet, protectedDataAvailable: isAvailable,
-                                                   lockSignalObserved: lockSignalObserved)
+                                                   lockSignalObserved: lockSignalObserved,
+                                                   lockNoticePending: willLockNoticeAt != nil)
     }
 
     /// One timer for the pipeline's next deadline (an icon that lingered, an episode's expiry, a
@@ -287,7 +323,13 @@ final class LiveActivityController {
             // from any context; this controller is the only one that holds the activity.
             guard let held = activity else { return }
             nonisolated(unsafe) let activity = held
+            let sent = Date.now
+            let started = ContinuousClock.now
             await activity.update(activityContent(content), alertConfiguration: alert.map(alertConfiguration))
+            let elapsed = (ContinuousClock.now - started).components
+            updateLog.append(UpdateRecord(date: sent, summary: content.redactedSummary, requestedExpansion: alert != nil,
+                                          milliseconds: Double(elapsed.seconds) * 1000 + Double(elapsed.attoseconds) / 1e15))
+            if updateLog.count > Self.updateLogCapacity { updateLog.removeFirst(updateLog.count - Self.updateLogCapacity) }
         case .end:
             stateTask?.cancel()
             stateTask = nil
@@ -390,7 +432,11 @@ final class LiveActivityController {
     /// Compact state for the periodic debug export. Metadata only.
     var heartbeat: String {
         let blocked = alertsBlocked.values.reduce(0, +)
-        return "island=\(content?.mode.rawValue ?? "off") lock=\(lockEstimate.rawValue) updates=\(statistics.updates) "
+        let live = DeviceLockEstimate.estimate(passcodeSet: passcodeSet,
+                                               protectedDataAvailable: UIApplication.shared.isProtectedDataAvailable,
+                                               lockSignalObserved: lockSignalObserved,
+                                               lockNoticePending: willLockNoticeAt != nil)
+        return "island=\(content?.mode.rawValue ?? "off") lock=\(live.rawValue) willLockNotice=\(willLockNoticeAt != nil) updates=\(statistics.updates) "
             + "keepAlives=\(statistics.keepAlives) icons=\(ambientStatistics.changes) alertsSent=\(alertsSent) "
             + "alertsBlocked=\(blocked) activities=\(activitiesStarted) endedBySystem=\(endedBySystem)"
     }
@@ -415,6 +461,23 @@ final class LiveActivityController {
         lines.append("Attention episodes shown \(statistics.attentionEpisodes); expansion requests \(statistics.alertRequests) "
             + "(rate-limited \(statistics.alertRequestsRateLimited)): sent to iOS \(alertsSent), silent instead "
             + (blocked.isEmpty ? "0" : blocked.joined(separator: ", ")))
+        lines.append("Secondary-only changes not sent: \(statistics.secondaryChangesNotSent)")
+        if let first = updateLog.first, let last = updateLog.last {
+            let span = last.date.timeIntervalSince(first.date)
+            let gaps = zip(updateLog.dropFirst(), updateLog).map { $0.date.timeIntervalSince($1.date) }
+            let rate = span > 0 ? Double(updateLog.count - 1) / span * 3600 : 0
+            let style = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(1))
+            lines.append("Updates handed to ActivityKit: \(updateLog.count) in \(span.formatted(style)) s"
+                + " (\(rate.formatted(style)) per hour over that span); shortest gap "
+                + "\((gaps.min() ?? 0).formatted(style)) s; update call mean "
+                + "\((updateLog.map(\.milliseconds).reduce(0, +) / Double(updateLog.count)).formatted(style)) ms, max "
+                + "\((updateLog.map(\.milliseconds).max() ?? 0).formatted(style)) ms")
+            lines.append("Update log (oldest first; speech-derived text omitted):")
+            for record in updateLog.suffix(150) {
+                lines.append("  \(record.date.formatted(.iso8601.time(includingFractionalSeconds: true))) "
+                    + "\(record.milliseconds.formatted(style)) ms  \(record.summary)" + (record.requestedExpansion ? "  [expansion requested]" : ""))
+            }
+        }
         return lines.joined(separator: "\n")
     }
 }
@@ -434,10 +497,29 @@ extension LiveActivityController {
 
     static var assumesUnlocked: Bool { ProcessInfo.processInfo.arguments.contains(assumeUnlockedArgument) }
 
+    /// `--hs-demo-key-at <seconds>`: when the scene's main event happens (default 9 s).
+    static let demoKeyAtArgument = "--hs-demo-key-at"
+    /// `--hs-demo-after-background`: the scene starts when the app leaves the screen (Home, another
+    /// app, or the lock button) instead of at launch. Without a listening session iOS suspends the
+    /// app about 30 s after that, so device checks of the locked screen time their event from the
+    /// moment of locking: "lock the iPhone, the knock comes N seconds later".
+    static let demoAfterBackgroundArgument = "--hs-demo-after-background"
+
     static var requestedDemo: DemoScene? {
         let arguments = ProcessInfo.processInfo.arguments
         guard let index = arguments.firstIndex(of: demoArgument) else { return nil }
         return index + 1 < arguments.count ? DemoScene(rawValue: arguments[index + 1]) ?? .ambient : .ambient
+    }
+
+    static var requestedDemoKeyTime: TimeInterval {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: demoKeyAtArgument), index + 1 < arguments.count,
+              let value = TimeInterval(arguments[index + 1]) else { return 9 }
+        return max(value, 0.5)
+    }
+
+    static var demoStartsAfterBackground: Bool {
+        ProcessInfo.processInfo.arguments.contains(demoAfterBackgroundArgument)
     }
 
     enum DemoScene: String, CaseIterable {
@@ -454,27 +536,29 @@ extension LiveActivityController {
         }
 
         /// Synthetic events (`synthetic.replay`); the same builders the Window 4 scenes use.
-        var scenario: AttentionScenario {
+        /// An ordinary sound starts within a second; the scene's main event happens at `keyAt`.
+        func scenario(keyAt: TimeInterval = 9) -> AttentionScenario {
             var scene = ScenarioBuilder(id: "island-demo-\(rawValue)", title: title, summary: "Live Activity demo.")
+            let lead = min(1, keyAt / 2)
             switch self {
             case .idle:
                 break
             case .ambient:
-                scene.sound("rain", at: 2, duration: 40, label: .ambient, confirmDelay: 0, endAfter: 3)
-                scene.sound("dog", at: 9, duration: 5, label: .optional, confirmDelay: 0, endAfter: 2)
-                scene.sound("bird", at: 24, duration: 6, label: .ambient, confirmDelay: 0, endAfter: 2)
+                scene.sound("rain", at: lead, duration: keyAt + 31, label: .ambient, confirmDelay: 0, endAfter: 3)
+                scene.sound("dog", at: keyAt, duration: 5, label: .optional, confirmDelay: 0, endAfter: 2)
+                scene.sound("bird", at: keyAt + 15, duration: 6, label: .ambient, confirmDelay: 0, endAfter: 2)
             case .knock:
-                scene.sound("rain", at: 2, duration: 40, label: .ambient, confirmDelay: 0, endAfter: 3)
-                scene.sound("door", at: 9, duration: 1, label: .important, confirmDelay: 0, endAfter: 2)
+                scene.sound("rain", at: lead, duration: keyAt + 31, label: .ambient, confirmDelay: 0, endAfter: 3)
+                scene.sound("door", at: keyAt, duration: 1, label: .important, confirmDelay: 0, endAfter: 2)
             case .siren:
-                scene.sound("music", at: 2, duration: 40, label: .irrelevant, confirmDelay: 0, endAfter: 3)
-                scene.sound("siren", at: 9, duration: 15, label: .important, confirmDelay: 0, endAfter: 3)
+                scene.sound("music", at: lead, duration: keyAt + 31, label: .irrelevant, confirmDelay: 0, endAfter: 3)
+                scene.sound("siren", at: keyAt, duration: 15, label: .important, confirmDelay: 0, endAfter: 3)
             case .speech:
-                scene.sound("rain", at: 2, duration: 40, label: .ambient, confirmDelay: 0, endAfter: 3)
-                scene.speech(at: 7, label: .optional, name: "Reminder") { speech in
-                    speech.final("we have a biology test tomorrow", at: 10)
-                    speech.summary("Biology Test Tomorrow", at: 12, category: .reminder, timeOrNumber: "tomorrow")
-                    speech.completed(at: 24)
+                scene.sound("rain", at: lead, duration: keyAt + 31, label: .ambient, confirmDelay: 0, endAfter: 3)
+                scene.speech(at: max(keyAt - 5, lead), label: .optional, name: "Reminder") { speech in
+                    speech.final("we have a biology test tomorrow", at: max(keyAt - 2, lead + 0.5))
+                    speech.summary("Biology Test Tomorrow", at: keyAt, category: .reminder, timeOrNumber: "tomorrow")
+                    speech.completed(at: keyAt + 12)
                 }
             }
             return scene.build()
@@ -485,19 +569,32 @@ extension LiveActivityController {
     /// attention engine (whose injected sounds and intents arrive here like real ones). The
     /// microphone stays off. A background task keeps the app running for a short while after it
     /// leaves the screen, which is when the island shows the activity.
-    func runDemo(_ scene: DemoScene, attention: AttentionController) {
+    func runDemo(_ scene: DemoScene, attention: AttentionController, keyAt: TimeInterval = 9,
+                 afterBackground: Bool = false)
+    {
         stopDemo(attention: attention)
         isDemoRunning = true
-        log(.lifecycle, "Live Activity demo “\(scene.title)” (synthetic events, microphone off)")
+        let scenario = scene.scenario(keyAt: keyAt)
+        log(.lifecycle, "Live Activity demo “\(scene.title)” (synthetic events, microphone off; main event at "
+            + "\(keyAt.formatted()) s" + (afterBackground ? " after the app leaves the screen)" : ")"))
         demoBackgroundTask = UIApplication.shared.beginBackgroundTask(withName: "island-demo") { [weak self] in
             guard let self else { return }
+            self.log(.lifecycle, "Live Activity demo: background time is over; iOS suspends the app now")
             UIApplication.shared.endBackgroundTask(self.demoBackgroundTask)
             self.demoBackgroundTask = .invalid
         }
         process(.sessionStarted(at: .now))
-        attention.inject(scene.scenario)
         demoTask = Task { [weak self] in
-            try? await Task.sleep(for: .seconds(scene.scenario.duration + 8))
+            if afterBackground {
+                let entered = NotificationCenter.default.notifications(named: UIApplication.didEnterBackgroundNotification)
+                    .map { _ in () }
+                for await _ in entered { break }
+                guard !Task.isCancelled, let self else { return }
+                self.log(.lifecycle, "Live Activity demo: app left the screen, scene starts")
+            }
+            guard !Task.isCancelled else { return }
+            attention.inject(scenario)
+            try? await Task.sleep(for: .seconds(scenario.duration + 8))
             guard !Task.isCancelled, let self else { return }
             self.stopDemo(attention: attention)
         }

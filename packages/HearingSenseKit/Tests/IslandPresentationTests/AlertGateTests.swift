@@ -21,6 +21,17 @@ import Testing
         #expect(DeviceLockEstimate.estimate(passcodeSet: true, protectedDataAvailable: false, lockSignalObserved: false) == .locked)
     }
 
+    /// Measured on the iPhone: the data is still available for 4–12 s after locking, the notice
+    /// arrives at once.
+    @Test func aPendingLockNoticeMeansLockedAlthoughTheDataIsStillAvailable() {
+        #expect(DeviceLockEstimate.estimate(passcodeSet: true, protectedDataAvailable: true, lockSignalObserved: true,
+                                            lockNoticePending: true) == .locked)
+        #expect(DeviceLockEstimate.estimate(passcodeSet: true, protectedDataAvailable: true, lockSignalObserved: true,
+                                            lockNoticePending: false) == .unlocked)
+        #expect(DeviceLockEstimate.estimate(passcodeSet: false, protectedDataAvailable: true, lockSignalObserved: true,
+                                            lockNoticePending: true) == .unknown)
+    }
+
     @Test func expansionIsOffUnlessTheUserTurnsItOn() {
         #expect(IslandSettings.default.expandsForImportantEvents == false)
         #expect(AlertGate.evaluate(settings: .default, lock: .unlocked, appIsActive: false) == .blocked(.disabledInSettings))

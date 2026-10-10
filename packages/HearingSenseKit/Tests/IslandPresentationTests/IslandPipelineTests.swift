@@ -137,8 +137,7 @@ import Testing
             #expect(update.content.headline == "Door or knock")
             #expect(update.content.symbolName == AttentionCategory.doorAndKnock.systemImage)
         }
-        content = driver.shown
-        #expect(content?.ambientSymbolName == "cloud.rain")
+        #expect(driver.updates.filter { $0.date > T.date(10) }.isEmpty)
 
         // The episode ends: the island goes back to the ordinary sound that is still there.
         driver.send(.sound(rain.updated(at: T.date(26))))
@@ -146,6 +145,31 @@ import Testing
         #expect(driver.shown?.mode == .ambient)
         #expect(driver.shown?.symbolName == "cloud.rain")
         #expect(driver.shown?.headline == nil)
+    }
+
+    @Test func secondaryDetailsAloneAreNotWorthAnUpdate() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Siren", priority: .urgent, at: 5, category: .emergencySignals)))
+        let before = driver.updates.count
+        // Ordinary sounds change and a lower-priority episode joins: only the small ambient icon
+        // and the "+N more" count of the expanded view would differ.
+        var rain = sound("rain", 1, at: 6)
+        driver.send(.sound(rain.started()))
+        var dog = sound("dog", 2, at: 12)
+        driver.send(.sound(dog.started()))
+        driver.send(.sound(dog.ended(at: T.date(14))))
+        driver.send(.intent(intent(2, "Dog", priority: .normal, at: 15, category: .animals)))
+        driver.send(.sound(rain.updated(at: T.date(20))))
+        driver.advance(to: 24)
+        #expect(driver.updates.count == before)
+        #expect(driver.pipeline.statistics.secondaryChangesNotSent > 0)
+        #expect(driver.shown?.ambientSymbolName == nil)
+        // The next update that is sent anyway carries the current values.
+        driver.send(.intent(intent(1, "Siren", priority: .urgent, action: .update, interruption: PresentationInterruption.none,
+                                   at: 25, category: .emergencySignals, subtitle: "Still going")))
+        #expect(driver.updates.count == before + 1)
+        #expect(driver.shown?.ambientSymbolName == "cloud.rain")
+        #expect(driver.shown?.additionalCount == 1)
     }
 
     @Test func aResolvedEpisodeStaysUntilItsExpiryAndCanComeBack() {
@@ -167,6 +191,61 @@ import Testing
         #expect(driver.shown?.mode == .attention)
     }
 
+    /// The two-channel rule as the student wrote it: ordinary sounds never overwrite "an active
+    /// high-priority event or speech summary". A lower-priority episode without a summary is not
+    /// protected.
+    @Test func aLowerPriorityEpisodeGivesWayToANewerOrdinarySound() {
+        var driver = IslandDriver()
+        var speechSound = sound("speech", 1, at: 2)
+        driver.send(.sound(speechSound.started()))
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech)))
+        #expect(driver.shown?.mode == .attention)
+        var sneeze = sound("body_sounds", 2, at: 8)
+        driver.send(.sound(sneeze.started()))
+        #expect(driver.shown?.mode == .ambient)
+        #expect(driver.shown?.symbolName == "lungs")
+        #expect(driver.alerts.isEmpty)
+        // The engine changes the episode: it is in front again.
+        driver.send(.sound(sneeze.ended(at: T.date(9))))
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .update, at: 20, category: .speech,
+                                   subtitle: "Still going")))
+        #expect(driver.shown?.mode == .attention)
+
+        // A summary protects the episode, and so does a high priority.
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .update, at: 22, category: .speech,
+                                   summary: "Biology Test Tomorrow")))
+        driver.send(.sound(sound("dog", 3, at: 24).started()))
+        #expect(driver.shown?.headline == "Biology Test Tomorrow")
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .dismiss, at: 30, category: .speech)))
+        driver.send(.intent(intent(2, "Door or knock", priority: .high, at: 31)))
+        driver.send(.sound(sound("bird", 4, at: 33).started()))
+        #expect(driver.shown?.headline == "Door or knock")
+        _ = speechSound.ended(at: T.date(40))
+    }
+
+    @Test func aResolvedEpisodeDoesNotComeBackToTheFrontAfterAnotherOne() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Dog", priority: .normal, at: 5, category: .animals)))
+        driver.send(.intent(intent(2, "Nearby Speech", priority: .normal, at: 9, category: .speech)))
+        #expect(driver.shown?.headline == "Nearby Speech")
+        // The dog ended and lingers until 30 s; the speech episode is gone at 20 s.
+        driver.send(.intent(intent(1, "Dog", priority: .normal, action: .dismiss, at: 10, expires: 30, category: .animals)))
+        driver.send(.intent(intent(2, "Nearby Speech", priority: .normal, action: .dismiss, at: 20, category: .speech)))
+        #expect(driver.shown?.mode == .listening)
+        driver.advance(to: 31)
+        #expect(driver.commands.filter { $0.date > T.date(20) }.isEmpty)
+        // An update of the resolved episode (the sound came back) does bring it to the front.
+        driver.send(.intent(intent(3, "Horn", priority: .high, at: 40, category: .vehicleWarnings)))
+        driver.send(.intent(intent(3, "Horn", priority: .high, action: .dismiss, at: 42, expires: 60, category: .vehicleWarnings)))
+        driver.send(.intent(intent(4, "Nearby Speech", priority: .high, at: 43, category: .speech)))
+        driver.advance(to: 47)
+        #expect(driver.shown?.headline == "Nearby Speech")
+        driver.send(.intent(intent(3, "Horn", priority: .high, action: .update, at: 50, category: .vehicleWarnings,
+                                   subtitle: "Repeated 2 times")))
+        driver.send(.intent(intent(4, "Nearby Speech", priority: .high, action: .dismiss, at: 51, category: .speech)))
+        #expect(driver.shown?.headline == "Horn")
+    }
+
     @Test func anEpisodeIsRemovedAtItsOwnExpiryEvenWithoutADismissal() {
         var driver = IslandDriver()
         driver.send(.intent(intent(1, "Door or knock", priority: .high, at: 5, expires: 17)))
@@ -180,9 +259,9 @@ import Testing
         // Same priority, 1 s later: the first one keeps the island for its minimum hold.
         driver.send(.intent(intent(2, "Breaking glass", priority: .high, at: 6, category: .impacts)))
         #expect(driver.shown?.headline == "Door or knock")
-        #expect(driver.shown?.additionalCount == 1)
         driver.advance(to: 8)
         #expect(driver.shown?.headline == "Breaking glass")
+        #expect(driver.shown?.additionalCount == 1)
         // A higher priority replaces it at once.
         driver.send(.intent(intent(3, "Siren", priority: .urgent, at: 8.5, category: .emergencySignals)))
         #expect(driver.shown?.headline == "Siren")

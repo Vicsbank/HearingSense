@@ -140,8 +140,13 @@ extension SoundTaxonomy {
             kind("bicycle_skateboard", "Bicycle or skateboard", .transportation, .intermittent, ["bicycle", "skateboard"]),
 
             // Household
-            kind("door", "Door or knock", .household, .transient,
-                 ["door", "door_bell", "door_sliding", "door_slam", "knock", "tap"]),
+            // Someone at the door (knock, bell, slam) is kept apart from a door merely moving.
+            // Measured on the iPhone in a lived-in room (Window 5 device session, 35 minutes):
+            // the label `door` was confirmed 12 times and none was a knock, while `knock` was
+            // confirmed 3 times, each a played knock. As one kind every one of them was a
+            // high-priority "Door or knock".
+            kind("door", "Door or knock", .household, .transient, ["door_bell", "door_slam", "knock", "tap"]),
+            kind("door_movement", "Door", .household, .transient, ["door", "door_sliding"]),
             kind("phone", "Phone ringing", .household, .intermittent, ["telephone", "telephone_bell_ringing", "ringtone"]),
             kind("beep", "Beep", .household, .intermittent, ["beep"]),
             kind("kitchen", "Kitchen sounds", .household, .intermittent,

@@ -57,8 +57,11 @@ enum AudioSetLabelTable {
             exact: ["Dog", "Bark", "Howl", "Bow-wow", "Growling", "Whimper (dog)"],
             within: ["Yip"]),
         "door": (
-            exact: ["Door", "Doorbell", "Sliding door", "Slam", "Knock", "Tap"],
+            exact: ["Doorbell", "Slam", "Knock", "Tap"],
             within: ["Ding-dong"]),
+        "door_movement": (
+            exact: ["Door", "Sliding door"],
+            within: []),
         "farm_animal": (
             exact: ["Clip-clop", "Neigh, whinny", "Moo", "Oink", "Bleat", "Fowl", "Chicken, rooster", "Cluck", "Crowing, cock-a-doodle-doo", "Gobble", "Quack", "Honk"],
             within: ["Livestock, farm animals, working animals", "Horse", "Cattle, bovinae", "Pig", "Goat", "Sheep", "Turkey", "Duck", "Goose"]),

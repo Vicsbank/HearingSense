@@ -104,6 +104,15 @@ public struct DetectionPolicy: Hashable, Sendable {
                                       instantConfirmScore: 0.85, endAfter: 5.0),
             "bang": ConfirmationRule(enterScore: 0.5, sustainScore: 0.35, requiredHits: 2, confirmWithin: 2.0,
                                      instantConfirmScore: 0.85, endAfter: 2.0),
+            // Window 5 device session (iPhone, lived-in room): one `screaming` window at 0.90 among
+            // laughter became a high-priority alert. Like the other warning signals it now needs
+            // two windows or one very strong window. One observation; provisional.
+            "screaming": ConfirmationRule(enterScore: 0.5, sustainScore: 0.35, requiredHits: 2, confirmWithin: 2.0,
+                                          instantConfirmScore: 0.95, endAfter: 2.0),
+            // A door moving is an ordinary sound (an icon, never an alert): no single-window
+            // confirmation. On the iPhone 4 of 12 `door` events came from one window (0.66–0.91).
+            "door_movement": ConfirmationRule(enterScore: 0.45, sustainScore: 0.3, requiredHits: 2, confirmWithin: 2.0,
+                                              instantConfirmScore: nil, endAfter: 2.0),
         ],
         suppressions: [
             // Offline evaluation (1.5 s windows): 20 of 22 vehicle_horn events on 300 GTZAN music

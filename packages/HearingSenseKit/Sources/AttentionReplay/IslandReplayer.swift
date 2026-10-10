@@ -105,7 +105,15 @@ public enum IslandReplayer {
                 feedPipeline(.intent(intent))
             }
             // The rule this window exists for: an episode the engine presents is what is in front.
-            if !engine.snapshot.presented.isEmpty, pipeline.isLive, pipeline.shown?.mode != .attention {
+            // (An episode that has ended and only lingers may have lost the island to a later one
+            // and does not get it back.)
+            // Protected episodes only (high priority or a speech summary): a lower one gives way to
+            // a newer ordinary sound.
+            let protected = engine.snapshot.presented.contains { event in
+                event.lifecycle != .resolved
+                    && (event.priority >= policy.protectedPriority || (settings.showsSpeechSummaries && event.privateContent != nil))
+            }
+            if protected, pipeline.isLive, pipeline.shown?.mode != .attention {
                 violations.append("\(scenario.id): engine presents an episode but the activity shows "
                     + "\(pipeline.shown?.mode.rawValue ?? "nothing")")
             }

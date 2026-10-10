@@ -124,8 +124,11 @@ silent; automatic expansion is off by default because the lock state can only be
 Report: `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`; results and device protocol:
 `docs/testing/WINDOW5_TEST_RESULTS.md`.
 
-**Open:** nothing was run on the physical iPhone, so the acceptance criterion below is not met yet
-(device steps D1–D8). Not done from the list below: haptics (left out on purpose), app icon.
+Device steps D1–D4 (synthetic demo scenes, microphone off) were run on the iPhone 18 Pro on
+2026-10-10: rendering as designed, locked screen not woken.
+
+**Open:** the acceptance criterion below asks for real events; D5–D8 need the student's microphone
+authorization. Not done from the list below: haptics (left out on purpose), app icon.
 
 Original scope:
 

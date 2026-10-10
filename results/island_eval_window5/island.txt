@@ -2,63 +2,63 @@ Synthetic input. Columns: seconds, activity updates, updates per hour, ambient i
 episodes shown, expansion requests (before the lock-state gate), seconds in attention / icon / idle.
 
 scenario                      mode       s       updates upd/h     icons  episodes expand  att s   icon s  idle s  rules
-01-continuous-rain            quiet      720     4       20        4      0        0       0       593     127     ok
-01-continuous-rain            balanced   720     4       20        4      0        0       0       593     127     ok
-01-continuous-rain            sensitive  720     5       25        4      1        0       20      573     127     ok
-02-repeated-music             quiet      620     6       35        6      0        0       0       499     121     ok
-02-repeated-music             balanced   620     6       35        6      0        0       0       499     121     ok
-02-repeated-music             sensitive  620     6       35        6      0        0       0       499     121     ok
-03-horn-during-rain           quiet      210     6       103       4      1        1       10      116     84      ok
-03-horn-during-rain           balanced   210     6       103       4      1        1       10      116     84      ok
-03-horn-during-rain           sensitive  210     7       120       4      2        1       30      96      84      ok
-04-repeated-vs-independent-hornsquiet      300     15      180       6      3        3       41      0       259     ok
-04-repeated-vs-independent-hornsbalanced   300     15      180       6      3        3       41      0       259     ok
-04-repeated-vs-independent-hornssensitive  300     15      180       6      3        3       41      0       259     ok
-05-siren-during-cooldown      quiet      210     15      257       8      5        2       78      11      121     ok
-05-siren-during-cooldown      balanced   210     17      291       8      6        3       78      11      121     ok
-05-siren-during-cooldown      sensitive  210     17      291       8      6        4       78      11      121     ok
+01-continuous-rain            quiet      720     4       20        4      0        0       0       603     117     ok
+01-continuous-rain            balanced   720     4       20        4      0        0       0       603     117     ok
+01-continuous-rain            sensitive  720     5       25        4      1        0       20      583     117     ok
+02-repeated-music             quiet      620     6       35        6      0        0       0       514     106     ok
+02-repeated-music             balanced   620     6       35        6      0        0       0       514     106     ok
+02-repeated-music             sensitive  620     6       35        6      0        0       0       514     106     ok
+03-horn-during-rain           quiet      210     4       69        4      1        1       10      121     79      ok
+03-horn-during-rain           balanced   210     4       69        4      1        1       10      121     79      ok
+03-horn-during-rain           sensitive  210     5       86        4      2        1       30      101     79      ok
+04-repeated-vs-independent-hornsquiet      300     12      144       6      3        3       41      6       253     ok
+04-repeated-vs-independent-hornsbalanced   300     12      144       6      3        3       41      6       253     ok
+04-repeated-vs-independent-hornssensitive  300     12      144       6      3        3       41      6       253     ok
+05-siren-during-cooldown      quiet      210     10      171       10     5        2       77      17      116     ok
+05-siren-during-cooldown      balanced   210     8       137       10     6        3       78      16      116     ok
+05-siren-during-cooldown      sensitive  210     9       154       10     6        4       78      16      116     ok
 06-knock-then-speech          quiet      120     4       120       2      1        1       29      0       91      ok
 06-knock-then-speech          balanced   120     4       120       2      1        1       29      0       91      ok
 06-knock-then-speech          sensitive  120     4       120       2      1        1       29      0       91      ok
 07-unrelated-speech-near-knockquiet      130     2       55        2      1        0       22      0       108     ok
-07-unrelated-speech-near-knockbalanced   130     4       111       2      2        1       31      0       99      ok
-07-unrelated-speech-near-knocksensitive  130     4       111       2      2        1       34      0       96      ok
-08-transcription-disabled     quiet      320     6       68        6      0        0       0       37      283     ok
-08-transcription-disabled     balanced   320     6       68        6      2        0       31      12      277     ok
-08-transcription-disabled     sensitive  320     6       68        6      2        0       35      12      273     ok
-09-possible-lyrics            quiet      210     4       69        2      1        0       16      110     84      ok
-09-possible-lyrics            balanced   210     4       69        2      1        0       16      110     84      ok
-09-possible-lyrics            sensitive  210     4       69        2      1        0       16      110     84      ok
+07-unrelated-speech-near-knockbalanced   130     3       83        2      2        1       31      0       99      ok
+07-unrelated-speech-near-knocksensitive  130     3       83        2      2        1       34      0       96      ok
+08-transcription-disabled     quiet      320     6       68        6      0        0       0       52      268     ok
+08-transcription-disabled     balanced   320     8       90        6      2        0       31      21      268     ok
+08-transcription-disabled     sensitive  320     8       90        6      2        0       4       52      264     ok
+09-possible-lyrics            quiet      210     4       69        2      1        0       16      115     79      ok
+09-possible-lyrics            balanced   210     4       69        2      1        0       16      115     79      ok
+09-possible-lyrics            sensitive  210     4       69        2      1        0       16      115     79      ok
 10-late-summary               quiet      130     0       0         0      0        0       0       0       130     ok
 10-late-summary               balanced   130     3       83        0      1        1       20      0       110     ok
 10-late-summary               sensitive  130     3       83        0      1        1       22      0       108     ok
 11-summary-revisions          quiet      150     0       0         0      0        0       0       0       150     ok
 11-summary-revisions          balanced   150     5       120       0      1        1       36      0       114     ok
 11-summary-revisions          sensitive  150     5       120       0      1        1       38      0       112     ok
-12-simultaneous-high-priority quiet      140     9       231       4      3        1       33      13      94      ok
-12-simultaneous-high-priority balanced   140     9       231       4      3        1       33      13      94      ok
-12-simultaneous-high-priority sensitive  140     9       231       4      3        1       33      13      94      ok
-13-expiration-cleanup         quiet      380     9       85        6      3        3       135     78      167     ok
-13-expiration-cleanup         balanced   380     9       85        6      3        4       135     78      167     ok
-13-expiration-cleanup         sensitive  380     9       85        6      3        4       135     78      167     ok
-14-rapid-burst                quiet      120     14      420       5      4        1       24      5       91      ok
-14-rapid-burst                balanced   120     20      600       5      7        1       26      3       91      ok
-14-rapid-burst                sensitive  120     28      840       5      12       1       31      0       89      ok
-15-mode-comparison            quiet      390     23      212       12     5        3       88      208     94      ok
-15-mode-comparison            balanced   390     27      249       12     7        4       129     167     94      ok
-15-mode-comparison            sensitive  390     30      277       12     9        4       164     132     94      ok
-16-preference-changes         quiet      280     18      231       10     4        2       75      102     104     ok
-16-preference-changes         balanced   280     18      231       10     4        2       75      102     104     ok
-16-preference-changes         sensitive  280     17      219       10     4        2       85      92      104     ok
-17-background-lifecycle       quiet      220     13      213       10     4        3       81      13      125     ok
-17-background-lifecycle       balanced   220     13      213       10     4        4       81      13      125     ok
-17-background-lifecycle       sensitive  220     15      245       10     5        4       95      0       125     ok
-18-unavailable-models         quiet      580     4       25        2      1        1       16      12      551     ok
-18-unavailable-models         balanced   580     8       50        2      4        1       64      0       516     ok
-18-unavailable-models         sensitive  580     9       56        2      4        1       70      0       510     ok
-soak-60min-seed20261010       quiet      3819    173     163       130    22       13      418     2547    854     ok
-soak-60min-seed20261010       balanced   3819    240     226       130    51       31      911     2210    698     ok
-soak-60min-seed20261010       sensitive  3819    309     291       130    86       34      1531    1618    670     ok
+12-simultaneous-high-priority quiet      140     4       103       6      3        1       33      18      89      ok
+12-simultaneous-high-priority balanced   140     4       103       6      3        1       33      18      89      ok
+12-simultaneous-high-priority sensitive  140     4       103       6      3        1       33      18      89      ok
+13-expiration-cleanup         quiet      380     7       66        6      3        3       135     83      162     ok
+13-expiration-cleanup         balanced   380     7       66        6      3        4       135     83      162     ok
+13-expiration-cleanup         sensitive  380     7       66        6      3        4       135     83      162     ok
+14-rapid-burst                quiet      120     10      300       9      4        1       12      8       99      ok
+14-rapid-burst                balanced   120     10      300       9      7        1       14      7       99      ok
+14-rapid-burst                sensitive  120     10      300       9      12       1       16      4       99      ok
+15-mode-comparison            quiet      390     18      166       16     5        3       67      234     89      ok
+15-mode-comparison            balanced   390     21      194       16     7        4       100     202     89      ok
+15-mode-comparison            sensitive  390     21      194       16     9        4       122     179     89      ok
+16-preference-changes         quiet      280     12      154       10     4        2       65      117     99      ok
+16-preference-changes         balanced   280     12      154       10     4        2       65      117     99      ok
+16-preference-changes         sensitive  280     11      141       10     4        2       75      107     99      ok
+17-background-lifecycle       quiet      220     10      164       9      4        3       81      15      123     ok
+17-background-lifecycle       balanced   220     10      164       9      4        4       81      15      123     ok
+17-background-lifecycle       sensitive  220     11      180       9      5        4       95      2       123     ok
+18-unavailable-models         quiet      580     4       25        2      1        1       16      17      546     ok
+18-unavailable-models         balanced   580     9       56        2      4        1       64      2       514     ok
+18-unavailable-models         sensitive  580     10      62        2      4        1       70      2       508     ok
+soak-60min-seed20261010       quiet      3819    188     177       186    22       13      334     2778    707     ok
+soak-60min-seed20261010       balanced   3819    218     205       186    51       31      810     2422    587     ok
+soak-60min-seed20261010       sensitive  3819    230     217       186    86       34      1227    2019    572     ok
 
 57 runs, 0 with rule violations
 Wrote ../../results/island_eval_window5/island_summary.json

@@ -303,7 +303,7 @@ extension AttentionConfiguration {
             + assign("thunder", .weather, ["thunder"])
             + assign("fire", .weather, ["fire"])
             + assign("transport", .transportation, ["road_vehicle", "rail", "aircraft", "boat", "bicycle_skateboard"])
-            + assign("household", .household, ["kitchen", "water_use", "appliance", "tools"])
+            + assign("household", .household, ["kitchen", "water_use", "appliance", "tools", "door_movement"])
             + assign("minor", .household, ["typing_writing", "clock", "small_objects"])
             + assign("human_activity", .humanActivity, ["laughter", "footsteps", "hands", "whistling", "sports"])
             + assign("minor", .humanActivity, ["body_sounds"])

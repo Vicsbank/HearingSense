@@ -68,6 +68,7 @@ public enum SoundSymbolCatalog {
         "bicycle_skateboard": "bicycle",
         // Household
         "door": "door.left.hand.closed",
+        "door_movement": "door.left.hand.open",
         "phone": "iphone.radiowaves.left.and.right",
         "beep": "dot.radiowaves.left.and.right",
         "kitchen": "fork.knife",

@@ -30,6 +30,21 @@ public struct AmbientIconPolicy: Hashable, Sendable {
     public var minimumDisplay: TimeInterval
     /// How long an icon stays after its sound ended.
     public var linger: TimeInterval
+    /// A sound that was just confirmed takes the icon, whatever is shown, for this long: the
+    /// newest sound wins. 0: only rank decides (the first version of Window 5, in which a sound
+    /// that kept going — speech in a room — hid every lower-ranked sound; the student saw a strong
+    /// sneeze not appear on the iPhone).
+    public var freshFor: TimeInterval
+    /// Extra time the last icon stays before the island goes back to the plain listening glyph.
+    /// A sound that starts meanwhile replaces it directly, which saves the update in between.
+    /// (iPhone, 35 minutes in a lived-in room: the island went "icon → glyph → icon" within
+    /// 2–6 s again and again.)
+    public var idleHold: TimeInterval
+    /// Whether a sound that has already ended may still get the island from a higher-ranked icon
+    /// once that one is gone. False: an ended sound keeps the island if it has it, but does not
+    /// get it afterwards. (iPhone: a drawer that had closed 5 s earlier appeared for 4 s when the
+    /// speech icon above it went away.)
+    public var showsEndedSoundsLate: Bool
     /// Icon changes allowed in any 60 s. Further changes wait.
     public var maximumChangesPerMinute: Int
     /// An active event without an update for this long is dropped (the detector publishes at
@@ -44,12 +59,16 @@ public struct AmbientIconPolicy: Hashable, Sendable {
     public var kindRank: [String: Int]
 
     public init(minimumQuality: EventQuality, minimumDisplay: TimeInterval, linger: TimeInterval,
+                freshFor: TimeInterval, idleHold: TimeInterval, showsEndedSoundsLate: Bool,
                 maximumChangesPerMinute: Int, staleAfter: TimeInterval, excludedKindIDs: Set<String>,
                 categoryRank: [SoundCategory: Int], kindRank: [String: Int])
     {
         self.minimumQuality = minimumQuality
         self.minimumDisplay = minimumDisplay
         self.linger = linger
+        self.freshFor = freshFor
+        self.idleHold = idleHold
+        self.showsEndedSoundsLate = showsEndedSoundsLate
         self.maximumChangesPerMinute = maximumChangesPerMinute
         self.staleAfter = staleAfter
         self.excludedKindIDs = excludedKindIDs
@@ -57,11 +76,26 @@ public struct AmbientIconPolicy: Hashable, Sendable {
         self.kindRank = kindRank
     }
 
+    /// The rules as first shipped in Window 5, kept for before/after comparisons on recorded
+    /// device traces (`hs-attention-eval island-device-trace`).
+    public static var firstVersion: AmbientIconPolicy {
+        var policy = standard
+        policy.minimumDisplay = 4
+        policy.freshFor = 0
+        policy.idleHold = 0
+        policy.showsEndedSoundsLate = true
+        policy.maximumChangesPerMinute = 10
+        return policy
+    }
+
     public static let standard = AmbientIconPolicy(
         minimumQuality: .moderate,
-        minimumDisplay: 4,
+        minimumDisplay: 2,
         linger: 5,
-        maximumChangesPerMinute: 10,
+        freshFor: 5,
+        idleHold: 5,
+        showsEndedSoundsLate: false,
+        maximumChangesPerMinute: 12,
         staleAfter: 20,
         // Wind on the microphone is a recording artifact, not a sound around the user.
         excludedKindIDs: ["mic_wind_noise"],
@@ -119,11 +153,12 @@ public struct AmbientIconStatistics: Hashable, Sendable, Codable {
 /// it: nothing here decides what deserves attention, sends a notification or shows text. An
 /// event the attention engine suppresses as ambient (rain, music, a dog) can still be an icon.
 ///
-/// Against flicker: only confirmed events count (the detector's k-of-n confirmation is the
-/// temporal smoothing of the classifier), the evidence quality must be at least
-/// `minimumQuality`, a shown icon stays for `minimumDisplay`, an ended sound lingers, a
-/// lower-ranked sound never replaces a higher-ranked one that is still present, and changes are
-/// limited per minute.
+/// Which icon: the sound that was confirmed most recently, for `freshFor` seconds; after that the
+/// highest-ranked sound that is still going on (a sneeze shows at once and the speech around it
+/// comes back). Against flicker: only confirmed events count (the detector's k-of-n confirmation
+/// is the temporal smoothing of the classifier), the evidence quality must be at least
+/// `minimumQuality`, a shown icon stays for `minimumDisplay`, an ended sound lingers, the plain
+/// glyph waits for `idleHold`, and changes are limited per minute.
 ///
 /// A value type without a clock, like the attention engine: every input carries its time and
 /// the host sends one `.tick` at `nextDeadline`, so a recorded sequence replays identically.
@@ -153,10 +188,16 @@ public struct AmbientIconStream: Sendable {
         var lastObserved: Date
         var ended: Date?
         var isEligible: Bool
+        /// When the event became eligible for an icon (confirmed, or its evidence improved).
+        var eligibleSince: Date?
     }
 
     private var tracked: [AcousticEventID: Tracked] = [:]
     private var currentID: AcousticEventID?
+    /// Rank of the icon that is shown (kept after its event is gone).
+    private var currentRank = 0
+    /// Since when nothing wants the island although an icon is still shown.
+    private var idleSince: Date?
     private var lastChange: Date?
     private var recentChanges: [Date] = []
 
@@ -175,6 +216,7 @@ public struct AmbientIconStream: Sendable {
         case .sessionStarted, .sessionEnded:
             tracked.removeAll()
             currentID = nil
+            idleSince = nil
             nextDeadline = nil
             // Session boundaries are not rate-limited: the icon of a session that ended must go.
             guard current != nil else { return nil }
@@ -199,11 +241,15 @@ public struct AmbientIconStream: Sendable {
                                spokenName: event.kind.displayName)
         var entry = tracked[event.id] ?? Tracked(
             icon: icon, rank: policy.rank(kindID: event.kind.id, category: event.category),
-            confirmed: event.confirmedDate, lastObserved: event.lastObservedDate, ended: nil, isEligible: false)
+            confirmed: event.confirmedDate, lastObserved: event.lastObservedDate, ended: nil, isEligible: false,
+            eligibleSince: nil)
         // The primary label can change while an event is ongoing (dog → dog_bark): the icon follows.
         entry.icon = icon
         entry.lastObserved = max(entry.lastObserved, event.lastObservedDate)
-        entry.isEligible = entry.isEligible || event.quality >= policy.minimumQuality
+        if !entry.isEligible, event.quality >= policy.minimumQuality {
+            entry.isEligible = true
+            entry.eligibleSince = AmbientIconInput.sound(update).date
+        }
         if case .ended = update {
             entry.ended = event.endedDate ?? event.lastObservedDate
             if !entry.isEligible {
@@ -226,7 +272,12 @@ public struct AmbientIconStream: Sendable {
             }
         }
 
-        let best = tracked.filter(\.value.isEligible).max { lhs, rhs in
+        let shownRank = current == nil ? Int.min : currentRank
+        let best = tracked.filter { id, entry in
+            guard entry.isEligible else { return false }
+            // A sound that is over does not get the island late from something that outranked it.
+            return policy.showsEndedSoundsLate || entry.ended == nil || id == currentID || entry.rank >= shownRank
+        }.max { lhs, rhs in
             if lhs.value.rank != rhs.value.rank { return lhs.value.rank < rhs.value.rank }
             if lhs.value.confirmed != rhs.value.confirmed { return lhs.value.confirmed < rhs.value.confirmed }
             return lhs.key.description < rhs.key.description
@@ -237,16 +288,42 @@ public struct AmbientIconStream: Sendable {
         if let currentID, let shown = tracked[currentID], let best, best.value.rank <= shown.rank {
             wantedID = currentID
         }
+        // The newest sound wins while it is fresh, whatever its rank.
+        var freshUntil: Date?
+        let newest = tracked.compactMap { id, entry -> (id: AcousticEventID, since: Date, rank: Int)? in
+            guard entry.isEligible, let since = entry.eligibleSince, since.addingTimeInterval(policy.freshFor) > now
+            else { return nil }
+            return (id, since, entry.rank)
+        }.max { lhs, rhs in
+            if lhs.since != rhs.since { return lhs.since < rhs.since }
+            if lhs.rank != rhs.rank { return lhs.rank < rhs.rank }
+            return lhs.id.description < rhs.id.description
+        }
+        if let newest {
+            wantedID = newest.id
+            freshUntil = newest.since.addingTimeInterval(policy.freshFor)
+        }
         let wanted = wantedID.flatMap { tracked[$0]?.icon }
 
         var pendingChange: Date?
         var change: Change?
         if wanted == current {
             currentID = wantedID
+            idleSince = nil
         } else {
-            let allowed = earliestChange(after: now)
+            var allowed = earliestChange(after: now)
+            if wanted == nil {
+                // Going back to the plain glyph waits a little: the next sound may come first.
+                let since = idleSince ?? now
+                idleSince = since
+                allowed = max(allowed, since.addingTimeInterval(policy.idleHold))
+            } else {
+                idleSince = nil
+            }
             if allowed <= now {
                 currentID = wantedID
+                if let wantedID, let entry = tracked[wantedID] { currentRank = entry.rank }
+                idleSince = nil
                 change = publish(wanted, at: now)
             } else {
                 statistics.heldBack += 1
@@ -255,6 +332,7 @@ public struct AmbientIconStream: Sendable {
         }
 
         var deadlines: [Date] = pendingChange.map { [$0] } ?? []
+        if let freshUntil { deadlines.append(freshUntil) }
         for entry in tracked.values {
             deadlines.append(entry.ended.map { $0.addingTimeInterval(policy.linger) }
                 ?? entry.lastObserved.addingTimeInterval(policy.staleAfter))

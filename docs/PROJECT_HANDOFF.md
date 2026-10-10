@@ -3,13 +3,17 @@
 Last updated: 2026-10-10, end of **Window 5** (Dynamic Island and Live Activity).
 
 **Window 5 status: code complete on `feature/window5-dynamic-island` (branched from the Window 4
-branch; not committed at the time of writing unless the student asked, not merged, not pushed);
-verified on the Mac (303 package tests: 302 passed, 1 opt-in skipped) and on the iPhone 18 Pro
-Simulator (308 tests: 304 passed, 4 skipped; app + widget extension build Debug and Release; the
-Live Activity checked with synthetic demo scenes, microphone off). No physical-iPhone test of
-Window 5 was run: the roadmap's acceptance criterion (real events on the iPhone's Lock Screen /
-Dynamic Island) is not met yet.** Read `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`, then
-`docs/testing/WINDOW5_TEST_RESULTS.md` (§6 is the device protocol, the next thing to do).
+branch; committed as `dc1f6cf`, with the changes of the device session on top — see `git status`;
+not merged, not pushed); verified on the Mac (package tests), on the iPhone 18 Pro Simulator and,
+on 2026-10-10 with the student's authorization, on the physical iPhone 18 Pro for the device steps
+D1–D4: synthetic demo scenes, microphone off. Compact, expanded and Lock Screen presentations work
+on the device; silent updates did not wake the locked screen (student-observed). D5–D6 then ran
+with the real microphone (classification only; 34.9 minutes locked, 0 classifier failures, 256
+updates per hour). After that session the icon rules, the alert-protection rule and two detection
+rules were revised (kind `door_movement` split from `door`; `screaming` needs two windows) —
+unit-tested and replayed on the recorded events, **not yet run on the iPhone** (the current build
+is installed, no listening run was made with it). Next: retest R1–R2 (test results §8).** Read `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`, then
+`docs/testing/WINDOW5_TEST_RESULTS.md` (§5 device results, §7 the remaining device steps).
 Next window: **Window 6 — Integration, Evaluation and Optimization** (not started; do not start it
 without the student's instruction).
 
@@ -245,7 +249,14 @@ wake a locked screen) are summarized in §1 of the report.
    `AttentionController.onInjectedSound`; diagnostics export and report extended.
 5. `AttentionReplay/IslandReplayer` and `hs-attention-eval island | island-trace | island-symbols`.
    Results: `results/island_eval_window5/`. Screenshots: `docs/device-tests/window5-simulator/`.
-6. Tests: `IslandPresentationTests` (47).
+6. Tests: `IslandPresentationTests` (47 at the commit; 49 after the device session).
+7. Device session (2026-10-10, after the commit): secondary-only changes are not sent as updates of
+   their own; the lock estimate honours iOS's early lock notice; demo scenes can be timed from the
+   moment the app leaves the screen; per-update log in the export; injection order fixed.
+8. After D5–D6 (real microphone): icon channel rewritten to "newest sound first" with an idle hold;
+   only high-priority episodes and speech summaries are protected; resolved episodes do not return;
+   taxonomy kind `door_movement`; `screaming` confirmation rule; `hs-attention-eval
+   island-device-trace`. 54 tests in `IslandPresentationTests`, 310 in the package.
 
 ## 5. Repository structure (current)
 
@@ -352,6 +363,15 @@ Full list: `docs/IOS_ARCHITECTURE.md` §9. Most important:
   symbol name must pass `SoundSymbolCatalogTests.everySymbolNameExistsOnThisSystem`.
 - (W5) `Activity` is not Sendable under Swift 6: hold it on the main actor and bind it to a
   `nonisolated(unsafe)` local before awaiting its methods (see `LiveActivityController.perform`).
+- (W5, after the device session) Icon channel: the newest confirmed sound wins for 5 s, then the
+  highest-ranked ongoing one. Do not go back to rank-only selection: on the device it hid every
+  sound behind continuous speech. Episodes below `IslandPolicy.protectedPriority` (high) without a
+  summary give way to newer ordinary sounds.
+- (W5, after the device session) `SoundTaxonomy.appleV1` has 51 kinds: `door_movement` (labels
+  `door`, `door_sliding`; icon only, two-window confirmation) is separate from `door` (knock, bell,
+  slam, tap). Earlier documents say 50.
+- (W5) Evaluate icon-rule changes on recorded device events before a device run:
+  `hs-attention-eval island-device-trace results/device_window5/<export>.txt`.
 - (W5) `xcrun simctl io screenshot` often omits the Dynamic Island; capture through the Simulator
   itself. The app's own activity is not shown in the island while the app is on screen.
 
@@ -461,15 +481,21 @@ Details and methods: `docs/testing/WINDOW5_TEST_RESULTS.md`. All input is script
 | Expanded island with text (knock; speech summary) | Simulator, `--hs-assume-unlocked` | Works |
 | Lock Screen entry icon-only | Simulator | Works |
 | Lock estimate | Simulator | First version said "unlocked" on a locked Simulator and sent an expansion request; final version: `unknown`, silent update |
-| Anything on the physical iPhone | iPhone 18 Pro | **Not run in Window 5** |
+| D1–D4 with synthetic demo scenes, microphone off (compact / expanded / Lock Screen rendering, Spotify split island, silent updates while locked, automatic expansion on) | **Physical iPhone 18 Pro**, iOS 27.2 | Rendering as designed; locked screen not woken, no sound, no vibration, also when an expansion request reached iOS 2 s and 20 s after locking (student-observed, once each, silent sound); data protection lags the lock by 4–12 s; evidence in `docs/device-tests/2026-10-10-window5/`, `results/device_window5/` |
+| D5–D6 with the real microphone, classification only, clips from the Mac speakers | **Physical iPhone 18 Pro** | Island follows real sounds; Spotify on the phone speaker splits the island and keeps playing; 34.9 min locked: 2 793 windows, 0 failures, 256 updates/h; D6's subjective checks (screen wake, sound, vibration, Lock Screen content) **not verified** |
+| Revised icon / alert / detection rules (after D6) | Mac tests and replay of the recorded events | 310 package tests pass; confirmed sounds that become the icon 44→68 of 73, 90th-percentile delay 5.8→1.8 s, icon changes 295→477 per hour on the first 10 minutes of D6; **not run on the device** |
+| Battery (D7), speech text with real speech (D8), 8-hour limit | Physical iPhone | **Not run** (postponed by the student) |
 
 ## 8. Known issues
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
-| **(W5) No physical-iPhone validation of the Live Activity** | Unknown: that silent updates leave a locked screen off, Always-On appearance, the island next to Spotify, update throttling, battery cost, the 8-hour end, extension signing with the Personal Team | Device protocol D1–D8 in `docs/testing/WINDOW5_TEST_RESULTS.md` §6 (D1–D4 need no microphone) |
-| (W5) The lock state cannot be detected reliably | With "Expand for important events" on, an event in the first seconds after locking can light up the screen | Off by default; measure the lag in D4; an undocumented Darwin notification (`com.apple.springboard.lockstate`) could serve as an extra veto — the student's decision, not adopted |
-| (W5) Automatic expansion is off by default | The island never expands by itself unless the user turns the setting on; text needs a touch and hold | By the student's rule (no screen wake first); revisit after D4 |
+| **(W5) The revised rules have not run on the iPhone** | Newest-sound icon rule, protection of high-priority episodes only, `door_movement`, the `screaming` rule: tested on the Mac and replayed on recorded events only | Retest R1–R2 in `docs/testing/WINDOW5_TEST_RESULTS.md` §8 (microphone authorization needed); the current build is installed |
+| (W5) Faster icons cost updates | Replay of the D6 recording: about 300–480 icon changes per hour in a lively room (first rules: 200–295; measured 256 updates/h) | Bounded by 12 changes per minute; `AmbientIconPolicy.firstVersion` keeps the calmer rules for comparison; battery unmeasured (D7 postponed) |
+| (W2/W4, found in W5) False alerts and misrecognitions with real sound | D6: 6 of 9 high-priority episodes in 10 minutes were room sounds; rain, footsteps, glass clips misrecognized; "Nearby Speech" 12 times in 17 minutes with transcription off | `door` / `screaming` addressed (one room, one evening: provisional). Open: whether textless "Nearby Speech" should be an episode at all in Quiet/Balanced (student's decision); re-tune with more device data |
+| (W5) The lock state is an estimate | Data protection lags the lock by 4–12 s (measured). The estimate now also treats iOS's early "will become unavailable" notice as locked (seen at the moment of locking in two runs; not yet exercised in a device run) | Keep automatic expansion off by default until the notice has been seen reliably; an undocumented Darwin notification could serve as an extra veto — the student's decision, not adopted |
+| (W5) Automatic expansion is off by default | The island never expands by itself unless the user turns the setting on; text needs a touch and hold | On the device an expansion request did not wake the locked screen in two runs (silent sound, Always-On on). The student may decide to turn the default on; repeat with the alert sound on first |
+| (W5) A stopped app leaves a frozen island | After a crash, termination or suspension the last icon stays for up to 15 minutes (stale date) | Shorter stale date with more keep-alive updates, or accept; seen with the demo scenes, which iOS suspends 26–27 s after leaving the screen |
 | (W5) Activity update rate is unmeasured on a device | iOS may throttle; energy cost unknown | D6 / D7; lower `AmbientIconPolicy.maximumChangesPerMinute` or raise `minimumDisplay` if needed |
 | (W5) Attention episodes use category-level icons | "Door or knock" and a doorbell share an icon | Carry the kind or label in `AttentionPresentationIntent` if wanted (a Window 4 contract change) |
 | (W5) Haptics and the app icon refresh were not done | Roadmap items 3 and 5 partly open | Haptics conflict with the no-vibration requirement when locked; decide with the student |
@@ -562,6 +588,13 @@ swift run -c release hs-attention-eval island-symbols      # label → kind → 
 xcrun simctl launch --terminate-running-process booted org.hearingsense.HearingSense \
   --hs-island-demo knock            # idle | ambient | knock | siren | speech
 #   add --hs-assume-unlocked to see the automatic expansion (layout checks only)
+
+# Window 5 on the iPhone without a microphone (phone unlocked for `launch`). Without a listening
+# session iOS suspends the app about 27 s after it leaves the screen, so time the scene from that moment:
+xcrun devicectl device process launch --device $D --terminate-existing org.hearingsense.HearingSense \
+  --hs-island-demo knock --hs-demo-after-background --hs-demo-key-at 10 --hs-export-diagnostics
+#   then lock the phone (or go Home): the knock comes 10 s later; read the export as above
+#   (it holds the Live Activity report with a per-update log)
 ```
 
 In the app the same scenes can be injected without the microphone: Attention card → "Attention
@@ -636,10 +669,12 @@ Share** exports the route snapshot and event log as text.
 
 ## 12. Recommended next steps
 
-00. (After Window 5) Device protocol D1–D8 of `docs/testing/WINDOW5_TEST_RESULTS.md` §6, one step
-   per message: D1–D4 use the demo scenes and no microphone (still the student's go-ahead to use
-   the iPhone); D5–D8 need microphone authorization and can be combined with A1 → A2 → A3 below.
-   Decide after D4 whether "Expand for important events" can be on by default. Window 6 only when
+00. (After Window 5) D1–D6 are done (2026-10-10). Next: with the current build (installed) run the
+   retest R1–R2 of `docs/testing/WINDOW5_TEST_RESULTS.md` §8 (microphone authorization; the
+   student watches the locked screen in R2). D7 and D8 are postponed by the student. Open
+   decisions for the student: "Expand for important events" on by default or not; whether textless
+   "Nearby Speech" stays an attention episode; committing the changes made after `dc1f6cf`. D6
+   also served as A3 (classifier 35 minutes locked without a failure, once). Window 6 only when
    the student asks, on a new branch from `feature/window5-dynamic-island`.
 0. (After Window 4) With the student's microphone authorization: repeat A1 → A2 and run A3 with the
    default build; one live session with real sounds and the Attention decisions screen open; then

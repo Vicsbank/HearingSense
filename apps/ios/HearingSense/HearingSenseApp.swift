@@ -30,7 +30,9 @@ struct HearingSenseApp: App {
                     if DebugDiagnosticsExporter.isAutostartRequested { await controller.start() }
                     // Presentation check without a microphone; see LiveActivityController.
                     if let scene = LiveActivityController.requestedDemo {
-                        controller.liveActivity.runDemo(scene, attention: controller.attention)
+                        controller.liveActivity.runDemo(scene, attention: controller.attention,
+                                                        keyAt: LiveActivityController.requestedDemoKeyTime,
+                                                        afterBackground: LiveActivityController.demoStartsAfterBackground)
                     }
                 }
                 #endif
