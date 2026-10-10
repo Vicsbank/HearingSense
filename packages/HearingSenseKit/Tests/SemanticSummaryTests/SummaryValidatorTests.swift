@@ -149,6 +149,21 @@ import Testing
         #expect(accepted("Essay Due Friday", for: "The essay is due on Friday.")?.reliability == .validated)
     }
 
+    @Test func aHeadlineMayNegateTheStatementOnlyIfTheTranscriptDoes() {
+        // Found in a real pipeline run: "nothing" in the transcript let an invented "not" through.
+        let transcript = "Why, that's nothing. I'm poor too. She laughed."
+        #expect(UtteranceAnalysis(transcript).isNegated && !UtteranceAnalysis(transcript).hasStatementNegation)
+        #expect(issues("Not Poor", for: transcript) == [.negationInvented])
+        #expect(issues("She Isn't Poor", for: transcript).contains(.negationInvented))
+        #expect(accepted("Nothing Poor Too", for: transcript) != nil)
+        // "No …" headlines stay possible for statement negations and for quantifier negations.
+        #expect(accepted("No School Friday", for: "There is no school on Friday.") != nil)
+        #expect(accepted("No Milk Left", for: "There isn't any milk left.") != nil)
+        #expect(accepted("Elevator Not Working", for: "The elevator isn't working.") != nil)
+        #expect(accepted("Never Been Restaurant", for: "I have never been to that restaurant.") != nil)
+        #expect(issues("School Not Friday", for: "There is no school on Friday.") == [.negationInvented])
+    }
+
     @Test func rejectsEmptyHeadlines() {
         #expect(issues("", for: "Your package arrived.") == [.empty])
         #expect(issues("  \"...\" ", for: "Your package arrived.") == [.empty])
@@ -157,6 +172,8 @@ import Testing
     @Test func formatsHeadlinesInTitleCase() {
         #expect(SummaryValidator.format("\"BIOLOGY TEST TOMORROW.\"", transcript: "biology test tomorrow") == "Biology Test Tomorrow")
         #expect(SummaryValidator.format("class at 3 pm", transcript: "Class starts at 3 PM.") == "Class At 3 PM")
+        #expect(SummaryValidator.format("at 10:15 a.m. friday", transcript: "") == "At 10:15 AM Friday")
+        #expect(SummaryValidator.format("what am i to do", transcript: "Oh, what am I to do?") == "What Am I To Do")
         #expect(SummaryValidator.format("tv is broken", transcript: "The TV is broken") == "TV Is Broken")
         #expect(SummaryValidator.format("don’t open door!", transcript: "") == "Don't Open Door")
         #expect(SummaryValidator.wordCount("Class At 3 PM") == 4)

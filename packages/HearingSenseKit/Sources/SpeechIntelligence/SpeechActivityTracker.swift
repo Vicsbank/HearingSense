@@ -9,18 +9,33 @@ import SoundEventDetection
 /// at `candidateScore` is available ≈ 0.75 s earlier and also catches utterances too short to
 /// ever be confirmed. A false activation costs a short transcription that produces no text; a
 /// missed one loses the sentence.
+///
+/// Music changes the picture: sung or rapped vocals often get a `speech` score, so in a music
+/// context the bar is higher (stage A of the speech relevance gate; stage B is
+/// `SpeechRelevanceGate`). Measured on recordings (docs/testing/WINDOW3_TEST_RESULTS.md):
+/// windows of real speech over music score ≥ 0.9 most of the time, vocal music mostly does not.
 public struct SpeechActivationPolicy: Hashable, Sendable {
     /// Event kinds whose labels count as speech (`SoundTaxonomy` kind ids).
     public var speechKindIDs: Set<String> = ["speech", "shouting"]
     public var musicKindID = "music"
-    /// Minimum speech score of one window to activate or sustain speech activity.
+    /// Labels of the music kind that mean a human voice making music.
+    public var vocalMusicLabels: Set<SoundLabel> = ["singing", "choir_singing", "rapping", "humming", "yodeling"]
+    /// Minimum speech score of one window to activate or sustain speech activity when no music
+    /// is around.
     public var candidateScore = 0.30
     /// A window with a music score at or above this value is "music present".
     public var musicPresentScore = 0.50
-    /// While music is present the speech score must reach this value. Sung vocals (labels
-    /// `singing`, `rapping`, … belong to the music kind) often carry a weak `speech` score;
-    /// genuine speech over music is usually scored higher.
-    public var speechScoreOverMusic = 0.50
+    /// Music context: music was present in at least `musicContextMinimum` of the last
+    /// `musicContextWindows` windows (or is present now). Vocals can mask the music label for a
+    /// window or two; the context remembers that music is playing.
+    public var musicContextWindows = 4
+    public var musicContextMinimum = 2
+    /// In a music context a window counts as speech when its speech score reaches this value …
+    public var strongSpeechScore = 0.90
+    /// … or when it reaches this value while no vocal-music label is above
+    /// `maximumVocalScoreOverMusic`.
+    public var speechScoreOverMusic = 0.80
+    public var maximumVocalScoreOverMusic = 0.20
     /// Speech activity ends after this much audio without a qualifying window.
     public var releaseAfter: TimeInterval = 2.25
     /// Audio before the first qualifying window that is also transcribed: the previous window
@@ -36,13 +51,18 @@ public struct SpeechActivationPolicy: Hashable, Sendable {
 public struct SpeechEvidence: Hashable, Sendable {
     public var speechScore: Double
     public var musicScore: Double
+    /// Best score among the vocal-music labels (singing, rapping, humming, …).
+    public var vocalScore: Double
+    /// Music is present now or was in most of the recent windows.
+    public var isMusicContext: Bool
     /// The window qualifies as speech under the activation policy.
     public var isSpeech: Bool
-    /// The window had a speech score ≥ `candidateScore` but was not accepted because music was
-    /// present and the speech score stayed below `speechScoreOverMusic`.
+    /// The window had a speech score ≥ `candidateScore` but was not accepted because of the
+    /// music context (probably vocals).
     public var suppressedByMusic: Bool
 
-    public static let none = SpeechEvidence(speechScore: 0, musicScore: 0, isSpeech: false, suppressedByMusic: false)
+    public static let none = SpeechEvidence(speechScore: 0, musicScore: 0, vocalScore: 0, isMusicContext: false,
+                                            isSpeech: false, suppressedByMusic: false)
 }
 
 /// Turns classifier windows into speech activity (began / ended). Deterministic: uses only the
@@ -57,6 +77,8 @@ public struct SpeechActivityTracker: Sendable {
     public let policy: SpeechActivationPolicy
     private let speechLabels: Set<SoundLabel>
     private let musicLabels: Set<SoundLabel>
+    /// Whether music was present in each of the most recent windows (newest last).
+    private var recentMusic: [Bool] = []
 
     public private(set) var isActive = false
     public private(set) var lastEvidence = SpeechEvidence.none
@@ -76,23 +98,38 @@ public struct SpeechActivityTracker: Sendable {
         musicLabels = music
     }
 
+    /// Evaluates one window given whether music was present in the windows before it.
     public func evidence(in frame: ClassificationFrame) -> SpeechEvidence {
         var speech = 0.0
         var music = 0.0
+        var vocal = 0.0
         for prediction in frame.predictions {
-            if speechLabels.contains(prediction.label) { speech = max(speech, prediction.score.rawValue) }
-            if musicLabels.contains(prediction.label) { music = max(music, prediction.score.rawValue) }
+            let score = prediction.score.rawValue
+            if speechLabels.contains(prediction.label) { speech = max(speech, score) }
+            if musicLabels.contains(prediction.label) { music = max(music, score) }
+            if policy.vocalMusicLabels.contains(prediction.label) { vocal = max(vocal, score) }
         }
         let candidate = speech >= policy.candidateScore
-        let musicPresent = music >= policy.musicPresentScore
-        let accepted = candidate && (!musicPresent || speech >= policy.speechScoreOverMusic)
-        return SpeechEvidence(speechScore: speech, musicScore: music, isSpeech: accepted,
-                              suppressedByMusic: candidate && !accepted)
+        let musicContext = music >= policy.musicPresentScore
+            || recentMusic.count(where: \.self) >= policy.musicContextMinimum
+        let accepted: Bool
+        if musicContext {
+            accepted = speech >= policy.strongSpeechScore
+                || (speech >= policy.speechScoreOverMusic && vocal <= policy.maximumVocalScoreOverMusic)
+        } else {
+            accepted = candidate
+        }
+        return SpeechEvidence(speechScore: speech, musicScore: music, vocalScore: vocal, isMusicContext: musicContext,
+                              isSpeech: accepted, suppressedByMusic: candidate && !accepted)
     }
 
     public mutating func process(_ frame: ClassificationFrame) -> Transition? {
         let evidence = evidence(in: frame)
         lastEvidence = evidence
+        recentMusic.append(evidence.musicScore >= policy.musicPresentScore)
+        if recentMusic.count > policy.musicContextWindows {
+            recentMusic.removeFirst(recentMusic.count - policy.musicContextWindows)
+        }
         if evidence.suppressedByMusic { windowsSuppressedByMusic += 1 }
         if evidence.isSpeech {
             lastSpeechTime = frame.audioTime.end
@@ -112,5 +149,6 @@ public struct SpeechActivityTracker: Sendable {
         lastEvidence = .none
         lastSpeechTime = 0
         windowsSuppressedByMusic = 0
+        recentMusic.removeAll()
     }
 }

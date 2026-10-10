@@ -10,7 +10,9 @@
 //   swift run -c release hs-speech-eval summarize [--repeat 2]
 //   swift run -c release hs-speech-eval activation [--libri 500] [--gtzan 300] [--snr 0]
 //   swift run -c release hs-speech-eval music-transcripts [--gtzan 40]
-//   swift run -c release hs-speech-eval pipeline --set tts|libri-short [--count 20] [--preroll 5] [--no-model]
+//   swift run -c release hs-speech-eval pipeline --set tts|libri-short|music|bed [--count 20] [--preroll 5] [--snr 10] [--no-model]
+//   swift run -c release hs-speech-eval gate-data --out FILE.jsonl      (scores + recognizer segments per clip)
+//   swift run -c release hs-speech-eval relevance --dump FILE.jsonl     (speech relevance gate, before vs. after)
 //
 // Evidence classes (see docs/testing/WINDOW3_TEST_RESULTS.md):
 // - LibriSpeech dev-clean: human read speech with reference transcripts (CC BY 4.0) → WER.
@@ -316,6 +318,8 @@ struct DirectTranscript {
     var meanConfidence: Double?
     var failure: String?
     var wallSeconds = 0.0
+    /// The recognizer's final results (one per sentence it finalized), with audio ranges.
+    var segments: [TranscriptAssembler.Segment] = []
 }
 
 /// Transcribes one clip with the production transcriber, feeding as fast as it accepts audio.
@@ -350,6 +354,7 @@ func transcribeDirectly(_ audio: Audio, with transcriber: AppleSpeechTranscriber
     }
     if !assembler.hasFinalText { assembler.promoteVolatile() }
     result.text = assembler.finalText
+    result.segments = assembler.segments
     result.meanConfidence = assembler.quality.meanConfidence
     result.wallSeconds = seconds(since: started)
     return result
@@ -608,8 +613,11 @@ func runActivation(_ arguments: Arguments) async throws {
     let engine = SoundRecognitionEngine(configuration: ClassifierConfiguration(windowDuration: 1.5, overlapFactor: 0.5,
                                                                                backlogLimit: nil))
     var iterator = engine.outputs.makeAsyncIterator()
+    // No music rule at all: the candidate threshold applies whatever else is in the window.
     var withoutRule = SpeechActivationPolicy.standard
+    withoutRule.strongSpeechScore = withoutRule.candidateScore
     withoutRule.speechScoreOverMusic = withoutRule.candidateScore
+    withoutRule.maximumVocalScoreOverMusic = 1
 
     func measure(_ name: String, _ clips: [Audio]) async -> ActivationCondition {
         var activated = 0, activatedNoRule = 0, confirmed = 0, windows = 0, speechWindows = 0, suppressed = 0
@@ -661,8 +669,10 @@ func runActivation(_ arguments: Arguments) async throws {
     let policy = SpeechActivationPolicy.standard
     try write(ActivationSummary(
         environment: environmentDescription(),
-        policy: "candidate ≥ \(policy.candidateScore); with music ≥ \(policy.musicPresentScore): speech ≥ \(policy.speechScoreOverMusic); "
-            + "release \(policy.releaseAfter) s",
+        policy: "candidate ≥ \(policy.candidateScore); in a music context (music ≥ \(policy.musicPresentScore) now or in "
+            + "≥ \(policy.musicContextMinimum) of the last \(policy.musicContextWindows) windows): speech ≥ "
+            + "\(policy.strongSpeechScore), or ≥ \(policy.speechScoreOverMusic) with vocal-music score ≤ "
+            + "\(policy.maximumVocalScoreOverMusic); release \(policy.releaseAfter) s",
         conditions: conditions,
         note: "Clips start with speech/music at t = 0 and are followed by 1.5 s of silence. Activation time is the "
             + "end of the first qualifying 1.5 s window (audio clock); it includes the classifier's window length. "
@@ -756,6 +766,18 @@ struct PipelineRecord: Codable {
     var preRollUsed: Double?
     var semanticSeconds: Double?
     var failure: String?
+    /// Distinct speech events the pipeline reported for this clip.
+    var speechEvents = 0
+    /// A summary was shown at some point (for music clips: a song was treated as a conversation).
+    var summaryShown = false
+    /// Speech relevance of the last utterance: nearbySpeech, speechOverMusic or possiblyMusic.
+    var relevance: String?
+    var utterancesHeldAsMusic = 0
+    var modelCallsAvoided = 0
+    var transcriptWords = 0
+    /// Share of the reference words found in the transcripts shown for this clip (approximate:
+    /// the result only carries the latest utterances).
+    var referenceWordRecall: Double?
 }
 
 struct PipelineSummary: Codable {
@@ -781,8 +803,25 @@ struct PipelineSummary: Codable {
     var emptyUtterances: Int
     var cpuSecondsPerAudioSecond: Double
     var peakMemoryMB: Double
+    var clipsWithSpeechEvent = 0
+    var clipsWithSummary = 0
+    var utterancesHeldAsMusic = 0
+    var modelCallsAvoided = 0
+    var relevanceOfLastUtterance: [String: Int] = [:]
+    var referenceWordRecall: Distribution?
     var note: String
     var records: [PipelineRecord]
+}
+
+/// One clip of a real-time pipeline run.
+struct PipelineClip {
+    var utterance: Utterance
+    var audio: Audio
+    /// Where the speech sits inside `audio` (the whole clip for plain speech; nil for music).
+    var speech: (start: Double, duration: Double)?
+    /// False when the audio contains music: recognized text may be song lyrics, so result files
+    /// get counts only (the console still shows it for clips that contain known speech).
+    var keepsText = true
 }
 
 func processCPUSeconds() -> Double {
@@ -807,10 +846,18 @@ func runPipeline(_ arguments: Arguments) async throws {
     let set = arguments.string("--set", "tts")
     let count = arguments.int("--count", 20)
     let lead = arguments.double("--lead", 2), tail = arguments.double("--tail", 8)
-    var clips: [Utterance]
+    let snr = arguments.double("--snr", 10)
+    var clips: [PipelineClip] = []
+    var setDescription = ""
+    func plain(_ utterances: [Utterance]) -> [PipelineClip] {
+        utterances.prefix(count).compactMap { utterance in
+            (try? loadAudio(utterance.url)).map { PipelineClip(utterance: utterance, audio: $0, speech: (0, $0.duration)) }
+        }
+    }
     switch set {
     case "tts":
-        clips = syntheticSentences()
+        clips = plain(syntheticSentences())
+        setDescription = "SYNTHETIC speech (macOS text-to-speech)"
     case "libri-short":
         // The shortest human utterances: the case the pre-roll buffer exists for.
         let all = libriSpeech()
@@ -818,11 +865,37 @@ func runPipeline(_ arguments: Arguments) async throws {
             guard let file = try? AVAudioFile(forReading: utterance.url) else { return nil }
             return (utterance.id, Double(file.length) / file.processingFormat.sampleRate)
         })
-        clips = all.sorted { (durations[$0.id] ?? 99, $0.id) < (durations[$1.id] ?? 99, $1.id) }
+        clips = plain(all.sorted { (durations[$0.id] ?? 99, $0.id) < (durations[$1.id] ?? 99, $1.id) })
+        setDescription = "LibriSpeech dev-clean, shortest utterances (human speech)"
+    case "music":
+        // Songs only (holdout clips, evenly over the ten genres). Nothing here is a conversation.
+        let songs = gtzanSplit(holdout: true, perGenre: max(count / 10, 1))
+        clips = songs.compactMap { url in
+            (try? loadAudio(url)).map {
+                PipelineClip(utterance: Utterance(id: url.lastPathComponent, url: url, reference: "",
+                                                  source: "gtzan-" + url.deletingLastPathComponent().lastPathComponent),
+                             audio: $0, speech: nil, keepsText: false)
+            }
+        }
+        setDescription = "GTZAN songs, holdout clips (music only; many with vocals)"
+    case "bed":
+        // Human speech over a song: 5 s of music, the utterance on top at --snr, 3 s of music.
+        let songs = gtzanSplit(holdout: true, perGenre: 3).compactMap { try? loadAudio($0) }
+        let speech = libriSplit(holdout: true, count: 200).compactMap { utterance -> (Utterance, Audio)? in
+            guard let audio = try? loadAudio(utterance.url), (2 ... 10).contains(audio.duration) else { return nil }
+            return (utterance, audio)
+        }
+        guard !songs.isEmpty else { return print("GTZAN not found") }
+        clips = evenSubset(speech, count: count).enumerated().map { index, item in
+            let mixed = speechOverMusicBed(item.1, music: songs[(index * 7) % songs.count], snrDB: snr, lead: 5, tail: 3,
+                                           offset: index * 7_919)
+            return PipelineClip(utterance: item.0, audio: mixed, speech: (5, item.1.duration), keepsText: false)
+        }
+        setDescription = "LibriSpeech utterances (human speech, holdout) over GTZAN songs (holdout) at \(Int(snr)) dB "
+            + "speech-to-music ratio, 5 s of music before the speech"
     default:
         return print("unknown --set \(set)")
     }
-    clips = Array(clips.prefix(count))
     guard !clips.isEmpty else { return print("no clips for set \(set)") }
 
     var configuration = SpeechIntelligenceConfiguration()
@@ -856,8 +929,10 @@ func runPipeline(_ arguments: Arguments) async throws {
     var audioSeconds = 0.0, peakMemory = 0.0
     let cpuStart = processCPUSeconds()
 
-    for (index, clip) in clips.enumerated() {
-        let audio = try loadAudio(clip.url)
+    var heldAsMusic = 0, callsAvoided = 0
+    for (index, item) in clips.enumerated() {
+        let clip = item.utterance
+        let audio = item.audio
         let silence = { (seconds: Double) in [Float](repeating: 0, count: Int(seconds * audio.sampleRate)) }
         let stream = silence(lead) + audio.samples + silence(tail)
         let step = Int(audio.sampleRate / 10)
@@ -889,7 +964,7 @@ func runPipeline(_ arguments: Arguments) async throws {
         audioSeconds += Double(stream.count) / audio.sampleRate
 
         // Milestones relative to the end of the speech in the file.
-        let speechEnd = startDate.addingTimeInterval(lead + audio.duration)
+        let speechEnd = startDate.addingTimeInterval(lead + (item.speech.map { $0.start + $0.duration } ?? audio.duration))
         let results = outputs.compactMap { entry -> (Date, SpeechSemanticResult)? in
             if case .result(let result) = entry.1 { (entry.0, result) } else { nil }
         }
@@ -897,21 +972,41 @@ func runPipeline(_ arguments: Arguments) async throws {
         let firstText = results.first { !($0.1.transcript?.text.isEmpty ?? true) }?.0
         let firstFinal = results.first { $0.1.utteranceCount > 0 }?.0
         let firstSummary = results.first { $0.1.summary != nil }?.0
+        var clipHeld = 0, clipAvoided = 0
         for entry in ending {
             if case .sessionEnded(let diagnostics) = entry.1 {
                 duplicates += diagnostics.duplicateSummariesSuppressed
                 failures += diagnostics.transcriptionFailures
                 emptyUtterances += diagnostics.emptyUtterances
+                clipHeld = diagnostics.utterancesPossiblyMusic
+                clipAvoided = diagnostics.modelCallsAvoidedForMusic
             }
         }
+        heldAsMusic += clipHeld
+        callsAvoided += clipAvoided
         let transcript = final?.transcript?.isFinal == true ? final?.transcript?.text ?? "" : ""
         let reference = scoringWords(clip.reference), hypothesis = scoringWords(transcript)
         let errors = wordErrors(reference: reference, hypothesis: hypothesis)
-        pairs.append((errors, reference.count))
+        if !reference.isEmpty { pairs.append((errors, reference.count)) }
         revisions.append(Double(final?.summaryRevision ?? 0))
-        let record = PipelineRecord(
-            id: clip.id, source: clip.source, reference: clip.reference, speechSeconds: audio.duration,
-            transcript: transcript, headline: final?.headline ?? "—", level: final?.level.rawValue ?? 0,
+        // Reference words found in any final transcript shown for this clip.
+        var seen: [String: Int] = [:]
+        for (_, result) in results {
+            guard let shown = result.transcript, shown.isFinal else { continue }
+            let counts = Dictionary(grouping: scoringWords(shown.text), by: \.self).mapValues(\.count)
+            for (word, count) in counts { seen[word] = max(seen[word] ?? 0, count) }
+        }
+        let referenceCounts = Dictionary(grouping: reference, by: \.self).mapValues(\.count)
+        let found = referenceCounts.reduce(0) { $0 + min($1.value, seen[$1.key] ?? 0) }
+        let neutralHeadlines = [SpeechSemanticResult.detectionHeadline, SpeechSemanticResult.transcriptHeadline,
+                                SpeechSemanticResult.unclearHeadline, SpeechSemanticResult.possiblyMusicHeadline]
+        let headline = final?.headline ?? "—"
+        var record = PipelineRecord(
+            id: clip.id, source: clip.source, reference: clip.reference,
+            speechSeconds: item.speech?.duration ?? 0,
+            transcript: item.keepsText ? transcript : "",
+            headline: item.keepsText || neutralHeadlines.contains(headline) || final == nil ? headline : "(summary of lyrics, not stored)",
+            level: final?.level.rawValue ?? 0,
             category: final?.category.rawValue ?? "unknown", state: final?.state.rawValue ?? "none",
             utterances: final?.utteranceCount ?? 0, wordErrors: errors, referenceWords: reference.count,
             firstWordKept: !reference.isEmpty && hypothesis.first == reference.first,
@@ -921,10 +1016,18 @@ func runPipeline(_ arguments: Arguments) async throws {
             endOfSpeechToSummary: firstSummary.map { $0.timeIntervalSince(speechEnd) },
             activationToTranscription: final?.latency.activationToTranscription, preRollUsed: final?.latency.preRollUsed,
             semanticSeconds: final?.latency.semanticProcessing, failure: final?.failure)
+        record.speechEvents = Set(results.map(\.1.id)).count
+        record.summaryShown = firstSummary != nil
+        record.relevance = final?.acousticContext?.relevance.rawValue
+        record.utterancesHeldAsMusic = clipHeld
+        record.modelCallsAvoided = clipAvoided
+        record.transcriptWords = seen.values.reduce(0, +)
+        record.referenceWordRecall = reference.isEmpty ? nil : Double(found) / Double(reference.count)
         records.append(record)
-        print(String(format: "%2d %-22@ [%@] L%d %@ | \"%@\" | first word %@ | final %@ summary %@", index + 1,
-                     clip.id as NSString, record.headline, record.level, record.category, transcript,
-                     record.firstWordKept ? "kept" : "LOST",
+        print(String(format: "%2d %-22@ [%@] L%d %@ %@ | \"%@\" | first word %@ | final %@ summary %@", index + 1,
+                     clip.id as NSString, record.headline, record.level, record.category, record.relevance ?? "–",
+                     item.keepsText || item.speech != nil ? transcript : "(\(record.transcriptWords) words, not stored)",
+                     reference.isEmpty ? "n/a" : record.firstWordKept ? "kept" : "LOST",
                      record.endOfSpeechToFinalTranscript.map { String(format: "%.2f s", $0) } ?? "—",
                      record.endOfSpeechToSummary.map { String(format: "%.2f s", $0) } ?? "—"))
     }
@@ -934,8 +1037,8 @@ func runPipeline(_ arguments: Arguments) async throws {
     let description = "pre-roll \(configuration.preRollSeconds) s, endpoint \(configuration.endpointSilence) s, "
         + "candidate \(configuration.activation.candidateScore), language model \(useModel ? "on" : "off"); "
         + "\(lead) s silence + clip + \(tail) s silence, real-time replay, one session per clip"
-    let summary = PipelineSummary(
-        environment: environmentDescription(), set: set == "tts" ? "SYNTHETIC speech (macOS text-to-speech)" : "LibriSpeech dev-clean, shortest utterances (human speech)",
+    var summary = PipelineSummary(
+        environment: environmentDescription(), set: setDescription,
         configuration: description, clips: records.count,
         withTranscript: records.filter { !$0.transcript.isEmpty }.count, withSummary: records.filter { $0.level == 3 }.count,
         wordErrorRate: Double(errors) / Double(max(words, 1)), wordErrorRateCI95: bootstrapRatio(pairs),
@@ -954,12 +1057,21 @@ func runPipeline(_ arguments: Arguments) async throws {
             + "sound classifier, the recognizer and the language-model client; the models themselves partly run in "
             + "system processes that are not counted.",
         records: records)
+    summary.clipsWithSpeechEvent = records.filter { $0.speechEvents > 0 }.count
+    summary.clipsWithSummary = records.filter(\.summaryShown).count
+    summary.utterancesHeldAsMusic = heldAsMusic
+    summary.modelCallsAvoided = callsAvoided
+    summary.relevanceOfLastUtterance = Dictionary(grouping: records.compactMap(\.relevance), by: \.self).mapValues(\.count)
+    summary.referenceWordRecall = Distribution(records.compactMap(\.referenceWordRecall))
+    print("speech events in \(summary.clipsWithSpeechEvent)/\(records.count) clips, a summary shown in "
+        + "\(summary.clipsWithSummary), utterances held as possibly music \(heldAsMusic), model calls avoided \(callsAvoided)")
     print(String(format: "%@: %d clips, transcript %d, summary %d, WER %.1f %%, first word kept %d/%d, "
             + "end of speech → final transcript median %.2f s, → summary median %.2f s, CPU %.2f s/s, peak %.0f MB",
         set, records.count, summary.withTranscript, summary.withSummary, summary.wordErrorRate * 100,
         summary.firstWordKept, records.count, summary.endOfSpeechToFinalTranscript.median,
         summary.endOfSpeechToSummary.median, summary.cpuSecondsPerAudioSecond, summary.peakMemoryMB))
-    let suffix = arguments.string("--tag", "preroll\(configuration.preRollSeconds)" + (useModel ? "" : "_nomodel"))
+    let suffix = arguments.string("--tag", (set == "bed" ? "snr\(Int(snr))_" : "") + "preroll\(configuration.preRollSeconds)"
+        + (useModel ? "" : "_nomodel"))
     try write(summary, to: "pipeline_\(set)_\(suffix).json", directory: defaultOutput)
 }
 
@@ -1008,6 +1120,8 @@ case "summarize": try await runSummarize(arguments)
 case "activation": try await runActivation(arguments)
 case "music-transcripts": try await runMusicTranscripts(arguments)
 case "pipeline": try await runPipeline(arguments)
+case "gate-data": try await runGateData(arguments)
+case "relevance": try await runRelevance(arguments)
 default:
     print("Usage: hs-speech-eval availability | transcribe | summarize | activation | music-transcripts | pipeline (see the file header)")
 }

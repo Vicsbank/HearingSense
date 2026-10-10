@@ -26,6 +26,12 @@ public struct UtteranceAnalysis: Hashable, Sendable {
 
     public var isNegated: Bool { !negations.isEmpty }
 
+    /// The statement itself is negated ("not", "n't", "never", "cannot"), as opposed to only
+    /// containing "no", "nothing", "nobody" and the like.
+    public var hasStatementNegation: Bool {
+        negations.contains { !Self.quantifierNegations.contains($0) }
+    }
+
     public init(_ text: String) {
         let lowered = text.lowercased().replacingOccurrences(of: "’", with: "'")
         words = Self.tokenize(lowered)
@@ -51,6 +57,10 @@ public struct UtteranceAnalysis: Hashable, Sendable {
         "ain't", "can't", "couldn't", "didn't", "doesn't", "don't", "hadn't", "hasn't", "haven't", "isn't",
         "mustn't", "shouldn't", "wasn't", "weren't", "won't", "wouldn't", "aren't", "needn't", "shan't",
     ]
+
+    /// Negation words that negate a thing or a quantity ("no milk", "nothing", "nobody") rather
+    /// than the statement itself ("has not arrived", "don't open", "never").
+    static let quantifierNegations: Set<String> = ["no", "none", "nobody", "nothing", "nowhere", "neither", "nor", "without"]
 
     /// Phrases that contain a negation word without negating the message.
     static let neutralIdioms = [

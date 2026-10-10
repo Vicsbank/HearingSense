@@ -60,18 +60,44 @@ struct WindowScript {
         }
     }
 
-    @Test func weakSpeechScoresUnderMusicAreSuppressedButClearSpeechOverMusicIsNot() {
+    @Test func inAMusicContextOnlyStrongOrVocalFreeSpeechActivates() {
         var tracker = SpeechActivityTracker()
         var script = WindowScript()
-        // Sung vocals: music is confident, speech is only a weak secondary label.
+        // Sung vocals: music is confident, speech is a secondary label, a vocal label is present.
         #expect(tracker.process(script.frame(["music": 0.9, "singing": 0.8, "speech": 0.4])) == nil)
         #expect(tracker.lastEvidence.suppressedByMusic && !tracker.lastEvidence.isSpeech)
-        #expect(tracker.windowsSuppressedByMusic == 1)
-        // Someone talks over the music.
-        #expect(tracker.process(script.frame(["music": 0.9, "speech": 0.55])) == .began(onset: 0.75))
-        // Weak music does not raise the bar.
+        #expect(tracker.lastEvidence.vocalScore == 0.8 && tracker.lastEvidence.isMusicContext)
+        // Even a fairly high speech score does not activate while a vocal label is present …
+        #expect(tracker.process(script.frame(["music": 0.9, "rapping": 0.5, "speech": 0.85])) == nil)
+        // … nor a moderate one without vocals.
+        #expect(tracker.process(script.frame(["music": 0.9, "speech": 0.7])) == nil)
+        #expect(tracker.windowsSuppressedByMusic == 3)
+        // A clear speech score without vocal labels does: someone talks over instrumental music.
+        #expect(tracker.process(script.frame(["music": 0.9, "speech": 0.82, "singing": 0.15])) == .began(onset: 2.25))
+
+        // A strong speech score activates whatever else is in the window.
+        var strong = SpeechActivityTracker()
+        #expect(strong.process(script.frame(["music": 0.9, "singing": 0.6, "speech": 0.93])) != nil)
+        // Weak music is not a music context.
         var quiet = SpeechActivityTracker()
         #expect(quiet.process(script.frame(["guitar": 0.45, "speech": 0.35])) != nil)
+        #expect(!quiet.lastEvidence.isMusicContext)
+    }
+
+    @Test func theMusicContextIsRememberedWhenVocalsMaskTheMusicLabel() {
+        var tracker = SpeechActivityTracker()
+        var script = WindowScript()
+        _ = tracker.process(script.frame(["music": 0.8]))
+        _ = tracker.process(script.frame(["music": 0.7]))
+        // The music label dips below "present", but music was playing a moment ago.
+        #expect(tracker.process(script.frame(["music": 0.3, "speech": 0.5])) == nil)
+        #expect(tracker.lastEvidence.isMusicContext && tracker.lastEvidence.suppressedByMusic)
+        // After enough windows without music the ordinary candidate threshold applies again.
+        _ = tracker.process(script.frame([:]))
+        _ = tracker.process(script.frame([:]))
+        _ = tracker.process(script.frame([:]))
+        #expect(tracker.process(script.frame(["speech": 0.35])) != nil)
+        #expect(!tracker.lastEvidence.isMusicContext)
     }
 
     @Test func thresholdsComeFromThePolicy() {

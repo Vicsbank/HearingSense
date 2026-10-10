@@ -188,6 +188,10 @@ private actor Core {
         var text: String
         var audioTime: AudioTimeRange
         var quality: TranscriptQuality
+        /// Speech, speech over music, or possibly lyrics (nil: no classifier window to judge by).
+        var context: SpeechAcousticContext?
+
+        var isPossiblyMusic: Bool { context?.relevance == .possiblyMusic }
     }
 
     private struct Conversation {
@@ -197,6 +201,10 @@ private actor Core {
         /// Utterances with an index below this value were already given to the language model.
         var summarizedCount = 0
         var semanticToken = 0
+        /// The latest utterances were either interpreted or deliberately left uninterpreted.
+        var hasInterpretation = false
+        /// At least one utterance of this conversation was interpreted as speech.
+        var hasSpokenInterpretation = false
         var semanticInFlight = false
         var needsSummary = false
         var lastSemanticAudioTime: TimeInterval?
@@ -221,6 +229,7 @@ private actor Core {
     private var isTranscriptionEnabled: Bool
     private var capabilities: SpeechCapabilities
     private var tracker: SpeechActivityTracker
+    private var relevance: SpeechRelevanceGate
     private var conversation: Conversation?
     private var utterance: ActiveUtterance?
     private var finishing: [Int: ActiveUtterance] = [:]
@@ -250,6 +259,7 @@ private actor Core {
         self.post = post
         self.emit = emit
         tracker = SpeechActivityTracker(policy: configuration.activation, taxonomy: taxonomy)
+        relevance = SpeechRelevanceGate(policy: configuration.relevance)
         capabilities = SpeechCapabilities(isTranscriptionEnabled: isTranscriptionEnabled,
                                           transcription: isTranscriptionEnabled ? .unknown : .disabledByUser,
                                           language: transcriber.languageIdentifier)
@@ -329,8 +339,12 @@ private actor Core {
             await transcriber.releaseResources()
             emit(.speechDataCleared)
         }
-        // Ongoing speech re-activates on the next classifier window under the new setting.
+        // Ongoing speech re-activates on the next classifier window under the new setting. If no
+        // further speech arrives, the open speech event still has to end.
         tracker.reset()
+        if conversation != nil, conversation?.closeAt == nil {
+            conversation?.closeAt = lastFrameTime + configuration.conversationGap
+        }
         await refreshCapabilities()
         if isSessionActive { prepareRecognizerIfUsable() }
     }
@@ -366,6 +380,7 @@ private actor Core {
 
     private func resetSessionState() {
         tracker.reset()
+        relevance.reset()
         conversation = nil
         activeSoundEvents = [:]
         transcribedThrough = 0
@@ -380,6 +395,7 @@ private actor Core {
         lastFrameTime = frame.audioTime.end
         diagnostics.windows += 1
         let transition = tracker.process(frame)
+        relevance.record(frame, evidence: tracker.lastEvidence)
         if tracker.lastEvidence.isSpeech { diagnostics.speechWindows += 1 }
         diagnostics.windowsSuppressedByMusic = tracker.windowsSuppressedByMusic
 
@@ -649,8 +665,15 @@ private actor Core {
         let quality = TranscriptQuality.assess(meanConfidence: segment.meanConfidence,
                                                minimumConfidence: segment.minimumConfidence,
                                                wordCount: TranscriptText.words(in: segment.text).count)
+        // Stage B of the speech relevance gate: was this spoken, or is it probably part of music?
+        let context = relevance.assess(segment.audioTime, meanConfidence: segment.meanConfidence)
+        switch context?.relevance {
+        case .possiblyMusic: diagnostics.utterancesPossiblyMusic += 1
+        case .speechOverMusic: diagnostics.utterancesOverMusic += 1
+        case .nearbySpeech, nil: break
+        }
         current.utterances.append(FinalUtterance(index: current.totalUtterances, text: segment.text,
-                                                 audioTime: segment.audioTime, quality: quality))
+                                                 audioTime: segment.audioTime, quality: quality, context: context))
         current.totalUtterances += 1
         if current.utterances.count > configuration.maximumUtterancesKept {
             current.utterances.removeFirst(current.utterances.count - configuration.maximumUtterancesKept)
@@ -690,11 +713,35 @@ private actor Core {
             conversation = current
             return
         }
-        let context = current.utterances.filter { $0.index < current.summarizedCount }
+        // Utterances that are probably lyrics are not interpreted: no language-model call, no
+        // summary. Their transcript stays visible, marked as uncertain.
+        let interpretable = pending.filter { !$0.isPossiblyMusic }
+        guard let newest = interpretable.last else {
+            current.summarizedCount = current.totalUtterances
+            current.needsSummary = false
+            current.hasInterpretation = true
+            if !current.hasSpokenInterpretation {
+                current.result.summary = nil
+                current.result.category = .unknown
+                current.result.details = nil
+                current.result.isUnclear = false
+                current.result.failure = nil
+                current.result.acousticContext = pending.last?.context
+            }
+            // Otherwise something in this conversation was interpreted as speech: a lyric line
+            // heard afterwards does not replace that summary.
+            conversation = current
+            diagnostics.modelCallsAvoidedForMusic += 1
+            publish()
+            if current.exceededMaximumDuration { completeConversation() } else { completeConversationIfDue() }
+            return
+        }
+        let context = current.utterances.filter { $0.index < current.summarizedCount && !$0.isPossiblyMusic }
             .suffix(configuration.summaryContextUtterances).map(\.text)
-        let quality = pending.map(\.quality).min { $0.rating < $1.rating } ?? .unknown
-        let request = SemanticRequest(transcript: pending.map(\.text).joined(separator: " "), context: context,
+        let quality = interpretable.map(\.quality).min { $0.rating < $1.rating } ?? .unknown
+        let request = SemanticRequest(transcript: interpretable.map(\.text).joined(separator: " "), context: context,
                                       languageIdentifier: capabilities.language, quality: quality)
+        current.result.acousticContext = newest.context
         current.summarizedCount = current.totalUtterances
         current.semanticToken += 1
         current.semanticInFlight = true
@@ -727,6 +774,8 @@ private actor Core {
             return
         }
         current.semanticInFlight = false
+        current.hasInterpretation = true
+        current.hasSpokenInterpretation = true
         diagnostics.modelAttempts += outcome.attempts
         diagnostics.summaryRejections += outcome.rejections.count
         if outcome.attempts > 0 { diagnostics.semanticProcessing.record(outcome.duration) }
@@ -809,7 +858,10 @@ private actor Core {
     private func publish() {
         guard var current = conversation else { return }
         let partial = utterance?.assembler.volatileText ?? ""
-        let shown = current.utterances.suffix(configuration.transcriptUtterances)
+        // The transcript belongs to the headline: spoken utterances if there are any, otherwise
+        // the lines that are probably lyrics.
+        let spoken = current.utterances.filter { !$0.isPossiblyMusic }
+        let shown = (spoken.isEmpty ? current.utterances : spoken).suffix(configuration.transcriptUtterances)
         var parts = shown.map(\.text)
         if !partial.isEmpty { parts.append(partial) }
         if parts.isEmpty {
@@ -820,7 +872,7 @@ private actor Core {
             let end = max(shown.last?.audioTime.end ?? start, utterance?.assembler.audioTime?.end ?? start)
             current.result.transcript = SpeechTranscript(
                 text: parts.joined(separator: " "), language: capabilities.language, isFinal: partial.isEmpty,
-                quality: current.utterances.last?.quality ?? .unknown,
+                quality: shown.last?.quality ?? .unknown,
                 audioTime: AudioTimeRange(start: start, end: end))
         }
 
@@ -828,7 +880,7 @@ private actor Core {
             current.result.state = .processing
         } else if !partial.isEmpty || (utterance != nil && current.totalUtterances == 0) {
             current.result.state = .transcribing
-        } else if current.totalUtterances > 0, current.semanticToken > 0 {
+        } else if current.totalUtterances > 0, current.hasInterpretation {
             current.result.state = .summarized
         } else if !finishing.isEmpty || current.totalUtterances > 0 {
             current.result.state = .transcribing

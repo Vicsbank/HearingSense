@@ -296,6 +296,10 @@ final class Harness {
     var musicScore = 0.0
     /// Overrides the speech score derived from the script (e.g. sung vocals without speech).
     var forcedSpeechScore: Double?
+    /// Vocal-music (`singing`) score reported in every window from now on.
+    var vocalScore = 0.0
+    /// Speech score of windows that contain scripted speech (default: a clear 0.9).
+    var speechScoreWhenSpeaking = 0.9
     private(set) var time: TimeInterval = 0
     private var sequence = 0
     private var samplePosition: Int64 = 0
@@ -360,7 +364,7 @@ final class Harness {
         let overlap = speech.reduce(0.0) { total, utterance in
             total + max(min(utterance.end, window.upperBound) - max(utterance.start, window.lowerBound), 0)
         }
-        return overlap >= 0.6 ? 0.9 : overlap >= 0.25 ? 0.4 : 0
+        return overlap >= 0.6 ? speechScoreWhenSpeaking : overlap >= 0.25 ? min(0.4, speechScoreWhenSpeaking) : 0
     }
 
     private func frameIfWindowEnds() -> ClassificationFrame? {
@@ -371,6 +375,7 @@ final class Harness {
         let speechScore = speechScore(in: range.start ... range.end)
         if speechScore > 0 { scores["speech"] = speechScore }
         if musicScore > 0 { scores["music"] = musicScore }
+        if vocalScore > 0 { scores["singing"] = vocalScore }
         let now = Date.now
         let predictions = scores.map {
             RawSoundPrediction(label: $0.key, score: ClassifierScore($0.value), audioTime: range, producedAt: now,

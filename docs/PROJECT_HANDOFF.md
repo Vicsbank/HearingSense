@@ -1,14 +1,18 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-09, end of **Window 2** (Real-Time Sound Analysis and Acoustic Event Detection).
-Window 2 status: **code complete and verified on Mac + iPhone 18 Pro Simulator; no physical-iPhone
-test was run in Window 2** (the student chose Simulator-only testing for this window). The open device
-tests are listed in `docs/testing/WINDOW2_DEVICE_TESTS.md`.
-Next window: **Window 3 — Speech Recognition and Apple Foundation Models** (not started; do not start
-it without the student's instruction).
+Last updated: 2026-10-09, end of **Window 3** (On-Device Speech Intelligence and Apple Foundation Models).
+Window 3 status: **code complete and verified on the Mac (unit tests, real recognizer and language
+model on files) and on the iPhone 18 Pro Simulator (unit tests, app build, level-1 live check).
+Nothing in Window 3 has run on the physical iPhone**; device tests wait for the student's
+explicit authorization (`docs/testing/WINDOW3_TEST_RESULTS.md` §9). Window 2's device tests
+(`docs/testing/WINDOW2_DEVICE_TESTS.md`) are still open too.
+Next window: **Window 4 — Attention Priority Engine** (not started; do not start it without the
+student's instruction).
 
-Git: initialized in Window 2. `main` = reconstructed Window 1 baseline (`7905f0b`, `679494e`);
-Window 2 work is on branch `feature/window2-sound-analysis` (not merged, not pushed; no remote).
+Git: `main` = reconstructed Window 1 baseline (`7905f0b`, `679494e`); Window 2 on
+`feature/window2-sound-analysis` (`6f41d90`); Window 3 on `feature/window3-speech-intelligence`,
+branched from the Window 2 branch. Nothing is merged or pushed; there is no remote. Merging is the
+student's decision.
 
 Each Claude Code window starts without memory of earlier windows. Read this file first, then the
 files listed in §11. Update this file at the end of every window.
@@ -39,6 +43,10 @@ It is an awareness aid, not a safety or emergency system.
   validation from the Simulator.
 - Apple-native frameworks first; no new third-party dependencies without a reason.
 - Privacy: no audio persistence or upload; transcripts opt-in and minimal; diagnostics carry metadata only.
+- (W3) **No microphone recording or transcription of real conversations without the student's
+  authorization.** The Mac/Simulator microphone picks up real speech in the student's room; sound
+  classification there was done before, transcription was deliberately not attempted.
+- (W3) Physical-iPhone tests stay pending until the student explicitly authorizes them.
 - Communicate with the student in Chinese; code, comments and docs in English.
 
 ## 3. Existing codebase (before iOS 2.0)
@@ -93,22 +101,54 @@ Music genre/emotion research, preserved unchanged (details: `docs/EXISTING_PROJE
    architecture, roadmap, routing feasibility updated.
 7. Git initialized; `.gitignore` excludes all dataset content and per-clip evaluation dumps.
 
+## 4c. Completed in Window 3
+
+Full report: `docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md`; architecture:
+`docs/research/SPEECH_INTELLIGENCE_ARCHITECTURE.md`; numbers and methods:
+`docs/testing/WINDOW3_TEST_RESULTS.md`.
+
+1. `HearingSenseDomain`: `SpeechSemanticResult` and its parts (speech event id, state, output level,
+   category, transcript + recognition quality, summary + reliability, details, acoustic context /
+   speech relevance, latency, model availability).
+2. `HearingSenseAudio`: `AudioStreamClock` (moved from SoundEventDetection; shared time base).
+3. `SpeechPipeline`: `PreRollAudioBuffer` (5 s ring), `SpeechAudioTap`, `AppleSpeechTranscriber`
+   (`SpeechAnalyzer` + `SpeechTranscriber`, one analyzer per utterance), `TranscriptAssembler`.
+4. `SemanticSummary`: `FoundationModelInterpreter` (`SystemLanguageModel.default`, guided
+   generation), `SpeechSemanticAnalyzer`, `SummaryValidator`, `UtteranceAnalysis`, `RuleBasedInterpreter`.
+5. `SpeechIntelligence`: `SpeechIntelligenceEngine` (serial command queue), `SpeechActivityTracker`
+   (speech candidates, music context), `SpeechRelevanceGate` (speech / speech over music / possibly
+   music), configuration, diagnostics.
+6. `hs-speech-eval` (macOS): forward-only evaluation; summaries in `results/speech_eval_window3/`.
+7. App: `Speech/SpeechIntelligenceController`, `Views/SpeechIntelligenceViews` (card + diagnostics);
+   `ListeningController` attaches the speech tap and session calls; `RecognitionController` forwards
+   classifier windows and events; `NSSpeechRecognitionUsageDescription` added.
+8. Tests: 103 new package tests (pre-roll buffer, assembler, validator, analyzer, tracker, relevance
+   gate, engine with scripted recognizer/model, real recognizer on synthetic speech).
+9. Tools/data: `tools/make_speech_test_signals.sh` + `tools/speech_test_sentences.tsv` (20 synthetic
+   sentences in `data/test_signals/window3/`, not committed).
+
 ## 5. Repository structure (current)
 
 ```
 apps/ios/                      iOS app (Xcode 27 project, synchronized folders)
   HearingSense/HearingSenseApp.swift   @main entry point
   HearingSense/Listening/      ListeningController (orchestrator), ListeningState, DeviceInfo
-  HearingSense/Recognition/    RecognitionController (W2: engine outputs → UI state)
+  HearingSense/Recognition/    RecognitionController (W2: engine outputs → UI state; W3: forwards to speech)
+  HearingSense/Speech/         SpeechIntelligenceController (W3: speech engine outputs → UI state, privacy)
   HearingSense/Views/          ContentView, StatusCard, LevelMeterView, RouteDiagnosticsView, DiagnosticLogView,
-                               RecognitionViews (W2)
+                               RecognitionViews (W2), SpeechIntelligenceViews (W3)
   HearingSense/Assets.xcassets AppIcon (placeholder), AccentColor
   Config/HearingSense-Info.plist  UIBackgroundModes=audio (other Info keys are build settings)
-packages/HearingSenseKit/      Swift package: Sources/{HearingSenseAudio, HearingSenseDomain, SoundEventDetection,
-                               SoundEvaluationTool}, Tests/{HearingSenseAudioTests, SoundEventDetectionTests}
-docs/                          this handoff, architecture, audit, feasibility, roadmap, WINDOW2 report,
+packages/HearingSenseKit/      Swift package (iOS 26, macOS 26): Sources/{HearingSenseAudio, HearingSenseDomain,
+                               SoundEventDetection, SoundEvaluationTool, SpeechPipeline, SemanticSummary,
+                               SpeechIntelligence, SpeechEvaluationTool}, Tests/{HearingSenseAudioTests,
+                               SoundEventDetectionTests, SpeechPipelineTests, SemanticSummaryTests,
+                               SpeechIntelligenceTests}
+docs/                          this handoff, architecture, audit, feasibility, roadmap, WINDOW2 and WINDOW3 reports,
                                device-tests/, research/, testing/
 results/sound_eval_window2/    W2 offline evaluation summaries (JSON)
+results/speech_eval_window3/   W3 evaluation summaries (JSON; no music transcripts)
+tools/                         + make_speech_test_signals.sh, speech_test_sentences.tsv (W3)
 src/ ml/ tools/ models/ results/ data/ app/   legacy & research assets (unchanged)
 ```
 
@@ -131,6 +171,23 @@ Full list: `docs/IOS_ARCHITECTURE.md` §9. Most important:
   `ConfirmedAcousticEvent`. All thresholds live in `DetectionPolicy.standard` (provisional).
 - (W2) Detector is deterministic (frame timestamps only); test with scripted frames
   (`Tests/SoundEventDetectionTests/FrameScript.swift`).
+- (W3) The speech pipeline is a second consumer of the same microphone tap (no second capture
+  session) and uses the same `AudioStreamClock`, so classifier windows address buffered audio.
+- (W3) Transcription starts on speech *candidates* (one window ≥ 0.30) from a 5 s pre-roll buffer;
+  measured on 30 short human utterances: first word kept 29/30 with the buffer, 1/30 without.
+- (W3) One `SpeechAnalyzer` per utterance with a contiguous timeline from 0. Do **not** reuse an
+  analyzer across a gap or after a mid-stream `finalize` (corrupt results, measured). Use
+  `finalizeAndFinishThroughEndOfInput()`; `finalize(through: time)` hung in a probe.
+- (W3) **The iOS Simulator has no `SpeechTranscriber`** (`isAvailable == false`); Foundation Models
+  works there. Verify transcription on the Mac (`swift test`, `hs-speech-eval`) or on the iPhone.
+- (W3) A model headline is shown only after deterministic validation; otherwise the result stays at
+  transcript level. Never `PrivateCloudComputeLanguageModel`, never `SFSpeechRecognizer`.
+- (W3) Speech vs. music is an explicit estimate (`SpeechRelevance`); probable lyrics are not sent
+  to the language model.
+- (W3) Engine state changes only on one serial command queue; background results carry the
+  session generation. Tests drive it with `drivesItself: false`, `pump()` and `drain()`.
+- (W3) All speech thresholds live in `SpeechIntelligenceConfiguration` (`activation`, `relevance`,
+  `summary`, endpoint and conversation timings); provisional until device data exists.
 
 ## 7. Verification results (Window 1)
 
@@ -184,10 +241,39 @@ Measured: tap buffers arrive as 4 800 frames (100 ms) at 48 kHz although 4 096 w
 | Offline evaluation, 1.5 s windows | Recorded files (Mac) | Speech recall 99.8 % [98.9, 100] (510 utterances); music recall 100 % [98.7, 100] (300 GTZAN); music falsely confirmed on speech 0.2 %; 0/510 alert events on speech; alert events on held-out music clips 1.0 % [0.3, 2.9] after the foghorn rule. **No accuracy for alerts/knocks/animals/weather** (no annotated data) |
 | Any physical-iPhone test (AirPods/Spotify, lock screen, stall, interruptions) | iPhone 18 Pro | **Not run in Window 2** |
 
+## 7c. Verification results (Window 3)
+
+Details and methods: `docs/testing/WINDOW3_TEST_RESULTS.md`. All measurements are from the Mac.
+
+| Check | Environment | Result |
+|---|---|---|
+| `swift test` (package) | macOS 27.2, Swift 6.4 | **160 passed, 1 skipped** (opt-in real-model test) of 161: 103 new + 58 from Windows 1–2 |
+| `HS_RUN_MODEL_TESTS=1 swift test --filter realModel` | Mac, real language model | passed |
+| `xcodebuild test -scheme HearingSenseKit-Package` | iOS 27.0 Simulator, iPhone 18 Pro | **162 passed, 4 skipped** of 166 (3 recognizer tests: no `SpeechTranscriber` in the Simulator; 1 opt-in) |
+| App build, Debug / Release unsigned | Simulator / generic iOS device | **Succeeded**, 0 Swift warnings |
+| Speech recognition, LibriSpeech dev-clean, 200 utterances | Recorded files (Mac) | WER 1.60 % clean; 2.66 % cafeteria +10 dB; 5.26 % traffic 0 dB; 15.4 % cafeteria 0 dB; 3.06 % / 17.4 % music +10 / 0 dB |
+| Pre-roll buffer, 30 shortest human utterances, real time | Recorded files (Mac) | First word kept 29/30 with 5 s pre-roll vs 1/30 with 0.25 s; WER 3.8 % vs 43.8 % |
+| End to end, 20 synthetic sentences, real time | Synthetic speech (Mac) | 20/20 transcript and validated summary; final transcript 0.93 s and summary 3.14 s (median) after the end of speech |
+| Summaries, 38 sentences as text | Real language model (Mac) | 37 shown, 1 guardrail fallback; 14/14 negated sentences keep a negation (rule check); manual review: 30 faithful, 4 incomplete, 3 ambiguous, 0 reversed |
+| Speech relevance gate, holdout clips | Recorded files (Mac) | Songs with anything sent to the language model 170/299 → 18/299; spoken words kept 99 % at +10 and +5 dB over music, 84 % at 0 dB; clean speech unchanged |
+| Complete pipeline in real time with music | Recorded files (Mac) | 1 of 20 songs treated as conversation; 12/15 summaries for speech over music at +10 dB, 10/15 at 0 dB |
+| Live microphone, transcription off | Simulator | "Nearby Speech" (level 1) shown; screenshots in `docs/device-tests/window3-simulator/` |
+| Live transcription of real speech | anywhere | **Not run** (needs authorization) |
+| Anything on the physical iPhone | iPhone 18 Pro | **Not run in Window 3** |
+
 ## 8. Known issues
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
+| (W3) No physical-device validation of speech intelligence | Unknown on the iPhone: availability of the speech model and of Foundation Models, latency, CPU/memory/battery, behaviour with the screen locked (the language model may be rate-limited for background apps) | Run `docs/testing/WINDOW3_TEST_RESULTS.md` §9 when authorized; P0 and P6 first |
+| (W3) Simulator cannot transcribe | Levels 2–3 cannot be exercised in the Simulator; recognizer tests are skipped there | Use the Mac for recognizer tests; optionally run the app as "My Mac (Designed for iPhone)" (needs the Mac registered in the student's developer account — their decision) |
+| (W3) ≈ 3 s from the end of a sentence to its summary (Mac) | Slower than a glance-and-go alert | ≈ 1 s is the wait for the final transcript, ≈ 2 s the language model; consider showing the transcript-level result first, or a shorter endpoint, after device measurements |
+| (W3) Summaries can be incomplete or ambiguous although validated | 3 of 37 manually reviewed headlines were ambiguous ("Store Won't Open Ten") | Keep the transcript reachable from any summary; Window 4 should not treat a headline as fact |
+| (W3) Speech vs. music is an estimate | ≈ 6 % of songs still produce something for the language model (mostly rap); ≈ 16 % of spoken words at 0 dB over music are held as "possibly music"; TV/podcast speech counts as nearby speech | Window 4: lowest priority for `possiblyMusic`, lower for `speechOverMusic`; re-tune with device recordings |
+| (W3) English only; validator rules are English keyword rules | Other languages get no validated summaries | Add per-language rules or restrict the feature to English; Chinese needs the speech model downloaded |
+| (W3) Categories are often debatable (model overuses "reminder") | Weak signal for prioritization | Prefer rule-based `details` (negation, question, time) and keywords in Window 4 |
+| (W3) `NSSpeechRecognitionUsageDescription` added defensively | Unknown whether iOS prompts for it with `SpeechAnalyzer` | Check in P0 |
+| (W3) Thresholds chosen on read/synthetic speech and GTZAN, on the Mac | May not transfer to a phone on a table or in a pocket | Re-run `hs-speech-eval` after collecting device data (with authorization) |
 | ~0.5 s media stall at Start/Stop listening | Noticeable but acceptable for manual start/stop | W2: redundant calls skipped + keep-session experiment added; **effect not measured** — device Test S (feasibility §3) |
 | No physical-device validation of Window 2 | Thresholds, quiet level, latency, CPU on iPhone unknown | Run `docs/testing/WINDOW2_DEVICE_TESTS.md` (L, A, B, C, D, H, I, S first) |
 | Thresholds provisional; no event-annotated environmental data | Alert/knock/animal/weather reliability unknown | Device tests with controlled playback; consider a small annotated set (download needs approval) |
@@ -205,12 +291,14 @@ Measured: tap buffers arrive as 4 800 frames (100 ms) at 48 kHz although 4 096 w
 
 ## 9. Remaining tasks (by window)
 
-See `docs/IOS_DEVELOPMENT_ROADMAP.md`. Carried over from Window 2 (physical iPhone, one step at a
-time): label inventory (L), quiet room (A, calibrate quiet threshold), speech/knock/music/overlap
+See `docs/IOS_DEVELOPMENT_ROADMAP.md`. Carried over from Window 3 (physical iPhone, only when the
+student authorizes it): P0–P9 in `docs/testing/WINDOW3_TEST_RESULTS.md` §9. Carried over from
+Window 2 (physical iPhone, one step at a time): label inventory (L), quiet room (A, calibrate quiet threshold), speech/knock/music/overlap
 (B, C, D, G), AirPods + Spotify (H), lock screen ≥ 1 min then ≥ 15 min (I), start/stop stall with
 the keep-session toggle off/on (S), playback rain/wind/horn (E, F), interruptions (J, ask first);
 plus Window 1's open items (calls, AirPods disconnect, Apple Music, battery/thermal).
-Then Window 3 (speech + Foundation Models), which consumes `ConfirmedAcousticEvent`s.
+Then Window 4 (Attention Priority Engine), which consumes `ConfirmedAcousticEvent`s and
+`SpeechSemanticResult`s (contract: `docs/research/SPEECH_INTELLIGENCE_ARCHITECTURE.md` §11).
 
 ## 10. How to build, test and run
 
@@ -227,7 +315,19 @@ xcodebuild build -project apps/ios/HearingSense.xcodeproj -scheme HearingSense -
 # Offline sound evaluation (forward-only, ~2 min on the M1 Max; needs data/ downloaded)
 cd packages/HearingSenseKit && swift run -c release hs-sound-eval evaluate --window 1.5
 swift run -c release hs-sound-eval labels     # label inventory with taxonomy mapping
+
+# Window 3: synthetic test sentences (macOS text-to-speech), then speech evaluation (forward-only)
+tools/make_speech_test_signals.sh
+cd packages/HearingSenseKit
+swift run -c release hs-speech-eval availability            # which on-device models exist here
+swift run -c release hs-speech-eval transcribe --libri 200  # WER on LibriSpeech (~1 min)
+swift run -c release hs-speech-eval summarize --repeat 2    # Foundation Models on 38 sentences (~4 min)
+swift run -c release hs-speech-eval pipeline --set tts      # real-time end to end, 20 sentences (~4 min)
+HS_RUN_MODEL_TESTS=1 swift test --filter realModel          # opt-in real language-model test
 ```
+
+Recognizer tests need macOS (they are reported as skipped in the Simulator) and the synthetic
+test signals; without the signals they are skipped too.
 
 In the Simulator the app listens through the Mac's microphone; results are Simulator evidence,
 not iPhone evidence.
@@ -247,7 +347,14 @@ Share** exports the route snapshot and event log as text.
 5. `docs/EXISTING_PROJECT_AUDIT.md` — what the research assets are and what must be preserved
 6. `docs/WINDOW2_SOUND_ANALYSIS_REPORT.md` — sound pipeline, rules, evaluation, limitations
 7. `docs/testing/WINDOW2_DEVICE_TESTS.md` — open device tests
-8. Code: `packages/HearingSenseKit/Sources/HearingSenseAudio/MicrophoneCapture.swift`,
+8. `docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md`, `docs/research/SPEECH_INTELLIGENCE_ARCHITECTURE.md`,
+   `docs/testing/WINDOW3_TEST_RESULTS.md` — speech pipeline, measurements, limitations, pending device tests
+9. Code (W3): `Sources/HearingSenseDomain/SpeechSemantics.swift`, `Sources/SpeechIntelligence/
+   {SpeechIntelligenceEngine, SpeechActivityTracker, SpeechRelevanceGate, SpeechIntelligenceTypes}.swift`,
+   `Sources/SpeechPipeline/{PreRollAudioBuffer, AppleSpeechTranscriber}.swift`, `Sources/SemanticSummary/
+   {SpeechSemanticAnalyzer, SummaryValidator, FoundationModelInterpreter}.swift`,
+   `apps/ios/HearingSense/Speech/SpeechIntelligenceController.swift`
+10. Code (W1–W2): `packages/HearingSenseKit/Sources/HearingSenseAudio/MicrophoneCapture.swift`,
    `AudioStreamConsumer.swift`, `Sources/HearingSenseDomain/AcousticEvent.swift`,
    `Sources/SoundEventDetection/{SoundRecognitionEngine, SoundAnalysisWorker, SoundEventDetector,
    DetectionPolicy, SoundTaxonomy}.swift`, `apps/ios/HearingSense/Listening/ListeningController.swift`,
@@ -255,10 +362,12 @@ Share** exports the route snapshot and event log as text.
 
 ## 12. Recommended next steps
 
-1. Student decides whether to merge `feature/window2-sound-analysis` into `main` (not done
-   automatically).
-2. Run the carried-over physical-iPhone tests (one step per message; see the memory of how the
-   student wants device tests run: short messages, screenshots only with the app in the foreground).
-3. Adjust `DetectionPolicy.standard` (quiet threshold, alert rules) from those results; re-run
-   `hs-sound-eval` to check nothing regressed.
-4. Start Window 3 in a new session only when the student asks, on a new branch from the merged state.
+1. Student decides whether to merge `feature/window2-sound-analysis` and
+   `feature/window3-speech-intelligence` into `main` (not done automatically; nothing is pushed).
+2. When the student authorizes device testing: Window 3 tests P0–P9 and the open Window 2 tests,
+   one step per message, screenshots only with the app in the foreground, the student decides what
+   is spoken.
+3. Re-tune `SpeechIntelligenceConfiguration` and `DetectionPolicy.standard` from device results and
+   re-run `hs-speech-eval` / `hs-sound-eval` to check nothing regressed.
+4. Start Window 4 in a new session only when the student asks, on a new branch from the Window 3
+   branch (or from `main` after merging).

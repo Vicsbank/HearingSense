@@ -281,18 +281,133 @@ import Testing
     @Test func vocalsInMusicDoNotStartTranscriptionButSpeechOverMusicDoes() async throws {
         let harness = Harness(speech: [])
         harness.musicScore = 0.85
-        harness.forcedSpeechScore = 0.4
+        harness.vocalScore = 0.6
+        harness.forcedSpeechScore = 0.7
         await harness.start()
         await harness.run(until: 6)
         #expect(harness.transcriber.count.begins == 0 && harness.recorder.results.isEmpty)
         #expect((harness.recorder.activity.last?.diagnostics.windowsSuppressedByMusic ?? 0) > 0)
         #expect(harness.recorder.activity.allSatisfy { !$0.isSpeechActive && $0.evidence.suppressedByMusic })
 
-        harness.forcedSpeechScore = 0.7
+        harness.forcedSpeechScore = 0.95
         await harness.run(until: 9)
         #expect(harness.transcriber.count.begins == 1 && harness.recorder.activity.last?.isTranscribing == true)
         #expect(harness.recorder.results.last?.state == .transcribing)
         await harness.stop()
+    }
+
+    @Test func sustainedSpeechOverMusicIsInterpretedAndFlagged() async throws {
+        let harness = Harness(speech: [SpokenUtterance("your package has arrived", at: 6.0)])
+        harness.musicScore = 0.8
+        harness.speechScoreWhenSpeaking = 0.95
+        await harness.start()
+        await harness.run(until: 20)
+        await harness.stop()
+
+        let final = try #require(harness.recorder.latestResults.first)
+        #expect(final.state == .completed && final.transcript?.text == "your package has arrived.")
+        #expect(final.summary?.text == "Your Package Has Arrived")
+        let context = try #require(final.acousticContext)
+        #expect(context.relevance == .speechOverMusic && context.musicShare == 1 && context.strongSpeechShare >= 0.5)
+        #expect(!final.isPossiblyMusic)
+        let diagnostics = try #require(harness.recorder.sessionDiagnostics.first)
+        #expect(diagnostics.utterancesOverMusic == 1 && diagnostics.utterancesPossiblyMusic == 0)
+        #expect(diagnostics.modelCallsAvoidedForMusic == 0 && harness.interpreter.requests.count == 1)
+    }
+
+    @Test func wordsRecognizedInVocalMusicAreNotInterpretedAsAConversation() async throws {
+        // One window scores as strong speech (enough to start transcribing), but over the whole
+        // line the speech evidence is sporadic and the recognizer is unsure: probably lyrics.
+        var behaviour = ScriptedTranscriber.Behaviour()
+        behaviour.confidence = 0.62
+        let harness = Harness(speech: [SpokenUtterance("we will rock you tonight baby yeah yeah", at: 6.0)],
+                              behaviour: behaviour)
+        harness.musicScore = 0.85
+        harness.vocalScore = 0.5
+        harness.speechScoreWhenSpeaking = 0.6
+        await harness.start()
+        await harness.run(until: 7.5)
+        harness.speechScoreWhenSpeaking = 0.93  // a single strong window
+        await harness.run(until: 8.25)
+        harness.speechScoreWhenSpeaking = 0.6
+        await harness.run(until: 24)
+        await harness.stop()
+
+        let final = try #require(harness.recorder.latestResults.first)
+        #expect(final.state == .completed && final.level == .transcript)
+        #expect(final.headline == "Speech Or Music" && final.isPossiblyMusic && final.summary == nil)
+        #expect(final.category == .unknown && final.failure == nil)
+        // The transcript is kept so the user can judge; nothing was sent to the language model.
+        #expect(final.transcript?.text.isEmpty == false)
+        #expect(harness.interpreter.requests.isEmpty)
+        let context = try #require(final.acousticContext)
+        #expect(context.relevance == .possiblyMusic && context.musicShare == 1 && context.strongSpeechShare < 0.34)
+        #expect(context.vocalMusicShare == 1)
+        let diagnostics = try #require(harness.recorder.sessionDiagnostics.first)
+        #expect(diagnostics.utterancesPossiblyMusic == 1 && diagnostics.modelCallsAvoidedForMusic == 1)
+        #expect(diagnostics.semanticRequests == 0 && diagnostics.summariesProduced == 0)
+        #expect(Self.states(harness.recorder.results).contains(.summarized))
+    }
+
+    @Test func speechAfterLyricsInTheSameConversationIsStillSummarized() async throws {
+        var behaviour = ScriptedTranscriber.Behaviour()
+        behaviour.confidence = 0.9
+        let harness = Harness(speech: [SpokenUtterance("we will rock you tonight", at: 6.0),
+                                       SpokenUtterance("your package has arrived", at: 12.0)], behaviour: behaviour)
+        harness.musicScore = 0.85
+        harness.vocalScore = 0.5
+        harness.speechScoreWhenSpeaking = 0.6
+        await harness.start()
+        await harness.run(until: 6.75)
+        harness.speechScoreWhenSpeaking = 0.93
+        await harness.run(until: 7.5)
+        harness.speechScoreWhenSpeaking = 0.6
+        await harness.run(until: 11.5)
+        // Now someone really talks: strong speech scores throughout, no vocal label.
+        harness.vocalScore = 0
+        harness.speechScoreWhenSpeaking = 0.96
+        await harness.run(until: 26)
+        await harness.stop()
+
+        let final = try #require(harness.recorder.latestResults.first)
+        #expect(harness.recorder.latestResults.count == 1 && final.utteranceCount == 2)
+        #expect(final.summary?.text == "Your Package Has Arrived")
+        #expect(final.acousticContext?.relevance == .speechOverMusic)
+        // Only the spoken sentence reached the language model; the lyric line is not even context.
+        #expect(harness.interpreter.requests.map(\.transcript) == ["your package has arrived."])
+        #expect(harness.interpreter.requests.map(\.context) == [[]])
+        let diagnostics = try #require(harness.recorder.sessionDiagnostics.first)
+        #expect(diagnostics.utterancesPossiblyMusic == 1 && diagnostics.utterancesOverMusic == 1)
+    }
+
+    @Test func aLyricLineAfterSpeechDoesNotReplaceTheSpeechSummary() async throws {
+        var behaviour = ScriptedTranscriber.Behaviour()
+        behaviour.confidence = 0.9
+        let harness = Harness(speech: [SpokenUtterance("your package has arrived", at: 6.0),
+                                       SpokenUtterance("we will rock you tonight", at: 12.0)], behaviour: behaviour)
+        harness.musicScore = 0.85
+        harness.speechScoreWhenSpeaking = 0.96  // someone talks over the music
+        await harness.start()
+        await harness.run(until: 11.5)
+        // Then the song's vocals: one strong window, otherwise weak speech scores with a vocal label.
+        harness.vocalScore = 0.5
+        harness.speechScoreWhenSpeaking = 0.6
+        await harness.run(until: 12.75)
+        harness.speechScoreWhenSpeaking = 0.93
+        await harness.run(until: 13.5)
+        harness.speechScoreWhenSpeaking = 0.6
+        await harness.run(until: 30)
+        await harness.stop()
+
+        let final = try #require(harness.recorder.latestResults.first)
+        #expect(final.utteranceCount == 2 && final.state == .completed)
+        // The summary, its transcript and its context still describe what was said.
+        #expect(final.summary?.text == "Your Package Has Arrived" && final.summaryRevision == 1)
+        #expect(final.transcript?.text == "your package has arrived.")
+        #expect(final.acousticContext?.relevance == .speechOverMusic && !final.isPossiblyMusic)
+        #expect(harness.interpreter.requests.map(\.transcript) == ["your package has arrived."])
+        let diagnostics = try #require(harness.recorder.sessionDiagnostics.first)
+        #expect(diagnostics.utterancesPossiblyMusic == 1 && diagnostics.modelCallsAvoidedForMusic == 1)
     }
 
     // MARK: - Cancellation, stale results, privacy cleanup
@@ -372,6 +487,22 @@ import Testing
         await harness.recorder.settle()
         #expect(harness.recorder.capabilities.last?.level == .summary)
         await harness.stop()
+    }
+
+    @Test func switchingTranscriptionOnAfterSpeechEndedStillCompletesTheOpenSpeechEvent() async throws {
+        let harness = Harness(speech: [SpokenUtterance("your package has arrived", at: 2.0)], transcriptionEnabled: false)
+        await harness.start()
+        await harness.run(until: 5)  // speech is over; the detection-only event is still open
+        #expect(harness.recorder.results.last?.state == .detected)
+        harness.engine.setTranscriptionEnabled(true)
+        await harness.engine.drain()
+        await harness.run(until: 14)
+        await harness.stop()
+
+        let final = try #require(harness.recorder.latestResults.first)
+        #expect(harness.recorder.latestResults.count == 1)
+        #expect(final.state == .completed && final.level == .detection && final.headline == "Nearby Speech")
+        #expect(harness.recorder.capabilities.last?.isTranscriptionEnabled == true)
     }
 
     // MARK: - Error recovery

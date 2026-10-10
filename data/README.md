@@ -20,6 +20,7 @@
 | `noise/demand/` | DEMAND：餐厅、街道、客厅、车站的真实环境噪声（16 kHz，16 声道阵列，评估只用第 1 声道） | 嘈杂环境测试 | CC BY 4.0 |
 | `noise/mit_rir/` | MIT IR Survey：270 个日常场所的实测房间脉冲响应 | 真实房间混响 | 未核实，按学术研究使用 |
 | `test_signals/` | macOS `say` 生成的合成语音 | 没有真实语音时的替代品 | 本机生成 |
+| `test_signals/window3/` | Window 3 的 20 句合成语音（`tools/make_speech_test_signals.sh` 生成，句子见 `tools/speech_test_sentences.tsv`） | 语音转写 → 摘要流水线的端到端检查（含否定句）；**合成语音，不能代表真人语音的准确率** | 本机生成，不入库 |
 | `samples/` | 原科学展的测试歌曲 | 无标签，只观察稳定性 | — |
 
 ## 注意事项

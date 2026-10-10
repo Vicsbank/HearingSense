@@ -42,29 +42,49 @@ Delivered (details: `docs/WINDOW2_SOUND_ANALYSIS_REPORT.md`):
 Carry-over before or at the start of Window 3: run the physical tests L, A, B, C, D, H, I, S (one step
 at a time) and calibrate the quiet threshold and alert rules from the results.
 
-## Window 3 — Speech Recognition and Apple Foundation Models
+## Window 3 — Speech Recognition and Apple Foundation Models ◐ (2026-10-09, code complete; physical-iPhone tests pending)
 
-Goal: event-driven speech understanding with privacy controls.
+Delivered (details: `docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md`,
+`docs/research/SPEECH_INTELLIGENCE_ARCHITECTURE.md`, `docs/testing/WINDOW3_TEST_RESULTS.md`):
 
-1. `SpeechPipeline`: pre-roll ring buffer (2–3 s; W2 speech events confirm ≈ 2.25 s after onset),
-   gate with `SpeechDetector` and/or W2 `speech` events (`ConfirmedAcousticEvent.kind.id == "speech"`), then run `SpeechAnalyzer` + `SpeechTranscriber` only for speech segments.
-2. Locale/asset management with `AssetInventory`; handle "model not installed" states.
-3. Opt-in transcription toggle (off by default), in-memory transcripts with retention limit, delete-all.
-4. `SemanticSummary`: check `SystemLanguageModel.default.availability`; guided generation of 2–3 word
-   labels and one-line summaries; deterministic fallback (keyword rules) when unavailable.
-   Do not use `PrivateCloudComputeLanguageModel`.
-5. Measure on device: transcription latency, battery impact of gating vs. always-on.
+1. ✅ `SpeechPipeline`: `PreRollAudioBuffer` (5 s ring on the shared audio clock, as a second consumer
+   of the existing microphone tap), `AppleSpeechTranscriber` (`SpeechAnalyzer` + `SpeechTranscriber`,
+   one analyzer per utterance), `TranscriptAssembler`.
+2. ✅ Activation on speech *candidates* (one classifier window ≥ 0.30) instead of confirmed events,
+   starting transcription from buffered audio before the trigger; explicit endpoint (transcript
+   stable for 1.6 s).
+3. ✅ Model availability and assets: `SpeechTranscriber.isAvailable`, `AssetInventory`; download only
+   on a user action. **The iOS Simulator has no `SpeechTranscriber`.**
+4. ✅ `SemanticSummary`: Foundation Models guided generation (`SystemLanguageModel.default` only),
+   deterministic `SummaryValidator` (negation, grounding, time, length), one corrective retry,
+   rule-based transcript-level fallback. `PrivateCloudComputeLanguageModel` is not used.
+5. ✅ `SpeechIntelligence`: event-driven coordinator, conversation model with stable `SpeechEventID`,
+   duplicate suppression, cancellation and stale-result handling, three output levels.
+6. ✅ Speech relevance gate (speech vs. vocal music): stricter activation in a music context and a
+   per-utterance `nearbySpeech / speechOverMusic / possiblyMusic` estimate; utterances that are
+   probably lyrics are not sent to the language model.
+7. ✅ Opt-in transcription switch (off by default), in-memory results with bounded retention, text
+   removed on Stop, no text in logs; debug UI (speech card, diagnostics).
+8. ✅ Tests (pre-roll buffer, assembler, validator, analyzer, tracker, gate, engine with scripted
+   recognizer and model, real recognizer on synthetic speech) and forward-only evaluation
+   (`hs-speech-eval`): WER on LibriSpeech, summaries, relevance gate on design/holdout clips,
+   real-time end-to-end replay. All on the Mac.
+9. ❌ Physical iPhone: nothing in Window 3 has run on the device (availability of both models,
+   latency, CPU/memory/battery, AirPods + Spotify, lock screen, Foundation Models in the
+   background). Protocol: `docs/testing/WINDOW3_TEST_RESULTS.md` §9.
 
-Acceptance: speech near the user produces a short on-device summary or a clear fallback; nothing is
-persisted unless the user opts in.
+Carry-over: the Window 2 device tests are still open as well (`docs/testing/WINDOW2_DEVICE_TESTS.md`).
 
 ## Window 4 — Attention Priority Engine
 
 Goal: decide what deserves attention, deterministically.
 
 1. `AttentionEngine` (Domain-only dependency) consuming `ConfirmedAcousticEvent` /
-   `AcousticEventUpdate`: score = f(category/kind priority, `EventQuality`, confidence, duration,
-   novelty, repetition, recency, user preferences, context such as "media playing").
+   `AcousticEventUpdate` and (W3) `SpeechSemanticResult`: score = f(category/kind priority,
+   `EventQuality`, confidence, duration, novelty, repetition, recency, user preferences, context
+   such as "media playing"). For speech: `level`, `category`, `details`, `summary.reliability`,
+   `transcript.quality`, `acousticContext.relevance` (`possiblyMusic` → lowest priority), keyed by
+   `SpeechEventID`, notifying on `summaryRevision` changes only.
 2. Temporal confirmation, per-category cooldowns, rate limiting, quiet hours.
 3. Configuration as data (JSON/Codable) with a settings UI hook.
 4. Exhaustive unit tests with scripted event sequences (runs on the Mac via `swift test`).
@@ -109,7 +129,7 @@ W1 ──▶ W2 ──▶ W3 ──┐
 ## Parallel development
 
 1. Git initialized in Window 2 (baseline commits on `main`; Window 2 on `feature/window2-sound-analysis`).
-2. One branch per window (`feature/window2-sound-analysis`, `feature/window3-…`, …) and, if two windows run at once, separate
+2. One branch per window (`feature/window2-sound-analysis`, `feature/window3-speech-intelligence` (branched from the Window 2 branch), …) and, if two windows run at once, separate
    worktrees (`git worktree add ../hs-w4 window-4-attention`).
 3. Ownership to avoid conflicts: each window edits only its own module folder plus additive entries
    in `Package.swift`, the app's orchestration code, and its own section of the handoff.

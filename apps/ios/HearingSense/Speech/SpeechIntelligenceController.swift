@@ -184,6 +184,7 @@ final class SpeechIntelligenceController {
             log(.recognition, "Speech event \(result.state.rawValue): level \(result.level.rawValue), "
                 + "\(result.utteranceCount) utterance(s), \(result.transcript?.quality.wordCount ?? 0) words in the last, "
                 + "quality \(result.transcript?.quality.rating.rawValue ?? "–"), category \(result.category.rawValue), "
+                + "context \(result.acousticContext?.relevance.rawValue ?? "–"), "
                 + "summary \(result.summary.map { "\($0.wordCount) words (\($0.reliability.rawValue))" } ?? "none")"
                 + (result.latency.speechEndToSummary.map { ", end of speech → summary \(Self.seconds($0))" } ?? "")
                 + (result.failure.map { ", note: \($0)" } ?? ""))
@@ -192,6 +193,10 @@ final class SpeechIntelligenceController {
 
     private func removeTranscripts() {
         for index in events.indices { events[index].transcript = nil }
+    }
+
+    static func percent(_ value: Double) -> String {
+        value.formatted(.percent.precision(.fractionLength(0)))
     }
 
     static func seconds(_ value: TimeInterval) -> String {
@@ -222,6 +227,7 @@ final class SpeechIntelligenceController {
                 + "\(event.state.rawValue) level \(event.level.rawValue) category \(event.category.rawValue) "
                 + "utterances \(event.utteranceCount) quality \(event.transcript?.quality.rating.rawValue ?? "–") "
                 + "summary \(event.summary.map { "\($0.wordCount)w/\($0.reliability.rawValue)" } ?? "none") "
+                + "context \(event.acousticContext.map { "\($0.relevance.rawValue) (music \(Self.percent($0.musicShare)), strong speech \(Self.percent($0.strongSpeechShare)))" } ?? "–") "
                 + "sound-events \(event.sourceEventIDs.count) "
                 + "start-delay \(latency.activationToTranscription.map(Self.seconds) ?? "–") "
                 + "pre-roll \(latency.preRollUsed.map(Self.seconds) ?? "–") "

@@ -10,7 +10,7 @@ import HearingSenseDomain
 /// | Check | Rule | Outcome |
 /// |---|---|---|
 /// | Negation kept | transcript negated ⇒ headline contains a negation word | reject |
-/// | Negation not invented | transcript not negated ⇒ headline has no negation word | reject |
+/// | Negation not invented | transcript not negated ⇒ headline has no negation word; "not"/"n't"/"never" in the headline needs one in the transcript ("no", "nothing" are not enough) | reject |
 /// | Grounded | every content word of the headline is a word (or inflection) of the transcript, or one of a few generic label words | reject |
 /// | Time kept | transcript has time expressions ⇒ headline keeps at least one, and a clock time if there is one | repair by appending it, else reject |
 /// | Time not invented | headline time expressions occur in the transcript | reject |
@@ -107,7 +107,12 @@ public struct SummaryValidator: Sendable {
         var reliability = SummaryReliability.validated
 
         if source.isNegated, !summary.isNegated { critical.append(.negationDropped) }
-        if !source.isNegated, summary.isNegated { critical.append(.negationInvented) }
+        // "That's nothing, I'm poor too" must not become "Not Poor": a headline may negate the
+        // statement only if the transcript does ("not", "n't", "never"), not merely because the
+        // transcript contains "no" or "nothing" somewhere.
+        if summary.isNegated, !source.isNegated || (summary.hasStatementNegation && !source.hasStatementNegation) {
+            critical.append(.negationInvented)
+        }
 
         let unsupported = summary.words.filter { word in
             !Self.functionWords.contains(word) && !Self.genericWords.contains(word)
@@ -171,7 +176,7 @@ public struct SummaryValidator: Sendable {
     }
 
     /// Title Case without surrounding quotes or sentence punctuation. Short words the transcript
-    /// writes in capitals ("TV") keep them; "AM"/"PM" are always capitalized.
+    /// writes in capitals ("TV") keep them; "AM"/"PM" are capitalized after a number.
     public static func format(_ headline: String, transcript: String) -> String {
         let acronyms = Set(transcript.split { !($0.isLetter || $0.isNumber) }
             .map(String.init)
@@ -185,13 +190,19 @@ public struct SummaryValidator: Sendable {
         return headline
             .replacingOccurrences(of: "’", with: "'")
             .split(whereSeparator: \.isWhitespace)
-            .compactMap { token -> String? in
-                let word = token.trimmingCharacters(in: strip)
-                guard !word.isEmpty else { return nil }
+            .map { $0.trimmingCharacters(in: strip) }
+            .filter { !$0.isEmpty }
+            .reduce(into: [String]()) { words, word in
                 let lowered = word.lowercased().replacingOccurrences(of: ".", with: "")
-                if lowered == "am" || lowered == "pm" { return lowered.uppercased() }
-                if acronyms.contains(word.uppercased()) { return word.uppercased() }
-                return word.prefix(1).uppercased() + word.dropFirst().lowercased()
+                // "3 PM", but "What Am I To Do".
+                let followsNumber = words.last?.first?.isNumber ?? false
+                if followsNumber, lowered == "am" || lowered == "pm" {
+                    words.append(lowered.uppercased())
+                } else if acronyms.contains(word.uppercased()) {
+                    words.append(word.uppercased())
+                } else {
+                    words.append(word.prefix(1).uppercased() + word.dropFirst().lowercased())
+                }
             }
             .joined(separator: " ")
     }

@@ -9,6 +9,8 @@ import SpeechPipeline
 /// iPhone (docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md).
 public struct SpeechIntelligenceConfiguration: Hashable, Sendable {
     public var activation = SpeechActivationPolicy.standard
+    /// Stage B of the speech relevance gate (speech vs. lyrics), applied to each final utterance.
+    public var relevance = SpeechRelevancePolicy.standard
     /// Capacity of the pre-roll ring buffer.
     public var preRollSeconds: TimeInterval = 5
     /// The utterance is finished when its transcript has not changed for this much audio.
@@ -88,6 +90,11 @@ public struct SpeechIntelligenceDiagnostics: Hashable, Sendable {
     public var overrunFrames: Int64 = 0
 
     public var finalSegments = 0
+    /// Final utterances judged "speech over music" (interpreted) and "possibly music" (held).
+    public var utterancesOverMusic = 0
+    public var utterancesPossiblyMusic = 0
+    /// Language-model requests that were not made because everything pending was probably lyrics.
+    public var modelCallsAvoidedForMusic = 0
     public var duplicateTranscriptsDropped = 0
     public var conversationsStarted = 0
     public var conversationsCompleted = 0
@@ -123,6 +130,8 @@ public struct SpeechIntelligenceDiagnostics: Hashable, Sendable {
                 + "overrun frames: \(overrunFrames)",
             "Transcription failures: \(transcriptionFailures); finalization timeouts: \(finalizationTimeouts)",
             "Final segments: \(finalSegments); duplicate transcripts dropped: \(duplicateTranscriptsDropped)",
+            "Speech relevance: \(utterancesOverMusic) over music, \(utterancesPossiblyMusic) possibly music; "
+                + "model calls avoided: \(modelCallsAvoidedForMusic)",
             "Conversations: \(conversationsStarted) started, \(conversationsCompleted) completed",
             "Semantic requests: \(semanticRequests) (model attempts \(modelAttempts)); summaries: \(summariesProduced); "
                 + "duplicates suppressed: \(duplicateSummariesSuppressed); fallbacks: \(summaryFallbacks); "

@@ -9,9 +9,12 @@ This repository contains two parts:
    [`docs/IOS_ARCHITECTURE.md`](docs/IOS_ARCHITECTURE.md),
    [`docs/AUDIO_ROUTING_FEASIBILITY.md`](docs/AUDIO_ROUTING_FEASIBILITY.md) and
    [`docs/IOS_DEVELOPMENT_ROADMAP.md`](docs/IOS_DEVELOPMENT_ROADMAP.md).
-   Status: Window 1 (audio foundation) and Window 2 (real-time Apple SoundAnalysis recognition,
-   [`docs/WINDOW2_SOUND_ANALYSIS_REPORT.md`](docs/WINDOW2_SOUND_ANALYSIS_REPORT.md)) are implemented;
-   Window 2 is verified on the Mac and iPhone Simulator, physical-device tests are still open.
+   Status: Window 1 (audio foundation), Window 2 (real-time Apple SoundAnalysis recognition,
+   [`docs/WINDOW2_SOUND_ANALYSIS_REPORT.md`](docs/WINDOW2_SOUND_ANALYSIS_REPORT.md)) and Window 3
+   (on-device speech transcription and Apple Foundation Models summaries,
+   [`docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md`](docs/WINDOW3_SPEECH_INTELLIGENCE_REPORT.md)) are
+   implemented. Windows 2 and 3 are verified on the Mac and in the iPhone Simulator;
+   physical-device tests are still open.
    Datasets under `data/` are not versioned in Git (see `data/README.md`).
 2. **Music emotion & genre recognition research** (preserved): the original science-fair system and
    the macOS evaluation/Core ML work, described below and audited in

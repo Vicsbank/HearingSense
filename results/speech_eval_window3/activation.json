@@ -27,38 +27,38 @@
         "p90" : 0.75
       },
       "name" : "speech (LibriSpeech)",
-      "speechWindowShare" : 0.9249173312585101,
-      "windowsSuppressedByMusic" : 0
+      "speechWindowShare" : 0.9245283018867925,
+      "windowsSuppressedByMusic" : 2
     },
     {
-      "activated" : 170,
-      "activatedRate" : 0.5666666666666667,
+      "activated" : 75,
+      "activatedRate" : 0.25,
       "activatedRateCI95" : [
-        0.5100989215349749,
-        0.6215486822754948
+        0.20436988882590335,
+        0.30195159688483497
       ],
       "activatedWithoutMusicRule" : 205,
       "activationTime" : {
-        "count" : 170,
-        "maximum" : 30,
-        "mean" : 7.936756302521006,
-        "median" : 4.5,
+        "count" : 75,
+        "maximum" : 30.74997732426304,
+        "mean" : 9.619990325018895,
+        "median" : 8.249977324263039,
         "minimum" : 1.5,
-        "p90" : 19.5
+        "p90" : 22.5
       },
       "clips" : 300,
       "confirmedBySoundDetector" : 130,
       "earlierThanConfirmation" : {
-        "count" : 130,
+        "count" : 73,
         "maximum" : 27.74997732426304,
-        "mean" : 3.265378335949765,
-        "median" : 0.750022675736961,
-        "minimum" : 0,
-        "p90" : 9
+        "mean" : -2.3630199111608143,
+        "median" : 0,
+        "minimum" : -27.74997732426304,
+        "p90" : 0.749977324263039
       },
       "name" : "music only (GTZAN)",
-      "speechWindowShare" : 0.12309943897877876,
-      "windowsSuppressedByMusic" : 779
+      "speechWindowShare" : 0.023823075046751768,
+      "windowsSuppressedByMusic" : 2000
     },
     {
       "activated" : 200,
@@ -70,8 +70,8 @@
       "activatedWithoutMusicRule" : 200,
       "activationTime" : {
         "count" : 200,
-        "maximum" : 1.5,
-        "mean" : 1.5,
+        "maximum" : 3,
+        "mean" : 1.515,
         "median" : 1.5,
         "minimum" : 1.5,
         "p90" : 1.5
@@ -81,47 +81,47 @@
       "earlierThanConfirmation" : {
         "count" : 200,
         "maximum" : 0.75,
-        "mean" : 0.75,
+        "mean" : 0.735,
         "median" : 0.75,
-        "minimum" : 0.75,
+        "minimum" : -0.75,
         "p90" : 0.75
       },
       "name" : "speech + music at 10 dB SNR",
-      "speechWindowShare" : 0.9150596877869606,
-      "windowsSuppressedByMusic" : 9
+      "speechWindowShare" : 0.8879706152433425,
+      "windowsSuppressedByMusic" : 68
     },
     {
-      "activated" : 200,
-      "activatedRate" : 1,
+      "activated" : 196,
+      "activatedRate" : 0.98,
       "activatedRateCI95" : [
-        0.9811546733310369,
-        0.9999999999999999
+        0.949712912759955,
+        0.9921955736378406
       ],
       "activatedWithoutMusicRule" : 200,
       "activationTime" : {
-        "count" : 200,
-        "maximum" : 2.25,
-        "mean" : 1.5075,
+        "count" : 196,
+        "maximum" : 4.5,
+        "mean" : 1.653061224489796,
         "median" : 1.5,
         "minimum" : 1.5,
-        "p90" : 1.5
+        "p90" : 2.25
       },
       "clips" : 200,
       "confirmedBySoundDetector" : 198,
       "earlierThanConfirmation" : {
-        "count" : 198,
+        "count" : 195,
         "maximum" : 0.75,
-        "mean" : 0.75,
+        "mean" : 0.6038461538461538,
         "median" : 0.75,
-        "minimum" : 0.75,
+        "minimum" : -2.25,
         "p90" : 0.75
       },
       "name" : "speech + music at 0 dB SNR",
-      "speechWindowShare" : 0.8709825528007347,
-      "windowsSuppressedByMusic" : 45
+      "speechWindowShare" : 0.6483011937557392,
+      "windowsSuppressedByMusic" : 530
     }
   ],
   "environment" : "macOS 27.2.0 (Mac hardware, not an iPhone)",
   "note" : "Clips start with speech/music at t = 0 and are followed by 1.5 s of silence. Activation time is the end of the first qualifying 1.5 s window (audio clock); it includes the classifier's window length. GTZAN contains songs with vocals, so activations on music are not all errors.",
-  "policy" : "candidate ≥ 0.3; with music ≥ 0.5: speech ≥ 0.5; release 2.25 s"
+  "policy" : "candidate ≥ 0.3; in a music context (music ≥ 0.5 now or in ≥ 2 of the last 4 windows): speech ≥ 0.9, or ≥ 0.8 with vocal-music score ≤ 0.2; release 2.25 s"
 }

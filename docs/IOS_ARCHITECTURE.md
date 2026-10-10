@@ -1,6 +1,6 @@
 # Hearing Sense iOS 2.0 — Architecture
 
-Status: Window 2 (2026-10-09; Window 1 earlier the same day). Sections marked **Implemented** exist in code; **Planned** sections
+Status: Window 3 (2026-10-09; Windows 1 and 2 earlier the same day). Sections marked **Implemented** exist in code; **Planned** sections
 are contracts for later windows and may be refined by them (record changes here).
 
 Goal: on-device environmental awareness for people wearing noise-cancelling headphones. The iPhone
@@ -25,12 +25,18 @@ Music Recognition/
 │       ├── Sources/HearingSenseDomain/  Window 2: shared value types (Foundation only)
 │       ├── Sources/SoundEventDetection/ Window 2: SoundAnalysis engine, taxonomy, detector
 │       ├── Sources/SoundEvaluationTool/ Window 2: hs-sound-eval (macOS, forward-only)
-│       └── Tests/{HearingSenseAudioTests, SoundEventDetectionTests}/
+│       ├── Sources/SpeechPipeline/      Window 3: pre-roll ring buffer, on-device transcription
+│       ├── Sources/SemanticSummary/     Window 3: Foundation Models interpretation, validation, fallback
+│       ├── Sources/SpeechIntelligence/  Window 3: coordinator, speech activity, relevance gate
+│       ├── Sources/SpeechEvaluationTool/ Window 3: hs-speech-eval (macOS, forward-only)
+│       └── Tests/{HearingSenseAudioTests, SoundEventDetectionTests, SpeechPipelineTests,
+│                  SemanticSummaryTests, SpeechIntelligenceTests}/
 ├── docs/                            existing docs kept; new iOS docs added
 │   ├── device-tests/2026-10-09/         device screenshots (evidence, W1)
 │   ├── device-tests/window2-simulator/  Simulator screenshots (W2)
-│   ├── testing/                         device test protocols (W2)
-│   └── research/                        label inventories, category mapping
+│   ├── device-tests/window3-simulator/  Simulator screenshots (W3)
+│   ├── testing/                         device test protocols (W2), W3 test results
+│   └── research/                        label inventories, category mapping, speech architecture (W3)
 ├── app/                             LEGACY macOS Swift scaffold (does not build; untouched)
 ├── src/  ml/  tools/                LEGACY / RESEARCH Python (untouched, still functional)
 ├── models/  results/  data/         RESEARCH ASSETS (untouched)
@@ -50,7 +56,9 @@ Optional, reversible later moves (not executed; only after Git exists and with a
 ```
  Microphone ─▶ [Audio Input] ─▶ AudioStreamConsumer fan-out
                     │                 ├─▶ [Sound Event Detection]  (W2)  ─┐
-                    │                 └─▶ [Speech Pipeline]        (W3)  ─┤  AcousticEvent stream
+                    │                 └─▶ [Speech Pipeline]        (W3)  ─┤  pre-roll buffer + on-device
+                    │                        ▲ classifier windows (W2)    │  transcription, gated by speech
+                    │                        └────────────────────────────┤  activity and the relevance gate
                     │                                                     ▼
                     │                               [Semantic Summary] (W3, optional, on-device LLM)
                     │                                                     ▼
@@ -62,13 +70,15 @@ Optional, reversible later moves (not executed; only after Git exists and with a
 | Module (SwiftPM target unless noted) | Window | Owns | Depends on | Status |
 |---|---|---|---|---|
 | `HearingSenseAudio` | 1 | Mic permission, `AVAudioSession` policies, `AVAudioEngine` capture, level metering, route snapshots, session events, diagnostic log, throughput accounting | AVFAudio, Accelerate | **Implemented** |
-| `HearingSenseDomain` | 2 | Shared value types: `SoundLabel`, `ClassifierScore`, `AudioTimeRange`, `RawSoundPrediction`, `ClassificationFrame`, `SoundCategory`, `SoundEventKind`, `AcousticEventCandidate`, `ConfirmedAcousticEvent`, `AcousticEventUpdate`, `EnvironmentStatus`; Foundation only | — | **Implemented** |
+| `HearingSenseDomain` | 2, 3 | Shared value types: `SoundLabel`, `ClassifierScore`, `AudioTimeRange`, `RawSoundPrediction`, `ClassificationFrame`, `SoundCategory`, `SoundEventKind`, `AcousticEventCandidate`, `ConfirmedAcousticEvent`, `AcousticEventUpdate`, `EnvironmentStatus`; W3: `SpeechSemanticResult` and its parts (`SpeechEventID`, state, level, category, transcript + quality, summary + reliability, relevance / acoustic context, latency, availability); Foundation only | — | **Implemented** |
 | `SoundEventDetection` | 2 | `SoundRecognitionEngine` (`AudioStreamConsumer` → `SNAudioStreamAnalyzer`), `SoundTaxonomy` (303 labels → 50 kinds → 11 categories), `DetectionPolicy` + `SoundEventDetector` (confidence filter, k-of-n confirmation, hysteresis, timeouts), `SoundClassifierCatalog`, diagnostics | SoundAnalysis, AVFAudio, HearingSenseAudio, Domain | **Implemented** |
 | `hs-sound-eval` (executable, macOS) | 2 | Forward-only offline evaluation of the production engine on local files | SoundEventDetection | **Implemented** |
-| `SpeechPipeline` | 3 | `SpeechDetector` gating, pre-roll ring buffer, `SpeechAnalyzer` + `SpeechTranscriber`, asset installation (`AssetInventory`) | Speech, HearingSenseAudio, Domain | Planned |
-| `SemanticSummary` | 3 | `SystemLanguageModel` availability check, guided generation of short summaries, fallback when unavailable | FoundationModels, Domain | Planned |
+| `SpeechPipeline` | 3 | `PreRollAudioBuffer` (5 s ring on the shared audio clock), `SpeechAudioTap`, `AppleSpeechTranscriber` (`SpeechAnalyzer` + `SpeechTranscriber`, one analyzer per utterance, `AssetInventory` availability and user-initiated install), `TranscriptAssembler` | Speech, AVFAudio, HearingSenseAudio, Domain | **Implemented** |
+| `SemanticSummary` | 3 | `FoundationModelInterpreter` (`SystemLanguageModel`, guided generation), `SpeechSemanticAnalyzer` (unclear check → model → validation → retry → fallback), `SummaryValidator`, `RuleBasedInterpreter` | FoundationModels, Domain | **Implemented** |
+| `SpeechIntelligence` | 3 | `SpeechIntelligenceEngine` (event-driven coordinator on a serial command queue), `SpeechActivityTracker` (speech candidates, music context), `SpeechRelevanceGate` (speech vs. lyrics), conversation model, diagnostics | SpeechPipeline, SemanticSummary, SoundEventDetection, Audio, Domain | **Implemented** |
+| `hs-speech-eval` (executable, macOS) | 3 | Forward-only evaluation: WER, summaries, activation, relevance gate, real-time end-to-end replay | all of the above | **Implemented** |
 | `AttentionEngine` | 4 | Deterministic scoring, cooldowns, confirmation windows, user preferences | Domain only | Planned |
-| App target `HearingSense` | 1→5 | Orchestration (`ListeningController`), SwiftUI screens, settings | all modules | Implemented (foundation) |
+| App target `HearingSense` | 1→5 | Orchestration (`ListeningController`), SwiftUI screens, settings; W3: `SpeechIntelligenceController`, speech card and diagnostics | all modules | Implemented (foundation, W2 recognition, W3 speech) |
 | Widget extension target (Live Activity) | 5 | ActivityKit `ActivityAttributes`, Lock Screen + Dynamic Island views | ActivityKit, WidgetKit, Domain | Planned |
 
 Rules: modules communicate through `HearingSenseDomain` types and small protocols; only the app
@@ -144,6 +154,29 @@ MicrophoneCapture tap thread                      analysis queue (actor SoundAna
   app is in the background; counting continues on the audio thread.
 - `AVAudioSession` calls run on the main actor (they can block briefly; acceptable for now).
 
+## 3c. Implemented: Window 3 speech intelligence
+
+Full description: `docs/research/SPEECH_INTELLIGENCE_ARCHITECTURE.md`. In short:
+
+```
+MicrophoneCapture ─▶ SpeechAudioTap ─▶ PreRollAudioBuffer (5 s ring, same AudioStreamClock as W2)
+RecognitionController ─ classifier windows / speech events ─▶ SpeechIntelligenceEngine
+   SpeechActivityTracker (candidate ≥ 0.30; stricter in a music context)
+     → AppleSpeechTranscriber: one SpeechAnalyzer per utterance, started on buffered audio from the
+       estimated onset, finished when the transcript is stable for 1.6 s
+     → SpeechRelevanceGate: nearbySpeech / speechOverMusic / possiblyMusic (not interpreted)
+     → SpeechSemanticAnalyzer: Foundation Models headline → SummaryValidator → retry → fallback
+     → SpeechSemanticResult (stable SpeechEventID per conversation, revision, summaryRevision)
+SpeechIntelligenceController (main actor) → SwiftUI card + diagnostics
+```
+
+- Three output levels: 1 "Nearby Speech" (no transcription), 2 transcript, 3 validated summary.
+- Transcription is opt-in (switch, default off), memory-only, cleared on Stop.
+- The engine serializes all state changes on one command queue; background results carry the
+  session generation and are dropped when stale.
+- The iOS Simulator has no `SpeechTranscriber` (level 1 only there); transcription is verified on
+  the Mac with `swift test` / `hs-speech-eval`; the iPhone is pending.
+
 ## 4. Contracts for later windows
 
 ```swift
@@ -171,6 +204,25 @@ public enum AcousticEventUpdate { case started(ConfirmedAcousticEvent), updated(
 // the app's RecognitionController owns it — Window 3/4 should subscribe through the app layer,
 // e.g. by forwarding .event updates, rather than creating a second engine).
 
+// Implemented in Window 3 (HearingSenseDomain) — see the source for full documentation.
+public struct SpeechSemanticResult: Identifiable, Hashable, Sendable, Codable {
+    public let id: SpeechEventID                 // one conversation; same id across updates
+    public var revision: Int                     // every published change
+    public var summaryRevision: Int              // only when the headline text changes
+    public var sourceEventIDs: [AcousticEventID] // W2 speech events during the conversation
+    public var state: SpeechProcessingState      // detected → transcribing → processing → summarized → completed | failed
+    public var transcript: SpeechTranscript?     // text, language, isFinal, TranscriptQuality (recognition quality)
+    public var summary: SpeechSummary?           // validated headline + SummaryReliability (interpretation quality)
+    public var category: SpeechSemanticCategory  // question, request, reminder, announcement, warning, …
+    public var details: SpeechSemanticDetails?   // subject, timeOrNumber, isNegated, isQuestion
+    public var acousticContext: SpeechAcousticContext?  // relevance: nearbySpeech / speechOverMusic / possiblyMusic
+    public var level: SpeechOutputLevel          // 1 detection, 2 transcript, 3 summary
+    public var headline: String                  // summary, or "Nearby Speech" / "Speech Detected" / "Speech Unclear" / "Speech Or Music"
+    …availability, latency, failure
+}
+// Producer: SpeechIntelligenceEngine.outputs (single consumer: the app's SpeechIntelligenceController,
+// which keeps the latest revision of each event in `events`). Window 4 should read from the app layer.
+
 // Window 4 (planned; consumes ConfirmedAcousticEvent instead of the old AcousticEvent sketch).
 public protocol AttentionPolicy: Sendable {
     func evaluate(_ event: ConfirmedAcousticEvent, context: AttentionContext) -> AttentionDecision
@@ -181,9 +233,11 @@ public enum AttentionDecision: Sendable { case ignore, log, surfaceInApp, update
 Consumer guidance (applied in Window 2): `SNAudioStreamAnalyzer.analyze(_:atAudioFramePosition:)`
 runs on its own serial queue; the buffer is copied before hopping. `captureDidStart(format:)` may
 arrive after the first buffers, so formats are detected per buffer (`StreamClock`).
-Extension points: Window 3 can gate speech on `kind.id == "speech"` events and attach transcripts
-keyed by `AcousticEventID`; Window 4 maps `kind`/`category` + `evidence` to priorities; Window 5
-renders `kind.displayName` / `category.systemImage`. None of these require changing SoundEventDetection.
+Extension points: Window 3 gates speech on classifier *windows* (speech candidates, earlier than
+confirmed events) and links confirmed `speech` events through `SpeechSemanticResult.sourceEventIDs`;
+Window 4 maps `kind`/`category` + `evidence` and `SpeechSemanticResult` to priorities; Window 5
+renders `kind.displayName` / `category.systemImage` / `headline`. The only change Window 3 made to
+SoundEventDetection was moving `StreamClock` to `HearingSenseAudio.AudioStreamClock` (a typealias keeps the old name).
 
 ## 5. Apple frameworks and availability (checked in the iOS 27.0 / macOS 27 SDKs)
 
@@ -195,8 +249,8 @@ renders `kind.displayName` / `category.systemImage`. None of these require chang
 | Sendable tap | `installAudioTap(onBus:…tapProvider:)` | iOS 27+ | Adopt if the deployment target moves to 27 |
 | Sound events | `SNClassifySoundRequest(classifierIdentifier: .version1)`, `SNAudioStreamAnalyzer` | iOS 15+ | **Implemented (W2)**. Only `version1` exists; 303 labels on macOS 27.2 and iOS 27.0 Simulator (iPhone pending); window 0.5–15 s (default 3 s, overlap 0.5); analyzer resamples and uses channel 0; `analyze` may block (backpressure) and must not run on a real-time thread |
 | Async session activation | `AVAudioSession.activate(options:completionHandler:)`, `deactivate(options:completionHandler:)` | iOS 27+ | Not adopted (deployment target 26); candidate to remove the main-thread "hang risk" warning — see AUDIO_ROUTING_FEASIBILITY §3 |
-| Speech | `SpeechAnalyzer`, `SpeechTranscriber`, `DictationTranscriber`, `SpeechDetector`, `AssetInventory` | `anyAppleOS 26` | Locale models must be installed via `AssetInventory`; check `SpeechTranscriber.isAvailable` / `supportedLocales` |
-| Summaries | `SystemLanguageModel.default.availability` | iOS 26+ | Unavailable reasons: `deviceNotEligible`, `appleIntelligenceNotEnabled`, `modelNotReady` — must have a non-LLM fallback |
+| Speech | `SpeechAnalyzer`, `SpeechTranscriber`, `AssetInventory` | `anyAppleOS 26` | **Implemented (W3)**. `SpeechTranscriber.isAvailable` is **false in the iOS 27.0 Simulator**, true on macOS 27.2; locale models are system assets (`AssetInventory`); analyzer input 16 kHz mono Int16; one analyzer per utterance with a contiguous timeline from 0 (gaps or mid-stream finalize corrupt results). `DictationTranscriber`, `SpeechDetector`, `SFSpeechRecognizer` unused |
+| Summaries | `SystemLanguageModel.default`, `LanguageModelSession.respond(to:generating:)`, `@Generable` | iOS 26+ | **Implemented (W3)**. Available on macOS 27.2 and in the Simulator; unavailable reasons `deviceNotEligible`, `appleIntelligenceNotEnabled`, `modelNotReady` map to the transcript-level fallback; context size 4096 tokens; the safety guardrail can refuse a transcript (handled as fallback) |
 | (forbidden) | `PrivateCloudComputeLanguageModel` | iOS 27+ | Server-side inference — **do not use** (project requires on-device only) |
 | Live Activity | ActivityKit + WidgetKit extension | iOS 16.1+ | Window 5 |
 
@@ -223,9 +277,14 @@ there. The test iPhone runs iOS 27.2.
 - Microphone use is explicit (Start/Stop), visible (status card, “MIC ON”, system orange dot) and
   explained in `NSMicrophoneUsageDescription`.
 - Diagnostics contain routing metadata only; sharing is user-initiated via the share sheet.
-- Planned: speech transcription off by default and opt-in per session; transcripts kept in memory
-  with a short retention window; summaries rather than verbatim text in notifications; a single
-  “Delete all” control; no transcript in Live Activities by default.
+- (W3, implemented) Speech transcription is off by default (a remembered switch, independent of
+  sound classification) and visibly indicated; the pre-roll buffer is a fixed ring in memory,
+  zeroed on Stop and unused while transcription is off; transcripts and summaries live in memory
+  only (20 speech events), transcript text is removed on Stop unless a debug option keeps it, and
+  switching transcription off discards all speech events; logs and shared reports carry counts,
+  states and timings, never text; "Delete speech events" control.
+- Planned: summaries rather than verbatim text in notifications; no transcript in Live Activities
+  by default.
 - The app is an awareness aid, **not** a certified safety or emergency detection system; UI and docs
   must say so (Window 1 main screen already does).
 
@@ -261,3 +320,11 @@ there. The test iPhone runs iOS 27.2.
 | D18 | Detector uses only frame timestamps (no system clock) | Deterministic replay of recorded/synthetic frame sequences |
 | D19 | 1.5 s window, 50 % overlap as default | Offline comparison of 1.0 / 1.5 / 3.0 s (report §6) |
 | D20 | Skip redundant AVAudioSession calls; optional "keep session active when stopped" experiment (default off) | Reduce route renegotiation without changing the verified A2DP configuration |
+| D21 | (W3) Speech pipeline is a second `AudioStreamConsumer` on the existing tap, with the same `AudioStreamClock` | No second capture session (would risk disturbing media playback); classifier windows and buffered audio share one time base |
+| D22 | (W3) Activate transcription on speech *candidates* (one window ≥ 0.30) and start it from a 5 s pre-roll ring | The detector confirms speech ≈ 2.25 s after onset; short sentences would be lost |
+| D23 | (W3) One `SpeechAnalyzer` per utterance, contiguous timeline from 0, always finished (never cancelled for "no text yet") | Measured: gaps and mid-stream finalize corrupt results; analyzer start costs ≈ 5 ms once the model is loaded; results lag behind audio |
+| D24 | (W3) Explicit endpoint: transcript unchanged for 1.6 s of audio | Natural finals can lag by seconds |
+| D25 | (W3) Model headline is shown only after deterministic validation (negation, grounding, time, length); one retry, then transcript-level fallback | A language model can reverse or invent; the app must not |
+| D26 | (W3) Two-stage speech relevance gate with an explicit `possiblyMusic` outcome | Vocal music scores as speech; scores cannot separate voices, so uncertainty is reported instead of hidden |
+| D27 | (W3) Engine state behind one serial command queue; background results tagged with the session generation | Deterministic ordering, no actor re-entrancy, stale results dropped |
+| D28 | (W3) Transcription opt-in, memory only, text never logged | Nearby conversations are private |

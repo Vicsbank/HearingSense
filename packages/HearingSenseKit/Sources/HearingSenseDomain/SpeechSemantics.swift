@@ -280,6 +280,55 @@ public struct SpeechSemanticDetails: Hashable, Sendable, Codable {
     }
 }
 
+/// Whether transcribed words were probably spoken by someone nearby or are probably part of
+/// music (sung or rapped vocals, speech samples in a song).
+///
+/// Rule-based, from the sound classifier's windows during the utterance and the recognizer's
+/// confidence. It is an estimate with measured error rates (docs/testing/WINDOW3_TEST_RESULTS.md),
+/// not a fact: the available Apple models cannot tell who is speaking, whether speech is live or
+/// played back (TV, podcast, phone speaker), or whether it is addressed to the user.
+public enum SpeechRelevance: String, Hashable, Sendable, Codable, CaseIterable {
+    /// No notable music while the words were spoken.
+    case nearbySpeech
+    /// Music was playing, and the speech evidence was sustained and confidently recognized:
+    /// probably someone talking over music. Interpreted, but less certain than `nearbySpeech`.
+    case speechOverMusic
+    /// Music was playing and the speech evidence was sporadic or poorly recognized: probably
+    /// lyrics. Not sent to the language model; shown as uncertain, never as a conversation summary.
+    case possiblyMusic
+
+    public var displayName: String {
+        switch self {
+        case .nearbySpeech: "Nearby speech"
+        case .speechOverMusic: "Speech over music"
+        case .possiblyMusic: "Possibly music or lyrics"
+        }
+    }
+}
+
+/// What the sound classifier reported while an utterance was spoken (metadata only).
+public struct SpeechAcousticContext: Hashable, Sendable, Codable {
+    public var relevance: SpeechRelevance
+    /// Classifier windows that overlap the utterance.
+    public var windows: Int
+    /// Share of those windows in which music was present.
+    public var musicShare: Double
+    /// Share of those windows with a strong speech score.
+    public var strongSpeechShare: Double
+    /// Share of those windows with a vocal-music label (singing, rapping, humming, …).
+    public var vocalMusicShare: Double
+
+    public init(relevance: SpeechRelevance, windows: Int, musicShare: Double, strongSpeechShare: Double,
+                vocalMusicShare: Double)
+    {
+        self.relevance = relevance
+        self.windows = windows
+        self.musicShare = musicShare
+        self.strongSpeechShare = strongSpeechShare
+        self.vocalMusicShare = vocalMusicShare
+    }
+}
+
 /// Wall-clock latencies measured for one speech event (seconds). Nil = not measured.
 public struct SpeechLatency: Hashable, Sendable, Codable {
     /// From the classifier result that triggered activation to transcription running.
@@ -340,6 +389,9 @@ public struct SpeechSemanticResult: Identifiable, Hashable, Sendable, Codable {
     /// The final transcript is too unreliable or fragmentary to interpret (poor recognition
     /// quality, only filler words). No summary is attempted for unclear speech.
     public var isUnclear: Bool
+    /// Acoustic context of the latest utterance: speech, speech over music, or possibly lyrics.
+    /// Nil until an utterance has been transcribed.
+    public var acousticContext: SpeechAcousticContext?
 
     public var transcriptionAvailability: TranscriptionAvailability
     public var modelAvailability: SemanticModelAvailability
@@ -351,7 +403,8 @@ public struct SpeechSemanticResult: Identifiable, Hashable, Sendable, Codable {
                 sourceEventIDs: [AcousticEventID] = [], state: SpeechProcessingState, audioTime: AudioTimeRange,
                 startDate: Date, updatedDate: Date, transcript: SpeechTranscript? = nil, utteranceCount: Int = 0,
                 summary: SpeechSummary? = nil, category: SpeechSemanticCategory = .unknown,
-                details: SpeechSemanticDetails? = nil, isUnclear: Bool = false, transcriptionAvailability: TranscriptionAvailability,
+                details: SpeechSemanticDetails? = nil, isUnclear: Bool = false,
+                acousticContext: SpeechAcousticContext? = nil, transcriptionAvailability: TranscriptionAvailability,
                 modelAvailability: SemanticModelAvailability, latency: SpeechLatency = SpeechLatency(),
                 failure: String? = nil)
     {
@@ -369,6 +422,7 @@ public struct SpeechSemanticResult: Identifiable, Hashable, Sendable, Codable {
         self.category = category
         self.details = details
         self.isUnclear = isUnclear
+        self.acousticContext = acousticContext
         self.transcriptionAvailability = transcriptionAvailability
         self.modelAvailability = modelAvailability
         self.latency = latency
@@ -385,7 +439,10 @@ public struct SpeechSemanticResult: Identifiable, Hashable, Sendable, Codable {
     /// the validated summary if there is one, otherwise a neutral label.
     public var headline: String {
         if let summary { return summary.text }
-        if level == .transcript { return isUnclear ? Self.unclearHeadline : Self.transcriptHeadline }
+        if level == .transcript {
+            if acousticContext?.relevance == .possiblyMusic { return Self.possiblyMusicHeadline }
+            return isUnclear ? Self.unclearHeadline : Self.transcriptHeadline
+        }
         return Self.detectionHeadline
     }
 
@@ -395,4 +452,10 @@ public struct SpeechSemanticResult: Identifiable, Hashable, Sendable, Codable {
     public static let transcriptHeadline = "Speech Detected"
     /// The transcript is unreliable; no summary is attempted.
     public static let unclearHeadline = "Speech Unclear"
+    /// Words were recognized while music was playing and they are probably lyrics.
+    public static let possiblyMusicHeadline = "Speech Or Music"
+
+    /// True when the latest utterance is probably part of music: consumers should not treat it
+    /// as a conversation (Window 4: low priority).
+    public var isPossiblyMusic: Bool { acousticContext?.relevance == .possiblyMusic }
 }

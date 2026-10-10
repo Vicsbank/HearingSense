@@ -114,10 +114,11 @@ private struct SpeechResultView: View {
                         .lineLimit(4)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                if let note = result.summary?.notes.first ?? result.failure {
+                if let note = contextNote(result) ?? result.summary?.notes.first ?? result.failure {
                     Text(note)
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .accessibilityElement(children: .combine)
@@ -135,6 +136,15 @@ private struct SpeechResultView: View {
         }
     }
 
+    /// Says so when music was playing: the words may be lyrics, and the app cannot be sure.
+    private func contextNote(_ result: SpeechSemanticResult) -> String? {
+        switch result.acousticContext?.relevance {
+        case .possiblyMusic: "Music was playing: these words may be lyrics, so they are not summarized."
+        case .speechOverMusic: "Heard over music: less certain than speech in a quiet place."
+        case .nearbySpeech, nil: nil
+        }
+    }
+
     private func transcriptText(_ result: SpeechSemanticResult) -> String {
         if let transcript = result.transcript, !transcript.text.isEmpty { return "“\(transcript.text)”" }
         if result.level == .detection, result.state.isTerminal { return "No transcript for this speech." }
@@ -144,6 +154,7 @@ private struct SpeechResultView: View {
     private func accessibilityText(_ result: SpeechSemanticResult) -> String {
         var parts = [result.summary == nil ? result.headline : "Summary: \(result.headline)"]
         if result.category != .unknown { parts.append("Category: \(result.category.displayName)") }
+        if let note = contextNote(result) { parts.append(note) }
         parts.append("Status: \(result.state.displayName)")
         if let transcript = result.transcript, !transcript.text.isEmpty { parts.append("Transcript: \(transcript.text)") }
         return parts.joined(separator: ". ")
@@ -227,6 +238,7 @@ struct SpeechEventRow: View {
             Text("\(event.state.displayName) · level \(event.level.rawValue) · \(event.category.displayName) · "
                 + "\(event.utteranceCount) utterance\(event.utteranceCount == 1 ? "" : "s")"
                 + (event.transcript.map { " · recognition \($0.quality.rating.rawValue)" } ?? "")
+                + (event.acousticContext.map { " · \($0.relevance.displayName.lowercased())" } ?? "")
                 + (event.summary.map { " · summary \($0.reliability.rawValue)" } ?? ""))
                 .font(.caption)
                 .foregroundStyle(.secondary)
