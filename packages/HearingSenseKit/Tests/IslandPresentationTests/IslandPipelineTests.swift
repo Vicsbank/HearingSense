@@ -253,9 +253,9 @@ import Testing
         var laughter = sound("laughter", 1, at: 20)
         driver.send(.sound(laughter.started()))
         driver.send(.intent(intent(1, "Door or knock", priority: .high, action: .dismiss, at: 24)))
-        #expect(driver.shown?.symbolName == "face.smiling")
+        #expect(driver.shown?.symbolName == "hs.laugh")
         driver.send(.sound(sound("farm_animal", 2, at: 25).started()))  // 1 s later, a newer sound
-        #expect(driver.shown?.symbolName == "face.smiling")
+        #expect(driver.shown?.symbolName == "hs.laugh")
         driver.advance(to: 27.5)
         #expect(driver.shown?.symbolName == "pawprint")
         let ambientUpdates = driver.updates.filter { $0.date >= T.date(24) }.map { T.seconds($0.date) }
@@ -268,7 +268,7 @@ import Testing
     @Test func nearbySpeechWithoutASummaryIsOnlyAnIcon() {
         var driver = IslandDriver()
         driver.send(.sound(sound("speech", 1, at: 2).started()))
-        #expect(driver.shown?.symbolName == "person.wave.2")
+        #expect(driver.shown?.symbolName == "bubble.left.fill")
         let before = driver.commands.count
         driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech)))
         driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .update, at: 12, category: .speech,

@@ -344,11 +344,24 @@ case "island-trace":
 case "island-symbols":
     // The icon of every classifier label, and which table it came from.
     let taxonomy = SoundTaxonomy.appleV1
-    print("label\tkind\tcategory\tsf_symbol\tlevel")
+    print("label\tkind\tcategory\tsymbol\tlevel\tdrawn_by")
     for label in taxonomy.mappedLabels.sorted() {
         let kind = taxonomy.definition(for: label).kind
         let symbol = SoundSymbolCatalog.symbol(label: label, kindID: kind.id, category: kind.category)
-        print("\(label)\t\(kind.id)\t\(kind.category.rawValue)\t\(symbol.name)\t\(symbol.level.rawValue)")
+        print("\(label)\t\(kind.id)\t\(kind.category.rawValue)\t\(symbol.name)\t\(symbol.level.rawValue)\t\(symbol.customGlyph == nil ? "sf_symbol" : "app")")
+    }
+
+case "island-icon-sheets":
+    // Pictures of the icons at the sizes of the Dynamic Island, for a visual review (Window 6).
+    guard arguments.count > 1 else {
+        print("Usage: hs-attention-eval island-icon-sheets <output directory>")
+        exit(2)
+    }
+    do {
+        for file in try IconSheets.write(to: URL(fileURLWithPath: arguments[1], isDirectory: true)) { print(file.path) }
+    } catch {
+        print("Could not write the icon sheets: \(error)")
+        exit(1)
     }
 
 case "island-device-trace":

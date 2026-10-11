@@ -414,8 +414,10 @@ final class LiveActivityController {
     /// A symbol this iOS version does not have would draw as nothing: use a generic one instead.
     private static func sanitized(_ content: IslandContent) -> IslandContent {
         var content = content
-        if UIImage(systemName: content.symbolName) == nil { content.symbolName = "waveform" }
-        if let ambient = content.ambientSymbolName, UIImage(systemName: ambient) == nil { content.ambientSymbolName = nil }
+        // The app's own drawings (`CustomSoundGlyph`) are not SF Symbols and need no check.
+        func exists(_ name: String) -> Bool { CustomSoundGlyph(symbolName: name) != nil || UIImage(systemName: name) != nil }
+        if !exists(content.symbolName) { content.symbolName = "waveform" }
+        if let ambient = content.ambientSymbolName, !exists(ambient) { content.ambientSymbolName = nil }
         return content
     }
 

@@ -43,7 +43,7 @@ public struct IslandIcon: View {
     }
 
     public var body: some View {
-        Image(systemName: isStale ? IslandSymbol.stale : content.symbolName)
+        SoundSymbolImage(isStale ? IslandSymbol.stale : content.symbolName)
             .symbolRenderingMode(.hierarchical)
             .foregroundStyle(isStale ? Color.white.opacity(0.5) : IslandStyle.tint(for: content))
             .fontWeight(content.mode == .attention ? .bold : .medium)
@@ -248,7 +248,7 @@ public struct IslandExpandedBottom: View {
             }
             Spacer(minLength: 0)
             if content.mode == .attention, let ambient = content.ambientSymbolName {
-                Image(systemName: ambient)
+                SoundSymbolImage(ambient)
                     .font(.footnote)
                     .foregroundStyle(.mint)
                     .accessibilityLabel("Another sound in the background")

@@ -74,7 +74,7 @@ let package = Package(
                 dependencies: ["Attention", "HearingSenseDomain", "SoundEventDetection", "IslandPresentation"]),
         .executableTarget(name: "AttentionReplayTool",
                           dependencies: ["AttentionReplay", "Attention", "HearingSenseDomain", "HearingSenseAudio",
-                                         "IslandPresentation", "SoundEventDetection"]),
+                                         "IslandPresentation", "IslandViews", "SoundEventDetection"]),
         .testTarget(name: "HearingSenseAudioTests", dependencies: ["HearingSenseAudio"]),
         .testTarget(name: "AttentionTests",
                     dependencies: ["Attention", "AttentionReplay", "HearingSenseDomain", "SoundEventDetection"]),

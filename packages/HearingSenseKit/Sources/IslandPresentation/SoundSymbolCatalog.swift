@@ -12,9 +12,12 @@ public enum SoundSymbolLevel: String, Hashable, Sendable, Codable {
 }
 
 public struct SoundSymbol: Hashable, Sendable {
-    /// SF Symbol name.
+    /// SF Symbol name, or the raw value of a `CustomSoundGlyph` (prefix `hs.`).
     public var name: String
     public var level: SoundSymbolLevel
+
+    /// The app's own drawing, if `name` is not an SF Symbol.
+    public var customGlyph: CustomSoundGlyph? { CustomSoundGlyph(symbolName: name) }
 
     public init(name: String, level: SoundSymbolLevel) {
         self.name = name
@@ -22,7 +25,9 @@ public struct SoundSymbol: Hashable, Sendable {
     }
 }
 
-/// SF Symbols for the icon-only presentation of sounds (Window 5).
+/// Icons for the icon-only presentation of sounds (Window 5; revised in Window 6 for recognition
+/// at a glance: speech is a speech bubble, human sounds are faces, and nine sounds SF Symbols has
+/// no picture of are drawn by the app, see `CustomSoundGlyph`).
 ///
 /// Three levels, most specific first: classifier label → event kind → category. Every label of
 /// Apple's built-in classifier resolves to a symbol through its kind (see `SoundTaxonomy.appleV1`
@@ -44,16 +49,39 @@ public enum SoundSymbolCatalog {
         symbol(label: event.primaryLabel, kindID: event.kind.id, category: event.category)
     }
 
-    /// Every symbol name this catalog can return (for availability checks).
+    /// Every name this catalog can return, SF Symbols and custom glyphs.
     public static var allSymbolNames: Set<String> {
         Set(labelSymbols.values).union(kindSymbols.values).union(SoundCategory.allCases.map(\.systemImage))
     }
 
+    /// The SF Symbols among `allSymbolNames` (for availability checks against the installed system).
+    public static var systemSymbolNames: Set<String> {
+        allSymbolNames.filter { CustomSoundGlyph(symbolName: $0) == nil }
+    }
+
+    /// What VoiceOver says for an event's icon: the label's own name where the icon is specific to
+    /// the label ("Cough"), otherwise the kind's name ("Body sounds" would not match a cough icon).
+    public static func spokenName(for event: ConfirmedAcousticEvent) -> String {
+        if labelSymbols[event.primaryLabel.rawValue] != nil {
+            return spokenLabelNames[event.primaryLabel.rawValue] ?? event.primaryLabel.generatedDisplayName
+        }
+        return event.kind.displayName
+    }
+
+    /// Spoken names that read better than the generated one. English; the keys are stable, so
+    /// this table is what a localization would translate.
+    public static let spokenLabelNames: [String: String] = [
+        "cough": "Coughing", "sneeze": "Sneezing", "snoring": "Snoring", "knock": "Knocking",
+        "door_bell": "Doorbell", "tap": "Tapping", "baby_crying": "Baby crying", "crying_sobbing": "Crying",
+        "nose_blowing": "Nose blowing", "applause": "Applause", "clapping": "Clapping", "chatter": "Conversation",
+        "whispering": "Whispering", "glass_clink": "Glasses clinking",
+    ]
+
     /// One symbol per event kind of the app's taxonomy.
     public static let kindSymbols: [String: String] = [
         // Speech
-        "speech": "person.wave.2",
-        "shouting": "exclamationmark.bubble",
+        "speech": "bubble.left.fill",
+        "shouting": "exclamationmark.bubble.fill",
         // Alerts
         "siren": "light.beacon.max",
         "vehicle_horn": "horn.blast",
@@ -67,7 +95,7 @@ public enum SoundSymbolCatalog {
         "boat": "ferry",
         "bicycle_skateboard": "bicycle",
         // Household
-        "door": "door.left.hand.closed",
+        "door": CustomSoundGlyph.knock.rawValue,
         "door_movement": "door.left.hand.open",
         "phone": "iphone.radiowaves.left.and.right",
         "beep": "dot.radiowaves.left.and.right",
@@ -80,23 +108,23 @@ public enum SoundSymbolCatalog {
         "small_objects": "hand.tap",
         // Impacts
         "bang": "burst",
-        "glass_breaking": "burst",
+        "glass_breaking": CustomSoundGlyph.glassBreak.rawValue,
         "impact": "burst",
         // Human activity
-        "laughter": "face.smiling",
-        "crying": "exclamationmark.bubble",
-        "screaming": "exclamationmark.bubble",
+        "laughter": CustomSoundGlyph.laugh.rawValue,
+        "crying": CustomSoundGlyph.cry.rawValue,
+        "screaming": CustomSoundGlyph.scream.rawValue,
         "body_sounds": "lungs",
         "footsteps": "shoeprints.fill",
         "hands": "hands.clap",
-        "whistling": "mouth",
+        "whistling": CustomSoundGlyph.whistle.rawValue,
         "sports": "sportscourt",
         // Animals
         "dog": "dog",
         "cat": "cat",
         "bird": "bird",
         "farm_animal": "pawprint",
-        "insect": "ant",
+        "insect": "ladybug",
         "wild_animal": "pawprint",
         // Music
         "music": "music.note",
@@ -119,15 +147,15 @@ public enum SoundSymbolCatalog {
     public static let labelSymbols: [String: String] = {
         var table: [String: String] = [
             // Speech
-            "chatter": "bubble.left.and.bubble.right",
+            "chatter": "bubble.left.and.bubble.right.fill",
+            "whispering": "ellipsis.bubble.fill",
             // Alerts
             "ambulance_siren": "staroflife",
             "civil_defense_siren": "megaphone",
             "train_horn": "train.side.front.car",
             "train_whistle": "train.side.front.car",
             "foghorn": "ferry",
-            "smoke_detector": "smoke",
-            "alarm_clock": "alarm",
+                        "alarm_clock": "alarm",
             // Transportation
             "race_car": "flag.checkered",
             "truck": "truck.box",
@@ -143,6 +171,7 @@ public enum SoundSymbolCatalog {
             "skateboard": "skateboard",
             // Household
             "door_bell": "bell.and.waves.left.and.right",
+            "knock": CustomSoundGlyph.knock.rawValue,
             "door_sliding": "door.sliding.left.hand.closed",
             "tap": "hand.tap",
             "telephone": "phone",
@@ -189,10 +218,9 @@ public enum SoundSymbolCatalog {
             "slap_smack": "hand.raised",
             "wood_cracking": "tree",
             // Human activity
-            "baby_crying": "stroller",
-            "cough": "facemask",
-            "sneeze": "facemask",
-            "snoring": "zzz",
+                        "cough": CustomSoundGlyph.cough.rawValue,
+            "sneeze": CustomSoundGlyph.sneeze.rawValue,
+            "snoring": CustomSoundGlyph.snore.rawValue,
             "nose_blowing": "nose",
             "person_running": "figure.run",
             "person_walking": "figure.walk",
@@ -218,8 +246,7 @@ public enum SoundSymbolCatalog {
             "orchestra": "music.note.list",
             "disc_scratching": "record.circle",
             "tuning_fork": "tuningfork",
-            "wind_chime": "wind",
-            // Weather & nature
+                        // Weather & nature
             "wind_rustling_leaves": "leaf",
             "raindrop": "drop",
             "thunderstorm": "cloud.bolt.rain",

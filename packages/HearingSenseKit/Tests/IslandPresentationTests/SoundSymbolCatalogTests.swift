@@ -52,7 +52,7 @@ import AppKit
     }
 
     @Test func everySymbolNameExistsOnThisSystem() {
-        let names = SoundSymbolCatalog.allSymbolNames.union(IslandSymbol.all)
+        let names = SoundSymbolCatalog.systemSymbolNames.union(IslandSymbol.all)
             .union(AttentionCategory.allCases.map(\.systemImage))
             .union(["exclamationmark", "exclamationmark.2", "circle.fill", "questionmark.circle"])
         let missing = names.filter { !symbolExists($0) }.sorted()
@@ -70,12 +70,62 @@ import AppKit
         #expect(name("bird_chirp_tweet") == "bird")
         #expect(name("person_walking") == "figure.walk")
         #expect(name("person_shuffling") == "shoeprints.fill")
-        #expect(name("knock") == "door.left.hand.closed")
+        #expect(name("knock") == "hs.knock")
         #expect(name("door_bell") == "bell.and.waves.left.and.right")
         #expect(name("motorcycle") == "motorcycle")
         #expect(name("piano") == "pianokeys")
         #expect(name("music") == "music.note")
         #expect(name("wind") == "wind")
+    }
+
+    // Window 6: the pictures the student asked for. A cough is a coughing head, not lungs.
+    @Test func humanSoundsAndSpeechHaveTellingIcons() {
+        func symbol(_ label: String) -> SoundSymbol {
+            let kind = taxonomy.definition(for: SoundLabel(label)).kind
+            return SoundSymbolCatalog.symbol(label: SoundLabel(label), kindID: kind.id, category: kind.category)
+        }
+        #expect(symbol("cough").customGlyph == .cough)
+        #expect(symbol("sneeze").customGlyph == .sneeze)
+        #expect(symbol("snoring").customGlyph == .snore)
+        #expect(symbol("laughter").customGlyph == .laugh)
+        #expect(symbol("giggling").customGlyph == .laugh)
+        #expect(symbol("crying_sobbing").customGlyph == .cry)
+        #expect(symbol("baby_crying").customGlyph == .cry)
+        #expect(symbol("screaming").customGlyph == .scream)
+        #expect(symbol("whistling").customGlyph == .whistle)
+        #expect(symbol("knock").customGlyph == .knock)
+        #expect(symbol("glass_breaking").customGlyph == .glassBreak)
+        #expect(symbol("speech").name == "bubble.left.fill")
+        #expect(symbol("chatter").name == "bubble.left.and.bubble.right.fill")
+        #expect(symbol("applause").name == "hands.clap")
+        #expect(symbol("person_shuffling").name == "shoeprints.fill")
+        #expect(symbol("siren").name == "light.beacon.max")
+        #expect(symbol("wind_chime").name == "bell")
+        // Lungs stay for breathing sounds only; a mask is not a cough.
+        #expect(symbol("breathing").name == "lungs")
+        #expect(!SoundSymbolCatalog.allSymbolNames.contains("facemask"))
+    }
+
+    @Test func everyCustomGlyphNameIsUsedAndRoundTrips() {
+        let used = Set(SoundSymbolCatalog.allSymbolNames.compactMap(CustomSoundGlyph.init(symbolName:)))
+        #expect(used == Set(CustomSoundGlyph.allCases))
+        #expect(CustomSoundGlyph(symbolName: "bell") == nil)
+        #expect(CustomSoundGlyph(symbolName: "hs.unknown") == nil)
+        // A custom name must never be mistaken for an SF Symbol, and the other way round.
+        #expect(SoundSymbolCatalog.systemSymbolNames.allSatisfy { !$0.hasPrefix(CustomSoundGlyph.prefix) })
+    }
+
+    @Test func voiceOverNamesTheSoundTheIconShows() {
+        func event(kind: String, label: String) -> ConfirmedAcousticEvent {
+            var event = sound(kind, 1, at: 0).event
+            event.primaryLabel = SoundLabel(label)
+            return event
+        }
+        #expect(SoundSymbolCatalog.spokenName(for: event(kind: "body_sounds", label: "cough")) == "Coughing")
+        #expect(SoundSymbolCatalog.spokenName(for: event(kind: "door", label: "knock")) == "Knocking")
+        // No icon of its own: the kind's name.
+        #expect(SoundSymbolCatalog.spokenName(for: event(kind: "dog", label: "dog_growl"))
+            == taxonomy.definition(for: "dog_growl").kind.displayName)
     }
 
     @Test func anUnknownLabelFallsBackToItsKindThenItsCategory() {

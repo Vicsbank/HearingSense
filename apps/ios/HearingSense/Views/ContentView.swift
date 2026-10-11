@@ -191,6 +191,14 @@ private struct DiagnosticsLinks: View {
                         Label("Event log", systemImage: "list.bullet.rectangle")
                     }
                 }
+                #if DEBUG
+                Divider()
+                NavigationLink {
+                    SoundIconGalleryView()
+                } label: {
+                    Label("Sound icon gallery (debug)", systemImage: "square.grid.3x3")
+                }
+                #endif
             }
         }
     }

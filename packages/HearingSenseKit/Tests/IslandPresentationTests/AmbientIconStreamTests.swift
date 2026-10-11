@@ -56,7 +56,7 @@ import Testing
         driver.send(sneeze.ended(at: T.date(22.5)))
         driver.send(speech.updated(at: T.date(25)))
         driver.advance(to: 30)
-        #expect(driver.timeline == ["0:person.wave.2", "21:lungs", "26:person.wave.2"])
+        #expect(driver.timeline == ["0:bubble.left.fill", "21:lungs", "26:bubble.left.fill"])
     }
 
     /// Same-kind de-duplication and its exception, both from the iPhone retest: three dog clips
@@ -88,11 +88,11 @@ import Testing
         play(brief("dog", 2, at: 20, peak: 0.7), thenSpeechAt: 24)
         play(brief("dog", 3, at: 30, peak: 0.7), thenSpeechAt: 34)   // 5 s after the dog icon left: not again
         driver.advance(to: 40)
-        #expect(driver.timeline == ["0:person.wave.2", "20:dog", "25:person.wave.2"])
+        #expect(driver.timeline == ["0:bubble.left.fill", "20:dog", "25:bubble.left.fill"])
         // After the cooldown the same kind is a newcomer again.
         play(brief("dog", 4, at: 45, peak: 0.7), thenSpeechAt: 49)
         driver.advance(to: 52)
-        #expect(driver.timeline.suffix(2) == ["45:dog", "50:person.wave.2"])
+        #expect(driver.timeline.suffix(2) == ["45:dog", "50:bubble.left.fill"])
         // A strong one does not wait for the cooldown.
         play(brief("dog", 5, at: 57, peak: 0.95), thenSpeechAt: 60)
         #expect(driver.timeline.suffix(1) == ["57:dog"])
@@ -129,7 +129,7 @@ import Testing
         driver.send(speech.ended(at: T.date(4.5)))
         driver.advance(to: 30)
         // Speech lingered until 9.5; the drawer (ended, lower rank) is not shown after it.
-        #expect(driver.timeline == ["0:person.wave.2", "14.5:-"])
+        #expect(driver.timeline == ["0:bubble.left.fill", "14.5:-"])
     }
 
     @Test func aBriefSoundLingersThenTheIconGoesAfterTheIdleHold() {
@@ -138,9 +138,9 @@ import Testing
         driver.send(knock.started())
         driver.send(knock.ended(at: T.date(2)))
         driver.advance(to: 11.9)
-        #expect(driver.stream.current?.symbolName == "door.left.hand.closed")
+        #expect(driver.stream.current?.symbolName == "hs.knock")
         driver.advance(to: 12)
-        #expect(driver.timeline == ["0:door.left.hand.closed", "12:-"])
+        #expect(driver.timeline == ["0:hs.knock", "12:-"])
         #expect(driver.stream.nextDeadline == nil)
     }
 
@@ -152,7 +152,7 @@ import Testing
         driver.send(knock.ended(at: T.date(2)))
         driver.send(sound("dog", 2, at: 9).started())  // the knock's linger is over, the hold is not
         driver.advance(to: 15)
-        #expect(driver.timeline == ["0:door.left.hand.closed", "9:dog"])
+        #expect(driver.timeline == ["0:hs.knock", "9:dog"])
     }
 
     @Test func aSoundThatComesBackKeepsItsIconWithoutAChange() {

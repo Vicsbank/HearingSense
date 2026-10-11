@@ -4,12 +4,12 @@ import HearingSenseDomain
 /// The icon of one ordinary sound, for the icon-only presentation. Carries no text to draw:
 /// `spokenName` exists for VoiceOver only.
 public struct AmbientIcon: Hashable, Sendable, Codable {
-    /// SF Symbol name.
+    /// SF Symbol name, or a `CustomSoundGlyph` raw value.
     public var symbolName: String
     /// `SoundEventKind.id` of the sound.
     public var kindID: String
     public var category: SoundCategory
-    /// The kind's name ("Rain"), as an accessibility label.
+    /// The sound's name ("Rain", "Coughing"), as an accessibility label.
     public var spokenName: String
 
     public init(symbolName: String, kindID: String, category: SoundCategory, spokenName: String) {
@@ -275,7 +275,7 @@ public struct AmbientIconStream: Sendable {
         }
         let symbol = SoundSymbolCatalog.symbol(for: event)
         let icon = AmbientIcon(symbolName: symbol.name, kindID: event.kind.id, category: event.category,
-                               spokenName: event.kind.displayName)
+                               spokenName: SoundSymbolCatalog.spokenName(for: event))
         var entry = tracked[event.id] ?? Tracked(
             icon: icon, rank: policy.rank(kindID: event.kind.id, category: event.category),
             confirmed: event.confirmedDate, lastObserved: event.lastObservedDate, ended: nil, isEligible: false,
