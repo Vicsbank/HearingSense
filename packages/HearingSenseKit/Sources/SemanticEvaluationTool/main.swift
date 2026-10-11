@@ -659,7 +659,7 @@ case "audience":
     }
     for item in dataset.items {
         let identity = identities[item.profile] ?? .unknown
-        let cue = AudienceAnalyzer.cue(in: item.text, identity: identity)
+        let cue = AudienceAnalyzer.cue(in: item.text, identity: identity, usesNameTagger: arguments.contains("--no-tagger") ? false : nil)
         table[item.category + " " + item.expected.rawValue, default: [:]][cue.kind.rawValue, default: 0] += 1
         if arguments.contains("--list"), cue.kind != .none {
             print("\(item.id) \(item.expected.rawValue.prefix(3)) \(item.category) \(cue.kind.rawValue) [\(cue.phrase)] \(item.text.prefix(70))")

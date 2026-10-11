@@ -352,7 +352,7 @@ public enum AudienceAnalyzer {
 
     /// A person called by name: a short segment set off by commas, at the start, in the middle
     /// or at the end ("Tom, …", "Excuse me, Tom, …", "…, Tom.").
-    static func calledName(in tokens: [Token], names: [String]) -> [Token]? {
+    static func calledName(in tokens: [Token], names: [String], usesTagger: Bool = tagsNames) -> [Token]? {
         guard let last = tokens.last?.segment, last >= 1 else { return nil }
         for segment in 0 ... last {
             var words = tokens.filter { $0.segment == segment }
@@ -368,13 +368,57 @@ public enum AudienceAnalyzer {
             }
             guard (1 ... 2).contains(words.count), words.allSatisfy(\.isCapitalized),
                   words.allSatisfy({ !$0.isNumber && !$0.isLabel && !notCalls.contains($0.text.lowercased()) }),
-                  words.allSatisfy({ $0.lexical == .noun || $0.lexical == nil || $0.lexical == .otherWord })
+                  !usesTagger || words.allSatisfy({ $0.lexical == .noun || $0.lexical == nil || $0.lexical == .otherWord })
             else { continue }
             let matchesListener = words.contains { word in names.contains { isSameName(word.text, $0) } }
-            if hasTitle || matchesListener || words.contains(where: \.isPersonalName) { return words }
+            if hasTitle || matchesListener { return words }
+            if usesTagger {
+                if words.contains(where: \.isPersonalName) { return words }
+            } else if tokens.first.map({ $0 != words[0] }) ?? false {
+                // No name tagger here: a capital letter inside a sentence is a name.
+                return words
+            } else if words.allSatisfy({ !notNamesByForm.contains($0.text.lowercased()) }),
+                      tokens.contains(where: { ["you", "your", "you're", "yours", "yourself", "you've", "you'll"].contains($0.text.lowercased()) })
+            {
+                // The first word of the sentence, set off by a comma, not one of the words that
+                // commonly open a sentence, and the sentence goes on to speak to "you": "Peter,
+                // your taxi is outside", not "Grill, two ribeyes".
+                return words
+            }
         }
         return nil
     }
+
+    /// Whether the system's name tagger works here. It needs linguistic data that the iOS Simulator
+    /// does not have (found in Window 6.3: the tagger then returns no names at all). Where it
+    /// works, it decides, as measured on the Mac; where it does not, a name is told by its form:
+    /// a short segment set off by commas whose words are capitalised and are not common openers.
+    static let tagsNames: Bool = {
+        let probe = "Yesterday John Smith met Mary Jones in London."
+        let tagger = NLTagger(tagSchemes: [.nameType])
+        tagger.string = probe
+        var found = false
+        tagger.enumerateTags(in: probe.startIndex ..< probe.endIndex, unit: .word, scheme: .nameType,
+                             options: [.omitWhitespace, .omitPunctuation]) { tag, _ in
+            if tag == .personalName { found = true }
+            return !found
+        }
+        return found
+    }()
+
+    /// Words that open a sentence before a comma without calling anybody (used only where there
+    /// is no name tagger): sentence adverbs, days, months, sequence words.
+    static let notNamesByForm: Set<String> = [
+        "apparently", "unfortunately", "fortunately", "actually", "basically", "luckily", "sadly", "finally", "honestly",
+        "seriously", "obviously", "hopefully", "generally", "usually", "normally", "technically", "personally", "frankly",
+        "literally", "clearly", "surely", "certainly", "definitely", "probably", "maybe", "perhaps", "anyway", "alright",
+        "also", "first", "second", "third", "next", "then", "later", "meanwhile", "otherwise", "however", "still", "besides",
+        "plus", "instead", "again", "now", "here", "there", "see", "say", "wow", "oops", "ugh", "hmm", "ah", "so", "and", "but",
+        "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "january", "february", "march", "april",
+        "may", "june", "july", "august", "september", "october", "november", "december", "yesterday", "afterwards", "sometimes",
+        "everything", "nothing", "something", "someone", "somebody", "nobody", "anyone", "whoever", "congratulations", "cheers",
+        "lunch", "dinner", "breakfast", "morning", "evening", "night", "true", "false", "correct", "exactly", "absolutely",
+    ]
 
     /// The same name, allowing for what a speech recognizer does to names ("Jordon" for "Jordan").
     static func isSameName(_ heard: String, _ name: String) -> Bool {
@@ -398,10 +442,11 @@ public enum AudienceAnalyzer {
         return row[second.count]
     }
 
-    public static func cue(in sentence: String, identity: ListenerIdentity) -> AudienceCue {
+    /// - Parameter usesNameTagger: nil for what the system offers (`tagsNames`); the tests set it.
+    public static func cue(in sentence: String, identity: ListenerIdentity, usesNameTagger: Bool? = nil) -> AudienceCue {
         let tokens = tokens(in: sentence)
         guard !tokens.isEmpty else { return .none }
-        let called = calledName(in: tokens, names: identity.names)
+        let called = calledName(in: tokens, names: identity.names, usesTagger: usesNameTagger ?? tagsNames)
         if let called, called.contains(where: { word in identity.names.contains { isSameName(word.text, $0) } }) {
             return AudienceCue(kind: .listenerNamed, phrase: called.map(\.text).joined(separator: " "))
         }

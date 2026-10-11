@@ -82,6 +82,27 @@ import Testing
         }
     }
 
+    /// Where the system has no name tagger (the iOS Simulator), a name is told by its form.
+    @Test func withoutANameTaggerNamesAreToldByTheirForm() {
+        func kind(_ sentence: String, _ identity: ListenerIdentity = Self.identity) -> AudienceCue.Kind {
+            AudienceAnalyzer.cue(in: sentence, identity: identity, usesNameTagger: false).kind
+        }
+        #expect(kind("Peter, your taxi is outside.") == .otherPerson)
+        #expect(kind("Excuse me, Sarah, is this your coat?") == .otherPerson)
+        #expect(kind("Good job today, Michael, really.") == .otherPerson)
+        #expect(kind("Hey Sarah, come and look at this.", .unknown) == .unknownPerson)
+        #expect(kind("Alma, have you got a minute?") == .listenerNamed)
+        #expect(kind("Green boat, you launch first.") == .listenerGroup)
+        #expect(kind("Yellow boat, you launch first.") == .otherGroup)
+        for sentence in ["Sorry, is this seat taken?", "Careful, that step is loose.", "Remember, we leave at six.",
+                         "No, it starts at nine.", "Everyone, please sit down.", "Stop, don't touch that!",
+                         "Unfortunately, the launch is cancelled.", "Monday, we start at eight.", "Fire alarm, everybody out!",
+                         "Grill, two ribeyes medium rare.", "Unfortunately, you have to leave."]
+        {
+            #expect(kind(sentence) == .none, "\(sentence)")
+        }
+    }
+
     @Test func theListenersOwnGroupIsRecognised() {
         #expect(kind("Green boat, you launch first.") == .listenerGroup)
         #expect(kind("Crew D, life jackets on.") == .listenerGroup)
