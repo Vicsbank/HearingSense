@@ -15,13 +15,11 @@ import Foundation
 /// 6. Novelty: the same statement accepted a short while ago is not accepted again.
 ///
 /// When sentences wait (speech faster than the model, or the model busy with a recap):
-/// - A sentence that looks like a warning goes first and is always judged on its own.
-/// - Waiting sentences are judged together, up to `maximumBatch` in one request. If the model
-///   says none of them matters, all are settled by that one request. If it names one, that one
-///   is decided and the others are judged again on their own, so a second relevant sentence in
-///   the same group is not lost.
+/// - A sentence that looks like a warning goes first, in a lane of its own.
+/// - The others are served oldest first while the model keeps up, and newest first while it is
+///   behind and speech keeps arriving (`ServingOrder`).
 /// - Nothing is discarded without a decision that says so: an utterance pushed out of a full
-///   queue, or one that waited longer than `maximumWait`, is reported with stage `.dropped`
+///   queue (`.dropped`) or one that waited longer than `maximumWait` (`.expired`) is reported
 ///   and counted.
 ///
 /// This module never delays the attention engine's own phrase rule ("Watch out!"), which does
@@ -53,11 +51,21 @@ public actor SemanticAttentionEngine {
         /// Take a second, narrower look at a sentence that was judged relevant (not at warnings)
         /// before it is accepted. It can only make the decision more cautious.
         public var confirmsRelevant = true
-        /// Waiting sentences from which they are judged together; 0 never does. Off: measured on
-        /// the development set, a group request waved through 7 of 34 groups that contained a
-        /// relevant sentence. The mechanism stays for a model that can do it.
-        public var batchThreshold = 0
-        public var maximumBatch = 3
+        /// Also take the second look at a sentence the model called a warning (Window 6.2).
+        /// Without it the model's word alone would make an alert urgent.
+        public var confirmsWarnings = true
+        /// Tell the second look which accepted statements a sentence may repeat (Window 6.2).
+        public var asksAboutRepetition = true
+        /// Prepare the next request's session whenever nothing is waiting (Window 6.2). Off for
+        /// a reasoner that keeps one session for several sentences: preparing another one makes
+        /// the system forget what the kept one has read.
+        public var preparesWhenIdle = true
+        /// Which waiting sentence is evaluated next (Window 6.2).
+        public var servingOrder = ServingOrder.newestWhenBehind
+        /// The line is behind when its oldest sentence has waited this long.
+        public var behindAfter: TimeInterval = 3
+        /// No sentence for this long is a pause in the speech.
+        public var pauseInterval: TimeInterval = 1.5
 
         public init() {}
 
@@ -72,8 +80,41 @@ public actor SemanticAttentionEngine {
             configuration.maximumWait = 12
             configuration.usesTriage = true
             configuration.confirmsRelevant = false
+            configuration.confirmsWarnings = false
+            configuration.asksAboutRepetition = false
+            configuration.preparesWhenIdle = false
+            configuration.servingOrder = .oldestFirst
             return configuration
         }
+
+        /// How the engine behaved in Window 6.1, for comparisons: twelve waiting sentences
+        /// served oldest first, given up after twenty seconds.
+        public static var window6_1: Configuration {
+            var configuration = Configuration()
+            configuration.queueCapacity = 12
+            configuration.maximumWait = 20
+            configuration.confirmsWarnings = false
+            configuration.asksAboutRepetition = false
+            configuration.preparesWhenIdle = false
+            configuration.servingOrder = .oldestFirst
+            return configuration
+        }
+    }
+
+    /// The order in which waiting sentences are evaluated.
+    public enum ServingOrder: String, Hashable, Sendable {
+        /// In the order they were said, always.
+        case oldestFirst
+        /// In the order they were said while the model keeps up. While it is behind and speech
+        /// keeps arriving, the newest sentence goes first: what was just said is what the
+        /// listener can still act on, and the decisions that are made stay fresh. In a pause the
+        /// oldest goes first again, because it is the one closest to being given up. A sentence
+        /// that has waited `maximumWait` is given up, visibly.
+        ///
+        /// Chosen by simulation and measurement (Window 6.2 report): under lasting overload it
+        /// decides as many sentences as oldest-first does, seconds earlier; after a burst it
+        /// loses fewer than newest-first alone.
+        case newestWhenBehind
     }
 
     public struct Statistics: Hashable, Sendable {
@@ -88,19 +129,22 @@ public actor SemanticAttentionEngine {
         public var timeouts = 0
         /// Utterances reported as dropped: pushed out of a full queue or waited too long.
         public var dropped = 0
+        /// Of those, the ones that waited longer than `maximumWait` (the others were pushed out
+        /// of a full line).
+        public var expired = 0
+        /// Sentences evaluated ahead of older ones because the line was behind.
+        public var servedNewestFirst = 0
+        /// Requests asked a second time after the model failed.
+        public var retries = 0
+        /// First answers given by a session that had answered for an earlier sentence (only
+        /// while sentences were waiting; see `FoundationModelRelevanceReasoner.Reuse`).
+        public var continuedSessions = 0
         public var accepted = 0
         public var uncertain = 0
         public var repeated = 0
         public var corrected = 0
         public var maximumQueueLength = 0
         public var totalModelTime: TimeInterval = 0
-        /// Requests that judged several waiting sentences together, and the sentences in them.
-        public var batchCalls = 0
-        public var batchedUtterances = 0
-        /// Sentences settled by a group request that found nothing.
-        public var settledByBatch = 0
-        /// Sentences judged again on their own after their group contained a match.
-        public var requeuedAfterBatch = 0
         /// Evaluations of a stable partial transcript; how many the final text could use; how
         /// many were abandoned because the final text was different or something else came first.
         /// Second looks at relevant sentences, and how many of them took the alert back.
@@ -128,6 +172,7 @@ public actor SemanticAttentionEngine {
 
     private struct Accepted {
         var goalID: UUID
+        var text: String
         var stems: Set<String>
         var isNegated: Bool
         var quantities: Set<String>
@@ -138,8 +183,6 @@ public actor SemanticAttentionEngine {
         var utterance: SemanticUtterance
         var submitted: Date
         var isUrgent: Bool
-        /// Judged in a group already: on its own from now on.
-        var wasBatched = false
     }
 
     private let reasoner: any SemanticRelevanceReasoning
@@ -163,6 +206,7 @@ public actor SemanticAttentionEngine {
     private var cache: [String: CacheEntry] = [:]
     private var accepted: [Accepted] = []
     private var generation = 0
+    private var lastSubmission = Date.distantPast
     private var isPaused = false
     public private(set) var statistics = Statistics()
     private let sampleLimit = 2_000
@@ -178,6 +222,8 @@ public actor SemanticAttentionEngine {
         self.reasoner = reasoner
         self.scorer = scorer
         self.gate = gate
+        var verifier = verifier
+        verifier.requiresSecondLookForUrgency = configuration.confirmsRelevant && configuration.confirmsWarnings
         self.verifier = verifier
         self.configuration = configuration
         self.scheduler = scheduler
@@ -201,6 +247,9 @@ public actor SemanticAttentionEngine {
     public var isActive: Bool { isEnabled && !goals.isEmpty }
 
     public var queueLength: Int { queue.count }
+
+    /// Sentences submitted and not yet being evaluated, the warning lane included.
+    public var waitingCount: Int { queue.count + urgentQueue.count }
 
     /// Holds back new evaluations. Since Window 6.1 a recap does not need this: it takes its
     /// turn through the scheduler, ahead of goal matching. Kept for hosts without a scheduler.
@@ -265,6 +314,7 @@ public actor SemanticAttentionEngine {
             let index = queue.firstIndex { !$0.isUrgent } ?? 0
             report(dropped: queue.remove(at: index))
         }
+        lastSubmission = now
         let entry = Entry(utterance: prepared(utterance), submitted: now, isUrgent: isUrgent)
         if isUrgent, let index = queue.firstIndex(where: { !$0.isUrgent }) {
             queue.insert(entry, at: index)
@@ -298,10 +348,15 @@ public actor SemanticAttentionEngine {
         return utterance
     }
 
-    private func report(dropped entry: Entry) {
+    /// Not evaluated, and said so: the decision carries the stage and how long it waited.
+    private func report(dropped entry: Entry, expired: Bool = false) {
         statistics.dropped += 1
-        continuation.yield(SemanticAttentionDecision(utteranceID: entry.utterance.id, date: entry.utterance.date,
-                                                     verdict: .irrelevant, stage: .dropped))
+        if expired { statistics.expired += 1 }
+        var decision = SemanticAttentionDecision(utteranceID: entry.utterance.id, date: entry.utterance.date,
+                                                 verdict: .irrelevant, stage: expired ? .expired : .dropped)
+        decision.queueWait = Date().timeIntervalSince(entry.submitted)
+        decision.latency = decision.queueWait
+        continuation.yield(decision)
     }
 
     private func startWorkerIfNeeded() {
@@ -326,10 +381,7 @@ public actor SemanticAttentionEngine {
     private func drain(generation: Int) async {
         while generation == self.generation, !Task.isCancelled, !isPaused {
             if !queue.isEmpty {
-                let group = nextGroup()
-                if group.count > 1 {
-                    await evaluateTogether(group, generation: generation)
-                } else if let entry = group.first {
+                if let entry = nextEntry() {
                     let started = Date()
                     var decision = await evaluate(entry.utterance, priority: entry.isUrgent ? .urgentCandidate : .attention)
                     guard generation == self.generation, !Task.isCancelled else { return }
@@ -342,26 +394,33 @@ public actor SemanticAttentionEngine {
                 break
             }
         }
-        if generation == self.generation { worker = nil }
+        guard generation == self.generation else { return }
+        worker = nil
+        // Nothing is waiting: the next request's session can read the instructions and the goals
+        // now. (Only now: prepared while a sentence waits, it would make that sentence slower.)
+        if configuration.preparesWhenIdle, queue.isEmpty, urgentQueue.isEmpty, isActive {
+            let goals = selectGoals(for: "")
+            Task { [reasoner] in await reasoner.prewarm(goals: goals) }
+        }
     }
 
-    /// The sentences to evaluate next: one, or several waiting ones together.
-    private func nextGroup() -> [Entry] {
-        while let first = queue.first, Date().timeIntervalSince(first.submitted) > configuration.maximumWait {
-            report(dropped: queue.removeFirst())
+    /// The sentence to evaluate next, after giving up those that have waited too long.
+    private func nextEntry() -> Entry? {
+        let now = Date()
+        while let first = queue.first, now.timeIntervalSince(first.submitted) > configuration.maximumWait {
+            report(dropped: queue.removeFirst(), expired: true)
         }
-        guard let first = queue.first else { return [] }
-        let canBatch = reasoner.judgesTogether && configuration.batchThreshold > 0
-            && queue.count >= configuration.batchThreshold && !first.isUrgent && !first.wasBatched
-        guard canBatch else { return [queue.removeFirst()] }
-        var group: [Entry] = []
-        while group.count < configuration.maximumBatch, let next = queue.first, !next.isUrgent, !next.wasBatched,
-              cache[cacheKey(next.utterance)] == nil
+        guard let first = queue.first else { return nil }
+        if configuration.servingOrder == .newestWhenBehind, queue.count > 1,
+           now.timeIntervalSince(first.submitted) > configuration.behindAfter,
+           now.timeIntervalSince(lastSubmission) < configuration.pauseInterval
         {
-            group.append(queue.removeFirst())
+            statistics.servedNewestFirst += 1
+            return queue.removeLast()
         }
-        return group.isEmpty ? [queue.removeFirst()] : group
+        return queue.removeFirst()
     }
+
 
     private func finish(_ decision: inout SemanticAttentionDecision, entry: Entry, started: Date) {
         let now = Date()
@@ -403,6 +462,37 @@ public actor SemanticAttentionEngine {
         // A partial transcript with the same words is being evaluated right now: wait for it.
         if let speculativeTask, speculativeTask.key == key { _ = await speculativeTask.task.result }
 
+        let started = Date()
+        let outcome: Outcome
+        do {
+            // One turn for everything this utterance needs from the model: the first answer and
+            // the second look. Given back in between, an ordinary sentence would get in before
+            // the second look of a warning.
+            let usesTriage = configuration.usesTriage && priority != .urgentCandidate
+            outcome = try await scheduler.run(priority, timeout: configuration.timeout) { [self] in
+                try await answers(for: utterance, goals: selected, key: key, usesTriage: usesTriage)
+            }
+        } catch {
+            return failure(error, utterance: utterance, started: started)
+        }
+        switch outcome {
+        case .triaged(let seconds):
+            return SemanticAttentionDecision(utteranceID: utterance.id, date: utterance.date, verdict: .irrelevant,
+                                             stage: .triage, modelTime: seconds)
+        case .judged(let judgement, let stage, let modelTime):
+            return decide(judgement, utterance: utterance, goals: selected, stage: stage, modelTime: modelTime)
+        }
+    }
+
+    private enum Outcome: Sendable {
+        case triaged(TimeInterval)
+        case judged(RelevanceJudgement, SemanticStage, TimeInterval)
+    }
+
+    /// The model's answers for one utterance. Runs inside one turn of the scheduler.
+    private func answers(for utterance: SemanticUtterance, goals selected: [AttentionGoal], key: String,
+                         usesTriage: Bool) async throws -> Outcome
+    {
         var stage = SemanticStage.model
         var modelTime: TimeInterval = 0
         let judgement: RelevanceJudgement
@@ -418,49 +508,50 @@ public actor SemanticAttentionEngine {
             stage = entry.isSpeculative ? .speculative : .cache
         } else {
             let started = Date()
-            let reasoner = reasoner, subject = utterance, goals = selected
-            do {
-                if configuration.usesTriage, priority != .urgentCandidate {
-                    statistics.triageCalls += 1
-                    let passes = try await model(priority) { try await reasoner.couldMatter(subject, goals: goals) }
-                    if !passes {
-                        statistics.triaged += 1
-                        let seconds = Date().timeIntervalSince(started)
-                        statistics.totalModelTime += seconds
-                        return SemanticAttentionDecision(utteranceID: utterance.id, date: utterance.date,
-                                                         verdict: .irrelevant, stage: .triage, modelTime: seconds)
-                    }
+            if usesTriage {
+                statistics.triageCalls += 1
+                if try await !reasoner.couldMatter(utterance, goals: selected) {
+                    statistics.triaged += 1
+                    let seconds = Date().timeIntervalSince(started)
+                    statistics.totalModelTime += seconds
+                    return .triaged(seconds)
                 }
-                statistics.modelCalls += 1
-                judgement = try await model(priority) { try await reasoner.judge(subject, goals: goals) }
-            } catch {
-                return failure(error, utterance: utterance, started: started)
             }
+            statistics.modelCalls += 1
+            judgement = try await reasoner.judge(utterance, goals: selected)
             modelTime = judgement.timing?.total ?? Date().timeIntervalSince(started)
             statistics.totalModelTime += modelTime
             statistics.outputTokens += judgement.timing?.outputTokens ?? 0
+            if judgement.timing?.retried == true { statistics.retries += 1 }
+            if judgement.timing?.continuedSession == true { statistics.continuedSessions += 1 }
             store(judgement, key: key, goals: selected, date: utterance.date, isSpeculative: false)
         }
-        let checked = await confirmed(judgement, utterance: utterance, goals: selected, key: key, priority: priority)
+        let checked = await confirmed(judgement, utterance: utterance, goals: selected, key: key)
         if stage == .model { modelTime = checked.timing?.total ?? modelTime }
-        return decide(checked, utterance: utterance, goals: selected, stage: stage, modelTime: modelTime)
+        return .judged(checked, stage, modelTime)
     }
 
     /// The second look, where one is due. Its answer is kept with the judgement, so a cached
     /// judgement is not looked at twice.
     private func confirmed(_ judgement: RelevanceJudgement, utterance: SemanticUtterance, goals: [AttentionGoal],
-                           key: String, priority: ModelInferenceScheduler.Priority) async -> RelevanceJudgement
+                           key: String) async -> RelevanceJudgement
     {
-        guard configuration.confirmsRelevant, judgement.confirmation == nil, judgement.urgency != .high,
+        guard configuration.confirmsRelevant, judgement.confirmation == nil,
+              configuration.confirmsWarnings || judgement.urgency != .high,
               verifier.verify(judgement, utterance: utterance, goals: goals).verdict == .relevant,
               goals.indices.contains(judgement.goalIndex - 1)
         else { return judgement }
         let goal = goals[judgement.goalIndex - 1]
         var judgement = judgement
-        let reasoner = reasoner
         let started = Date()
-        // A failed second look leaves the first judgement as it is.
-        guard let answer = try? await model(priority, { try await reasoner.confirm(utterance, goal: goal) }) else { return judgement }
+        let earlier = configuration.asksAboutRepetition
+            ? SemanticRepetition.candidates(for: utterance.text, among: accepted.filter {
+                utterance.date.timeIntervalSince($0.date) <= configuration.noveltyWindow
+            }.map(\.text)) : []
+        // A failed second look leaves the first judgement as it is (and a warning not urgent).
+        guard var answer = try? await reasoner.confirm(utterance, goal: goal, earlier: earlier) else { return judgement }
+        // Nothing was listed that it could repeat.
+        if answer == .saidBefore, earlier.isEmpty { answer = .hereAndNow }
         statistics.confirmCalls += 1
         statistics.totalModelTime += Date().timeIntervalSince(started)
         judgement.confirmation = answer
@@ -476,6 +567,7 @@ public actor SemanticAttentionEngine {
         var decision = verifier.verify(judgement, utterance: utterance, goals: goals, stage: stage)
         if decision.corrections.contains("second_look") { statistics.confirmDemoted += 1 }
         decision.hadSecondLook = judgement.confirmation != nil && stage == .model
+        decision.usedContinuedSession = judgement.timing?.continuedSession == true && stage == .model
         decision.modelTime = modelTime
         decision.outputTokens = stage == .model ? judgement.timing?.outputTokens ?? 0 : 0
         if !decision.corrections.isEmpty { statistics.corrected += 1 }
@@ -495,68 +587,6 @@ public actor SemanticAttentionEngine {
         // No model, no semantic alert. Never a guess from keywords.
         return SemanticAttentionDecision(utteranceID: utterance.id, date: utterance.date, verdict: .irrelevant,
                                          stage: .fallback, modelTime: Date().timeIntervalSince(started))
-    }
-
-    /// Several waiting sentences in one request.
-    private func evaluateTogether(_ group: [Entry], generation: Int) async {
-        let started = Date()
-        let utterances = group.map(\.utterance)
-        let selected = selectGoals(for: utterances.map(\.text).joined(separator: " "))
-        statistics.batchCalls += 1
-        statistics.batchedUtterances += group.count
-        let reasoner = reasoner
-        let answer: BatchJudgement
-        do {
-            answer = try await model(.attention) { try await reasoner.judgeTogether(utterances, goals: selected) }
-        } catch {
-            guard generation == self.generation, !Task.isCancelled else { return }
-            // The group request failed: each sentence still gets its own.
-            requeue(group)
-            statistics.modelFailures += 1
-            return
-        }
-        guard generation == self.generation, !Task.isCancelled else { return }
-        let modelTime = answer.judgement.timing?.total ?? Date().timeIntervalSince(started)
-        statistics.totalModelTime += modelTime
-        statistics.outputTokens += answer.judgement.timing?.outputTokens ?? 0
-        let named = answer.line - 1
-        if answer.judgement.verdict == .irrelevant || answer.judgement.goalIndex == 0 {
-            // Nothing in the group matters: all settled by one request.
-            for entry in group {
-                statistics.settledByBatch += 1
-                var decision = SemanticAttentionDecision(
-                    utteranceID: entry.utterance.id, date: entry.utterance.date, verdict: .irrelevant,
-                    statementKind: answer.judgement.statementKind, stage: .batch, modelTime: modelTime / Double(group.count))
-                decision.batchSize = group.count
-                finish(&decision, entry: entry, started: started)
-            }
-        } else if group.indices.contains(named) {
-            // One sentence is named: it is decided here, the others are judged on their own.
-            let entry = group[named]
-            let checked = await confirmed(answer.judgement, utterance: entry.utterance, goals: selected,
-                                          key: cacheKey(entry.utterance), priority: .attention)
-            guard generation == self.generation, !Task.isCancelled else { return }
-            var decision = decide(checked, utterance: entry.utterance, goals: selected, stage: .batch,
-                                  modelTime: modelTime)
-            decision.batchSize = group.count
-            decision.outputTokens = answer.judgement.timing?.outputTokens ?? 0
-            finish(&decision, entry: entry, started: started)
-            requeue(group.enumerated().filter { $0.offset != named }.map(\.element))
-        } else {
-            requeue(group)
-        }
-    }
-
-    /// Back to the front of the queue, in their order, each to be judged on its own.
-    private func requeue(_ entries: [Entry]) {
-        statistics.requeuedAfterBatch += entries.count
-        let marked = entries.map { entry in
-            var entry = entry
-            entry.wasBatched = true
-            return entry
-        }
-        let index = queue.firstIndex { !$0.isUrgent } ?? queue.count
-        queue.insert(contentsOf: marked, at: index)
     }
 
     /// Evaluates a stable partial transcript and keeps the answer for the final text.
@@ -581,12 +611,6 @@ public actor SemanticAttentionEngine {
         case .failure:
             statistics.speculativeCancelled += 1
         }
-    }
-
-    private func model<Value: Sendable>(_ priority: ModelInferenceScheduler.Priority,
-                                        _ operation: @escaping @Sendable () async throws -> Value) async throws -> Value
-    {
-        try await scheduler.run(priority, timeout: configuration.timeout, operation: operation)
     }
 
     /// The words of the utterance and of its context: the same words in the same context get
@@ -625,7 +649,7 @@ public actor SemanticAttentionEngine {
         let stems = SemanticText.stems(in: statement)
         let isNegated = SemanticText.isNegated(statement)
         let quantities = SemanticText.quantities(in: statement)
-        let isRepeat = accepted.contains {
+        let isRepeat = decision.corrections.contains("said_before") || accepted.contains {
             // Whatever goal is named this time: the model may file the same announcement under
             // "grades" once and under "schedule" the next time.
             $0.isNegated == isNegated && $0.quantities == quantities
@@ -636,7 +660,7 @@ public actor SemanticAttentionEngine {
             decision.presentation = .none
             statistics.repeated += 1
         } else {
-            accepted.append(Accepted(goalID: goalID, stems: stems, isNegated: isNegated, quantities: quantities,
+            accepted.append(Accepted(goalID: goalID, text: utterance.text, stems: stems, isNegated: isNegated, quantities: quantities,
                                      date: utterance.date))
         }
     }

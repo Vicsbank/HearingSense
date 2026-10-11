@@ -28,13 +28,6 @@ import Testing
     private static let talk = ["I think I left my umbrella at the coffee shop.", "That movie was way too long.",
                                "My cat knocked a plant off the shelf.", "We should go hiking this weekend."]
 
-    /// Judging waiting sentences together is off by default; these tests turn it on.
-    private static var together: SemanticAttentionEngine.Configuration {
-        var configuration = SemanticAttentionEngine.Configuration.standard
-        configuration.batchThreshold = 2
-        return configuration
-    }
-
     // MARK: - Second look
 
     @Test func theSecondLookTakesBackAnAlertAboutSomeoneElse() async {
@@ -60,13 +53,41 @@ import Testing
         #expect(await reasoner.confirmed == [Fixture.exam])
     }
 
-    @Test func aWarningIsNotHeldUpByTheSecondLook() async {
+    @Test func aWarningIsUrgentOnlyWhenTheSecondLookAgrees() async {
+        let real = "That shelf is coming down, get back."
+        let idiom = "Get out, no way she said that."
+        let reasoner = ScriptedReasoner([real: Fixture.relevant(goal: 2, headline: "", urgency: .high),
+                                         idiom: Fixture.relevant(goal: 2, headline: "", urgency: .high)])
+        await reasoner.setConfirmations([idiom: .story])
+        let engine = await Fixture.engine(reasoner)
+        let warning = await engine.evaluate(Fixture.utterance(real))
+        #expect(warning.isAccepted)
+        #expect(warning.urgency == .high)
+        #expect(warning.presentation == .alert)
+        let saying = await engine.evaluate(Fixture.utterance(idiom, at: 30))
+        #expect(!saying.isAccepted)
+        #expect(saying.urgency == .normal)
+        #expect(await reasoner.confirmed == [real, idiom])
+    }
+
+    @Test func withoutASecondLookTheModelsWordAloneDoesNotMakeAnAlertUrgent() async {
         let text = "That shelf is coming down, get back."
         let reasoner = ScriptedReasoner([text: Fixture.relevant(goal: 2, headline: "", urgency: .high)])
-        await reasoner.setConfirmations([text: .story])
+        await reasoner.setFailsConfirmation(true)
         let engine = await Fixture.engine(reasoner)
         let decision = await engine.evaluate(Fixture.utterance(text))
         #expect(decision.isAccepted)
+        #expect(decision.urgency == .normal)
+        #expect(decision.presentation == .notify)
+        #expect(decision.corrections.contains("urgency_unconfirmed"))
+    }
+
+    @Test func theWindow6_1ConfigurationStillLetsAWarningThroughUnchecked() async {
+        let text = "That shelf is coming down, get back."
+        let reasoner = ScriptedReasoner([text: Fixture.relevant(goal: 2, headline: "", urgency: .high)])
+        await reasoner.setConfirmations([text: .story])
+        let engine = await Fixture.engine(reasoner, configuration: .window6_1)
+        let decision = await engine.evaluate(Fixture.utterance(text))
         #expect(decision.presentation == .alert)
         #expect(await reasoner.confirmed.isEmpty)
     }
@@ -132,79 +153,64 @@ import Testing
         #expect(SemanticText.withoutRepetitionMarker("Again.") == "Again.")
     }
 
-    // MARK: - Sentences judged together
+    // MARK: - Repetition in other words (Window 6.2)
 
-    @Test func waitingSentencesThatDoNotMatterAreSettledByOneRequest() async {
-        let reasoner = ScriptedReasoner(delay: .milliseconds(80), judgesTogether: true)
-        let engine = await Fixture.engine(reasoner, configuration: Self.together)
-        for (index, text) in Self.talk.enumerated() {
-            await engine.submit(Fixture.utterance(text, at: Double(index)))
-            if index == 0 { try? await Task.sleep(for: .milliseconds(20)) }
-        }
-        let decisions = await decisions(of: engine, count: 4)
-        #expect(decisions.count == 4)
-        #expect(decisions.allSatisfy { $0.verdict == .irrelevant })
-        // The first was under way alone; the three that waited went in one request.
-        #expect(await reasoner.judged == [Self.talk[0]])
-        #expect(await reasoner.groups == [Array(Self.talk[1...])])
-        #expect(decisions.count { $0.stage == .batch && $0.batchSize == 3 } == 3)
-        let statistics = await engine.statistics
-        #expect(statistics.batchCalls == 1)
-        #expect(statistics.settledByBatch == 3)
-        #expect(statistics.dropped == 0)
+    @Test func aRepetitionInOtherWordsNeedsSharedWordsAndTheSecondLook() async {
+        let first = "The elevator will be out of service all day Wednesday for inspection."
+        let again = "Again, no elevator on Wednesday, it's being inspected all day."
+        let reasoner = ScriptedReasoner([first: Fixture.relevant(headline: ""), again: Fixture.relevant(headline: "")])
+        await reasoner.setConfirmations([again: .saidBefore])
+        let engine = await Fixture.engine(reasoner)
+        #expect(await engine.evaluate(Fixture.utterance(first)).isAccepted)
+        let repeated = await engine.evaluate(Fixture.utterance(again, at: 60))
+        #expect(!repeated.isNovel)
+        #expect(!repeated.isAccepted)
+        #expect(repeated.verdict == .relevant)
+        #expect(await reasoner.earlier[again] == [first])
+        #expect(await engine.statistics.repeated == 1)
     }
 
-    @Test func aMatchInAGroupIsDecidedAndTheOthersAreJudgedOnTheirOwn() async {
-        let texts = [Self.talk[0], Self.talk[1], Fixture.exam, Self.talk[2]]
-        let reasoner = ScriptedReasoner([Self.talk[2]: Fixture.relevant(headline: "")], delay: .milliseconds(80),
-                                        judgesTogether: true)
-        await reasoner.setGroupAnswer { texts in
-            BatchJudgement(line: (texts.firstIndex(of: Fixture.exam) ?? -1) + 1, judgement: Fixture.relevant(headline: ""))
-        }
-        let engine = await Fixture.engine(reasoner, configuration: Self.together)
-        for (index, text) in texts.enumerated() {
-            await engine.submit(Fixture.utterance(text, at: Double(index)))
-            if index == 0 { try? await Task.sleep(for: .milliseconds(20)) }
-        }
-        let decisions = await decisions(of: engine, count: 4)
-        let exam = decisions.first { $0.evidence == Fixture.exam }
-        #expect(exam?.isAccepted == true)
-        #expect(exam?.stage == .batch)
-        // The group contained a match, so the sentences beside it are not waved through: each
-        // is judged alone, and a second match among them is found.
-        #expect(await reasoner.judged == [Self.talk[0], Self.talk[1], Self.talk[2]])
-        #expect(decisions.count { $0.isAccepted } == 2)
-        #expect(await engine.statistics.requeuedAfterBatch == 2)
+    @Test func theSecondLookIsNotAskedAboutStatementsWithOtherNumbersOrOtherWords() async {
+        let first = "The elevator will be out of service all day Wednesday for inspection."
+        let otherDay = "The elevator will also be out on Thursday, they found another fault."
+        let otherTopic = "Your rent goes up by sixty dollars a month."
+        let reasoner = ScriptedReasoner([first: Fixture.relevant(headline: ""), otherDay: Fixture.relevant(headline: ""),
+                                         otherTopic: Fixture.relevant(headline: "")])
+        // Even if the model said so: with nothing listed, nothing can have been said before.
+        await reasoner.setConfirmations([otherDay: .saidBefore, otherTopic: .saidBefore])
+        let engine = await Fixture.engine(reasoner)
+        #expect(await engine.evaluate(Fixture.utterance(first)).isAccepted)
+        #expect(await engine.evaluate(Fixture.utterance(otherDay, at: 30)).isAccepted)
+        #expect(await engine.evaluate(Fixture.utterance(otherTopic, at: 60)).isAccepted)
+        #expect(await reasoner.earlier[otherDay] == [])
+        #expect(await reasoner.earlier[otherTopic] == [])
     }
 
-    @Test func aSentenceThatLooksLikeAWarningGoesFirstAndIsJudgedAlone() async {
+    @Test func repetitionCandidatesShareWordsAndNameNoOtherQuantity() {
+        let earlier = ["Practice is moved to six thirty tomorrow morning.", "The keynote has moved from the main hall to ballroom B."]
+        #expect(SemanticRepetition.candidates(for: "Reminder, tomorrow's practice is at six thirty in the morning.", among: earlier)
+            == [earlier[0]])
+        #expect(SemanticRepetition.candidates(for: "Practice tomorrow morning is at seven.", among: earlier).isEmpty)
+        #expect(SemanticRepetition.candidates(for: "Once more, the keynote is in ballroom B, not the main hall.", among: earlier)
+            == [earlier[1]])
+        #expect(SemanticRepetition.candidates(for: "My cat knocked a plant off the shelf.", among: earlier).isEmpty)
+    }
+
+    // MARK: - Order
+
+    @Test func aSentenceThatLooksLikeAWarningGoesFirst() async {
         let warning = "Everyone get out, fire in the kitchen!"
         let reasoner = ScriptedReasoner([warning: Fixture.relevant(goal: 2, headline: "", urgency: .high)],
-                                        delay: .milliseconds(80), judgesTogether: true)
-        let engine = await Fixture.engine(reasoner, configuration: Self.together)
+                                        delay: .milliseconds(80))
+        let engine = await Fixture.engine(reasoner)
         for (index, text) in (Array(Self.talk.prefix(3)) + [warning]).enumerated() {
             await engine.submit(Fixture.utterance(text, at: Double(index)))
             if index == 0 { try? await Task.sleep(for: .milliseconds(20)) }
         }
         let decisions = await decisions(of: engine, count: 4)
-        #expect(await reasoner.judged == [Self.talk[0], warning])
-        #expect(await reasoner.groups == [[Self.talk[1], Self.talk[2]]])
+        #expect(await reasoner.judged.prefix(2) == [Self.talk[0], warning])
         #expect(decisions.firstIndex { $0.evidence == warning } == 1)
         #expect(decisions[1].presentation == .alert)
-    }
-
-    @Test func aFailedGroupRequestLosesNothing() async {
-        let reasoner = ScriptedReasoner(delay: .milliseconds(60), judgesTogether: true)
-        let engine = await Fixture.engine(reasoner, configuration: Self.together)
-        await engine.submit(Fixture.utterance(Self.talk[0]))
-        try? await Task.sleep(for: .milliseconds(20))
-        await engine.submit(Fixture.utterance(Self.talk[1], at: 1))
-        await engine.submit(Fixture.utterance(Self.talk[2], at: 2))
-        await reasoner.setFails(true)
-        let decisions = await decisions(of: engine, count: 3)
-        // Each sentence still has a decision that says what happened to it.
-        #expect(decisions.count == 3)
-        #expect(decisions.allSatisfy { !$0.isAccepted })
     }
 
     @Test func aDecisionLaterThanTheDeadlineIsMadeAndCounted() async {
@@ -320,8 +326,11 @@ import Testing
         _ = await engine.evaluate(Fixture.utterance(Fixture.exam))
         _ = await engine.evaluate(Fixture.utterance("Fire, everyone out now!"), priority: .urgentCandidate)
         let statistics = await scheduler.statistics
-        // The judgement and its second look; then the warning-like sentence in its own class.
-        #expect(statistics[.attention].completed == 2)
+        // One turn for the judgement and its second look together (Window 6.2: given back in
+        // between, another sentence could get in before the second look of a warning); then the
+        // warning-like sentence in its own class.
+        #expect(statistics[.attention].completed == 1)
+        #expect(await reasoner.confirmed == [Fixture.exam])
         #expect(statistics[.urgentCandidate].completed == 1)
         #expect(statistics.maximumRunning == 1)
     }

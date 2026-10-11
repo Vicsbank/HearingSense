@@ -59,6 +59,10 @@ final class ConversationIntelligenceController {
     // Semantic attention
     private(set) var matches: [GoalMatch] = []
     private(set) var semanticStatistics = SemanticAttentionEngine.Statistics()
+
+    /// Sentences that goal matching gave up on because they waited too long for the language
+    /// model (Window 6.2). A count, shown so that an overload is never silent.
+    var uncheckedSentences: Int { semanticStatistics.dropped }
     private(set) var isLanguageModelAvailable = false
 
     // Recap and continued understanding
@@ -116,7 +120,7 @@ final class ConversationIntelligenceController {
     /// - Parameter inMemory: no files are read or written (UI checks, previews).
     init(defaults: UserDefaults = .standard, inMemory: Bool = ConversationIntelligenceController.isDemoRequested,
          summarizer: any ConversationSummarizing = FoundationModelRecapSummarizer(),
-         reasoner: any SemanticRelevanceReasoning = FoundationModelRelevanceReasoner.optimized)
+         reasoner: any SemanticRelevanceReasoning = FoundationModelRelevanceReasoner.current)
     {
         self.defaults = defaults
         goalStore = AttentionGoalStore(inMemory: inMemory)
@@ -617,18 +621,21 @@ final class ConversationIntelligenceController {
         let statistics = semanticStatistics
         let calls = statistics.modelCalls + statistics.triageCalls
         return [
-            "Conversation intelligence (Window 6, semantic engine of Window 6.1)",
+            "Conversation intelligence (Window 6, semantic engine of Window 6.2)",
             "Semantic attention: \(isSemanticAttentionEnabled ? "on" : "off") · goals \(goals.count(where: \.isEnabled)) of \(goals.count) enabled"
                 + " · language model \(isLanguageModelAvailable ? "available" : "not available")",
             "Utterances submitted \(statistics.submitted), gated \(statistics.gated), stopped by the first pass \(statistics.triaged), "
                 + "full judgements \(statistics.modelCalls), cache hits \(statistics.cacheHits)",
             "Accepted \(statistics.accepted), uncertain \(statistics.uncertain), repeated \(statistics.repeated), "
-                + "corrected by the verifier \(statistics.corrected), dropped \(statistics.dropped), "
+                + "corrected by the verifier \(statistics.corrected), not checked \(statistics.dropped) "
+                + "(of these given up after waiting \(statistics.expired)), "
                 + "model failures \(statistics.modelFailures) (timeouts \(statistics.timeouts)), longest queue \(statistics.maximumQueueLength)",
             "Model time per call: \(calls > 0 ? Self.seconds(statistics.totalModelTime / Double(calls)) : "–") over \(calls) call(s)",
             "Second looks \(statistics.confirmCalls) (alerts taken back \(statistics.confirmDemoted)) · early evaluations of partial "
                 + "transcripts \(statistics.speculativeCalls) (used \(statistics.speculativeHits), abandoned \(statistics.speculativeCancelled))"
                 + " · decisions later than the deadline \(statistics.deadlineMisses)",
+            "While behind: newest sentence served first \(statistics.servedNewestFirst) time(s) · answers from a session that "
+                + "continued \(statistics.continuedSessions) · requests asked again after a failure \(statistics.retries)",
             "Waiting for a turn, median: \(Self.median(statistics.queueWaits).map(Self.seconds) ?? "–") · utterance to decision, "
                 + "median: \(Self.median(statistics.latencies).map(Self.seconds) ?? "–")",
             "Recent speech for recaps: \(keepsRecentSpeech ? "on" : "off") · look-back \(Int(lookBack)) s · "

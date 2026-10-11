@@ -146,16 +146,23 @@ public enum SemanticEvaluator {
     /// items are evaluated in file order, 20 seconds apart, as a conversation would arrive.
     public static func runEngine(_ dataset: SemanticDataset, reasoner: any SemanticRelevanceReasoning,
                                  usesTriage: Bool = true, verifier: EvidenceVerifier = .standard,
-                                 configuration base: SemanticAttentionEngine.Configuration? = nil,
+                                 configuration base: SemanticAttentionEngine.Configuration? = nil, seed: UInt64? = nil,
                                  progress: (@Sendable (Int, Int) -> Void)? = nil) async -> [SemanticItemOutcome]
     {
+        // With a seed the items of each profile are shuffled first (Window 6.2: a decision must
+        // not depend on what happened to be said before).
+        var dataset = dataset
+        dataset.items = SemanticProbe.ordered(dataset, seed: seed)
         var outcomes: [SemanticItemOutcome] = []
         var engines: [String: SemanticAttentionEngine] = [:]
         let origin = Date(timeIntervalSince1970: 1_780_000_000)
         // A repetition is said one minute after the statement it repeats (the file lists the
         // repetitions at the end); the items are then evaluated in the order of their times.
         var dates: [String: Date] = [:]
-        for (index, item) in dataset.items.enumerated() {
+        for (index, item) in dataset.items.enumerated() where item.repeatOf == nil {
+            dates[item.id] = origin.addingTimeInterval(Double(index) * 20)
+        }
+        for (index, item) in dataset.items.enumerated() where item.repeatOf != nil {
             dates[item.id] = item.repeatOf.flatMap { dates[$0] }?.addingTimeInterval(60)
                 ?? origin.addingTimeInterval(Double(index) * 20)
         }

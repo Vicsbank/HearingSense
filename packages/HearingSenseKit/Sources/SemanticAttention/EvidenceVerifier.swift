@@ -10,6 +10,10 @@ public struct EvidenceVerifier: Hashable, Sendable {
     public var maximumHeadlineWords: Int
     /// The longest headline made of the utterance's own words (Window 6.1).
     public var maximumExtractiveWords: Int
+    /// Window 6.2: the model calling a sentence urgent is not enough. It is presented as urgent
+    /// only if the second look, which does not know the first answer, calls it a real statement
+    /// about here and now. Set by the engine from its configuration.
+    public var requiresSecondLookForUrgency = false
 
     public init(minimumEvidenceCoverage: Double = 0.6, minimumHeadlineCoverage: Double = 0.6, maximumHeadlineWords: Int = 8,
                 maximumExtractiveWords: Int = 12)
@@ -118,10 +122,17 @@ public struct EvidenceVerifier: Hashable, Sendable {
             case .wish:
                 decision.verdict = .uncertain
                 decision.statementKind = .hypothetical
+            case .saidBefore:
+                // Still a relevant statement; the engine does not present it a second time.
+                corrections.append("said_before")
             case .hereAndNow:
                 break
             }
-            corrections.append("second_look")
+            if confirmation != .saidBefore { corrections.append("second_look") }
+        }
+        if requiresSecondLookForUrgency, decision.urgency == .high, judgement.confirmation != .hereAndNow {
+            decision.urgency = .normal
+            if decision.verdict == .relevant { corrections.append("urgency_unconfirmed") }
         }
 
         // About someone else: worth keeping in the list at most.

@@ -1,6 +1,34 @@
 import Foundation
 import NaturalLanguage
 
+/// Which earlier statements a new one could be a repetition of (Window 6.2).
+///
+/// A repetition in other words ("Again, no elevator on Wednesday" after "The elevator will be
+/// out of service all day Wednesday") is beyond a word count, and asking the model about every
+/// pair would be slow and would let it call new information old. So two keys are needed: the
+/// statements must share words and name no other number, day or time (decided here), and the
+/// second look must say that it is the same news (decided by the model).
+public enum SemanticRepetition {
+    /// Share of the shorter statement's content words that the other one has too (by stem).
+    public static func overlap(_ first: String, _ second: String) -> Double {
+        let one = SemanticText.stems(in: SemanticText.withoutRepetitionMarker(first))
+        let other = SemanticText.stems(in: SemanticText.withoutRepetitionMarker(second))
+        let smaller = min(one.count, other.count)
+        return smaller == 0 ? 0 : Double(one.intersection(other).count) / Double(smaller)
+    }
+
+    /// The earlier statements, newest first, that `text` may repeat: enough shared words, and
+    /// every number, day and time of `text` was in the earlier one.
+    public static func candidates(for text: String, among earlier: [String], minimumOverlap: Double = 0.4,
+                                  limit: Int = 3) -> [String]
+    {
+        let quantities = SemanticText.quantities(in: text)
+        return Array(earlier.reversed().filter {
+            overlap(text, $0) >= minimumOverlap && quantities.isSubset(of: SemanticText.quantities(in: $0))
+        }.prefix(limit))
+    }
+}
+
 /// Small deterministic text helpers shared by the gate, the baselines and the verifier.
 enum SemanticText {
     /// Lower-cased words; apostrophes inside a word are kept ("don't").

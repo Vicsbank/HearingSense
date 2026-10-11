@@ -42,9 +42,6 @@ public enum SemanticStreamBenchmark {
         public var model: Quantiles
         public var maximumQueueLength: Int
         public var modelCalls: Int
-        public var batchCalls: Int
-        public var settledByBatch: Int
-        public var requeuedAfterBatch: Int
         public var deadlineMisses: Int
         public var modelCallsPerMinute: Double
         public var sentencesPerMinute: Double
@@ -55,18 +52,39 @@ public enum SemanticStreamBenchmark {
         public var secondLooks: Int
         public var confusion: SemanticConfusion
         public var outcomes: [SemanticItemOutcome]
+        /// Window 6.2. How the sentences arrived ("every 1.5 s", "bursty", …).
+        public var pattern = ""
+        /// Sentences given up after waiting too long, and those pushed out of a full line.
+        public var expired = 0
+        public var notEvaluated: [String] = []
+        public var notEvaluatedRelevant: [String] = []
+        /// The waiting line, sampled every 50 ms: its mean length, and how long after the last
+        /// sentence arrived the last decision was made.
+        public var meanQueueLength = 0.0
+        public var recoverySeconds = 0.0
+        /// End to end for the sentences that should have alerted.
+        public var endToEndRelevant = Quantiles([])
+        public var servedNewestFirst = 0
+        /// Requests to the model beyond one per evaluated sentence that were not second looks
+        /// (a request repeated after a failure, an early evaluation that was not used).
+        public var extraModelCalls = 0
+        public var modelFailures = 0
 
         public var report: String {
             """
-            \(name) — one sentence every \(interval) s, \(sentences) sentences in \(seconds.formatted(.number.precision(.fractionLength(1)))) s
+            \(name) — \(pattern.isEmpty ? "one sentence every \(interval) s" : pattern), \(sentences) sentences in \(seconds.formatted(.number.precision(.fractionLength(1)))) s
               decided \(decided), dropped \(dropped) (relevant among them: \(droppedRelevant.isEmpty ? "none" : droppedRelevant.joined(separator: " "))), without any decision \(unaccounted)
               end to end           \(endToEnd.text)
               waiting for a turn   \(queueWait.text)
               model                \(model.text)
                 one request        \(modelOneRequest.text)
                 with a second look \(modelWithSecondLook.text)
-              longest queue \(maximumQueueLength); model requests \(modelCalls) single + \(batchCalls) group (\(modelCallsPerMinute.formatted(.number.precision(.fractionLength(1)))) per minute); settled by a group request \(settledByBatch), judged again after one \(requeuedAfterBatch); later than the deadline \(deadlineMisses)
+              longest queue \(maximumQueueLength); first judgements \(modelCalls) (\(modelCallsPerMinute.formatted(.number.precision(.fractionLength(1)))) per minute); later than the deadline \(deadlineMisses)
               throughput \(sentencesPerMinute.formatted(.number.precision(.fractionLength(1)))) sentences per minute; output tokens \(outputTokens)
+              not evaluated: \(notEvaluated.count) (expired \(expired), pushed out \(dropped - expired)); relevant among them: \(notEvaluatedRelevant.isEmpty ? "none" : notEvaluatedRelevant.joined(separator: " "))
+              relevant sentences   \(endToEndRelevant.text)
+              waiting line: mean \(meanQueueLength.formatted(.number.precision(.fractionLength(2)))), longest \(maximumQueueLength); empty \(recoverySeconds.formatted(.number.precision(.fractionLength(2)))) s after the last sentence arrived; served newest first \(servedNewestFirst)
+              second looks \(secondLooks); extra model requests \(extraModelCalls); model failures \(modelFailures)
               under load: TP \(confusion.truePositives) FP \(confusion.falsePositives) FN \(confusion.falseNegatives) TN \(confusion.trueNegatives); missed \(confusion.falseNegativeIDs.joined(separator: " ")); false alerts \(confusion.falsePositiveIDs.joined(separator: " "))
             """
         }
@@ -85,7 +103,33 @@ public enum SemanticStreamBenchmark {
     }
 
     /// Submits the items at a fixed interval and waits for their decisions.
+    /// Arrival times, in seconds from the start, for `count` sentences (Window 6.2).
+    /// - "bursty": runs of 3–7 sentences 0.5–1.3 s apart with pauses of 2.5–8 s between them.
+    /// - "dense": 20 s of silence, 25 sentences 0.8 s apart, 15 s of silence, then the rest 0.8 s apart.
+    /// - a number: one sentence every that many seconds.
+    public static func offsets(pattern: String, count: Int, seed: UInt64 = 7) -> [Double] {
+        var generator = SplitMix(state: seed)
+        switch pattern {
+        case "bursty":
+            var offsets: [Double] = [], time = 0.0
+            while offsets.count < count {
+                for _ in 0 ..< Int.random(in: 3 ... 7, using: &generator) where offsets.count < count {
+                    offsets.append(time)
+                    time += Double.random(in: 0.5 ... 1.3, using: &generator)
+                }
+                time += Double.random(in: 2.5 ... 8, using: &generator)
+            }
+            return offsets
+        case "dense":
+            return (0 ..< count).map { $0 < 25 ? 20 + Double($0) * 0.8 : 20 + 25 * 0.8 + 15 + Double($0 - 25) * 0.8 }
+        default:
+            let interval = Double(pattern) ?? 1.5
+            return (0 ..< count).map { Double($0) * interval }
+        }
+    }
+
     public static func throughput(name: String, items: [SemanticDataset.Item], interval: Double,
+                                  pattern: String = "", offsets: [Double]? = nil,
                                   reasoner: any SemanticRelevanceReasoning,
                                   configuration: SemanticAttentionEngine.Configuration,
                                   scheduler: ModelInferenceScheduler = ModelInferenceScheduler()) async -> ThroughputResult
@@ -103,26 +147,50 @@ public enum SemanticStreamBenchmark {
         }
         var ids: [String: UUID] = [:]
         let started = Date()
+        let sampler = Task {
+            var samples: [Int] = []
+            while !Task.isCancelled {
+                samples.append(await engine.waitingCount)
+                try? await Task.sleep(for: .milliseconds(50))
+            }
+            return samples
+        }
+        var lastArrival = started
         for (index, item) in items.enumerated() {
-            let due = started.addingTimeInterval(Double(index) * interval)
+            let due = started.addingTimeInterval(offsets.map { $0[index] } ?? Double(index) * interval)
             let wait = due.timeIntervalSinceNow
             if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
             let utterance = SemanticUtterance(text: item.text, context: item.context, date: Date())
             ids[item.id] = utterance.id
+            lastArrival = Date()
             await engine.submit(utterance)
         }
         // Everything submitted gets a decision (accepted, rejected or dropped); wait for them.
         let giveUp = Date().addingTimeInterval(90)
         while await collector.count < items.count, Date() < giveUp { try? await Task.sleep(for: .milliseconds(50)) }
         let seconds = Date().timeIntervalSince(started)
+        let recovery = Date().timeIntervalSince(lastArrival)
+        sampler.cancel()
+        let samples = await sampler.value
         consumer.cancel()
         let decisions = await collector.decisions
         let statistics = await engine.statistics
         var outcomes: [SemanticItemOutcome] = []
         var droppedRelevant: [String] = []
+        var notEvaluated: [String] = [], notEvaluatedRelevant: [String] = [], relevantLatencies: [Double] = []
         for item in items {
-            guard let id = ids[item.id], let decision = decisions[id] else { continue }
-            if decision.stage == .dropped, item.expected == .relevant { droppedRelevant.append(item.id) }
+            guard let id = ids[item.id], let decision = decisions[id] else {
+                notEvaluated.append(item.id)
+                if item.expected == .relevant { notEvaluatedRelevant.append(item.id) }
+                continue
+            }
+            if decision.stage == .dropped || decision.stage == .expired {
+                notEvaluated.append(item.id)
+                if item.expected == .relevant { notEvaluatedRelevant.append(item.id) }
+            } else if item.expected == .relevant {
+                relevantLatencies.append(decision.latency)
+            }
+            if decision.stage == .dropped || decision.stage == .expired, item.expected == .relevant { droppedRelevant.append(item.id) }
             let key = decision.matchedGoalID.flatMap { goalID in goals.first { $0.goal.id == goalID }?.key }
             outcomes.append(SemanticItemOutcome(
                 id: item.id, alerted: decision.isAccepted, verdict: decision.verdict.rawValue, matchedGoal: key,
@@ -130,22 +198,33 @@ public enum SemanticStreamBenchmark {
                 seconds: decision.latency, modelSeconds: decision.modelTime, outputTokens: decision.outputTokens,
                 queueSeconds: decision.queueWait))
         }
-        let evaluated = decisions.values.filter { $0.stage != .dropped && $0.stage != .gate }
-        return ThroughputResult(
+        let evaluated = decisions.values.filter { $0.stage != .dropped && $0.stage != .expired && $0.stage != .gate }
+        var result = ThroughputResult(
             name: name, interval: interval, sentences: items.count, seconds: seconds, decided: decisions.count,
             unaccounted: items.count - decisions.count, dropped: statistics.dropped, droppedRelevant: droppedRelevant,
             endToEnd: Quantiles(evaluated.map(\.latency)), queueWait: Quantiles(evaluated.map(\.queueWait)),
             model: Quantiles(evaluated.map(\.modelTime).filter { $0 > 0 }),
             maximumQueueLength: statistics.maximumQueueLength, modelCalls: statistics.modelCalls + statistics.triageCalls,
-            batchCalls: statistics.batchCalls, settledByBatch: statistics.settledByBatch,
-            requeuedAfterBatch: statistics.requeuedAfterBatch, deadlineMisses: statistics.deadlineMisses,
-            modelCallsPerMinute: Double(statistics.modelCalls + statistics.triageCalls + statistics.batchCalls) / seconds * 60,
-            sentencesPerMinute: Double(decisions.values.count { $0.stage != .dropped }) / seconds * 60,
+            deadlineMisses: statistics.deadlineMisses,
+            modelCallsPerMinute: Double(statistics.modelCalls + statistics.triageCalls) / seconds * 60,
+            sentencesPerMinute: Double(decisions.values.count { $0.stage != .dropped && $0.stage != .expired }) / seconds * 60,
             outputTokens: statistics.outputTokens,
             modelOneRequest: Quantiles(evaluated.filter { !$0.hadSecondLook }.map(\.modelTime).filter { $0 > 0 }),
             modelWithSecondLook: Quantiles(evaluated.filter(\.hadSecondLook).map(\.modelTime)),
             secondLooks: statistics.confirmCalls,
             confusion: SemanticConfusion(outcomes, dataset: SemanticDataset(split: .dev2, items: items)), outcomes: outcomes)
+        result.pattern = pattern
+        result.expired = statistics.expired
+        result.notEvaluated = notEvaluated
+        result.notEvaluatedRelevant = notEvaluatedRelevant
+        result.meanQueueLength = samples.isEmpty ? 0 : Double(samples.reduce(0, +)) / Double(samples.count)
+        result.recoverySeconds = recovery
+        result.endToEndRelevant = Quantiles(relevantLatencies)
+        result.servedNewestFirst = statistics.servedNewestFirst
+        result.modelFailures = statistics.modelFailures
+        result.extraModelCalls = max(0, statistics.modelCalls + statistics.triageCalls + statistics.speculativeCalls
+            + statistics.retries - evaluated.count { $0.stage == .model })
+        return result
     }
 
     // MARK: - Early evaluation of partial transcripts

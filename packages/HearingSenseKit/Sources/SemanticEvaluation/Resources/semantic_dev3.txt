@@ -1,7 +1,9 @@
 # Hearing Sense — semantic attention, DEVELOPMENT set 3 (Window 6.2).
 # Synthetic, written for this project; no real conversation. Prompts, rules and thresholds may be tuned on this
 # file. Its profiles, goals and sentences do not occur in semantic_sealed2.txt (which has another author).
-# Categories are interleaved within a profile, as in a real stretch of conversation.
+# Categories are interleaved within a profile, as in a real stretch of conversation. The last two or three items of
+# each profile (ids 053 and up) were added later: repetitions in other words, and new statements that share words
+# with an earlier one.
 # Profile lines: @profile | <profile> | <goal key> | <goal text>
 # Item lines: id | profile | category | expected | acceptable goals | flags | utterance | why
 @profile | tenant | rent | Tell me about anything that changes my rent or my lease.
@@ -62,6 +64,8 @@ te051|tenant|ambiguous|ambiguous|door||Is anybody home in there?|unclear who is 
 te052|tenant|idiom|irrelevant|||Get out, no way she said that.|figure of speech with an alarm word
 te053|tenant|obvious|relevant|danger|important|The alarm panel says fire on level two, please use the stairs and leave now.|danger, names it
 te054|tenant|ambiguous|ambiguous|building||They may or may not shut the water off Monday, nobody knows.|unsettled
+te055|tenant|implicit|relevant|building||The elevator will also be out on Thursday, they found another fault.|new day, not a repetition
+te056|tenant|repeated|repeat|rent|repeat_of=te001|As I mentioned, the rent increase of sixty dollars begins in March.|said before, in other words
 @profile | athlete | practice | Tell me if the time or place of practice or a game changes.
 @profile | athlete | lineup | Let me know about anything that decides whether I play or what position I play.
 @profile | athlete | coach | Tell me when the coach or a teammate is talking to me.
@@ -120,6 +124,8 @@ at051|athlete|ambiguous|ambiguous|coach||Somebody needs to move those cones.|unc
 at052|athlete|idiom|irrelevant|||I told my sister to break a leg at her recital.|figure of speech
 at053|athlete|attention|relevant|coach||Coach is calling you, he wants you at the bench.|the coach wants the listener
 at054|athlete|hypothetical|ambiguous|practice||If it keeps raining they could call off the match.|a possibility
+at055|athlete|negation|relevant|practice||Practice tomorrow morning is cancelled after all.|new: cancelled, not moved
+at056|athlete|repeated|repeat|practice|repeat_of=at020|Like I said, Thursday's practice is off because the field is closed.|said before, in other words
 @profile | attendee | sessions | Tell me if a talk I might go to moves to another room or time.
 @profile | attendee | mytalk | Let me know about anything that affects my own presentation.
 @profile | attendee | attention | Notify me when somebody is speaking to me.
@@ -175,6 +181,9 @@ co049|attendee|third_person|irrelevant|||My boss is presenting at a different co
 co050|attendee|ambiguous|ambiguous|mytalk||Somebody said the speakers' dinner could be moved.|a rumour, loosely related
 co051|attendee|implicit|relevant|mytalk||We're recording every talk in this track, so sign the release form before you go up.|a requirement for presenters
 co052|attendee|idiom|irrelevant|||I'm drowning in emails right now.|figure of speech
+co053|attendee|implicit|relevant|sessions||The keynote in ballroom B will start twenty minutes late.|new: a delay
+co054|attendee|causal|relevant|sessions||The keynote is back in the main hall, ballroom B flooded.|new: moved back
+co055|attendee|repeated|repeat|sessions|repeat_of=co042|Just so everyone knows, that design workshop this afternoon is not happening.|said before, in other words
 @profile | cook | orders | Tell me about orders or changes to orders for my station, the grill.
 @profile | cook | hazard | Warn me about anything hot, sharp or dangerous near me.
 @profile | cook | shift | Tell me about anything that changes when I work or when my break is.
@@ -233,3 +242,5 @@ ck051|cook|implicit|relevant|hazard|important|That handle's been in the oven, do
 ck052|cook|past|irrelevant|||Last night the grill orders didn't stop until eleven.|the past
 ck053|cook|idiom|irrelevant|||He's skating on thin ice with the manager.|figure of speech
 ck054|cook|hypothetical|ambiguous|shift||If it's slow tonight they could send a few of us home early.|a possibility
+ck055|cook|negation|relevant|orders||Grill, the ribeyes for table two are cancelled.|new: an order is cancelled
+ck056|cook|repeated|repeat|shift|repeat_of=ck016|Don't forget, your break is at three thirty now, not before.|said before, in other words

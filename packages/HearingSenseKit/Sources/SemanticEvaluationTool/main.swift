@@ -108,32 +108,24 @@ case "run":
             name = "Sentence-embedding retrieval (threshold \(threshold), chosen on dev)"
             outcomes = SemanticEvaluator.runSimilarity(dataset, scorer: scorer, threshold: threshold)
         case "model":
-            // --config optimized alone selects the whole Window 6.1 configuration.
-            let isOptimized = option("--config") == "optimized"
-            let style = FoundationModelRelevanceReasoner.Style(rawValue: option("--style") ?? (isOptimized ? "lean" : "window6"))
-                ?? .window6
-            let turns = Int(option("--turns") ?? "") ?? (isOptimized ? FoundationModelRelevanceReasoner.optimizedSessionTurns : 1)
-            let reasoner = FoundationModelRelevanceReasoner(style: style, sessionTurns: turns)
+            // --config window6 | window6_1 | window6_2 (default): reasoner and engine together.
+            guard let setup = EngineSetup.named(option("--config"), arguments: arguments, option: option) else {
+                print("--config window6|window6_1|window6_2")
+                exit(2)
+            }
+            let reasoner = setup.reasoner
             guard await reasoner.availability().isUsable else {
                 print("Language model not available on this system; skipped.\n")
                 continue
             }
-            // --config window6 | optimized: the whole engine configuration at once. Without it,
-            // the standard configuration with the first pass on unless --no-triage is given.
-            var configuration: SemanticAttentionEngine.Configuration?
-            switch option("--config") {
-            case "window6": configuration = .window6
-            case "optimized": configuration = .standard
-            default: break
-            }
-            if arguments.contains("--no-confirm") { configuration = configuration ?? .standard; configuration?.confirmsRelevant = false }
-            let usesTriage = configuration?.usesTriage ?? !arguments.contains("--no-triage")
-            name = "Foundation Models, style \(style.rawValue), first pass \(usesTriage ? "on" : "off"), second look "
-                + ((configuration ?? .standard).confirmsRelevant && style != .window6 ? "on" : "off")
+            let configuration: SemanticAttentionEngine.Configuration? = setup.configuration
+            let usesTriage = setup.configuration.usesTriage
+            name = "Foundation Models, \(setup.name)" + (option("--seed").map { ", order shuffled with seed \($0)" } ?? "")
             let before = residentMegabytes()
             let started = Date()
             outcomes = await SemanticEvaluator.runEngine(dataset, reasoner: reasoner, usesTriage: usesTriage,
-                                                         configuration: configuration) { done, total in
+                                                         configuration: configuration,
+                                                         seed: option("--seed").flatMap { UInt64($0) }) { done, total in
                 if done % 10 == 0 || done == total { FileHandle.standardError.write(Data("  \(done)/\(total)\n".utf8)) }
             }
             print("  wall time \(Date().timeIntervalSince(started).formatted(.number.precision(.fractionLength(1)))) s; "
@@ -276,20 +268,25 @@ case "triage":
     }
     print("median \(times[times.count / 2]) s, p95 \(times[Int(Double(times.count) * 0.95)]) s; relevant items stopped: \(missed)")
 
-case "throughput", "speculation", "contention", "together":
-    // Stream benchmarks (Window 6.1): synthetic, timestamped sentences through the engine's
-    // queue, as in the app. Development data only.
-    //   hs-semantic-eval throughput --config window6|optimized [--interval 1.5] [--count 40] [--profile student2]
+case "throughput", "speculation", "contention":
+    // Stream benchmarks: synthetic, timestamped sentences through the engine's queue, as in
+    // the app. Development data only.
+    //   hs-semantic-eval throughput [--config window6|window6_1|window6_2] [--pattern 3.0|1.5|1.0|bursty|dense]
+    //                               [--count 40] [--set dev3] [--profile tenant] [--mix dense]
     //   hs-semantic-eval speculation [--final-delay 0.8] [--count 24] [--revise-every 6]
     //   hs-semantic-eval contention [--interval 1.5] [--count 16]
-    //   hs-semantic-eval together [--size 3]     accuracy of judging waiting sentences together
-    let isWindow6 = option("--config") == "window6"
-    let style: FoundationModelRelevanceReasoner.Style = isWindow6 ? .window6 : .lean
-    let configuration: SemanticAttentionEngine.Configuration = isWindow6 ? .window6 : .standard
-    let profile = option("--profile") ?? "student2"
+    guard let setup = EngineSetup.named(option("--config"), arguments: arguments, option: option),
+          let split = SemanticDataset.Split(rawValue: option("--set") ?? "dev3"), !split.isSealed
+    else {
+        print("--config window6|window6_1|window6_2  --set dev|dev2|dev3")
+        exit(2)
+    }
+    let configuration = setup.configuration
+    let reasoner = setup.reasoner
+    let profile = option("--profile") ?? "tenant"
     let count = Int(option("--count") ?? "") ?? 40
-    let all = try SemanticDataset.load(.dev2).items.filter { $0.profile == profile && $0.expected != .repeat }
-    // --mix dense: the file order, in which more than half of the sentences are relevant.
+    let all = try SemanticDataset.load(split).items.filter { $0.profile == profile && $0.expected != .repeat }
+    // --mix dense: the file order, in which about half of the sentences are relevant.
     // Default: one relevant sentence in about six, spread among the others, which is still
     // far more than in ordinary conversation.
     var items = Array(all.prefix(count))
@@ -298,26 +295,30 @@ case "throughput", "speculation", "contention", "together":
         let others = all.filter { $0.expected != .relevant && $0.context.isEmpty }
         items = []
         var nextRelevant = 0
-        for (index, item) in others.enumerated() where items.count < count {
+        var index = 0
+        // The other sentences are used again from the start when the stream is longer than they are.
+        while items.count < count, !others.isEmpty {
+            var item = others[index % others.count]
+            if index >= others.count { item.id += "+\(index / others.count)" }
             items.append(item)
             // Every fifth place, taking every fourth relevant sentence so that all kinds occur.
             if index % 5 == 2, relevant.indices.contains(nextRelevant), items.count < count {
                 items.append(relevant[nextRelevant])
                 nextRelevant += 4
             }
+            index += 1
         }
     }
-    let turns = Int(option("--turns") ?? "") ?? (isWindow6 ? 1 : FoundationModelRelevanceReasoner.optimizedSessionTurns)
-    let reasoner = FoundationModelRelevanceReasoner(style: style, sessionTurns: turns)
     var json: Data?
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
     switch command {
     case "throughput":
-        let interval = Double(option("--interval") ?? "") ?? 1.5
+        let pattern = option("--pattern") ?? option("--interval") ?? "1.5"
+        let offsets = SemanticStreamBenchmark.offsets(pattern: pattern, count: items.count)
         let result = await SemanticStreamBenchmark.throughput(
-            name: "\(isWindow6 ? "Window 6" : "Window 6.1") engine, style \(style.rawValue)", items: items, interval: interval,
-            reasoner: reasoner, configuration: configuration)
+            name: setup.name, items: items, interval: Double(pattern) ?? 0,
+            pattern: Double(pattern) == nil ? pattern : "", offsets: offsets, reasoner: reasoner, configuration: configuration)
         print(result.report)
         json = try? encoder.encode(result)
     case "speculation":
@@ -329,7 +330,8 @@ case "throughput", "speculation", "contention", "together":
             var (result, verdicts) = await SemanticStreamBenchmark.speculation(
                 name: usesSpeculation ? "early evaluation of the stable partial transcript" : "final transcript only",
                 items: items, finalDelay: delay, usesSpeculation: usesSpeculation, reviseEvery: reviseEvery,
-                reasoner: FoundationModelRelevanceReasoner(style: style, sessionTurns: turns), configuration: configuration)
+                reasoner: EngineSetup.named(option("--config"), arguments: arguments, option: option)?.reasoner ?? reasoner,
+                configuration: configuration)
             if usesSpeculation {
                 result.verdictsEqualToPlainRun = verdicts.count { plain[$0.key] == $0.value }
                 print(result.report)
@@ -353,60 +355,21 @@ case "throughput", "speculation", "contention", "together":
             mixed.append(item)
             if index >= 4, index % 3 == 1, urgent.indices.contains((index - 4) / 3) { mixed.append(urgent[(index - 4) / 3]) }
         }
-        for mode in SemanticStreamBenchmark.ContentionMode.allCases {
-            let old = mode == .window6Pause
+        // --modes recapAlone,scheduled (default) | window6Pause | uncoordinated | scheduledUrgentBeside
+        let modes = (option("--modes") ?? "recapAlone,scheduled").split(separator: ",")
+            .compactMap { SemanticStreamBenchmark.ContentionMode(rawValue: String($0)) }
+        for mode in modes {
             let result = await SemanticStreamBenchmark.contention(
                 mode: mode, items: mixed, interval: interval, recapAfter: 4, scene: scene,
-                reasoner: old ? FoundationModelRelevanceReasoner(style: .window6) : .optimized,
-                summarizer: FoundationModelRecapSummarizer(), configuration: old ? .window6 : .standard)
-            print(result.report)
+                reasoner: EngineSetup.named(option("--config"), arguments: arguments, option: option)?.reasoner ?? reasoner,
+                summarizer: FoundationModelRecapSummarizer(), configuration: configuration)
+            print(setup.name + " — " + result.report)
             results.append(result)
             try? await Task.sleep(for: .seconds(2))
         }
         json = try? encoder.encode(results)
     default:
-        // Sentences in groups, as they are judged when they wait: how often does a group
-        // request miss a relevant sentence that is judged relevant on its own?
-        let size = Int(option("--size") ?? "") ?? 3
-        let dataset = try SemanticDataset.load(.dev2)
-        let goalsByProfile = Dictionary(uniqueKeysWithValues: Set(dataset.items.map(\.profile)).map {
-            ($0, SemanticDataset.goals(for: $0).map(\.goal))
-        })
-        var groupsWithRelevant = 0, groupsFlagged = 0, namedRight = 0, groupsWithout = 0, falselyFlagged = 0
-        var times: [Double] = []
-        var missed: [String] = []
-        for profile in goalsByProfile.keys.sorted() {
-            let scored = dataset.items.filter { $0.profile == profile && ($0.expected == .relevant || $0.expected == .irrelevant) && $0.context.isEmpty }
-            for start in stride(from: 0, to: scored.count - size + 1, by: size) {
-                let group = Array(scored[start ..< start + size])
-                let started = Date()
-                guard let answer = try? await reasoner.judgeTogether(group.map { SemanticUtterance(text: $0.text) },
-                                                                     goals: goalsByProfile[profile] ?? []) else { continue }
-                times.append(Date().timeIntervalSince(started))
-                let flagged = answer.judgement.verdict != .irrelevant && answer.judgement.goalIndex != 0
-                let relevant = group.enumerated().filter { $0.element.expected == .relevant }
-                if relevant.isEmpty {
-                    groupsWithout += 1
-                    if flagged { falselyFlagged += 1 }
-                } else {
-                    groupsWithRelevant += 1
-                    if flagged {
-                        groupsFlagged += 1
-                        if relevant.contains(where: { $0.offset == answer.line - 1 }) { namedRight += 1 }
-                    } else {
-                        missed.append(contentsOf: relevant.map(\.element.id))
-                    }
-                }
-            }
-        }
-        times.sort()
-        print("""
-        Sentences judged \(size) at a time (development set 2, file order, no context items)
-          groups with a relevant sentence: \(groupsWithRelevant); recognized as containing one: \(groupsFlagged); the named sentence is a relevant one: \(namedRight)
-          relevant sentences in groups that were waved through: \(missed.count) (\(missed.joined(separator: " ")))
-          groups without a relevant sentence: \(groupsWithout); flagged anyway (costs requests, not correctness): \(falselyFlagged)
-          seconds per group request: median \(times.isEmpty ? 0 : times[times.count / 2])
-        """)
+        break
     }
     if let path = option("--json"), let json {
         try? json.write(to: URL(fileURLWithPath: path))
@@ -430,8 +393,8 @@ case "cues":
 case "latency":
     // Where the time of one judgement goes (Window 6.1): per style, with and without a session
     // that was prepared in an idle gap, with and without the goals read in advance.
-    //   hs-semantic-eval latency [--styles window6,compact,reasoned] [--count 12] [--gap 1.0]
-    let styles = (option("--styles") ?? "window6,compact,reasoned").split(separator: ",")
+    //   hs-semantic-eval latency [--styles window6,lean,staged] [--count 12] [--gap 1.0]
+    let styles = (option("--styles") ?? "window6,lean,staged").split(separator: ",")
         .compactMap { FoundationModelRelevanceReasoner.Style(rawValue: String($0)) }
     let count = Int(option("--count") ?? "") ?? 12
     let gap = Double(option("--gap") ?? "") ?? 1.0
@@ -445,8 +408,7 @@ case "latency":
     print("style | preparation | prepared session | first token | generation | total | tokens in (cached) | tokens out")
     for style in styles {
         for mode in ["cold", "prepared", "prepared+goals"] {
-            let reasoner = FoundationModelRelevanceReasoner(style: style, measuresFirstToken: !arguments.contains("--no-stream"),
-                                                            sessionTurns: Int(option("--turns") ?? "") ?? 1)
+            let reasoner = FoundationModelRelevanceReasoner(style: style, sessionTurns: Int(option("--turns") ?? "") ?? 1)
             var timings: [ReasonerTiming] = []
             for sample in samples {
                 if mode == "prepared" { await reasoner.prewarm() }
@@ -473,16 +435,22 @@ case "probe":
     //   hs-semantic-eval probe --set dev3 --variant lean [--turns 6] [--seed 1] [--repeat-schema] [--repeat-goals]
     //                          [--json <file>]
     guard let split = SemanticDataset.Split(rawValue: option("--set") ?? "dev3"), !split.isSealed,
-          let dataset = try? SemanticDataset.load(split), let variant = ProbeCatalog.variants[option("--variant") ?? "lean"]
+          var dataset = try? SemanticDataset.load(split), let variant = ProbeCatalog.variants[option("--variant") ?? "lean"]
     else {
         print("probe --set dev|dev2|dev3 --variant " + ProbeCatalog.variants.keys.sorted().joined(separator: "|"))
         exit(2)
+    }
+    if let path = option("--ids"), let text = try? String(contentsOfFile: path, encoding: .utf8) {
+        let wanted = Set(text.split(whereSeparator: \.isWhitespace).map(String.init))
+        dataset.items = dataset.items.filter { wanted.contains($0.id) }
     }
     var options = SemanticProbe.Options()
     options.sessionTurns = Int(option("--turns") ?? "") ?? 1
     options.seed = option("--seed").flatMap { UInt64($0) }
     options.repeatsSchema = arguments.contains("--repeat-schema")
     options.repeatsGoals = arguments.contains("--repeat-goals")
+    options.omitsSchema = arguments.contains("--no-schema")
+    options.silentBefore = Int(option("--silent-before") ?? "") ?? 0
     print("Probe \(variant.name) on \(split.rawValue): \(dataset.items.count) items, session of \(options.sessionTurns), "
         + "order \(options.seed.map { "shuffled \($0)" } ?? "as written")")
     let answers = await SemanticProbe.run(dataset, variant: variant, options: options) { done, total in
@@ -515,6 +483,30 @@ case "probe-cost":
         try? encoder.encode(costs).write(to: URL(fileURLWithPath: path))
     }
 
+case "probe-stream":
+    // When do the fields of an answer arrive, and can a request be abandoned after the first?
+    guard let dataset = try? SemanticDataset.load(.dev3) else { exit(1) }
+    let profile = option("--profile") ?? "tenant"
+    let sentences = Array(dataset.items.filter { $0.profile == profile && $0.context.isEmpty }.map(\.text).prefix(8))
+    let goals = SemanticDataset.goals(for: profile).map(\.goal)
+    print("Fields of a streamed answer (seconds after the request):")
+    await SemanticProbe.streamTimeline(instructions: FoundationModelRelevanceReasoner.leanInstructions, goals: goals,
+                                       sentences: sentences) { print("  " + $0) }
+    print("Abandoned after the first field:")
+    await SemanticProbe.abandonTimeline(instructions: FoundationModelRelevanceReasoner.leanInstructions, goals: goals,
+                                        sentences: sentences) { print("  " + $0) }
+
+case "probe-lead":
+    // How long ahead must a session be prepared? hs-semantic-eval probe-lead --variant lean-lazy
+    guard let variant = ProbeCatalog.variants[option("--variant") ?? "lean-lazy"], let dataset = try? SemanticDataset.load(.dev3)
+    else { exit(2) }
+    let profile = option("--profile") ?? "tenant"
+    // Sentences that should stay silent: one request each.
+    let sentences = dataset.items.filter { $0.profile == profile && $0.context.isEmpty && $0.expected == .irrelevant }.map(\.text)
+    print("Preparation lead time, \(variant.name), goals of \(profile), sentences that stay silent")
+    await SemanticProbe.leadTimes(variant: variant, goals: SemanticDataset.goals(for: profile).map(\.goal), sentences: sentences,
+                                  leads: [0.1, 0.3, 0.5, 0.7, 0.9, 1.2, 2.0]) { print("  " + $0) }
+
 case "probe-check":
     // A second request on every positive answer of an earlier probe run.
     //   hs-semantic-eval probe-check --from <probe json> --check confirm [--json <file>]
@@ -531,7 +523,8 @@ case "probe-check":
         if done % 20 == 0 || done == total { FileHandle.standardError.write(Data("  \(done)/\(total)\n".utf8)) }
     }
     run.check = check.name
-    run.checkedScore = SemanticProbe.score(run.answers, dataset: dataset, keeps: check.keeps)
+    run.checkedScore = SemanticProbe.score(run.answers, dataset: dataset, keeps: check.keeps,
+                                           checksWarnings: check.checksWarnings)
     print("  before: " + run.score.line)
     printProbe(run, dataset: dataset, keeps: check.keeps)
     let checkSeconds = run.answers.compactMap(\.checkSeconds)

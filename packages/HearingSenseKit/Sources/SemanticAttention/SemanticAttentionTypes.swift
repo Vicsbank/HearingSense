@@ -109,10 +109,10 @@ public enum SemanticStage: String, Hashable, Sendable, Codable, CaseIterable {
     case model
     /// The model was unavailable or failed; nothing is presented.
     case fallback
-    /// Dropped from a full queue or cancelled before it was evaluated.
+    /// Pushed out of a full queue or cancelled before it was evaluated.
     case dropped
-    /// Judged together with other waiting sentences in one request.
-    case batch
+    /// Waited longer than the engine allows: given up without an evaluation, and reported.
+    case expired
     /// Answered by the evaluation of a partial transcript that had the same words.
     case speculative
 }
@@ -149,12 +149,13 @@ public struct SemanticAttentionDecision: Identifiable, Hashable, Sendable {
     public var queueWait: TimeInterval = 0
     /// Decided later than the engine's deadline after submission.
     public var isLate = false
-    /// Sentences in the request that decided this one (1 unless judged together).
-    public var batchSize = 1
     /// Tokens the model wrote for this decision (0 when no model answer was needed).
     public var outputTokens = 0
     /// The decision needed a second request to the model (the second look).
     public var hadSecondLook = false
+    /// Answered by a session that had answered for an earlier sentence (only while sentences
+    /// were waiting): such an answer can depend on what was said before.
+    public var usedContinuedSession = false
 
     public init(id: UUID = UUID(), utteranceID: UUID, date: Date, matchedGoalID: UUID? = nil, verdict: SemanticVerdict,
                 reason: String = "", evidence: String = "", headline: String = "", urgency: SemanticUrgency = .normal,
@@ -189,7 +190,7 @@ public struct SemanticAttentionDecision: Identifiable, Hashable, Sendable {
     public var redactedSummary: String {
         "\(verdict.rawValue) stage=\(stage.rawValue) kind=\(statementKind.rawValue) subject=\(subject.rawValue) "
             + "urgency=\(urgency.rawValue) novel=\(isNovel) presentation=\(presentation.rawValue)"
-            + (isLate ? " late" : "") + (batchSize > 1 ? " batch=\(batchSize)" : "")
+            + (isLate ? " late" : "")
             + (corrections.isEmpty ? "" : " corrections=\(corrections.joined(separator: ","))")
     }
 }
@@ -246,6 +247,12 @@ public struct ReasonerTiming: Hashable, Sendable, Codable {
     /// Input the model had already read when the request came (instructions, goals).
     public var cachedInputTokens: Int?
     public var outputTokens: Int?
+    /// Requests made for this answer.
+    public var requests = 0
+    /// Answered by a session that had answered for an earlier utterance.
+    public var continuedSession = false
+    /// Asked a second time after the model failed.
+    public var retried = false
 
     public init(preparation: TimeInterval = 0) {
         self.preparation = preparation
@@ -277,11 +284,10 @@ public protocol SemanticRelevanceReasoning: Sendable {
     /// about here and now, or about someone else, the past, a story, a wish, or "nothing
     /// changes"? Nil when the reasoner has no such check (the default).
     func confirm(_ utterance: SemanticUtterance, goal: AttentionGoal) async throws -> StatementConfirmation?
-    /// Whether `judgeTogether` is implemented. The default is false.
-    var judgesTogether: Bool { get }
-    /// Several sentences that are waiting, oldest first, in one request: does one of them
-    /// matter, and which.
-    func judgeTogether(_ utterances: [SemanticUtterance], goals: [AttentionGoal]) async throws -> BatchJudgement
+    /// The second look, also told which statements the listener was alerted to a moment ago
+    /// and that this one may repeat (`SemanticRepetition.candidates`; empty when there are
+    /// none). The default ignores them.
+    func confirm(_ utterance: SemanticUtterance, goal: AttentionGoal, earlier: [String]) async throws -> StatementConfirmation?
 }
 
 /// What a sentence that was judged relevant turns out to be on a second look.
@@ -289,27 +295,18 @@ public enum StatementConfirmation: String, Hashable, Sendable, Codable, CaseIter
     /// A real statement, request or instruction about here and now.
     case hereAndNow
     case someoneElse, past, story, wish, nothingChanges
-}
-
-/// The answer for several sentences judged in one request. Untrusted, like `RelevanceJudgement`.
-public struct BatchJudgement: Hashable, Sendable {
-    /// 1-based number of the sentence the judgement is about; 0 when none of them matters.
-    public var line: Int
-    public var judgement: RelevanceJudgement
-
-    public init(line: Int, judgement: RelevanceJudgement) {
-        self.line = line
-        self.judgement = judgement
-    }
+    /// The same news as a statement the listener was alerted to a moment ago (Window 6.2).
+    case saidBefore
 }
 
 extension SemanticRelevanceReasoning {
     public func confirm(_ utterance: SemanticUtterance, goal: AttentionGoal) async throws -> StatementConfirmation? { nil }
-    public var judgesTogether: Bool { false }
-    public func judgeTogether(_ utterances: [SemanticUtterance], goals: [AttentionGoal]) async throws -> BatchJudgement {
-        throw SemanticReasonerError.unavailable
+    public func confirm(_ utterance: SemanticUtterance, goal: AttentionGoal, earlier: [String]) async throws
+        -> StatementConfirmation?
+    {
+        let answer = try await confirm(utterance, goal: goal)
+        return answer == .saidBefore ? .hereAndNow : answer
     }
-
     public func prewarm(goals: [AttentionGoal]) async { await prewarm() }
     public func forget() async {}
     public func couldMatter(_ utterance: SemanticUtterance, goals: [AttentionGoal]) async throws -> Bool { true }

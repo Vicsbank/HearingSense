@@ -565,6 +565,12 @@ struct AttentionGoalsView: View {
                 ForEach(conversation.matches) { match in
                     GoalMatchRow(match: match)
                 }
+                if conversation.uncheckedSentences > 0 {
+                    Label("Goal matching could not keep up: \(conversation.uncheckedSentences) sentence(s) were not checked. "
+                        + "Live captions are not affected.", systemImage: "hourglass")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
             } header: {
                 Text("Recent matches")
             } footer: {

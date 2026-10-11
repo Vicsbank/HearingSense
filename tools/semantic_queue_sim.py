@@ -11,6 +11,10 @@ benchmark (tools/run_window6_2_streams.sh).
 Policies:
   fifo        oldest first; a sentence older than --max-wait when its turn comes is expired
   lifo        newest first; the same expiry
+  shed        oldest first; the oldest sentences are given up as soon as the newest one could
+              not be decided within --behind seconds
+  adaptive    as fresh while sentences keep arriving; oldest first again once nothing has arrived
+              for 1.5 s (the oldest is the one closest to being given up)
   fresh       oldest first while the oldest has waited less than --behind seconds, newest first
               while it has waited longer (the line is "behind"); the same expiry
 """
@@ -49,7 +53,7 @@ def patterns(seed=7):
 
 
 def simulate(arrivals, relevant, first, check, policy, max_wait, behind, capacity, recap_at=None, recap=7.0, jitter=0.15,
-             seed=11):
+             seed=11, pause=1.5):
     rng = random.Random(seed)
     n = len(arrivals)
     waiting, done, expired = [], {}, []
@@ -93,8 +97,18 @@ def simulate(arrivals, relevant, first, check, policy, max_wait, behind, capacit
             expired.append((k, clock))
         if not waiting:
             continue
+        if policy == "shed":
+            # Oldest first, but only as many as can still be decided within `behind` seconds of
+            # being said: the oldest give way while the newest would have to wait longer.
+            while len(waiting) > 1 and (clock - arrivals[waiting[-1]]) + (len(waiting) - 1) * first > behind:
+                expired.append((waiting.pop(0), clock))
         oldest_wait = clock - arrivals[waiting[0]]
         take_newest = policy == "lifo" or (policy == "fresh" and oldest_wait > behind)
+        if policy == "adaptive":
+            # Behind and speech still arriving: the newest. Behind in a pause: the oldest, which
+            # is the one closest to being given up.
+            last_arrival = arrivals[i - 1] if i > 0 else 0.0
+            take_newest = oldest_wait > behind and clock - last_arrival < pause
         k = waiting.pop(-1 if take_newest else 0)
         advance(clock)
         service = first * rng.uniform(1 - jitter, 1 + jitter)
@@ -129,6 +143,7 @@ def main():
     parser.add_argument("--max-wait", type=float, default=12.0)
     parser.add_argument("--behind", type=float, default=4.0)
     parser.add_argument("--capacity", type=int, default=24)
+    parser.add_argument("--policies", default="fifo,lifo,fresh,shed")
     parser.add_argument("--json")
     args = parser.parse_args()
     results = {}
@@ -138,7 +153,7 @@ def main():
     for name, arrivals in patterns().items():
         rng = random.Random(3)
         relevant = [rng.random() < args.relevant for _ in arrivals]
-        for policy in ("fifo", "lifo", "fresh"):
+        for policy in args.policies.split(","):
             r = simulate(arrivals, relevant, args.first, args.check, policy, args.max_wait, args.behind, args.capacity,
                          recap_at=arrivals[len(arrivals) // 3] + 0.2 if "recap" in name else None)
             results[f"{name}|{policy}"] = r
