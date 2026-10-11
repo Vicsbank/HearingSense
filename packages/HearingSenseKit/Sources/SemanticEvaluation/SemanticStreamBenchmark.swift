@@ -163,11 +163,14 @@ public enum SemanticStreamBenchmark {
             return samples
         }
         var lastArrival = started
+        // As in the app (Window 6.3): each sentence comes with the three said before it.
+        var said: [String] = []
         for (index, item) in items.enumerated() {
             let due = started.addingTimeInterval(offsets.map { $0[index] } ?? Double(index) * interval)
             let wait = due.timeIntervalSinceNow
             if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
-            let utterance = SemanticUtterance(text: item.text, context: item.context, date: Date())
+            let utterance = SemanticUtterance(text: item.text, context: Array(said.suffix(3)) + item.context, date: Date())
+            said.append(item.text)
             ids[item.id] = utterance.id
             lastArrival = Date()
             await engine.submit(utterance)
@@ -413,6 +416,7 @@ public enum SemanticStreamBenchmark {
         var ids: [UUID: (submitted: Date, isUrgent: Bool)] = [:]
         var recapTask: Task<(ConversationRecap, Date, Date), Never>?
         let started = Date()
+        var said: [String] = []
         for (index, item) in items.enumerated() {
             let wait = started.addingTimeInterval(Double(index) * interval).timeIntervalSinceNow
             if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
@@ -435,7 +439,8 @@ public enum SemanticStreamBenchmark {
                     }
                 }
             }
-            let utterance = SemanticUtterance(text: item.text, context: item.context, date: Date())
+            let utterance = SemanticUtterance(text: item.text, context: Array(said.suffix(3)) + item.context, date: Date())
+            said.append(item.text)
             ids[utterance.id] = (Date(), item.isUrgent)
             await engine.submit(utterance)
         }

@@ -1,0 +1,22 @@
+{
+ "name": "look-group",
+ "instructions": "One sentence was said near a person, to them or to people around them. It comes from a speech recognizer and may have errors. Say what it is:\n\nhereAndNow: a real announcement, rule, request, question or warning about the present or the future that concerns the people who are there, also when it names a person (\"Ms. Lee is ill, so our test moves to Monday\", \"someone is at the door\", \"the pickup is at the side gate today\").\nsomeoneElse: only about another person's life, or about one particular other group, family, company, school, team, class or table and its own meeting, game, timetable, turn or things, with nothing following for the other people who are there (\"my wife's company moved their meetings\", \"their deadline, not ours\", \"the neighbours got a parcel\", \"the juniors have their match moved\", \"the staff meet in the office at five\").\npast: how something was or used to be, an old story (\"on my last project ...\", \"years ago ...\", \"yesterday they ...\").\nstory: a joke, sarcasm (\"oh sure, like that ever happens\", \"right, because she's totally going to ...\"), a quotation or impression of what someone says, a film, a book, a saying.\nwish: a wish, a guess, something imagined (\"picture a ...\", \"what if\", \"I bet\", \"maybe\").\nnothingChanges: it says that things stay as they are or that something is not happening.\n\nMost plain announcements, requests and warnings are hereAndNow.\n\nOne more possibility, when the request lists what was already said a moment ago:\nsaidBefore: the sentence gives the same news as one of those, said again or in other words (a reminder, a repetition). It is not saidBefore when a time, day, place, number or anything else is different or new.",
+ "prompt": "?Already said a moment ago: {earlier}\nSaid: {passage}",
+ "fields": [
+  {
+   "name": "about",
+   "values": [
+    "hereAndNow",
+    "someoneElse",
+    "past",
+    "story",
+    "wish",
+    "nothingChanges",
+    "saidBefore"
+   ]
+  }
+ ],
+ "limit": 16,
+ "schemaInPrompt": true,
+ "prefix": null
+}

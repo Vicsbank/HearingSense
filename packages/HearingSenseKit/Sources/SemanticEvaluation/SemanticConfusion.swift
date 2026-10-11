@@ -61,6 +61,11 @@ public struct SemanticConfusion: Sendable, Codable {
     static let groupDefinitions: [(name: String, categories: Set<String>, expected: SemanticDataset.Expected?)] = [
         ("implicit relevance recall", ["implicit", "causal"], .relevant),
         ("explicit relevance recall", ["obvious", "attention"], .relevant),
+        // Window 6.3: whom a sentence is for.
+        ("announcement to all or own group", ["group_all", "my_group"], .relevant),
+        ("said to others, concerns all", ["other_affects"], .relevant),
+        ("another person addressed", ["other_addressee"], nil),
+        ("another group addressed", ["other_group"], nil),
         ("negation accuracy", ["negation"], nil),
         ("hypothetical accuracy", ["hypothetical"], nil),
         ("personal relevance accuracy", ["third_person"], nil),
@@ -70,6 +75,7 @@ public struct SemanticConfusion: Sendable, Codable {
         ("context (several sentences) accuracy", ["multi"], nil),
         ("unrelated talk accuracy", ["unrelated"], nil),
         ("repetition accuracy", ["repeated"], nil),
+        ("cut-off sentence accuracy", ["incomplete"], nil),
     ]
 
     public init(_ outcomes: [SemanticItemOutcome], dataset: SemanticDataset) {

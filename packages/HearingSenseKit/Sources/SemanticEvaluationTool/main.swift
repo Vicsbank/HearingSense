@@ -672,6 +672,27 @@ case "audience":
         print("  \(key): " + (table[key] ?? [:]).sorted { $0.key < $1.key }.map { "\($0.key) \($0.value)" }.joined(separator: ", "))
     }
 
+case "prior":
+    // Window 6.3: how well a cheap score (sentence embedding against the goals; no language model)
+    // ranks the sentences that matter above the ones that do not. AUC per development set.
+    let scorer = SentenceEmbeddingScorer()
+    for split in SemanticDataset.Split.allCases where !split.isSealed && split != .heldout {
+        guard let dataset = try? SemanticDataset.load(split) else { continue }
+        var relevant: [Double] = [], irrelevant: [Double] = []
+        let started = Date()
+        for item in dataset.items {
+            let goals = SemanticDataset.goals(for: item.profile).map(\.goal.text)
+            let score = goals.map { scorer.score(utterance: item.text, goal: $0) }.max() ?? 0
+            if item.expected == .relevant { relevant.append(score) } else if item.expected == .irrelevant { irrelevant.append(score) }
+        }
+        var wins = 0.0
+        for r in relevant { for i in irrelevant { wins += r > i ? 1 : r == i ? 0.5 : 0 } }
+        let auc = wins / Double(max(1, relevant.count * irrelevant.count))
+        let perSentence = Date().timeIntervalSince(started) / Double(max(1, dataset.items.count)) * 1000
+        print("\(split.rawValue): AUC \(auc.formatted(.number.precision(.fractionLength(3)))) "
+            + "(\(relevant.count) relevant, \(irrelevant.count) irrelevant), \(perSentence.formatted(.number.precision(.fractionLength(1)))) ms per sentence")
+    }
+
 default:
     print("Commands: run, recap, availability, judge, timing, triage, latency, probe, probe-check")
     exit(2)

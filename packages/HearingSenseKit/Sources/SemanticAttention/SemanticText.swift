@@ -62,7 +62,9 @@ enum SemanticText {
 
     /// Numbers, days and times of day: details an alert must not change.
     static func quantities(in text: String) -> Set<String> {
-        Set(words(in: text).filter { quantityWords.contains($0) || $0.contains(where: \.isNumber) })
+        // "Friday's", "tonight's": the day, whatever belongs to it.
+        Set(words(in: text).map { $0.hasSuffix("'s") ? String($0.dropLast(2)) : $0 }
+            .filter { quantityWords.contains($0) || $0.contains(where: \.isNumber) })
     }
 
     /// Share of `part`'s content words that occur in `whole` (by stem). 1 when `part` has none.

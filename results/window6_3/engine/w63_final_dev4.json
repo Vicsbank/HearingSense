@@ -1,0 +1,3978 @@
+{
+  "confusion" : {
+    "model" : {
+      "ambiguousAlerted" : 6,
+      "ambiguousSilent" : 2,
+      "ambiguousUncertain" : 3,
+      "byCategory" : {
+        "asr_error" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "attention" : {
+          "hits" : 8,
+          "total" : 10
+        },
+        "causal" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "group_all" : {
+          "hits" : 7,
+          "total" : 8
+        },
+        "hypothetical" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "idiom" : {
+          "hits" : 4,
+          "total" : 7
+        },
+        "implicit" : {
+          "hits" : 21,
+          "total" : 22
+        },
+        "incomplete" : {
+          "hits" : 3,
+          "total" : 4
+        },
+        "multi" : {
+          "hits" : 13,
+          "total" : 16
+        },
+        "my_group" : {
+          "hits" : 6,
+          "total" : 6
+        },
+        "negation" : {
+          "hits" : 11,
+          "total" : 12
+        },
+        "obvious" : {
+          "hits" : 5,
+          "total" : 5
+        },
+        "other_addressee" : {
+          "hits" : 9,
+          "total" : 9
+        },
+        "other_affects" : {
+          "hits" : 7,
+          "total" : 8
+        },
+        "other_group" : {
+          "hits" : 12,
+          "total" : 15
+        },
+        "past" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "repeated" : {
+          "hits" : 7,
+          "total" : 8
+        },
+        "sarcasm_quote" : {
+          "hits" : 6,
+          "total" : 8
+        },
+        "third_person" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "unrelated" : {
+          "hits" : 28,
+          "total" : 28
+        },
+        "urgent_short" : {
+          "hits" : 8,
+          "total" : 8
+        }
+      },
+      "byProfile" : {
+        "gym" : {
+          "fn" : 1,
+          "fp" : 5,
+          "tn" : 26,
+          "tp" : 23
+        },
+        "library" : {
+          "fn" : 2,
+          "fp" : 2,
+          "tn" : 28,
+          "tp" : 23
+        },
+        "maker" : {
+          "fn" : 1,
+          "fp" : 2,
+          "tn" : 25,
+          "tp" : 21
+        },
+        "tour" : {
+          "fn" : 1,
+          "fp" : 5,
+          "tn" : 26,
+          "tp" : 23
+        }
+      },
+      "falseNegativeIDs" : [
+        "li011",
+        "li050",
+        "gy023",
+        "to056",
+        "mk020"
+      ],
+      "falseNegatives" : 5,
+      "falsePositiveIDs" : [
+        "li045",
+        "li053",
+        "gy032",
+        "gy050",
+        "gy051",
+        "gy053",
+        "gy054",
+        "to029",
+        "to041",
+        "to045",
+        "to047",
+        "to051",
+        "mk017",
+        "mk050"
+      ],
+      "falsePositives" : 14,
+      "groups" : {
+        "announcement to all or own group" : {
+          "hits" : 13,
+          "total" : 14
+        },
+        "another group addressed" : {
+          "hits" : 12,
+          "total" : 15
+        },
+        "another person addressed" : {
+          "hits" : 9,
+          "total" : 9
+        },
+        "context (several sentences) accuracy" : {
+          "hits" : 13,
+          "total" : 16
+        },
+        "cut-off sentence accuracy" : {
+          "hits" : 3,
+          "total" : 4
+        },
+        "explicit relevance recall" : {
+          "hits" : 13,
+          "total" : 15
+        },
+        "hypothetical accuracy" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "idiom accuracy" : {
+          "hits" : 4,
+          "total" : 7
+        },
+        "implicit relevance recall" : {
+          "hits" : 29,
+          "total" : 30
+        },
+        "important-event recall" : {
+          "hits" : 25,
+          "total" : 26
+        },
+        "negation accuracy" : {
+          "hits" : 11,
+          "total" : 12
+        },
+        "past and quotation accuracy" : {
+          "hits" : 14,
+          "total" : 16
+        },
+        "personal relevance accuracy" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "recognition-error accuracy" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "repetition accuracy" : {
+          "hits" : 7,
+          "total" : 8
+        },
+        "said to others, concerns all" : {
+          "hits" : 7,
+          "total" : 8
+        },
+        "short urgent instruction recall" : {
+          "hits" : 10,
+          "total" : 10
+        },
+        "unrelated talk accuracy" : {
+          "hits" : 28,
+          "total" : 28
+        }
+      },
+      "modelDecisions" : 225,
+      "modelSecondsP50" : 2.6171590089797974,
+      "modelSecondsP95" : 2.8726260662078857,
+      "modelSecondsP99" : 3.269929885864258,
+      "outputTokensPerModelDecision" : 26.93777777777778,
+      "secondsP50" : 2.620434045791626,
+      "secondsP95" : 2.8750799894332886,
+      "secondsP99" : 3.274056911468506,
+      "stages" : {
+        "model" : 225
+      },
+      "trueNegatives" : 105,
+      "truePositives" : 90
+    }
+  },
+  "items" : 225,
+  "metrics" : [
+    {
+      "ambiguousAlerted" : 6,
+      "ambiguousTotal" : 11,
+      "ambiguousUncertain" : 3,
+      "assumedUtterancesPerHour" : 240,
+      "byCategory" : {
+        "asr_error" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "attention" : {
+          "hits" : 8,
+          "total" : 10
+        },
+        "causal" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "group_all" : {
+          "hits" : 7,
+          "total" : 8
+        },
+        "hypothetical" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "idiom" : {
+          "hits" : 4,
+          "total" : 7
+        },
+        "implicit" : {
+          "hits" : 21,
+          "total" : 22
+        },
+        "incomplete" : {
+          "hits" : 3,
+          "total" : 4
+        },
+        "multi" : {
+          "hits" : 13,
+          "total" : 16
+        },
+        "my_group" : {
+          "hits" : 6,
+          "total" : 6
+        },
+        "negation" : {
+          "hits" : 11,
+          "total" : 12
+        },
+        "obvious" : {
+          "hits" : 5,
+          "total" : 5
+        },
+        "other_addressee" : {
+          "hits" : 9,
+          "total" : 9
+        },
+        "other_affects" : {
+          "hits" : 7,
+          "total" : 8
+        },
+        "other_group" : {
+          "hits" : 12,
+          "total" : 15
+        },
+        "past" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "repeated" : {
+          "hits" : 7,
+          "total" : 8
+        },
+        "sarcasm_quote" : {
+          "hits" : 6,
+          "total" : 8
+        },
+        "third_person" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "unrelated" : {
+          "hits" : 28,
+          "total" : 28
+        },
+        "urgent_short" : {
+          "hits" : 8,
+          "total" : 8
+        }
+      },
+      "corrections" : {
+        "another_group" : 8,
+        "audience_unknown" : 4,
+        "called_by_name" : 2,
+        "cut_off" : 3,
+        "headline_not_shortened" : 12,
+        "hypothetical_marker" : 1,
+        "no_change_marker" : 2,
+        "no_goal" : 2,
+        "nothing_changes" : 2,
+        "said_before" : 7,
+        "said_to_someone_else" : 8,
+        "second_look" : 8,
+        "urgency_unconfirmed" : 22
+      },
+      "f1" : 0.9045226130653268,
+      "fallbacks" : 0,
+      "falseAlertRate" : {
+        "hits" : 13,
+        "total" : 111
+      },
+      "falseAlertsPerHour" : 28.10810810810811,
+      "gated" : 0,
+      "goalAccuracy" : {
+        "hits" : 69,
+        "total" : 90
+      },
+      "importantMisses" : {
+        "hits" : 1,
+        "total" : 26
+      },
+      "medianModelSeconds" : 2.6171590089797974,
+      "medianSeconds" : 2.620434045791626,
+      "method" : "Foundation Models, Window 6.3, a session per sentence",
+      "modelCalls" : 225,
+      "p95Seconds" : 2.8750799894332886,
+      "precision" : {
+        "hits" : 90,
+        "total" : 104
+      },
+      "recall" : {
+        "hits" : 90,
+        "total" : 95
+      },
+      "repeatAlerts" : {
+        "hits" : 1,
+        "total" : 8
+      },
+      "split" : "dev4",
+      "triaged" : 0
+    }
+  ],
+  "note" : "Synthetic utterances, evaluated on a Mac. Not an iPhone measurement.",
+  "outcomes" : {
+    "model" : [
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li001",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7349098920822144,
+        "outputTokens" : 29,
+        "seconds" : 2.7389609813690186,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li002",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.116181969642639,
+        "outputTokens" : 23,
+        "seconds" : 2.119235038757324,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "li003",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7582409381866455,
+        "outputTokens" : 29,
+        "seconds" : 2.7624449729919434,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "another_group"
+        ],
+        "id" : "li004",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 1.880632996559143,
+        "outputTokens" : 29,
+        "seconds" : 1.8838289976119995,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "said_before",
+          "urgency_unconfirmed"
+        ],
+        "id" : "li037",
+        "isNovel" : false,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 3.0104950666427612,
+        "outputTokens" : 29,
+        "seconds" : 3.0153950452804565,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerNamed",
+        "corrections" : [
+          "called_by_name"
+        ],
+        "id" : "li005",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 1.8950660228729248,
+        "outputTokens" : 23,
+        "seconds" : 1.896759033203125,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+
+        ],
+        "id" : "li006",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.956207036972046,
+        "outputTokens" : 23,
+        "seconds" : 1.9592100381851196,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li007",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "project",
+        "modelSeconds" : 2.832642078399658,
+        "outputTokens" : 29,
+        "seconds" : 2.8366799354553223,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li008",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0282280445098877,
+        "outputTokens" : 23,
+        "seconds" : 2.0313360691070557,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li009",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.731341004371643,
+        "outputTokens" : 29,
+        "seconds" : 2.7348339557647705,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherPerson",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "said_to_someone_else"
+        ],
+        "id" : "li010",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.580116033554077,
+        "outputTokens" : 29,
+        "seconds" : 2.5839439630508423,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "no_goal"
+        ],
+        "id" : "li011",
+        "isNovel" : true,
+        "kind" : "statement",
+        "modelSeconds" : 1.8343840837478638,
+        "outputTokens" : 29,
+        "seconds" : 1.83748197555542,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "nothing_changes"
+        ],
+        "id" : "li012",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.983694076538086,
+        "outputTokens" : 21,
+        "seconds" : 1.9866750240325928,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_not_shortened"
+        ],
+        "id" : "li013",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.73704195022583,
+        "outputTokens" : 29,
+        "seconds" : 2.7414050102233887,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li014",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9736520051956177,
+        "outputTokens" : 23,
+        "seconds" : 1.9767839908599854,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+          "another_group"
+        ],
+        "id" : "li015",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.001024007797241,
+        "outputTokens" : 29,
+        "seconds" : 2.0044569969177246,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li016",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7760149240493774,
+        "outputTokens" : 29,
+        "seconds" : 2.779976010322571,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li017",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0635629892349243,
+        "outputTokens" : 23,
+        "seconds" : 2.066833019256592,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "li018",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7325280904769897,
+        "outputTokens" : 29,
+        "seconds" : 2.7364490032196045,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li019",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0791229009628296,
+        "outputTokens" : 23,
+        "seconds" : 2.0821369886398315,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "otherPerson",
+        "corrections" : [
+
+        ],
+        "id" : "li020",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 3.269929885864258,
+        "outputTokens" : 29,
+        "seconds" : 3.274056911468506,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li021",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.037529945373535,
+        "outputTokens" : 23,
+        "seconds" : 2.040458083152771,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li022",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "project",
+        "modelSeconds" : 2.801761031150818,
+        "outputTokens" : 29,
+        "seconds" : 2.8054059743881226,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "second_look"
+        ],
+        "id" : "li023",
+        "isNovel" : true,
+        "kind" : "hypothetical",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.65472412109375,
+        "outputTokens" : 29,
+        "seconds" : 2.6586309671401978,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li024",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.679805040359497,
+        "outputTokens" : 29,
+        "seconds" : 2.683187961578369,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherPerson",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "said_to_someone_else"
+        ],
+        "id" : "li025",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.520664930343628,
+        "outputTokens" : 29,
+        "seconds" : 2.524256110191345,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li026",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7576440572738647,
+        "outputTokens" : 29,
+        "seconds" : 2.7616419792175293,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li027",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9521069526672363,
+        "outputTokens" : 23,
+        "seconds" : 1.9550390243530273,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li028",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.651628017425537,
+        "outputTokens" : 29,
+        "seconds" : 2.655126929283142,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li029",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7988680601119995,
+        "outputTokens" : 29,
+        "seconds" : 2.802963972091675,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "said_before",
+          "urgency_unconfirmed"
+        ],
+        "id" : "li054",
+        "isNovel" : false,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 1.9852609634399414,
+        "outputTokens" : 29,
+        "seconds" : 1.9892330169677734,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "second_look"
+        ],
+        "id" : "li030",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.83195698261261,
+        "outputTokens" : 29,
+        "seconds" : 2.8353190422058105,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li031",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.780755043029785,
+        "outputTokens" : 29,
+        "seconds" : 2.784891963005066,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li032",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.016947031021118,
+        "outputTokens" : 23,
+        "seconds" : 2.0199990272521973,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+          "another_group"
+        ],
+        "id" : "li033",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 1.836313009262085,
+        "outputTokens" : 29,
+        "seconds" : 1.8395600318908691,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li034",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7932499647140503,
+        "outputTokens" : 29,
+        "seconds" : 2.797153949737549,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li035",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9595799446105957,
+        "outputTokens" : 23,
+        "seconds" : 1.9625380039215088,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li036",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.037263035774231,
+        "outputTokens" : 23,
+        "seconds" : 2.040229916572571,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "second_look"
+        ],
+        "id" : "li038",
+        "isNovel" : true,
+        "kind" : "hypothetical",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.6666260957717896,
+        "outputTokens" : 29,
+        "seconds" : 2.670302987098694,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "li039",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "project",
+        "modelSeconds" : 2.791991949081421,
+        "outputTokens" : 29,
+        "seconds" : 2.79590106010437,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherPerson",
+        "corrections" : [
+          "said_to_someone_else"
+        ],
+        "id" : "li040",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.58423912525177,
+        "outputTokens" : 29,
+        "seconds" : 2.587885022163391,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "urgency_unconfirmed",
+          "cut_off"
+        ],
+        "id" : "li041",
+        "isNovel" : true,
+        "kind" : "unclear",
+        "matchedGoal" : "room",
+        "modelSeconds" : 1.8346539735794067,
+        "outputTokens" : 29,
+        "seconds" : 1.8379700183868408,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+          "headline_not_shortened"
+        ],
+        "id" : "li042",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7624268531799316,
+        "outputTokens" : 29,
+        "seconds" : 2.766324043273926,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li043",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9676350355148315,
+        "outputTokens" : 23,
+        "seconds" : 1.9706460237503052,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li044",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.6737228631973267,
+        "outputTokens" : 29,
+        "seconds" : 2.6772009134292603,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li045",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.8108069896698,
+        "outputTokens" : 29,
+        "seconds" : 2.8151350021362305,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_not_shortened"
+        ],
+        "id" : "li046",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7577030658721924,
+        "outputTokens" : 29,
+        "seconds" : 2.7621819972991943,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "nothing_changes"
+        ],
+        "id" : "li047",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.8990229368209839,
+        "outputTokens" : 21,
+        "seconds" : 1.902338981628418,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li048",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9207079410552979,
+        "outputTokens" : 23,
+        "seconds" : 1.9237771034240723,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li049",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.7654600143432617,
+        "outputTokens" : 29,
+        "seconds" : 2.7691450119018555,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li050",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9856230020523071,
+        "outputTokens" : 23,
+        "seconds" : 1.9884090423583984,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li051",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0547460317611694,
+        "outputTokens" : 23,
+        "seconds" : 2.0577290058135986,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li052",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "project",
+        "modelSeconds" : 2.780521035194397,
+        "outputTokens" : 29,
+        "seconds" : 2.7842050790786743,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li053",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.722925066947937,
+        "outputTokens" : 29,
+        "seconds" : 2.726465940475464,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "li055",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0855549573898315,
+        "outputTokens" : 23,
+        "seconds" : 2.0885339975357056,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "li056",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "room",
+        "modelSeconds" : 2.8054580688476562,
+        "outputTokens" : 29,
+        "seconds" : 2.8094829320907593,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "gy001",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.8116939067840576,
+        "outputTokens" : 29,
+        "seconds" : 2.8147510290145874,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy002",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0626139640808105,
+        "outputTokens" : 23,
+        "seconds" : 2.065011978149414,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "another_group"
+        ],
+        "id" : "gy003",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 1.9627230167388916,
+        "outputTokens" : 29,
+        "seconds" : 1.9654390811920166,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy004",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.7948520183563232,
+        "outputTokens" : 29,
+        "seconds" : 2.7983559370040894,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerNamed",
+        "corrections" : [
+
+        ],
+        "id" : "gy005",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.71412193775177,
+        "outputTokens" : 29,
+        "seconds" : 2.7161420583724976,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy006",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.017472982406616,
+        "outputTokens" : 23,
+        "seconds" : 2.0200260877609253,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy007",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.8249629735946655,
+        "outputTokens" : 29,
+        "seconds" : 2.828436017036438,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "said_before"
+        ],
+        "id" : "gy038",
+        "isNovel" : false,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 1.8784550428390503,
+        "outputTokens" : 29,
+        "seconds" : 1.8816440105438232,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherPerson",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "said_to_someone_else"
+        ],
+        "id" : "gy008",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "lockers",
+        "modelSeconds" : 2.410762071609497,
+        "outputTokens" : 29,
+        "seconds" : 2.413432002067566,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy009",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.752639055252075,
+        "outputTokens" : 29,
+        "seconds" : 2.755310893058777,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy010",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.1816070079803467,
+        "outputTokens" : 23,
+        "seconds" : 2.1839770078659058,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "gy011",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0519109964370728,
+        "outputTokens" : 23,
+        "seconds" : 2.0541939735412598,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy012",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.838044047355652,
+        "outputTokens" : 29,
+        "seconds" : 2.841328978538513,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "gy013",
+        "isNovel" : true,
+        "kind" : "reported",
+        "modelSeconds" : 2.0628650188446045,
+        "outputTokens" : 21,
+        "seconds" : 2.0651580095291138,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "another_group",
+          "headline_not_shortened"
+        ],
+        "id" : "gy014",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 1.908100962638855,
+        "outputTokens" : 29,
+        "seconds" : 1.911081075668335,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy015",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.8727511167526245,
+        "outputTokens" : 29,
+        "seconds" : 2.8763840198516846,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "gy016",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.1067850589752197,
+        "outputTokens" : 23,
+        "seconds" : 2.1090630292892456,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy017",
+        "isNovel" : true,
+        "kind" : "reported",
+        "modelSeconds" : 1.9775090217590332,
+        "outputTokens" : 21,
+        "seconds" : 1.97981595993042,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "gy018",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.8275800943374634,
+        "outputTokens" : 29,
+        "seconds" : 2.8305459022521973,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy054",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.8757799863815308,
+        "outputTokens" : 29,
+        "seconds" : 2.879460096359253,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy019",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.049267053604126,
+        "outputTokens" : 23,
+        "seconds" : 2.0516430139541626,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "otherPerson",
+        "corrections" : [
+
+        ],
+        "id" : "gy020",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 3.3301788568496704,
+        "outputTokens" : 29,
+        "seconds" : 3.3336020708084106,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy021",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.119431972503662,
+        "outputTokens" : 23,
+        "seconds" : 2.1219289302825928,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy022",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.8442981243133545,
+        "outputTokens" : 29,
+        "seconds" : 2.8471850156784058,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy023",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9657609462738037,
+        "outputTokens" : 23,
+        "seconds" : 1.9680980443954468,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherPerson",
+        "corrections" : [
+
+        ],
+        "id" : "gy024",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.047039031982422,
+        "outputTokens" : 23,
+        "seconds" : 2.0494179725646973,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy025",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.82526695728302,
+        "outputTokens" : 29,
+        "seconds" : 2.8288129568099976,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy026",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9903579950332642,
+        "outputTokens" : 23,
+        "seconds" : 1.99270498752594,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "gy027",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.971232056617737,
+        "outputTokens" : 29,
+        "seconds" : 2.974097967147827,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy028",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "lockers",
+        "modelSeconds" : 2.8275691270828247,
+        "outputTokens" : 29,
+        "seconds" : 2.8305859565734863,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "no_goal"
+        ],
+        "id" : "gy029",
+        "isNovel" : true,
+        "kind" : "statement",
+        "modelSeconds" : 1.9907209873199463,
+        "outputTokens" : 29,
+        "seconds" : 1.9930150508880615,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy030",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.787521004676819,
+        "outputTokens" : 29,
+        "seconds" : 2.7903120517730713,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy031",
+        "isNovel" : true,
+        "kind" : "reported",
+        "modelSeconds" : 2.037045955657959,
+        "outputTokens" : 21,
+        "seconds" : 2.0395160913467407,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy032",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.7135329246520996,
+        "outputTokens" : 29,
+        "seconds" : 2.716418981552124,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy033",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.824165105819702,
+        "outputTokens" : 29,
+        "seconds" : 2.827907919883728,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy034",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.1453280448913574,
+        "outputTokens" : 23,
+        "seconds" : 2.1475579738616943,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy035",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.707099199295044,
+        "outputTokens" : 29,
+        "seconds" : 2.7102099657058716,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy036",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0625280141830444,
+        "outputTokens" : 23,
+        "seconds" : 2.0648809671401978,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "hypothetical_marker"
+        ],
+        "id" : "gy037",
+        "isNovel" : true,
+        "kind" : "hypothetical",
+        "matchedGoal" : "lockers",
+        "modelSeconds" : 1.9629069566726685,
+        "outputTokens" : 29,
+        "seconds" : 1.9653539657592773,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerNamed",
+        "corrections" : [
+
+        ],
+        "id" : "gy039",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.7977490425109863,
+        "outputTokens" : 29,
+        "seconds" : 2.8000799417495728,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherPerson",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "said_to_someone_else"
+        ],
+        "id" : "gy040",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.4584330320358276,
+        "outputTokens" : 29,
+        "seconds" : 2.46150004863739,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "audience" : "listenerGroup",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "cut_off"
+        ],
+        "id" : "gy041",
+        "isNovel" : true,
+        "kind" : "unclear",
+        "matchedGoal" : "class",
+        "modelSeconds" : 1.8620359897613525,
+        "outputTokens" : 29,
+        "seconds" : 1.864508032798767,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "audience" : "otherPerson",
+        "corrections" : [
+          "headline_not_shortened"
+        ],
+        "id" : "gy042",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 3.4051860570907593,
+        "outputTokens" : 29,
+        "seconds" : 3.4086509943008423,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy043",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.087851047515869,
+        "outputTokens" : 23,
+        "seconds" : 2.090252995491028,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy044",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.8263639211654663,
+        "outputTokens" : 29,
+        "seconds" : 2.8293060064315796,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "second_look"
+        ],
+        "id" : "gy045",
+        "isNovel" : true,
+        "kind" : "reported",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.7668309211730957,
+        "outputTokens" : 29,
+        "seconds" : 2.770211935043335,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy046",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.7693508863449097,
+        "outputTokens" : 29,
+        "seconds" : 2.7730050086975098,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "no_change_marker"
+        ],
+        "id" : "gy047",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.8607250452041626,
+        "outputTokens" : 29,
+        "seconds" : 1.8634179830551147,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy048",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.8044649362564087,
+        "outputTokens" : 29,
+        "seconds" : 2.807438015937805,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy049",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.803249955177307,
+        "outputTokens" : 29,
+        "seconds" : 2.806364059448242,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "urgency_unconfirmed"
+        ],
+        "id" : "gy050",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.1139140129089355,
+        "outputTokens" : 29,
+        "seconds" : 2.332723021507263,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy051",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.789000988006592,
+        "outputTokens" : 29,
+        "seconds" : 2.791931986808777,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerNamed",
+        "corrections" : [
+
+        ],
+        "id" : "gy052",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.688956141471863,
+        "outputTokens" : 29,
+        "seconds" : 2.691074013710022,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "gy053",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.773071050643921,
+        "outputTokens" : 29,
+        "seconds" : 2.776208996772766,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "gy055",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.1128170490264893,
+        "outputTokens" : 23,
+        "seconds" : 2.115186929702759,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_not_shortened"
+        ],
+        "id" : "gy056",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "lockers",
+        "modelSeconds" : 2.735705018043518,
+        "outputTokens" : 29,
+        "seconds" : 2.738842010498047,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "to001",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.837540864944458,
+        "outputTokens" : 29,
+        "seconds" : 2.8414549827575684,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to002",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0136799812316895,
+        "outputTokens" : 23,
+        "seconds" : 2.016672968864441,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "another_group"
+        ],
+        "id" : "to003",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 1.8631170988082886,
+        "outputTokens" : 29,
+        "seconds" : 1.8665660619735718,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to004",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "visits",
+        "modelSeconds" : 2.6696619987487793,
+        "outputTokens" : 29,
+        "seconds" : 2.673677086830139,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerNamed",
+        "corrections" : [
+          "called_by_name"
+        ],
+        "id" : "to005",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 1.9477170705795288,
+        "outputTokens" : 23,
+        "seconds" : 1.9494190216064453,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to006",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0456749200820923,
+        "outputTokens" : 23,
+        "seconds" : 2.0487040281295776,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to007",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.807765007019043,
+        "outputTokens" : 29,
+        "seconds" : 2.81202495098114,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "said_before",
+          "urgency_unconfirmed"
+        ],
+        "id" : "to038",
+        "isNovel" : false,
+        "kind" : "statement",
+        "matchedGoal" : "visits",
+        "modelSeconds" : 1.8209049701690674,
+        "outputTokens" : 29,
+        "seconds" : 1.824842929840088,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherPerson",
+        "corrections" : [
+          "said_to_someone_else"
+        ],
+        "id" : "to008",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "visits",
+        "modelSeconds" : 2.461624026298523,
+        "outputTokens" : 29,
+        "seconds" : 2.465198040008545,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to009",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.7389729022979736,
+        "outputTokens" : 29,
+        "seconds" : 2.7422560453414917,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to010",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.06312894821167,
+        "outputTokens" : 23,
+        "seconds" : 2.066102981567383,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "no_change_marker"
+        ],
+        "id" : "to011",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.964460015296936,
+        "outputTokens" : 29,
+        "seconds" : 1.9676460027694702,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to012",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.8059420585632324,
+        "outputTokens" : 29,
+        "seconds" : 2.8096070289611816,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to013",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9789559841156006,
+        "outputTokens" : 23,
+        "seconds" : 1.982024908065796,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "another_group"
+        ],
+        "id" : "to014",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 1.8771289587020874,
+        "outputTokens" : 29,
+        "seconds" : 1.880389928817749,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_not_shortened"
+        ],
+        "id" : "to015",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.6718209981918335,
+        "outputTokens" : 29,
+        "seconds" : 2.6762501001358032,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "said_before",
+          "urgency_unconfirmed"
+        ],
+        "id" : "to054",
+        "isNovel" : false,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 1.892760992050171,
+        "outputTokens" : 29,
+        "seconds" : 1.8964899778366089,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to016",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9547560214996338,
+        "outputTokens" : 23,
+        "seconds" : 1.957932949066162,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to017",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.896407961845398,
+        "outputTokens" : 23,
+        "seconds" : 1.8992999792099,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "to018",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "visits",
+        "modelSeconds" : 2.7671929597854614,
+        "outputTokens" : 29,
+        "seconds" : 2.770915985107422,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to019",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9931750297546387,
+        "outputTokens" : 23,
+        "seconds" : 1.99618399143219,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "headline_not_shortened"
+        ],
+        "id" : "to020",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 1.9403570890426636,
+        "outputTokens" : 29,
+        "seconds" : 2.1675000190734863,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to021",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.032462954521179,
+        "outputTokens" : 23,
+        "seconds" : 2.035499930381775,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to022",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.8496819734573364,
+        "outputTokens" : 29,
+        "seconds" : 2.853314995765686,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to023",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.614405035972595,
+        "outputTokens" : 29,
+        "seconds" : 2.6178849935531616,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherPerson",
+        "corrections" : [
+          "said_to_someone_else"
+        ],
+        "id" : "to024",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.446189045906067,
+        "outputTokens" : 29,
+        "seconds" : 2.4497679471969604,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to025",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.803394913673401,
+        "outputTokens" : 29,
+        "seconds" : 2.8072749376296997,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to026",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0475680828094482,
+        "outputTokens" : 23,
+        "seconds" : 2.05056095123291,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "to027",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.7358009815216064,
+        "outputTokens" : 29,
+        "seconds" : 2.7394150495529175,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to028",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.6626510620117188,
+        "outputTokens" : 29,
+        "seconds" : 2.6661540269851685,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to029",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.804719924926758,
+        "outputTokens" : 29,
+        "seconds" : 2.808195948600769,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to030",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.612118124961853,
+        "outputTokens" : 29,
+        "seconds" : 2.6154160499572754,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to031",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0041730403900146,
+        "outputTokens" : 23,
+        "seconds" : 2.0071449279785156,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "another_group",
+          "headline_not_shortened"
+        ],
+        "id" : "to032",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 1.9294790029525757,
+        "outputTokens" : 29,
+        "seconds" : 1.9330819845199585,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to033",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.6697909832000732,
+        "outputTokens" : 29,
+        "seconds" : 2.6737000942230225,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to034",
+        "isNovel" : true,
+        "kind" : "unclear",
+        "modelSeconds" : 1.9447970390319824,
+        "outputTokens" : 21,
+        "seconds" : 1.9476819038391113,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to035",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.766426920890808,
+        "outputTokens" : 29,
+        "seconds" : 2.770788073539734,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherGroup",
+        "corrections" : [
+
+        ],
+        "id" : "to036",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.045133948326111,
+        "outputTokens" : 23,
+        "seconds" : 2.04811692237854,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to037",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.161743998527527,
+        "outputTokens" : 23,
+        "seconds" : 2.1646710634231567,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "audience" : "listenerGroup",
+        "corrections" : [
+
+        ],
+        "id" : "to039",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.6810660362243652,
+        "outputTokens" : 29,
+        "seconds" : 2.6846600770950317,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "otherPerson",
+        "corrections" : [
+          "said_to_someone_else"
+        ],
+        "id" : "to040",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.495284080505371,
+        "outputTokens" : 29,
+        "seconds" : 2.498906970024109,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to041",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.7852230072021484,
+        "outputTokens" : 29,
+        "seconds" : 2.7888940572738647,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to042",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.7114810943603516,
+        "outputTokens" : 29,
+        "seconds" : 2.7158079147338867,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to043",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9680490493774414,
+        "outputTokens" : 23,
+        "seconds" : 1.970879077911377,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to044",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "visits",
+        "modelSeconds" : 2.6171590089797974,
+        "outputTokens" : 29,
+        "seconds" : 2.620434045791626,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to045",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.7952070236206055,
+        "outputTokens" : 29,
+        "seconds" : 2.7993690967559814,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to046",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.700642943382263,
+        "outputTokens" : 29,
+        "seconds" : 2.705030918121338,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to047",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "visits",
+        "modelSeconds" : 2.7911499738693237,
+        "outputTokens" : 29,
+        "seconds" : 2.794824004173279,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to048",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.8862029314041138,
+        "outputTokens" : 23,
+        "seconds" : 1.8890060186386108,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to049",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "visits",
+        "modelSeconds" : 2.841020941734314,
+        "outputTokens" : 29,
+        "seconds" : 2.8445459604263306,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to050",
+        "isNovel" : true,
+        "kind" : "unclear",
+        "modelSeconds" : 1.8507870435714722,
+        "outputTokens" : 21,
+        "seconds" : 1.853667974472046,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to051",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "departure",
+        "modelSeconds" : 2.687644839286804,
+        "outputTokens" : 29,
+        "seconds" : 2.6911590099334717,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "to052",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "visits",
+        "modelSeconds" : 2.7675211429595947,
+        "outputTokens" : 29,
+        "seconds" : 2.7711039781570435,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "second_look"
+        ],
+        "id" : "to053",
+        "isNovel" : true,
+        "kind" : "reported",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.8615020513534546,
+        "outputTokens" : 29,
+        "seconds" : 2.864859938621521,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to055",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.973197102546692,
+        "outputTokens" : 23,
+        "seconds" : 1.9760839939117432,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "to056",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0395909547805786,
+        "outputTokens" : 23,
+        "seconds" : 2.0425139665603638,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk001",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.656627058982849,
+        "outputTokens" : 29,
+        "seconds" : 2.659121036529541,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk002",
+        "isNovel" : true,
+        "kind" : "statement",
+        "modelSeconds" : 1.8603971004486084,
+        "outputTokens" : 21,
+        "seconds" : 1.8620109558105469,
+        "stage" : "model",
+        "subject" : "someoneElse",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk003",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.660616874694824,
+        "outputTokens" : 29,
+        "seconds" : 2.6631990671157837,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk004",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.7143659591674805,
+        "outputTokens" : 29,
+        "seconds" : 2.716508984565735,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "said_before",
+          "urgency_unconfirmed"
+        ],
+        "id" : "mk054",
+        "isNovel" : false,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 1.927548885345459,
+        "outputTokens" : 29,
+        "seconds" : 1.9297599792480469,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk005",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.7399709224700928,
+        "outputTokens" : 29,
+        "seconds" : 2.74222993850708,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk006",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0757020711898804,
+        "outputTokens" : 23,
+        "seconds" : 2.0774959325790405,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "said_before",
+          "urgency_unconfirmed"
+        ],
+        "id" : "mk038",
+        "isNovel" : false,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 1.8827500343322754,
+        "outputTokens" : 29,
+        "seconds" : 1.8850740194320679,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_not_shortened"
+        ],
+        "id" : "mk007",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.8245450258255005,
+        "outputTokens" : 29,
+        "seconds" : 2.827828049659729,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "unknownPerson",
+        "corrections" : [
+          "audience_unknown"
+        ],
+        "id" : "mk008",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.4827799797058105,
+        "outputTokens" : 29,
+        "seconds" : 2.4848469495773315,
+        "stage" : "model",
+        "subject" : "unclear",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk009",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.662014961242676,
+        "outputTokens" : 29,
+        "seconds" : 2.6638669967651367,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk010",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9520319700241089,
+        "outputTokens" : 23,
+        "seconds" : 1.9536089897155762,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk011",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0393779277801514,
+        "outputTokens" : 23,
+        "seconds" : 2.0410850048065186,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk012",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.78460693359375,
+        "outputTokens" : 29,
+        "seconds" : 2.787230968475342,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk013",
+        "isNovel" : true,
+        "kind" : "reported",
+        "modelSeconds" : 2.0261030197143555,
+        "outputTokens" : 21,
+        "seconds" : 2.027922034263611,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk014",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.952355980873108,
+        "outputTokens" : 23,
+        "seconds" : 1.9540009498596191,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk015",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.7680509090423584,
+        "outputTokens" : 29,
+        "seconds" : 2.7703980207443237,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk016",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0563600063323975,
+        "outputTokens" : 23,
+        "seconds" : 2.058117985725403,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk017",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.866692900657654,
+        "outputTokens" : 29,
+        "seconds" : 2.8689210414886475,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk018",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.6683270931243896,
+        "outputTokens" : 29,
+        "seconds" : 2.670693039894104,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk019",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0625109672546387,
+        "outputTokens" : 23,
+        "seconds" : 2.0641289949417114,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "unknownPerson",
+        "corrections" : [
+          "audience_unknown"
+        ],
+        "id" : "mk020",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.4226839542388916,
+        "outputTokens" : 29,
+        "seconds" : 2.424844980239868,
+        "stage" : "model",
+        "subject" : "unclear",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk021",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9835669994354248,
+        "outputTokens" : 23,
+        "seconds" : 1.9852049350738525,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk022",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.8615100383758545,
+        "outputTokens" : 29,
+        "seconds" : 2.863767981529236,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk023",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.7543710470199585,
+        "outputTokens" : 29,
+        "seconds" : 2.7565499544143677,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "unknownPerson",
+        "corrections" : [
+          "urgency_unconfirmed",
+          "audience_unknown"
+        ],
+        "id" : "mk024",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.4822330474853516,
+        "outputTokens" : 29,
+        "seconds" : 2.484501004219055,
+        "stage" : "model",
+        "subject" : "unclear",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk025",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.6845920085906982,
+        "outputTokens" : 29,
+        "seconds" : 2.687188982963562,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk026",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.1120190620422363,
+        "outputTokens" : 23,
+        "seconds" : 2.1137319803237915,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk027",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.77421498298645,
+        "outputTokens" : 29,
+        "seconds" : 2.7764689922332764,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk028",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.807065010070801,
+        "outputTokens" : 29,
+        "seconds" : 2.809805989265442,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "second_look"
+        ],
+        "id" : "mk029",
+        "isNovel" : true,
+        "kind" : "reported",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.932447075843811,
+        "outputTokens" : 29,
+        "seconds" : 2.9346659183502197,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk030",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "danger",
+        "modelSeconds" : 2.9254029989242554,
+        "outputTokens" : 29,
+        "seconds" : 2.9273520708084106,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk031",
+        "isNovel" : true,
+        "kind" : "reported",
+        "modelSeconds" : 1.892063021659851,
+        "outputTokens" : 21,
+        "seconds" : 1.8936669826507568,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk032",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9302949905395508,
+        "outputTokens" : 23,
+        "seconds" : 1.9318609237670898,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk033",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.8726260662078857,
+        "outputTokens" : 29,
+        "seconds" : 2.8750799894332886,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk034",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0628010034561157,
+        "outputTokens" : 23,
+        "seconds" : 2.0644410848617554,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_not_shortened"
+        ],
+        "id" : "mk035",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.8510100841522217,
+        "outputTokens" : 29,
+        "seconds" : 2.8538260459899902,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk036",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0227760076522827,
+        "outputTokens" : 23,
+        "seconds" : 2.024493932723999,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "second_look"
+        ],
+        "id" : "mk037",
+        "isNovel" : true,
+        "kind" : "hypothetical",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.8270740509033203,
+        "outputTokens" : 29,
+        "seconds" : 2.8292040824890137,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk039",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.7290490865707397,
+        "outputTokens" : 29,
+        "seconds" : 2.7312549352645874,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk040",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.055793046951294,
+        "outputTokens" : 23,
+        "seconds" : 2.057554006576538,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "urgency_unconfirmed",
+          "cut_off"
+        ],
+        "id" : "mk041",
+        "isNovel" : true,
+        "kind" : "unclear",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 1.9372329711914062,
+        "outputTokens" : 29,
+        "seconds" : 1.9393659830093384,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_not_shortened"
+        ],
+        "id" : "mk042",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.825221061706543,
+        "outputTokens" : 29,
+        "seconds" : 2.8282550573349,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk043",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9283640384674072,
+        "outputTokens" : 23,
+        "seconds" : 1.9301549196243286,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk044",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.841251015663147,
+        "outputTokens" : 29,
+        "seconds" : 2.8434629440307617,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk045",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9543370008468628,
+        "outputTokens" : 23,
+        "seconds" : 1.9561599493026733,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk046",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.8677479028701782,
+        "outputTokens" : 29,
+        "seconds" : 2.870437979698181,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk047",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 1.9495410919189453,
+        "outputTokens" : 23,
+        "seconds" : 1.9512889385223389,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk048",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.8875778913497925,
+        "outputTokens" : 29,
+        "seconds" : 2.8895679712295532,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk049",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.7971620559692383,
+        "outputTokens" : 29,
+        "seconds" : 2.7992420196533203,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk050",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.6682980060577393,
+        "outputTokens" : 29,
+        "seconds" : 2.6704810857772827,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "audience" : "unknownPerson",
+        "corrections" : [
+          "audience_unknown"
+        ],
+        "id" : "mk051",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.440604090690613,
+        "outputTokens" : 29,
+        "seconds" : 2.4426920413970947,
+        "stage" : "model",
+        "subject" : "unclear",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk052",
+        "isNovel" : true,
+        "kind" : "question",
+        "matchedGoal" : "me",
+        "modelSeconds" : 2.8363540172576904,
+        "outputTokens" : 29,
+        "seconds" : 2.838639974594116,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "second_look"
+        ],
+        "id" : "mk053",
+        "isNovel" : true,
+        "kind" : "reported",
+        "matchedGoal" : "deadline",
+        "modelSeconds" : 2.8973639011383057,
+        "outputTokens" : 29,
+        "seconds" : 2.8994970321655273,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "mk055",
+        "isNovel" : true,
+        "kind" : "noChange",
+        "modelSeconds" : 2.0811800956726074,
+        "outputTokens" : 23,
+        "seconds" : 2.0828219652175903,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk056",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.765043020248413,
+        "outputTokens" : 29,
+        "seconds" : 2.7673349380493164,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "mk057",
+        "isNovel" : true,
+        "kind" : "statement",
+        "matchedGoal" : "tools",
+        "modelSeconds" : 2.712154984474182,
+        "outputTokens" : 29,
+        "seconds" : 2.7143170833587646,
+        "stage" : "model",
+        "subject" : "listenerOrGroup",
+        "verdict" : "relevant"
+      }
+    ]
+  },
+  "split" : "dev4"
+}

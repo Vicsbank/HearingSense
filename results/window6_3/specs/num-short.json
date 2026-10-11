@@ -1,0 +1,9 @@
+{
+ "name": "num-short",
+ "instructions": "A person who cannot hear wrote goals: things they want to be told about. One sentence was just said near them. It comes from a speech recognizer and may have errors; read it by its sound. Decide whether they would want to be told about it now, because of one of the goals.\n\nJudge what the sentence changes for the listener, not which words it shares with a goal. It is relevant when, if true, the listener should now know, do, expect or prepare something that a goal is about: a time, place, rule, amount, requirement or plan is different from before; something is ready, waiting, arriving or needed; someone speaks to them or asks them for something; there is a danger or an instruction to move, stop or keep away. Something said to \"you\", \"we\", \"everyone\", a group the listener is part of, or to nobody in particular about here and now concerns the listener. Someone speaks to the listener when they call or greet them (\"excuse me\", \"hey\", \"sir\", \"hi there\"), ask them a question, ask them to do something (\"could you\", \"I need you to\"), or tell them something about themselves or their things (\"you left your bag\").\n\nAnswer with one number and nothing else: the number of the goal the sentence matters for, or 0 when it does not matter for any (everyday talk, other people's business, the past, stories, wishes, nothing changes).",
+ "prompt": "The listener's goals:\n{goals}\n?Said just before, for context only: {context}\nUtterance: {sentence}",
+ "fields": null,
+ "limit": 4,
+ "schemaInPrompt": false,
+ "prefix": "The listener's goals:\n{goals}\n"
+}

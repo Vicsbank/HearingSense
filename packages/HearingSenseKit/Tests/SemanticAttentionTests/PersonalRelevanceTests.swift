@@ -318,4 +318,9 @@ import Testing
         await reasoner.setJudgement(changed, Fixture.relevant(headline: ""))
         #expect(await engine.evaluate(Fixture.utterance(changed, at: 120)).isAccepted)
     }
+
+    @Test func aDayOrTimeWithAnApostropheIsStillThatDay() {
+        #expect(SemanticText.quantities(in: "Tonight's class is at six.") == ["tonight", "six"])
+        #expect(SemanticText.quantities(in: "Friday's exam moved.") == ["friday"])
+    }
 }

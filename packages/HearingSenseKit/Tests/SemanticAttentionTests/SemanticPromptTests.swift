@@ -22,10 +22,11 @@ import Testing
 
     @Test func noExampleInTheInstructionsIsTakenFromAnEvaluationSet() throws {
         let instructions = [FoundationModelRelevanceReasoner.stagedInstructions, FoundationModelRelevanceReasoner.secondLookInstructions,
-                            FoundationModelRelevanceReasoner.repetitionInstructions]
+                            FoundationModelRelevanceReasoner.repetitionInstructions,
+                            FoundationModelRelevanceReasoner.concernInstructions, FoundationModelRelevanceReasoner.groupsInstructions]
         let examples = instructions.flatMap(Self.examples)
         #expect(examples.count >= 5)
-        for split in [SemanticDataset.Split.heldout, .sealed, .dev3, .sealed2] {
+        for split in [SemanticDataset.Split.heldout, .sealed, .dev3, .sealed2, .dev4, .sealed3] {
             for item in try SemanticDataset.load(split).items {
                 let sentence = Self.words(item.text)
                 for example in examples {
@@ -48,6 +49,27 @@ import Testing
         let tuned = Set(tuning.map(\.profile)).flatMap { SemanticDataset.goals(for: $0).map { $0.goal.text.lowercased() } }
         #expect(Set(goals).isDisjoint(with: tuned))
         #expect(sealed.items.count >= 240)
+    }
+
+    @Test func theThirdSealedSetSharesNothingWithTheSetsUsedForTuning() throws {
+        let (sealed, excluded) = try SemanticDataset.load(.sealed3).independent()
+        #expect(excluded.count <= 2)
+        let tuning = try [SemanticDataset.Split.dev, .dev2, .dev3, .dev4, .heldout, .sealed, .sealed2]
+            .flatMap { try SemanticDataset.load($0).items }
+        #expect(Set(sealed.items.map(\.profile)).isDisjoint(with: tuning.map(\.profile)))
+        #expect(Set(sealed.items.map { $0.text.lowercased() }).isDisjoint(with: tuning.map { $0.text.lowercased() }))
+        let goals = Set(sealed.items.map(\.profile)).flatMap { SemanticDataset.goals(for: $0).map { $0.goal.text.lowercased() } }
+        let tuned = Set(tuning.map(\.profile)).flatMap { SemanticDataset.goals(for: $0).map { $0.goal.text.lowercased() } }
+        #expect(Set(goals).isDisjoint(with: tuned))
+        #expect(sealed.items.count >= 300)
+        // Three of its five listeners say who they are in an "about me" line, one inside the goals, one nowhere.
+        #expect(Set(sealed.items.map(\.profile)).count { !SemanticDataset.about(for: $0).isEmpty } == 3)
+        // No rule of the audience analysis was written from one of its sentences: none of the
+        // examples in the analyzer's own tests occurs in it (checked here by its words).
+        let sentences = Set(sealed.items.map { $0.text.lowercased() })
+        for example in ["yellow boat, you launch first.", "peter, your taxi is outside.", "crew a, life jackets on."] {
+            #expect(!sentences.contains(example))
+        }
     }
 
     @Test func theAnswerFormIsNotSentWithARequestOfTheCurrentStyle() {
