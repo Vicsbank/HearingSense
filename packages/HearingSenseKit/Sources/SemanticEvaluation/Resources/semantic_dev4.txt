@@ -1,0 +1,252 @@
+# Hearing Sense — semantic attention, DEVELOPMENT set 4 (Window 6.3: personal relevance).
+# Synthetic, written for this project; no real conversation. Prompts, rules and thresholds may be tuned on this
+# file. Its profiles, goals and sentences do not occur in semantic_sealed3.txt (which has another author).
+# The listener is an ordinary person with earphones in. Two profiles have an "about me" line, one says who the
+# listener is inside the goals, one says nothing about the listener at all (maker): there, a sentence said to
+# a named person or team cannot be placed and is labelled ambiguous (audience_unknown).
+# Profile lines: @profile | <profile> | <goal key> | <goal text>
+# About lines:   @about | <profile> | <what the listener wrote about themselves>
+# Item lines: id | profile | category | expected | acceptable goals | flags | utterance | why
+@profile | library | room | Tell me if anything changes about our study room booking or when the library closes.
+@profile | library | project | Let me know about anything that changes our chemistry group project.
+@profile | library | me | Tell me when someone is talking to me.
+@profile | library | danger | Warn me if there's an emergency and I have to leave the building.
+@about | library | My name is Priya. I'm with my chemistry study group in study room 3.
+@profile | gym | class | Tell me about any change to the six o'clock spin class, that's the one I take.
+@profile | gym | lockers | Let me know about anything that affects the lockers or the showers.
+@profile | gym | me | Notify me if someone is talking to me, my name is Jordan.
+@profile | gym | danger | Warn me if I'm in the way of something dangerous.
+@profile | tour | departure | Tell me when and where my bus leaves or if the meeting point changes.
+@profile | tour | visits | Let me know about anything I have to pay, show or bring for a visit.
+@profile | tour | me | Tell me if the guide or anyone else is speaking to me.
+@profile | tour | danger | Warn me about anything dangerous around me.
+@about | tour | I'm Nora, travelling on the red bus with group B.
+@profile | maker | deadline | Tell me about anything that changes when our robot has to be finished or when the competition is.
+@profile | maker | tools | Let me know when a machine or tool I might need is free, broken or off limits.
+@profile | maker | me | Notify me when someone wants my attention.
+@profile | maker | danger | Warn me if something near me is dangerous.
+li001|library|obvious|relevant|room||The library is closing an hour early tonight, at nine.|names the closing time
+li002|library|unrelated|irrelevant|||I can't believe how much it rained on the way here.|small talk
+li003|library|implicit|relevant|room||There's another group booked into room three from four o'clock, so you'll need to wrap up by then.|the booking ends early
+li004|library|other_group|irrelevant|||Room five, your booking ran out ten minutes ago.|another room
+li005|library|attention|relevant|me||Priya, did you bring the lab notebook?|spoken to by name
+li006|library|third_person|irrelevant|||My roommate's study group got kicked out of the science library last week.|someone else, elsewhere
+li007|library|implicit|relevant|project||Okay, so we're dropping the titration part and just doing the spectroscopy section.|the project's scope changes
+li008|library|unrelated|irrelevant|||This coffee is way too sweet, I asked for no syrup.|small talk
+li009|library|urgent_short|relevant|danger|important,urgent|Fire alarm, everybody out now!|emergency
+li010|library|other_addressee|irrelevant|||Daniel, somebody's been looking for you at the front desk.|said to Daniel about Daniel
+li011|library|group_all|relevant|room|important|Attention please, all study rooms need to be vacated by eight tonight for maintenance.|announcement to all rooms
+li012|library|negation|irrelevant|||The closing time hasn't changed, it's still midnight during exams.|nothing changes
+li013|library|causal|relevant|project|important|Since Arjun can't get the data until Thursday, we're pushing our draft to Friday.|cause and new date
+li014|library|past|irrelevant|||Last semester they used to let you book these rooms for six hours at a time.|the past
+li015|library|other_group|irrelevant|||The physics group next door is presenting on Monday instead of Wednesday.|another group's project
+li016|library|implicit|relevant|room||The card reader on this door stops working after ten, you won't get back in.|access to the room
+li017|library|hypothetical|irrelevant|||Imagine if the library just stayed open all night, that would be amazing.|a wish
+li018|library|my_group|relevant|room||Study room three, you have five minutes left on your booking.|the listener's own room
+li019|library|unrelated|irrelevant|||Did you watch the game last night? Unreal ending.|small talk
+li020|library|other_affects|relevant|room||Daniel, they're locking this whole floor at eight tonight, so tell your group too.|said to Daniel, the floor closes for all
+li021|library|idiom|irrelevant|||If I read one more page my brain is going to catch fire.|figure of speech
+li022|library|multi|relevant|project|context=Are we still splitting the report into four parts?|No, three, and you're taking the introduction.|project change, with the question before
+li023|library|sarcasm_quote|irrelevant|||Oh sure, because the library is totally going to let us stay past closing.|sarcasm
+li024|library|attention|relevant|me||Excuse me, is anyone using this chair?|a stranger speaks to the listener
+li025|library|other_addressee|irrelevant|||Hannah, your booking for tomorrow got cancelled, you need to redo it.|Hannah's own booking
+li026|library|implicit|relevant|project|important|The professor just emailed, we have to add a safety section to the write-up.|a new requirement
+li027|library|unrelated|irrelevant|||My phone's about to die and I left the charger at home.|small talk
+li028|library|asr_error|relevant|room||The library clothes early on Friday for the holiday.|closes, misrecognised
+li029|library|negation|relevant|room||You can no longer extend a room booking at the desk, it has to be done online.|the not is the news
+li030|library|multi|irrelevant||context=My sister's been waiting on her visa interview date.|They finally moved it to next Tuesday.|the sister's interview
+li031|library|group_all|relevant|danger|important,urgent|Everyone please make your way to the nearest exit, this is not a drill.|evacuation
+li032|library|past|irrelevant|||I pulled an all-nighter in this room before the organic exam last year.|the past
+li033|library|other_group|irrelevant|||Can the group in room one please keep the noise down?|said to another room
+li034|library|implicit|relevant|project||Mei's taking over the graphs, so send your numbers to her instead of me.|who does what changes
+li035|library|unrelated|irrelevant|||They're opening a new ramen place across from the bookstore.|small talk
+li036|library|third_person|irrelevant|||My cousin's university closes its library at six on weekends.|another library
+li037|library|repeated|repeat|room|repeat_of=li001|Just so you know, they're shutting the library at nine tonight, an hour earlier than usual.|same news again
+li038|library|hypothetical|irrelevant|||Maybe they'll push the project deadline back if enough people complain.|a guess
+li039|library|my_group|relevant|project||Chemistry group, the professor wants your topic choice by tomorrow noon.|the listener's own group
+li040|library|other_addressee|irrelevant|||Excuse me, Tom, can I borrow your charger for a minute?|said to Tom
+li041|library|incomplete|irrelevant|||So about the booking, I was going to say that the|cut off
+li042|library|other_affects|relevant|room||Hannah, the desk says nobody can stay in the study rooms past ten tonight.|said to Hannah, applies to every room
+li043|library|unrelated|irrelevant|||Honestly I prefer the old textbook, the new edition is so confusing.|small talk
+li044|library|urgent_short|relevant|danger|important,urgent|Gas leak in the lab wing, leave the building!|emergency
+li045|library|sarcasm_quote|irrelevant|||And then the guy in the movie yells everybody get out, the building's coming down.|a film
+li046|library|causal|relevant|room|important|The heating's broken on this side, so they're moving everyone from rooms one to four down to the reading hall.|cause and the room changes
+li047|library|negation|irrelevant|||Nothing's different for the project, the due date is the same as on the syllabus.|nothing changes
+li048|library|ambiguous|ambiguous|||Somebody left their laptop charger in here.|could be the listener's or not
+li049|library|multi|relevant|room|context=Can we keep the room after five?|No, it's reserved for a seminar, we have to be out by then.|booking, with the question before
+li050|library|attention|relevant|me||Is this your water bottle?|a question put to the listener
+li051|library|other_group|irrelevant|||The engineering students have to hand in their group report tonight.|another group's deadline
+li052|library|asr_error|relevant|project||We decided to due the presentation as a poster instead of slides.|do, misrecognised
+li053|library|multi|irrelevant||context=In the last episode the whole lab is on fire.|And he shouts that everyone has to get out right now.|a series
+li054|library|repeated|repeat|project|repeat_of=li026|Don't forget the professor now wants a safety section in our write-up.|same news again
+li055|library|unrelated|irrelevant|||I need to do laundry tonight or I'll have nothing to wear.|small talk
+li056|library|implicit|relevant|room||They need this room for an exam tomorrow morning, so our nine o'clock slot is gone.|the booking is lost
+gy001|gym|obvious|relevant|class||Tonight's six o'clock spin class is starting fifteen minutes late.|names the class
+gy002|gym|unrelated|irrelevant|||I'm thinking of getting a dog, maybe a beagle.|small talk
+gy003|gym|other_group|irrelevant|||The seven o'clock yoga class has been moved to studio two.|another class
+gy004|gym|implicit|relevant|lockers|important|They're turning the hot water off at five for the boiler repair.|no hot showers
+gy005|gym|attention|relevant|me||Jordan, are you using this bench?|spoken to by name
+gy006|gym|third_person|irrelevant|||My brother's gym cancelled all their spin classes for a month.|another gym
+gy007|gym|implicit|relevant|class||The instructor for the six o'clock ride called in sick, so Maya is covering.|the class changes
+gy008|gym|other_addressee|irrelevant|||Marcus, you left your locker open again.|Marcus's locker
+gy009|gym|urgent_short|relevant|danger|important,urgent|Heads up, behind you!|danger, act now
+gy010|gym|unrelated|irrelevant|||This playlist is so much better than last week's.|small talk
+gy011|gym|negation|irrelevant|||The spin schedule is exactly the same as last month.|nothing changes
+gy012|gym|group_all|relevant|lockers|important|Attention members, all lockers must be emptied tonight, we're replacing the locks.|announcement to everyone
+gy013|gym|past|irrelevant|||They used to run the six o'clock class in the big studio upstairs.|the past
+gy014|gym|other_group|irrelevant|||Seven thirty spinners, your bikes are being swapped out, so pick a new one.|another class
+gy015|gym|causal|relevant|class|important|Three bikes are broken, so tonight's six o'clock is capped at twelve riders, first come first served.|cause and a limit
+gy016|gym|hypothetical|irrelevant|||I wish they'd add a spin class at lunchtime.|a wish
+gy017|gym|idiom|irrelevant|||That last set absolutely killed me, I'm dead.|figure of speech
+gy018|gym|my_group|relevant|class||Six o'clock spin, we're in studio B today, not the usual room.|the listener's own class
+gy019|gym|unrelated|irrelevant|||Parking was a nightmare, I circled three times.|small talk
+gy020|gym|other_affects|relevant|lockers||Marcus, can you put a sign up, the whole locker room's closed until the floor dries.|said to Marcus, the locker room is closed
+gy021|gym|sarcasm_quote|irrelevant|||Yeah right, like they'd ever fix the showers on time.|sarcasm
+gy022|gym|multi|relevant|class|context=Is the six o'clock still on the second floor?|No, they moved it down to the studio by the pool.|place, with the question before
+gy023|gym|attention|relevant|me||Sorry, how many sets do you have left?|a question put to the listener
+gy024|gym|other_addressee|irrelevant|||Nice work today, Sam, you really pushed on that last climb.|said to Sam
+gy025|gym|implicit|relevant|lockers||From Monday you'll need your own padlock, the built-in ones are being removed.|lockers change
+gy026|gym|unrelated|irrelevant|||I'm so behind on that show, no spoilers please.|small talk
+gy027|gym|asr_error|relevant|class||The six a clock spin class is council tonight.|cancelled, misrecognised
+gy028|gym|negation|relevant|lockers||The showers on the upper floor are not available anymore after eight.|the not is the news
+gy029|gym|multi|irrelevant||context=My daughter's swim lesson keeps changing.|Now they've pushed it to six o'clock on Thursdays.|the daughter's lesson
+gy030|gym|urgent_short|relevant|danger|important,urgent|Watch out, that bar's slipping!|danger, act now
+gy031|gym|past|irrelevant|||I slipped on those wet tiles by the showers two years ago and broke my wrist.|the past
+gy032|gym|other_group|irrelevant|||Staff lockers are being moved to the back office this week.|the staff's lockers
+gy033|gym|implicit|relevant|class||If you're here for the six o'clock ride, you'll need to sign in on the sheet by the door from now on.|a new rule for the class
+gy034|gym|unrelated|irrelevant|||My sister's getting married in the spring.|small talk
+gy035|gym|group_all|relevant|danger|important,urgent|Everybody step back from the cable machine, the wire just snapped.|danger, to everyone
+gy036|gym|third_person|irrelevant|||My coworker's spin instructor makes them ride for ninety minutes.|someone else's class
+gy037|gym|hypothetical|irrelevant|||What if they close the showers for the whole renovation, imagine that.|a what-if
+gy038|gym|repeated|repeat|lockers|repeat_of=gy004|Reminder, the hot water goes off at five while they fix the boiler.|same news again
+gy039|gym|my_group|relevant|me||Hey Jordan, the trainer's asking for you at the front.|the listener by name
+gy040|gym|other_addressee|irrelevant|||Lena, your six o'clock session with the trainer is moved to seven.|Lena's session
+gy041|gym|incomplete|irrelevant|||And for the spin class tonight you'll want to|cut off
+gy042|gym|other_affects|relevant|class||Sam, let your whole six o'clock group know the class ends twenty minutes early today.|said to Sam, about the listener's class
+gy043|gym|unrelated|irrelevant|||Protein bars are two for one at the counter, not that I'd eat them.|small talk
+gy044|gym|implicit|relevant|danger|important|Careful, the floor's soaking wet right where you're standing.|a hazard for the listener
+gy045|gym|sarcasm_quote|irrelevant|||My trainer always says pain is just weakness leaving the body, get out of your own way.|a saying
+gy046|gym|causal|relevant|lockers||A pipe burst in the changing room, so the showers are shut for the rest of the day.|cause and showers shut
+gy047|gym|negation|irrelevant|||No, the locker room isn't closing, that was just a rumor.|nothing changes
+gy048|gym|ambiguous|ambiguous|||I think somebody's alarm is going off in one of the lockers.|could be the listener's or not
+gy049|gym|multi|relevant|lockers|context=Are the lockers by the entrance okay to use?|Not those, they're taped off until the new doors arrive.|lockers, with the question before
+gy050|gym|idiom|irrelevant|||I'm going to crash and burn if I try that weight.|figure of speech
+gy051|gym|other_group|irrelevant|||Swim team, your lane time is cut to thirty minutes tonight.|another group
+gy052|gym|asr_error|relevant|me||Jordon, can I work in with you on this wreck?|Jordan and rack, misrecognised
+gy053|gym|multi|irrelevant||context=In that documentary the gym roof collapses.|The coach screams at everyone to move away from the wall.|a documentary
+gy054|gym|repeated|repeat|class|repeat_of=gy015|Just a reminder, only twelve spots in the six o'clock tonight because of the broken bikes.|same news again
+gy055|gym|unrelated|irrelevant|||I always forget how cold they keep it in here.|small talk
+gy056|gym|obvious|relevant|lockers||The showers in the main locker room are out of order until Friday.|names the showers
+to001|tour|obvious|relevant|departure||The red bus leaves from the north car park at four thirty sharp.|names the listener's bus
+to002|tour|unrelated|irrelevant|||The light on those hills is just gorgeous this time of day.|small talk
+to003|tour|other_group|irrelevant|||Blue bus, you're leaving at four from the main gate.|the other bus
+to004|tour|implicit|relevant|visits|important|You'll need your passport at the entrance to the palace, they check everyone.|something to show
+to005|tour|attention|relevant|me||Nora, is this seat next to you free?|spoken to by name
+to006|tour|third_person|irrelevant|||My parents did a bus tour in Portugal and the driver left without them.|someone else, elsewhere
+to007|tour|implicit|relevant|departure||The driver has to refuel, so we're setting off twenty minutes later than planned.|departure is later
+to008|tour|other_addressee|irrelevant|||Mr. Becker, you still owe me the fee for the boat trip.|Mr. Becker's fee
+to009|tour|urgent_short|relevant|danger|important,urgent|Stop, there's a car coming!|danger, act now
+to010|tour|unrelated|irrelevant|||I bought way too many postcards already.|small talk
+to011|tour|negation|irrelevant|||The meeting point is the same as this morning, by the fountain.|nothing changes
+to012|tour|group_all|relevant|departure|important|Listen up everyone, both buses now leave at five instead of four.|announcement to both buses
+to013|tour|past|irrelevant|||When I came here in the nineties you could walk right up to the ruins for free.|the past
+to014|tour|other_group|irrelevant|||Group A, your cathedral tickets are for the eleven o'clock slot.|the other group
+to015|tour|causal|relevant|visits||The cable car is closed for wind, so the afternoon visit is swapped for the museum, and that one costs eight euros.|cause and a cost
+to016|tour|hypothetical|irrelevant|||If it rains tomorrow they might cancel the boat ride, who knows.|a guess
+to017|tour|idiom|irrelevant|||These prices are highway robbery, I swear.|figure of speech
+to018|tour|my_group|relevant|visits||Group B, have your wristbands out, they'll scan them at the gate.|the listener's own group
+to019|tour|unrelated|irrelevant|||I should have worn the other shoes, these are useless on cobblestones.|small talk
+to020|tour|other_affects|relevant|departure||Driver, the police want every coach out of this square by three, including the red one.|said to the driver, the listener's bus has to leave
+to021|tour|sarcasm_quote|irrelevant|||Oh great, another gift shop, exactly what I came to Europe for.|sarcasm
+to022|tour|multi|relevant|departure|context=Do we meet at the fountain again?|No, by the clock tower this time, the square is blocked off.|meeting point, with the question before
+to023|tour|attention|relevant|me||Excuse me, could you take a picture of us?|a stranger asks the listener
+to024|tour|other_addressee|irrelevant|||Paolo, your group is waiting for you at the ticket office.|Paolo's group
+to025|tour|implicit|relevant|visits||No bags bigger than a handbag are allowed inside the caves.|something not to bring
+to026|tour|unrelated|irrelevant|||I think that's the same waiter we had yesterday.|small talk
+to027|tour|asr_error|relevant|departure||The red boss will leaf from the back entrance, not the front.|bus and leave, misrecognised
+to028|tour|negation|relevant|visits||They no longer take cash at the castle, card only.|the not is the news
+to029|tour|multi|irrelevant||context=My husband booked a separate wine tasting for tomorrow.|They just told him it starts at three, not two.|the husband's booking
+to030|tour|urgent_short|relevant|danger|important,urgent|Mind the edge, it's a sheer drop!|danger, act now
+to031|tour|past|irrelevant|||On yesterday's tour the bus broke down and we waited two hours.|the past
+to032|tour|other_group|irrelevant|||The school group over there has to be back on their coach by noon.|another group's coach
+to033|tour|implicit|relevant|departure|important|We're skipping the last viewpoint, so pickup is in ten minutes right here.|pickup time and place
+to034|tour|unrelated|irrelevant|||This gelato is the best thing I've eaten all week.|small talk
+to035|tour|group_all|relevant|danger|important|Everybody stay on the marked path, the ground is unstable on both sides.|a hazard, to everyone
+to036|tour|third_person|irrelevant|||My neighbour's tour group had to pay extra at every single stop.|someone else's tour
+to037|tour|hypothetical|irrelevant|||I wish they'd let us stay another hour in the old town.|a wish
+to038|tour|repeated|repeat|visits|repeat_of=to004|Don't forget, they check passports at the palace door, so keep yours handy.|same news again
+to039|tour|my_group|relevant|departure||Red bus passengers, we're boarding at bay seven, not bay two.|the listener's own bus
+to040|tour|other_addressee|irrelevant|||Excuse me, Linda, did you pay for the audio guide yet?|said to Linda
+to041|tour|incomplete|irrelevant|||And when we get back to the bus you all need to|cut off
+to042|tour|other_affects|relevant|visits||I was just telling Paolo's group that the monastery makes everyone cover their shoulders, so bring a scarf.|told to another group, applies to all
+to043|tour|unrelated|irrelevant|||Apparently it's going to be even hotter tomorrow.|weather
+to044|tour|attention|relevant|me||You dropped your ticket back there.|said to the listener about their thing
+to045|tour|sarcasm_quote|irrelevant|||The guidebook says, and I quote, leave the bus at your own risk.|a quotation
+to046|tour|causal|relevant|departure||There's a parade blocking the main road, so the bus will pick us up behind the market instead.|cause and a new pickup place
+to047|tour|negation|irrelevant|||No, nothing extra to pay at the museum, it's all included.|nothing changes
+to048|tour|ambiguous|ambiguous|||Has anybody seen a grey backpack?|asked of nobody in particular
+to049|tour|multi|relevant|visits|context=Do we need anything for the vineyard visit?|Just your ID, they won't pour for you without it.|something to bring, with the question before
+to050|tour|idiom|irrelevant|||That climb up the tower nearly gave me a heart attack.|figure of speech
+to051|tour|other_group|irrelevant|||The cruise passengers have to be back at the ship by five.|another group
+to052|tour|asr_error|relevant|visits||You have to show your wrist bend to get into the gardens.|wristband, misrecognised
+to053|tour|multi|irrelevant||context=In the film they shot here the bridge collapses.|And the guide yells run, get off the bridge.|a film
+to054|tour|repeated|repeat|departure|repeat_of=to012|Remember, it's five o'clock now for both buses, not four.|same news again
+to055|tour|unrelated|irrelevant|||I never know how much to tip in this country.|small talk
+to056|tour|implicit|relevant|visits||The boat only takes exact change, two euros each way.|something to pay and bring
+mk001|maker|obvious|relevant|deadline|important|The competition has been moved up a week, it's now on the twelfth.|names the competition
+mk002|maker|unrelated|irrelevant|||I had the weirdest dream about my old math teacher.|small talk
+mk003|maker|implicit|relevant|tools||The laser cutter's lens cracked, nobody touch it until the new one comes.|a machine is off limits
+mk004|maker|audience_unknown|ambiguous|||Build team, you're staying an extra hour tonight.|the listener's team is not known
+mk005|maker|attention|relevant|me||Hey, can you hold this while I tighten it?|asked of the listener
+mk006|maker|third_person|irrelevant|||My cousin's robotics team in Ohio missed their deadline by a day.|someone else, elsewhere
+mk007|maker|implicit|relevant|deadline||The judges want the robot inspected two days before the event, so it has to be done by Wednesday.|an earlier finish
+mk008|maker|audience_unknown|ambiguous|||Mia, your mom's outside waiting to pick you up.|the listener's name is not known
+mk009|maker|urgent_short|relevant|danger|important,urgent|Sparks, unplug it now!|danger, act now
+mk010|maker|unrelated|irrelevant|||It is absolutely freezing in here today.|small talk
+mk011|maker|negation|irrelevant|||Kickoff for next season is still in January, same as always.|nothing changes
+mk012|maker|group_all|relevant|tools|important|Everybody, the soldering irons are off limits until the new fume fan is installed.|announcement to everyone
+mk013|maker|past|irrelevant|||Two years ago we finished the robot the night before and it fell apart on stage.|the past
+mk014|maker|other_group|irrelevant|||The middle school club has their own competition in the spring.|another club
+mk015|maker|causal|relevant|deadline||The venue flooded, so the regional competition is pushed back two weeks.|cause and a new date
+mk016|maker|hypothetical|irrelevant|||What if we just strapped a second motor on, would that even be legal?|a what-if
+mk017|maker|idiom|irrelevant|||This code is a ticking time bomb, I swear.|figure of speech
+mk018|maker|audience_unknown|ambiguous|||Programmers, your laptops need to be back in the cart by five.|the listener's team is not known
+mk019|maker|unrelated|irrelevant|||I'm starving, I skipped lunch again.|small talk
+mk020|maker|other_affects|relevant|tools||Mia, the drill press is free now if you still need it.|said to Mia, a machine is free
+mk021|maker|sarcasm_quote|irrelevant|||Sure, because the 3D printer has never jammed on us before.|sarcasm
+mk022|maker|multi|relevant|tools|context=Is the band saw working again?|Not yet, the blade's still out for sharpening.|a machine is out, with the question before
+mk023|maker|attention|relevant|me||Excuse me, are you done with the multimeter?|asked of the listener
+mk024|maker|audience_unknown|ambiguous|||Leo, come over here a second, I need to show you something.|the listener's name is not known
+mk025|maker|implicit|relevant|deadline||They want the code frozen by Friday so the drivers can practice all weekend.|an earlier finish
+mk026|maker|unrelated|irrelevant|||My brother just got his driver's license, scary thought.|small talk
+mk027|maker|asr_error|relevant|tools||The three D printer is free now, the last prince just finished.|print, misrecognised
+mk028|maker|negation|relevant|tools||You can't use the belt sander anymore without a mentor in the room.|the not is the news
+mk029|maker|multi|irrelevant||context=My dad's car has been in the shop for a week.|They said it won't be finished until Friday now.|the father's car
+mk030|maker|urgent_short|relevant|danger|important,urgent|Hands off, the blade's still spinning!|danger, act now
+mk031|maker|past|irrelevant|||Last year the drill press was broken for a whole month.|the past
+mk032|maker|other_group|irrelevant|||The teachers are getting new laptops next semester.|the teachers
+mk033|maker|implicit|relevant|tools||I'm done with the heat gun, it's on the bench cooling down.|a tool is free
+mk034|maker|unrelated|irrelevant|||That new pizza place delivers until midnight.|small talk
+mk035|maker|group_all|relevant|deadline|important|Listen up, all teams have to hand in the finished robot's weight sheet by tomorrow noon.|announcement to all teams
+mk036|maker|third_person|irrelevant|||My friend's school doesn't even let students near the laser cutter.|another school
+mk037|maker|hypothetical|irrelevant|||I bet they'll postpone the competition if it snows.|a guess
+mk038|maker|repeated|repeat|tools|repeat_of=mk003|Remember, don't use the laser cutter, the lens is cracked.|same news again
+mk039|maker|audience_unknown|ambiguous|||Drive team, the practice field is yours from four to five.|the listener's team is not known
+mk040|maker|other_group|irrelevant|||Parents, the bake sale sign-up sheet is by the door.|the parents
+mk041|maker|incomplete|irrelevant|||So the new deadline for the chassis is going to be|cut off
+mk042|maker|other_affects|relevant|deadline||I already told the other team, the organizers want every robot checked in by eight on the day.|told to another team, applies to all
+mk043|maker|unrelated|irrelevant|||I can never remember which bin is recycling.|small talk
+mk044|maker|implicit|relevant|danger|important|That battery's swelling, don't put it on the charger.|a hazard
+mk045|maker|sarcasm_quote|irrelevant|||As my grandpa always says, measure twice, cut once, lose a finger never.|a saying
+mk046|maker|causal|relevant|tools||The compressor tripped the breaker, so none of the air tools work until someone resets it.|cause and tools out
+mk047|maker|negation|irrelevant|||Nothing's changed with the tool cabinet, same rules as before.|nothing changes
+mk048|maker|ambiguous|ambiguous|||Someone left the glue gun plugged in.|a hazard or a remark
+mk049|maker|multi|relevant|deadline|context=Do we still have until the end of the month?|No, they want it finished by the twentieth.|deadline, with the question before
+mk050|maker|idiom|irrelevant|||We really need to hit the ground running after the break.|figure of speech
+mk051|maker|audience_unknown|ambiguous|||Hey Sam, the mentor wants to see you about the wiring.|the listener's name is not known
+mk052|maker|asr_error|relevant|me||Hey can you here me, I need a hand over here.|hear, misrecognised
+mk053|maker|multi|irrelevant||context=In that robot movie the lab goes up in flames.|And the kid screams that it's going to explode.|a film
+mk054|maker|repeated|repeat|deadline|repeat_of=mk001|Don't forget the competition's a week earlier now, on the twelfth.|same news again
+mk055|maker|unrelated|irrelevant|||I think it's supposed to rain all weekend.|weather
+mk056|maker|audience_unknown|ambiguous|||Electrical team, the oscilloscope is reserved for you until three.|the listener's team is not known
+mk057|maker|implicit|relevant|tools||Whoever needs the drill, the battery's charged again.|a tool is ready

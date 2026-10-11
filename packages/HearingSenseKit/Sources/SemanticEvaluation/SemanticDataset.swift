@@ -11,10 +11,12 @@ public struct SemanticDataset: Sendable {
         /// Window 6: the first development set and the held-out set that has since been read
         /// (a historical benchmark). Window 6.1: a second development set and a sealed set.
         /// Window 6.2: a third development set and a second sealed set by another author.
-        case dev, heldout, dev2, sealed, dev3, sealed2
+        /// Window 6.3: a fourth development set and a third sealed set by another author, both
+        /// about whether a sentence applies to the listener.
+        case dev, heldout, dev2, sealed, dev3, sealed2, dev4, sealed3
 
         /// Report only: run once with a frozen configuration, never as a subset.
-        public var isSealed: Bool { self == .sealed || self == .sealed2 }
+        public var isSealed: Bool { self == .sealed || self == .sealed2 || self == .sealed3 }
 
         var resource: String {
             switch self {
@@ -24,6 +26,8 @@ public struct SemanticDataset: Sendable {
             case .sealed: "semantic_sealed"
             case .dev3: "semantic_dev3"
             case .sealed2: "semantic_sealed2"
+            case .dev4: "semantic_dev4"
+            case .sealed3: "semantic_sealed3"
             }
         }
     }
@@ -135,6 +139,26 @@ public struct SemanticDataset: Sendable {
         return found
     }()
 
+    /// What the listener of a profile wrote about themselves (`@about | name | text`), if anything.
+    static let fileAbouts: [String: String] = {
+        var found: [String: String] = [:]
+        for split in Split.allCases {
+            guard let url = Bundle.module.url(forResource: split.resource, withExtension: "txt"),
+                  let text = try? String(contentsOf: url, encoding: .utf8) else { continue }
+            for line in text.split(whereSeparator: \.isNewline) where line.hasPrefix("@about") {
+                let fields = line.split(separator: "|", omittingEmptySubsequences: false).map {
+                    $0.trimmingCharacters(in: .whitespaces)
+                }
+                guard fields.count == 3 else { continue }
+                found[fields[1]] = fields[2]
+            }
+        }
+        return found
+    }()
+
+    /// The optional "about me" line of a profile; empty when the listener wrote none.
+    public static func about(for profile: String) -> String { fileAbouts[profile] ?? "" }
+
     /// Stable goal identifiers, so a run is reproducible.
     public static func goals(for profile: String) -> [(key: String, goal: AttentionGoal)] {
         (profiles[profile] ?? fileProfiles[profile] ?? []).enumerated().map { index, entry in
@@ -155,7 +179,7 @@ public struct SemanticDataset: Sendable {
     /// that was used for tuning (Window 6.2: the second sealed set has another author, and one
     /// of its everyday sentences is also in the first development set). Returns the set and
     /// the identifiers that were left out, so that a report can account for them.
-    public func independent(of tuning: [Split] = [.dev, .dev2, .dev3, .heldout, .sealed]) throws
+    public func independent(of tuning: [Split] = [.dev, .dev2, .dev3, .dev4, .heldout, .sealed, .sealed2]) throws
         -> (dataset: SemanticDataset, excluded: [String])
     {
         let seen = Set(try tuning.filter { $0 != split }.flatMap { try SemanticDataset.load($0).items }.map { $0.text.lowercased() })

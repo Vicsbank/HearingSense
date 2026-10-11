@@ -550,6 +550,57 @@ case "probe-check":
         try? encoder.encode(run).write(to: URL(fileURLWithPath: path))
     }
 
+case "probe2":
+    // Research (Window 6.3): one request per sentence, described by a JSON file.
+    //   hs-semantic-eval probe2 --spec <json> --set dev4 [--ids <file>] [--from <probe2 json>] [--turns N]
+    //                           [--lead seconds] --json <file>
+    guard let split = SemanticDataset.Split(rawValue: option("--set") ?? "dev4"), !split.isSealed,
+          var dataset = try? SemanticDataset.load(split), let specPath = option("--spec"),
+          let specData = FileManager.default.contents(atPath: specPath)
+    else {
+        print("probe2 --spec <json> --set dev|dev2|dev3|dev4 [--ids <file>] [--from <json>] [--turns N] [--lead s] --json <file>")
+        exit(2)
+    }
+    let spec: SemanticSpecProbe.Spec
+    do { spec = try JSONDecoder().decode(SemanticSpecProbe.Spec.self, from: specData) } catch {
+        print("bad spec: \(error)")
+        exit(2)
+    }
+    if let path = option("--ids"), let text = try? String(contentsOfFile: path, encoding: .utf8) {
+        let wanted = Set(text.split(whereSeparator: \.isWhitespace).map(String.init))
+        dataset.items = dataset.items.filter { wanted.contains($0.id) }
+    }
+    if let profile = option("--profile") { dataset.items = dataset.items.filter { $0.profile == profile } }
+    if let count = option("--count").flatMap({ Int($0) }) { dataset.items = Array(dataset.items.prefix(count)) }
+    var options = SemanticSpecProbe.Options()
+    options.sessionTurns = Int(option("--turns") ?? "") ?? 1
+    options.lead = option("--lead").flatMap { Double($0) }
+    if let path = option("--from"), let data = FileManager.default.contents(atPath: path),
+       let earlier = try? JSONDecoder().decode([SemanticSpecProbe.Answer].self, from: data)
+    {
+        options.first = Dictionary(earlier.map { ($0.id, $0.fields) }, uniquingKeysWith: { first, _ in first })
+    }
+    do {
+        let answers = try await SemanticSpecProbe.run(dataset, spec: spec, options: options) { done, total in
+            if done % 25 == 0 || done == total { FileHandle.standardError.write(Data("  \(done)/\(total)\n".utf8)) }
+        }
+        let seconds = answers.map(\.seconds).reduce(0, +) / Double(max(1, answers.count))
+        let tokens = answers.compactMap(\.outputTokens)
+        let input = answers.compactMap(\.inputTokens)
+        print("\(spec.name) on \(split.rawValue): \(answers.count) requests, failed \(answers.count { $0.failure != nil }), "
+            + "mean \(seconds.formatted(.number.precision(.fractionLength(2)))) s, "
+            + "\(tokens.isEmpty ? 0 : tokens.reduce(0, +) / tokens.count) tokens out, "
+            + "\(input.isEmpty ? 0 : input.reduce(0, +) / input.count) in")
+        if let path = option("--json") {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys]
+            try encoder.encode(answers).write(to: URL(fileURLWithPath: path))
+        }
+    } catch {
+        print("failed: \(error)")
+        exit(1)
+    }
+
 default:
     print("Commands: run, recap, availability, judge, timing, triage, latency, probe, probe-check")
     exit(2)

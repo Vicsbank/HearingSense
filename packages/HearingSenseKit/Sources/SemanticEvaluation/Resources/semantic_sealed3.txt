@@ -1,0 +1,352 @@
+# Hearing Sense - semantic sealed set 3 (Window 6.3). Synthetic, held-out evaluation data.
+# Independently authored without access to the implementation, the prompts or any earlier set.
+# Format: id | profile | category | expected | goal key(s) | flags | sentence | why
+# Five profiles: film_set, car_ferry, food_bank (identity in @about), hostel (identity in goals), festival_camp (no identity).
+#
+# ---------- film_set ----------
+@profile | film_set | called | Someone calls for me or wants me to do something
+@profile | film_set | safety | Anything dangerous on set, or when we have to clear out of the way
+@profile | film_set | schedule | When my group is needed on set, or the call time, lunch or wrap time changes
+@profile | film_set | costume | News about my costume or props, or being sent to hair and makeup
+@about | film_set | I'm Nadia, a background extra. I'm in group C, the market crowd.
+fs001 | film_set | unrelated | irrelevant |  |  | What a finish in the match last night, I couldn't believe it. | small talk about sport
+fs002 | film_set | obvious | relevant | schedule | important | Wrap is pushed to nine tonight, so call time tomorrow moves to ten. | wrap and call time change for the whole shoot
+fs003 | film_set | other_addressee | irrelevant |  |  | Oliver, wardrobe wants you back, your jacket is the wrong colour. | Oliver's costume, not the user's
+fs004 | film_set | implicit | relevant | schedule |  | The second unit just finished early and they're resetting the cameras for the crowd shots. | crowd will be needed sooner than planned
+fs005 | film_set | attention | relevant | called |  | Nadia, can you come over here a second? | user called by name
+fs006 | film_set | past | irrelevant |  |  | On my last shoot they kept us in holding until two in the morning. | story about an earlier job
+fs007 | film_set | group_all | relevant | schedule |  | Listen up everyone, lunch is half an hour early today, twelve thirty. | lunch time changed for all
+fs008 | film_set | idiom | irrelevant |  |  | That director is playing with fire, shouting at the producer like that. | figure of speech, no real fire
+fs009 | film_set | implicit | relevant | safety |  | Heads up, the crane arm is about to swing right over holding. | hazard over the waiting area
+fs010 | film_set | other_group | irrelevant |  |  | Group A, you're needed on set right away. | group A, user is in group C
+fs011 | film_set | unrelated | irrelevant |  |  | I've been trying to sell my old bike for weeks. | personal chat
+fs012 | film_set | my_group | relevant | schedule | important | Group C, you're on set in five minutes. | user's own group called to set
+fs013 | film_set | hypothetical | irrelevant |  |  | If they ever wrapped early I think I'd faint. | joke about a what-if
+fs014 | film_set | causal | relevant | schedule |  | The generator has gone down, so nobody is shooting anything for at least an hour. | power failure delays everything
+fs015 | film_set | third_person | irrelevant |  |  | My cousin was an extra on a series in Toronto and their wrap times were always past midnight. | another production elsewhere
+fs016 | film_set | urgent_short | relevant | safety | important,urgent | Clear the lane, now! | immediate order to get out of the way
+fs017 | film_set | negation | irrelevant |  |  | Nothing's changed for the afternoon, the call sheet stays as printed. | explicitly no change
+fs018 | film_set | implicit | relevant | costume |  | The director wants all the background in winter layers after the break. | costume change for every extra
+fs019 | film_set | other_addressee | irrelevant |  |  | They're calling for you on set, Hannah. | Hannah is wanted, not the user
+fs020 | film_set | multi | relevant | costume | context=The market crowd's coats came back from the dryer. | They're on the rail by the door now, go and grab yours. | context shows it is the user's group's costumes
+fs021 | film_set | unrelated | irrelevant |  |  | This coffee tastes like it was brewed yesterday. | complaint about coffee
+fs022 | film_set | repeated | repeat | schedule | repeat_of=fs007 | Reminder, lunch is at half past twelve today, thirty minutes earlier than usual. | same lunch news again
+fs023 | film_set | sarcasm_quote | irrelevant |  |  | Oh sure, we'll definitely wrap on time, just like every other day this week. | sarcasm, no information
+fs024 | film_set | other_affects | relevant | schedule |  | Group B's scene is running long, so everything after it slides by an hour. | another group's overrun delays the user's scenes
+fs025 | film_set | other_group | irrelevant |  |  | Stunt team, safety briefing by the crash mats in two minutes. | briefing for the stunt team only
+fs026 | film_set | attention | relevant | called |  | Excuse me, Nadia, did you sign the release form this morning? | question put to the user by name
+fs027 | film_set | implicit | relevant | safety |  | They're about to drive the picture car through this lane at speed. | moving vehicle where people stand
+fs028 | film_set | past | irrelevant |  |  | Back in the nineties extras brought their own costumes, nobody gave you anything. | how things used to be
+fs029 | film_set | asr_error | relevant | costume |  | Group see, your wanted in makeup for touch ups. | group C sent to makeup, misrecognised words
+fs030 | film_set | unrelated | irrelevant |  |  | My sister is moving to Lisbon in the spring. | family news
+fs031 | film_set | multi | irrelevant |  | context=My brother's wedding rehearsal was a disaster. | They moved the whole thing forward two hours and didn't tell anyone. | about a wedding rehearsal, not the shoot
+fs032 | film_set | obvious | relevant | costume |  | Your costume has a tear at the back, wardrobe wants to fix it before the next take. | the user's own costume
+fs033 | film_set | other_addressee | irrelevant |  |  | Dev, your call time tomorrow is six, don't be late. | Dev's personal call time
+fs034 | film_set | group_all | relevant | safety |  | Everybody stay behind the yellow tape while the stunt is rigged, no exceptions. | safety instruction for everyone
+fs035 | film_set | ambiguous | ambiguous |  |  | I think they said some of the background might be finishing early. | vague hearsay, unclear who and whether true
+fs036 | film_set | implicit | relevant | costume |  | The makeup trailer is shutting for an hour after this last person. | makeup about to be unavailable
+fs037 | film_set | idiom | irrelevant |  |  | That last take was a car crash from start to finish. | figure of speech
+fs038 | film_set | my_group | relevant | costume |  | Market crowd, pick up your baskets and shopping bags from the props table. | props for the user's group
+fs039 | film_set | third_person | irrelevant |  |  | A friend of mine does costumes for an opera house in Leeds, she says the fittings never end. | someone else's job elsewhere
+fs040 | film_set | repeated | repeat | schedule | repeat_of=fs014 | Like I said, with the power out there's no filming for an hour or more. | same generator news again
+fs041 | film_set | other_affects | relevant | safety | important | Marcus, the fire effect goes off beside holding in two minutes, get everyone back. | said to Marcus but the danger is where extras wait
+fs042 | film_set | unrelated | irrelevant |  |  | I can never remember where I parked. | personal remark
+fs043 | film_set | negation | relevant | schedule | important | Group C is no longer needed this afternoon, you're released after lunch. | the cancellation itself is the news
+fs044 | film_set | other_group | irrelevant |  |  | Group B, hand your umbrellas back to props before you go. | props instruction for group B
+fs045 | film_set | causal | relevant | costume |  | It rained on the costume rail overnight, so everyone's coats are being swapped before we roll. | cause and costume change for all
+fs046 | film_set | hypothetical | irrelevant |  |  | Imagine if they called us to set and nobody had their costume on. | imagined situation
+fs047 | film_set | urgent_short | relevant | safety | important,urgent | Watch your back, light coming down! | immediate physical warning
+fs048 | film_set | sarcasm_quote | irrelevant |  |  | And then the guy in the film goes, everybody get out, the building's going to blow. | retelling a film scene
+fs049 | film_set | implicit | relevant | schedule |  | We're losing the light, so they're jumping straight to the market scene. | user's scene comes up next
+fs050 | film_set | other_addressee | irrelevant |  |  | Sam, you need to move your car, it's blocking the grip truck. | Sam's car
+fs051 | film_set | obvious | relevant | safety |  | Careful, that cable ramp is live and it's dangerous to step over right now. | named danger close by
+fs052 | film_set | multi | irrelevant |  | context=The lead actor's stand-in has gone missing again. | She's wanted in makeup right now and they can't find her. | about the stand-in, not the user
+fs053 | film_set | attention | relevant | called |  | Hey, you with the earphones, are you with the market crowd? | direct question to the user
+fs054 | film_set | unrelated | irrelevant |  |  | That new phone of hers has a huge camera. | chat about a phone
+fs055 | film_set | group_all | relevant | costume |  | All background, props get handed back at the truck before wrap, please. | props instruction for all extras
+fs056 | film_set | negation | irrelevant |  |  | Nobody needs to move, the truck is going around the other side. | explicitly nothing to do
+fs057 | film_set | asr_error | relevant | safety |  | Stand clear of the dolly track, the camera car is reversing threw here. | safety warning with a homophone error
+fs058 | film_set | other_group | irrelevant |  |  | Camera department, your call tomorrow is five a.m. | call time for the camera crew
+fs059 | film_set | multi | relevant | safety | context=There's a light stand wobbling right behind the holding benches. | It's going to come down if nobody moves away from it. | context makes it a hazard where extras sit
+fs060 | film_set | implicit | relevant | schedule |  | Catering is closing the line in ten minutes because the afternoon got moved up. | lunch ends early and the afternoon starts sooner
+fs061 | film_set | other_affects | relevant | schedule |  | Camera team, we're cancelling the night shoot, so the whole unit wraps at six. | told to camera team but wrap changes for all
+fs062 | film_set | incomplete | irrelevant |  |  | So what they want the background to do after lunch is | cut off before any content
+fs063 | film_set | my_group | relevant | safety |  | Group C, move over to the fountain, the lighting truck needs to back in here. | user's group told to move out of the way
+#
+# ---------- car_ferry ----------
+@profile | car_ferry | spoken | If somebody is talking to me or asking me something
+@profile | car_ferry | safety | Emergencies, rough sea warnings, or being told to go somewhere or stay put
+@profile | car_ferry | arrival | When we get in, any delay, and when I should go back down to my car
+@profile | car_ferry | food | Restaurant, cafe or shop closing times, I still want to eat before we dock
+@about | car_ferry | I'm Tomas. I'm travelling as a driver and my car is parked on deck 3.
+cf001 | car_ferry | unrelated | irrelevant |  |  | I always forget how expensive the chocolate is on these boats. | remark about prices
+cf002 | car_ferry | obvious | relevant | arrival |  | We will be arriving in port about forty minutes late. | delay announced
+cf003 | car_ferry | other_addressee | irrelevant |  |  | Mrs Okafor, your table in the restaurant is ready. | another passenger's table
+cf004 | car_ferry | implicit | relevant | arrival |  | The captain says we're waiting outside the harbour for another ship to clear the berth. | means a later docking
+cf005 | car_ferry | attention | relevant | spoken |  | Tomas, is this seat next to you taken? | question to the user by name
+cf006 | car_ferry | past | irrelevant |  |  | When I was a kid this crossing took six hours and there was no restaurant at all. | old memory
+cf007 | car_ferry | group_all | relevant | arrival | important | All passengers, due to a change of berth we will now dock at terminal two. | docking place changed for everyone
+cf008 | car_ferry | idiom | irrelevant |  |  | We're all in the same boat with these prices, aren't we. | figure of speech
+cf009 | car_ferry | implicit | relevant | safety |  | The floor by the bar is covered in broken glass, they're keeping people out. | hazard and closed-off area
+cf010 | car_ferry | other_group | irrelevant |  |  | Foot passengers, please gather at the forward gangway for disembarkation. | for foot passengers, user is a driver
+cf011 | car_ferry | unrelated | irrelevant |  |  | I finally finished that book about the lighthouse keeper. | chat about a book
+cf012 | car_ferry | my_group | relevant | arrival |  | Deck 3 will unload last today, drivers should stay upstairs until called. | about the user's own car deck
+cf013 | car_ferry | hypothetical | irrelevant |  |  | If the sea gets any rougher I'm going to regret that lunch. | speculation and a joke
+cf014 | car_ferry | causal | relevant | arrival | important | There's a strike at the port, so nobody will be driving off for at least an hour after we dock. | cause and a long wait for drivers
+cf015 | car_ferry | third_person | irrelevant |  |  | My uncle works on the ferries up north, and they cancel sailings for the wind every other week. | other ferries elsewhere
+cf016 | car_ferry | urgent_short | relevant | safety | important,urgent | Sit down, hold on! | immediate safety order
+cf017 | car_ferry | negation | irrelevant |  |  | No, the shop isn't closing, they're just restocking the shelves. | explicitly not closing
+cf018 | car_ferry | implicit | relevant | arrival |  | The stairwell doors to the car decks have just been unlocked. | drivers can now go down
+cf019 | car_ferry | other_addressee | irrelevant |  |  | Jonas, go down and check you locked the van. | Jonas's own vehicle
+cf020 | car_ferry | multi | relevant | arrival | context=The bow doors are jammed. | They say it could take an hour to get them open. | context shows cars cannot leave for an hour
+cf021 | car_ferry | unrelated | irrelevant |  |  | My phone has no signal out here at all. | remark about signal
+cf022 | car_ferry | repeated | repeat | arrival | repeat_of=cf007 | Just to repeat, we're coming into terminal two today, not our usual berth. | same berth news again
+cf023 | car_ferry | sarcasm_quote | irrelevant |  |  | Sure, and the captain's going to come down and carry your bags to the car himself. | sarcasm
+cf024 | car_ferry | other_affects | relevant | arrival |  | Lorry drivers, your vehicles go off first today, so cars will be held about twenty minutes. | said to lorry drivers but delays cars
+cf025 | car_ferry | other_group | irrelevant |  |  | Drivers on deck 5, you may now return to your vehicles. | deck 5, user is on deck 3
+cf026 | car_ferry | attention | relevant | spoken |  | Excuse me, sir, is this your bag in the aisle? | someone addressing the user
+cf027 | car_ferry | implicit | relevant | arrival | important | We're turning back toward the mainland, there's a medical case on board. | big delay follows from turning back
+cf028 | car_ferry | past | irrelevant |  |  | Years ago they let you sleep in your car on the deck, imagine that. | how it used to be
+cf029 | car_ferry | asr_error | relevant | arrival |  | We expect to birth at seven fifteen, twenty minutes behind schedule. | arrival time, berth misrecognised
+cf030 | car_ferry | unrelated | irrelevant |  |  | We should send Gran a postcard when we get there. | family chat
+cf031 | car_ferry | multi | irrelevant |  | context=My daughter took the night boat to Bilbao last month. | They were held outside the port for three hours. | a different sailing last month
+cf032 | car_ferry | obvious | relevant | food |  | The restaurant closes in fifteen minutes. | closing time named
+cf033 | car_ferry | other_addressee | irrelevant |  |  | Could Daniel Reyes please come to the information desk, your daughter is waiting for you. | page for another passenger
+cf034 | car_ferry | group_all | relevant | food |  | All passengers, the self-service restaurant will reopen at six for one hour. | new opening time for all
+cf035 | car_ferry | ambiguous | ambiguous |  |  | Would the owner of a silver hatchback on deck 3 please contact the information desk. | right deck but unknown whether it is the user's car
+cf036 | car_ferry | implicit | relevant | food |  | Last orders for hot meals are being taken right now. | kitchen about to stop serving
+cf037 | car_ferry | idiom | irrelevant |  |  | Their marriage has been on the rocks for years. | figure of speech
+cf038 | car_ferry | my_group | relevant | arrival | important | Drivers with vehicles on deck 3, please make your way down now. | the user's deck is called
+cf039 | car_ferry | third_person | irrelevant |  |  | Our neighbours got stuck in port for nine hours last summer on the way to the islands. | neighbours' trip last year
+cf040 | car_ferry | repeated | repeat | arrival | repeat_of=cf014 | Remember, with the dockers on strike we'll sit at least an hour before anyone drives off. | same strike news again
+cf041 | car_ferry | other_affects | relevant | arrival,safety |  | Deck 5 drivers, there's a fuel spill on your ramp, so all car decks stay closed until it's cleaned. | said to deck 5 but closes every car deck
+cf042 | car_ferry | unrelated | irrelevant |  |  | The kids want to see if there are dolphins. | family chat
+cf043 | car_ferry | negation | relevant | food |  | The restaurant will not be reopening this evening. | the not is the news
+cf044 | car_ferry | other_group | irrelevant |  |  | Freight drivers, your meal vouchers are valid in the truckers' lounge until nine. | freight drivers' lounge only
+cf045 | car_ferry | causal | relevant | food |  | Because of the swell the crew are closing the shop early, in ten minutes. | cause and early closing
+cf046 | car_ferry | hypothetical | irrelevant |  |  | Imagine if they told everyone to get into the lifeboats, I'd be useless. | imagined emergency
+cf047 | car_ferry | urgent_short | relevant | arrival | important,urgent | Drivers to your cars now, please! | drivers must go down immediately
+cf048 | car_ferry | sarcasm_quote | irrelevant |  |  | And the old man in the story shouts abandon ship, abandon ship, and nobody listens. | retelling a story
+cf049 | car_ferry | implicit | relevant | arrival |  | You can see the harbour lights already, we're early. | arrival sooner than expected
+cf050 | car_ferry | other_addressee | irrelevant |  |  | Ruth, move your suitcase, it's blocking the lady's wheelchair. | Ruth's luggage
+cf051 | car_ferry | obvious | relevant | safety |  | This is a rough sea warning, please stay seated and hold the handrails if you must move. | rough sea warning named
+cf052 | car_ferry | multi | irrelevant |  | context=The woman opposite left her handbag in the shop. | They just called her to come and collect it at the desk. | page was for another woman
+cf053 | car_ferry | attention | relevant | spoken |  | Tomas, do you want anything from the bar while I'm up? | question to the user by name
+cf054 | car_ferry | unrelated | irrelevant |  |  | I think I left the charger in the other bag. | personal remark
+cf055 | car_ferry | group_all | relevant | safety |  | Would all passengers please return to the seating areas and remain seated until further notice. | instruction to everyone to stay put
+cf056 | car_ferry | negation | irrelevant |  |  | Nothing new from the bridge, same arrival time as they said before. | explicitly no change
+cf057 | car_ferry | asr_error | relevant | food |  | The cafe is clothing early because of the whether. | cafe closing early, two misrecognised words
+cf058 | car_ferry | other_group | irrelevant |  |  | Cabin passengers, please leave your cabins and hand in your keys thirty minutes before arrival. | for cabin passengers only
+cf059 | car_ferry | multi | relevant | food | context=Is the cafe on this deck still serving? | No, it shut ten minutes ago, only the vending machines now. | context shows the cafe has closed
+cf060 | car_ferry | implicit | relevant | safety |  | The outside decks are being closed off, the spray is coming right over the rail. | weather hazard and area closed
+cf061 | car_ferry | other_affects | relevant | food |  | Elena, tell the cafe crew to shut everything, the chef has been taken ill. | said to crew but the cafe closes for passengers
+cf062 | car_ferry | incomplete | irrelevant |  |  | Passengers travelling with vehicles are advised that the | cut off before the content
+cf063 | car_ferry | my_group | relevant | safety |  | All drivers, engines must stay off until the bow doors are fully open, there were fumes last crossing. | safety instruction to drivers, the user's role
+#
+# ---------- food_bank ----------
+@profile | food_bank | wanted | Someone asks for me or needs my help
+@profile | food_bank | safety | Forklift or pallet warnings, anything unsafe, or if we have to clear an area
+@profile | food_bank | supplies | A delivery arriving, or what my table has to sort next
+@profile | food_bank | breaks | Break and lunch times and when today's session ends
+@about | food_bank | I'm Priya. Today I'm volunteering on the sorting team at table 4.
+fb001 | food_bank | unrelated | irrelevant |  |  | My knees are not what they used to be. | personal remark
+fb002 | food_bank | obvious | relevant | supplies |  | The delivery from the supermarket has just arrived at the back door. | delivery arrival named
+fb003 | food_bank | other_addressee | irrelevant |  |  | Gareth, your break was supposed to end ten minutes ago. | Gareth's own break
+fb004 | food_bank | implicit | relevant | supplies |  | The van's stuck in traffic, it won't be here before eleven. | delivery will be late
+fb005 | food_bank | attention | relevant | wanted |  | Priya, could you give me a hand lifting this? | help asked from the user by name
+fb006 | food_bank | past | irrelevant |  |  | When this place opened we had one shelf and a borrowed van. | history of the place
+fb007 | food_bank | group_all | relevant | breaks | important | Everyone, we're finishing at half past two today, not four. | session end changed for all
+fb008 | food_bank | idiom | irrelevant |  |  | Give me a break, you can't be serious. | figure of speech, not a real break
+fb009 | food_bank | implicit | relevant | safety |  | That stack of pallets by the door is leaning badly. | unstable load nearby
+fb010 | food_bank | other_group | irrelevant |  |  | Packing team, your lunch is at one today. | packing team, user is on sorting
+fb011 | food_bank | unrelated | irrelevant |  |  | That bakery on Mill Street does the best sourdough. | chat about a bakery
+fb012 | food_bank | my_group | relevant | supplies |  | Sorting team, you're on tins and jars until the break. | task for the user's own team
+fb013 | food_bank | hypothetical | irrelevant |  |  | If a pallet ever fell on me I think I'd sue. | imagined accident
+fb014 | food_bank | causal | relevant | supplies | important | The chiller broke overnight, so all the dairy has to be checked and binned before anything else gets sorted. | cause and a change in what is sorted first
+fb015 | food_bank | third_person | irrelevant |  |  | My daughter volunteers at a shelter in Glasgow, and their deliveries never turn up on time. | another charity elsewhere
+fb016 | food_bank | urgent_short | relevant | safety | important,urgent | Mind your feet, pallet coming down! | immediate warning
+fb017 | food_bank | negation | irrelevant |  |  | No, the delivery schedule hasn't changed, it's the same as last week. | explicitly no change
+fb018 | food_bank | implicit | relevant | breaks |  | The coordinator wants the hall empty by three because the scouts have it booked. | everyone must be done by three
+fb019 | food_bank | other_addressee | irrelevant |  |  | Someone's at the front desk asking for you, Monique. | visitor for Monique
+fb020 | food_bank | multi | relevant | supplies | context=The frozen delivery just turned up early. | It has to go straight onto the sorting tables before it thaws. | context shows new work arriving at the sorting tables
+fb021 | food_bank | unrelated | irrelevant |  |  | I think it's going to rain later. | weather chat
+fb022 | food_bank | repeated | repeat | breaks | repeat_of=fb007 | Don't forget, today we stop at two thirty instead of four. | same end time again
+fb023 | food_bank | sarcasm_quote | irrelevant |  |  | Oh yes, because carrying forty kilos of potatoes is exactly how I wanted to spend my break. | sarcastic grumble
+fb024 | food_bank | other_affects | relevant | safety |  | Packing team, the fire door on your side is blocked, so everybody goes out through the front if the alarm sounds. | said to packing team but changes the exit for all
+fb025 | food_bank | other_group | irrelevant |  |  | Drivers, the delivery sheets are on the clipboard by the door. | paperwork for the drivers
+fb026 | food_bank | attention | relevant | wanted |  | Excuse me, Priya, do you know where the date labels are kept? | question to the user by name
+fb027 | food_bank | implicit | relevant | safety |  | Someone's spilled cooking oil all along the aisle by the scales. | slip hazard
+fb028 | food_bank | past | irrelevant |  |  | Last Christmas we sorted four tonnes in a single day, it was mad. | old story
+fb029 | food_bank | asr_error | relevant | breaks |  | Table for, your brake starts in five minutes. | table 4 break, two homophone errors
+fb030 | food_bank | unrelated | irrelevant |  |  | She's training for a half marathon at sixty two. | chat about someone
+fb031 | food_bank | multi | irrelevant |  | context=My son works nights at a parcel depot. | They cut his break down to ten minutes without warning. | the son's workplace, not here
+fb032 | food_bank | obvious | relevant | breaks |  | Lunch for volunteers is at twelve fifteen in the side room. | lunch time for volunteers
+fb033 | food_bank | other_addressee | irrelevant |  |  | Winston, you sort the cereal boxes, I'll do the tea. | task given to Winston
+fb034 | food_bank | group_all | relevant | safety |  | Attention all volunteers, the back half of the warehouse is closed while the racking is repaired. | area closed for everyone
+fb035 | food_bank | ambiguous | ambiguous |  |  | I think they might need a couple of people to stay behind and help unload. | vague, not addressed, may or may not concern the user
+fb036 | food_bank | implicit | relevant | breaks |  | The urn's on and there are biscuits out in the side room. | the break has effectively started
+fb037 | food_bank | idiom | irrelevant |  |  | He's skating on thin ice with the coordinator. | figure of speech
+fb038 | food_bank | my_group | relevant | safety | important | Table 4, can you shift down to the far end, the forklift needs this corner. | user's table told to move for the forklift
+fb039 | food_bank | third_person | irrelevant |  |  | A man at my brother's warehouse got hit by a forklift last year, broke his ankle. | accident elsewhere, long ago
+fb040 | food_bank | repeated | repeat | safety | repeat_of=fb034 | Remember the rear of the warehouse stays shut while they fix the racks. | same closure again
+fb041 | food_bank | other_affects | relevant | supplies |  | Luis, tell the drivers the second van is cancelled, there'll be no more deliveries today. | said to Luis but means no more deliveries for anyone
+fb042 | food_bank | unrelated | irrelevant |  |  | I've had this song stuck in my head all morning. | small talk
+fb043 | food_bank | negation | relevant | supplies |  | Table 4 is not doing produce any more, you're switching to toiletries. | the stop is the news, for the user's table
+fb044 | food_bank | other_group | irrelevant |  |  | Table 2, you're on the baby food and nappies next. | task for table 2
+fb045 | food_bank | causal | relevant | breaks |  | The fire inspector is coming at one, so lunch is being cut to twenty minutes. | cause and shorter lunch
+fb046 | food_bank | hypothetical | irrelevant |  |  | I wish they'd give us a longer lunch, even just once. | a wish
+fb047 | food_bank | urgent_short | relevant | safety | important,urgent | Everybody out of the loading bay, now! | immediate order to clear an area
+fb048 | food_bank | sarcasm_quote | irrelevant |  |  | My grandad always said, never stand behind a horse or in front of a forklift. | quoting a saying
+fb049 | food_bank | implicit | relevant | supplies |  | This is the last crate of tins, after that it's all pasta and rice. | what gets sorted next
+fb050 | food_bank | other_addressee | irrelevant |  |  | Aisha, mind your fingers on that crate lid, it bit me earlier. | warning about Aisha's own crate
+fb051 | food_bank | obvious | relevant | safety |  | Forklift coming through the centre aisle, keep clear. | forklift warning named
+fb052 | food_bank | multi | irrelevant |  | context=There was a programme about dock workers on last night. | A whole stack came down on top of them. | retelling a television programme
+fb053 | food_bank | attention | relevant | wanted | important | Priya, the coordinator wants a word when you've got a minute. | the user is wanted
+fb054 | food_bank | unrelated | irrelevant |  |  | Parking round here is a nightmare on Saturdays. | small talk
+fb055 | food_bank | group_all | relevant | supplies |  | Everybody, a big bread delivery is coming in ten minutes and it all needs sorting before noon. | delivery and work for all
+fb056 | food_bank | negation | irrelevant |  |  | Nobody has to move, the pallets fit where they are. | explicitly nothing to do
+fb057 | food_bank | asr_error | relevant | safety |  | Fork lift is reversing, stand clear of the I'll. | forklift warning, aisle misrecognised
+fb058 | food_bank | other_group | irrelevant |  |  | Front desk volunteers, you need to clear the entrance area before the doors open. | for the front desk team
+fb059 | food_bank | multi | relevant | safety | context=There's a pallet jack rolling loose down the ramp. | It's heading right for the sorting tables. | context makes it a hazard at the user's tables
+fb060 | food_bank | implicit | relevant | safety |  | They found broken glass in one of the jam crates, so check every jar before you shelve it. | hazard in what is being sorted
+fb061 | food_bank | other_affects | relevant | breaks |  | Table 2, you're taking the early lunch, which pushes the other tables to one o'clock. | said to table 2 but moves the user's lunch
+fb062 | food_bank | incomplete | irrelevant |  |  | And when the next lorry gets here what we need table four to | cut off before the instruction
+fb063 | food_bank | my_group | relevant | breaks |  | Table 4, your break is now, fifteen minutes. | break for the user's table
+#
+# ---------- hostel (identity only inside the goals) ----------
+@profile | hostel | name | Let me know if anyone asks for Mika (that's me) or is talking to me
+@profile | hostel | safety | Fire alarm, anything dangerous, or being told to get out or move
+@profile | hostel | room | I'm in dorm 6: whatever changes for that room, the lockers, the luggage room or checkout time
+@profile | hostel | kitchen | When the shared kitchen or the laundry closes, or a washing machine becomes free
+ho001 | hostel | unrelated | irrelevant |  |  | The wifi only really works in the lounge. | chat about wifi
+ho002 | hostel | obvious | relevant | kitchen |  | The kitchen closes at nine tonight. | kitchen closing time named
+ho003 | hostel | other_addressee | irrelevant |  |  | Jasper, reception says your locker key deposit is still unpaid. | Jasper's own deposit
+ho004 | hostel | implicit | relevant | kitchen |  | Somebody just took their stuff out of the washer by the window. | a washing machine is now free
+ho005 | hostel | attention | relevant | name |  | Mika, are you coming down for dinner? | question to the user by name
+ho006 | hostel | past | irrelevant |  |  | This building used to be a shoe factory before they turned it into a hostel. | history
+ho007 | hostel | group_all | relevant | kitchen |  | Hi everyone, the kitchen will be closed tomorrow morning for pest control. | kitchen closure for all guests
+ho008 | hostel | idiom | irrelevant |  |  | That new guy in the bar is on fire tonight, he's won every round. | figure of speech
+ho009 | hostel | implicit | relevant | safety |  | Someone left a pan on and the kitchen is full of smoke. | possible fire
+ho010 | hostel | other_group | irrelevant |  |  | Dorm 4, your room is being cleaned now, can you wait in the lounge. | dorm 4, user is in dorm 6
+ho011 | hostel | unrelated | irrelevant |  |  | I've been travelling for three months and I still overpack. | traveller chat
+ho012 | hostel | my_group | relevant | room |  | Dorm 6, your room is being cleaned at eleven, please take your things off the floor. | the user's own dorm
+ho013 | hostel | hypothetical | irrelevant |  |  | If the alarm went off at three in the morning I honestly wouldn't even wake up. | imagined situation
+ho014 | hostel | causal | relevant | safety |  | The fire escape at the back is being repaired, so the only way out today is the front stairs. | cause and changed escape route
+ho015 | hostel | third_person | irrelevant |  |  | My mate stayed in a hostel in Porto where the fire alarm went off every single night. | another hostel elsewhere
+ho016 | hostel | urgent_short | relevant | safety | important,urgent | Fire, get out, leave your stuff! | immediate evacuation
+ho017 | hostel | negation | irrelevant |  |  | Nothing's changed with the lockers, same codes as yesterday. | explicitly no change
+ho018 | hostel | implicit | relevant | room |  | They're replacing all the locker padlocks this afternoon, anything left inside goes to reception. | lockers must be emptied
+ho019 | hostel | other_addressee | irrelevant |  |  | There's someone at the door asking for you, Ingrid. | visitor for Ingrid
+ho020 | hostel | multi | relevant | kitchen | context=The big washer on the left has stopped. | It's empty now if you want it. | context shows a free washing machine
+ho021 | hostel | unrelated | irrelevant |  |  | That street food market by the river is unreal. | chat about food
+ho022 | hostel | repeated | repeat | kitchen | repeat_of=ho007 | Just so you know, no cooking tomorrow morning, the kitchen's shut for the pest people. | same closure again
+ho023 | hostel | sarcasm_quote | irrelevant |  |  | Oh perfect, a top bunk next to the door, exactly what I dreamed of. | sarcasm about the speaker's own bunk
+ho024 | hostel | other_affects | relevant | kitchen |  | Staff, we're shutting the kitchen an hour early tonight to fix the extractor. | said to staff but guests lose the kitchen earlier
+ho025 | hostel | other_group | irrelevant |  |  | The cycling group, your breakfast is at seven and your bikes need to be out of the luggage room by eight. | instructions for the cycling group
+ho026 | hostel | attention | relevant | name |  | Hey Mika, is this your towel on the radiator? | question to the user by name
+ho027 | hostel | implicit | relevant | name |  | The receptionist is holding a parcel for a Mika and wants to know who that is. | someone is looking for the user
+ho028 | hostel | past | irrelevant |  |  | Two years ago they had a kitchen fire here and had to close for a month. | old event
+ho029 | hostel | asr_error | relevant | kitchen |  | The laundry room closest at eight tonight. | laundry closing time, closes misrecognised
+ho030 | hostel | unrelated | irrelevant |  |  | My flip flops broke on the first day. | small talk
+ho031 | hostel | multi | irrelevant |  | context=My friend's hostel in Hanoi was a nightmare. | They made everyone leave their room at six in the morning. | a different hostel
+ho032 | hostel | obvious | relevant | room |  | Your locker in dorm 6 has to be emptied by noon today. | the user's locker and room
+ho033 | hostel | other_addressee | irrelevant |  |  | Felipe, you need to check out by eleven or they'll charge you another night. | Felipe's own checkout
+ho034 | hostel | group_all | relevant | safety |  | Attention all guests, the roof terrace is closed, part of the railing has come loose. | danger announced to all
+ho035 | hostel | ambiguous | ambiguous |  |  | I heard they might be overbooked and shuffling some beds around this weekend. | rumour, unclear whether dorm 6 is affected
+ho036 | hostel | implicit | relevant | room |  | The luggage room is going to be locked from twelve to four today. | no access to stored bags for a while
+ho037 | hostel | idiom | irrelevant |  |  | My budget's gone up in smoke already. | figure of speech
+ho038 | hostel | my_group | relevant | room,safety | important | Everyone in dorm 6, you're being moved to dorm 9 tonight, the heating's broken. | the user's dorm has to move
+ho039 | hostel | third_person | irrelevant |  |  | My sister's flat in Bristol has one washing machine between twelve people. | someone else's home
+ho040 | hostel | repeated | repeat | room | repeat_of=ho032 | Don't forget to clear out your dorm 6 locker before twelve. | same locker news again
+ho041 | hostel | other_affects | relevant | room |  | Carlos, tell the group in dorm 2 the luggage room closes for good at six, anything left goes to storage across town. | said about dorm 2 but the luggage room is shared
+ho042 | hostel | unrelated | irrelevant |  |  | We ended up splitting a taxi from the station, it was cheaper than the tram. | travel chat
+ho043 | hostel | negation | relevant | kitchen |  | The kitchen isn't open twenty four hours any more, it locks at midnight now. | the no longer is the news
+ho044 | hostel | other_group | irrelevant |  |  | Private rooms on the top floor, your checkout is extended to noon. | private rooms, user is in a dorm
+ho045 | hostel | causal | relevant | kitchen |  | The laundry room flooded, so the machines are off until tomorrow. | cause and no laundry today
+ho046 | hostel | hypothetical | irrelevant |  |  | I wish they'd let us check out at two, just once. | a wish
+ho047 | hostel | urgent_short | relevant | safety | important,urgent | Don't touch that socket, it's sparking! | immediate danger
+ho048 | hostel | sarcasm_quote | irrelevant |  |  | So in the book the landlady bangs on every door shouting everybody out, the house is burning. | retelling a book
+ho049 | hostel | implicit | relevant | safety |  | The stair lights are out and someone's already slipped on the bottom step. | hazard on the stairs
+ho050 | hostel | other_addressee | irrelevant |  |  | Tess, move your backpack off my bunk, please. | Tess's backpack
+ho051 | hostel | obvious | relevant | safety | important | That's the fire alarm, everyone has to go outside. | fire alarm named
+ho052 | hostel | multi | irrelevant |  | context=Ingrid's boyfriend turned up at reception. | He's downstairs asking for her right now. | someone asking for Ingrid
+ho053 | hostel | attention | relevant | name |  | Sorry, excuse me, is the bottom bunk yours? | someone addressing the user
+ho054 | hostel | unrelated | irrelevant |  |  | They were playing cards in the lounge until two last night. | chat
+ho055 | hostel | group_all | relevant | room |  | Announcement for all guests, checkout tomorrow is at nine thirty instead of eleven. | checkout time changed for all
+ho056 | hostel | negation | irrelevant |  |  | That's not the fire alarm, it's just somebody's phone. | explicitly nothing happening
+ho057 | hostel | asr_error | relevant | room |  | Dorm sicks needs to be empty by noon for the painters. | dorm 6 must be vacated, six misrecognised
+ho058 | hostel | other_group | irrelevant |  |  | Staff, your lockers in the office are being replaced on Monday. | staff lockers, user is a guest
+ho059 | hostel | multi | relevant | room | context=Reception just put a note on the door of dorm 6. | It says the room has to be vacated by ten for repairs. | context shows it is the user's dorm
+ho060 | hostel | implicit | relevant | kitchen |  | They're mopping the kitchen now and locking it straight after. | kitchen about to close
+ho061 | hostel | other_affects | relevant | room,safety | important | Dorm 4, you've got bedbugs in there, so we're treating every dorm in the building tomorrow and everyone's out by nine. | said to dorm 4 but every dorm must be out
+ho062 | hostel | incomplete | irrelevant |  |  | If you're in one of the dorms on the second floor then tomorrow you | cut off before the content
+ho063 | hostel | my_group | relevant | name | important | Is Mika from dorm 6 here, there's a phone call at reception. | asks for the user by name and dorm
+#
+# ---------- festival_camp (no identity given anywhere) ----------
+@profile | festival_camp | talk | Somebody talking to me or trying to get my attention
+@profile | festival_camp | safety | Storm or weather warnings, anything dangerous, having to move the tent or leave
+@profile | festival_camp | lineup | Set times or stages changing, acts being cancelled
+@profile | festival_camp | facilities | Showers, water points or the phone charging tent opening, closing or running out
+fc001 | festival_camp | unrelated | irrelevant |  |  | I can't believe nobody in our group brought a bottle opener. | camp chat
+fc002 | festival_camp | obvious | relevant | lineup |  | The headline set on the main stage has been moved to ten thirty. | set time change named
+fc003 | festival_camp | other_addressee | irrelevant |  |  | Darren, your steward shift at gate B starts at six, don't be late. | a steward's own shift
+fc004 | festival_camp | implicit | relevant | facilities |  | They've run a hose to the taps by the big oak and the water's back on. | water available again
+fc005 | festival_camp | attention | relevant | talk |  | Excuse me, mate, is anyone sitting here? | someone addressing the user
+fc006 | festival_camp | past | irrelevant |  |  | Ten years ago this whole festival was one stage and a cider van. | history
+fc007 | festival_camp | group_all | relevant | facilities,safety | important | This is a site-wide announcement, please do not drink from the taps until further notice. | water warning for everyone
+fc008 | festival_camp | idiom | irrelevant |  |  | It's the calm before the storm, my exams start next week. | figure of speech, no weather
+fc009 | festival_camp | implicit | relevant | safety |  | The wind's picking up fast and gazebos are starting to go over. | weather danger for tents
+fc010 | festival_camp | other_group | irrelevant |  |  | Stewards on the night shift, move over to gate C for your briefing. | for stewards, user is a camper
+fc011 | festival_camp | unrelated | irrelevant |  |  | I haven't slept properly since Thursday. | camp chat
+fc012 | festival_camp | audience_unknown | ambiguous |  |  | Everyone camping in the yellow field needs to move their tents to higher ground before tonight. | unknown whether the user camps in the yellow field
+fc013 | festival_camp | hypothetical | irrelevant |  |  | If it floods I'm sleeping in the car, I don't care. | a what-if
+fc014 | festival_camp | causal | relevant | facilities |  | The tanker didn't come, so the taps will be dry by lunchtime. | cause and water running out
+fc015 | festival_camp | third_person | irrelevant |  |  | My brother went to a festival in Croatia where the main stage got cancelled two nights running. | another festival elsewhere
+fc016 | festival_camp | urgent_short | relevant | safety | important,urgent | Get away from the trees, now! | immediate danger warning
+fc017 | festival_camp | negation | irrelevant |  |  | No changes to tonight's running order, everything is as printed. | explicitly no change
+fc018 | festival_camp | implicit | relevant | lineup |  | The band closing the second stage tonight is stuck at the border and won't make it. | an act will not play
+fc019 | festival_camp | other_addressee | irrelevant |  |  | Nurse Bailey, you're wanted at the medical tent right away. | a nurse is wanted, not a camper
+fc020 | festival_camp | multi | relevant | facilities | context=They just put a sign up on the water point by the gate. | It says it's shut until the morning. | context shows a water point closing
+fc021 | festival_camp | unrelated | irrelevant |  |  | These noodles are the best thing I've eaten all year. | food chat
+fc022 | festival_camp | repeated | repeat | facilities,safety | repeat_of=fc007 | Once again, the tap water on site is not safe to drink for now. | same water warning again
+fc023 | festival_camp | sarcasm_quote | irrelevant |  |  | Oh brilliant, mud up to my knees, this is exactly the luxury glamping they promised. | sarcasm
+fc024 | festival_camp | other_affects | relevant | safety | important | Stewards, close the main arena now, lightning within five miles. | said to stewards but the danger and closure hit everyone
+fc025 | festival_camp | other_group | irrelevant |  |  | Bar staff, your showers behind crew catering are open till midnight. | staff showers, not for campers
+fc026 | festival_camp | attention | relevant | talk |  | Hey, sorry, you dropped your wristband. | someone addressing the user
+fc027 | festival_camp | implicit | relevant | safety | important | The river's come up a lot overnight and it's nearly at the bottom row of tents. | flood risk in the campsite
+fc028 | festival_camp | past | irrelevant |  |  | Last year the showers ran out of hot water by eight every morning. | last year's story
+fc029 | festival_camp | asr_error | relevant | lineup |  | Tomorrow's opening act on the mane stage has been can sold. | act cancelled, two misrecognised words
+fc030 | festival_camp | unrelated | irrelevant |  |  | My wellies have a hole in them already. | small talk
+fc031 | festival_camp | multi | irrelevant |  | context=My cousin went to that festival in the desert. | They evacuated the whole site because of a dust storm. | a different festival
+fc032 | festival_camp | obvious | relevant | facilities |  | The showers by the east gate are closed until further notice. | shower closure named
+fc033 | festival_camp | other_addressee | irrelevant |  |  | Marta, your burger van's water tank is nearly empty, shall I fetch more? | a trader's own van
+fc034 | festival_camp | group_all | relevant | lineup |  | Good afternoon everybody, the comedy tent programme starts at two instead of noon. | programme time changed for all
+fc035 | festival_camp | ambiguous | ambiguous |  |  | Somebody said one of the bands tomorrow might be swapping slots, not sure which. | vague rumour without details
+fc036 | festival_camp | implicit | relevant | facilities |  | The charging tent's generator just died. | no phone charging for now
+fc037 | festival_camp | idiom | irrelevant |  |  | I'm in hot water with my boss for taking Friday off. | figure of speech
+fc038 | festival_camp | audience_unknown | ambiguous |  |  | Liam, hey Liam, over here, I need to ask you something. | unknown whether the user is Liam
+fc039 | festival_camp | third_person | irrelevant |  |  | My aunt's village flooded last spring and they all had to leave their houses. | a relative's village, long ago
+fc040 | festival_camp | repeated | repeat | lineup | repeat_of=fc002 | Remember the headliner's on at half ten now on the main stage. | same set time news again
+fc041 | festival_camp | other_affects | relevant | facilities,safety |  | Dave, get the crew to shut off all the water points, the supply's contaminated. | said to crew but campers lose the water
+fc042 | festival_camp | unrelated | irrelevant |  |  | Georgia said she can give us a lift back on Monday. | travel plans chat
+fc043 | festival_camp | negation | relevant | lineup |  | The second stage will not be opening at all today. | the not is the news
+fc044 | festival_camp | other_group | irrelevant |  |  | Artists playing the second stage, check in at the production office an hour before your set. | for performers, not the audience
+fc045 | festival_camp | causal | relevant | lineup,safety |  | Because of the lightning the main stage is shut down and tonight's sets are being rescheduled. | cause and schedule change
+fc046 | festival_camp | hypothetical | irrelevant |  |  | I wish they'd move the folk stage further from the dance tent. | a wish
+fc047 | festival_camp | urgent_short | relevant | safety | important,urgent | Hey, your tent's blowing away! | urgent warning to the user
+fc048 | festival_camp | sarcasm_quote | irrelevant |  |  | Then the ranger in the film yells everybody off the mountain, storm's coming, and of course nobody moves. | retelling a film
+fc049 | festival_camp | implicit | relevant | lineup |  | They're swapping the two tents around, so the DJs are in the big top and the folk acts are in the dome. | stages changed
+fc050 | festival_camp | other_addressee | irrelevant |  |  | Mister Hughes, the security office needs you to sign for the radios. | a security matter for a staff member
+fc051 | festival_camp | obvious | relevant | safety | important | There is a severe storm warning for the site this evening. | storm warning named
+fc052 | festival_camp | multi | irrelevant |  | context=The traders next to the pizza van are furious. | They've been told to pack up and be gone by six. | about traders, not campers
+fc053 | festival_camp | attention | relevant | talk |  | Sorry to bother you, do you have a spare tent peg? | question put to the user
+fc054 | festival_camp | unrelated | irrelevant |  |  | Her hat is amazing, she made it herself. | chat
+fc055 | festival_camp | group_all | relevant | safety |  | Attention everyone, there is no access through the woodland path tonight, a tree has come down. | danger and closed route for all
+fc056 | festival_camp | negation | irrelevant |  |  | The showers aren't closing, that was just a rumour. | explicitly not happening
+fc057 | festival_camp | asr_error | relevant | safety |  | A whether warning has been issued, please secure your tense. | weather warning, two homophone errors
+fc058 | festival_camp | other_group | irrelevant |  |  | Traders must move their vehicles off the market field by nine tomorrow. | for traders
+fc059 | festival_camp | multi | relevant | lineup | context=The folk singer everyone came for is ill. | She's been replaced by a local band at the same time. | context shows an act change
+fc060 | festival_camp | implicit | relevant | lineup |  | Everything on the acoustic stage is running forty minutes behind. | set times slip
+fc061 | festival_camp | other_affects | relevant | lineup |  | Crew, the headliner's truck is stuck on the motorway, push the main stage back an hour. | said to crew but moves the set times
+fc062 | festival_camp | incomplete | irrelevant |  |  | The organisers have asked us to let you know that from tonight the | cut off before the content
+fc063 | festival_camp | audience_unknown | ambiguous |  |  | Blue wristbands, your shower slot is from now until four. | unknown whether the user has a blue wristband
