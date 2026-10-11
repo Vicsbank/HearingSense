@@ -15,6 +15,11 @@ public struct SummaryPolicy: Hashable, Sendable {
     public var maximumAttempts = 2
     /// Seconds before a model request is abandoned and the transcript-level fallback is used.
     public var timeout: TimeInterval = 10
+    /// Window 6: write a 2–3 word headline for every stretch of speech. Off in the app since
+    /// Window 6 (ordinary speech is an icon; summaries are written on request), in which case
+    /// the language model is not called here at all and only the rule-based category and
+    /// details are produced.
+    public var writesHeadlines = true
 
     public init() {}
 

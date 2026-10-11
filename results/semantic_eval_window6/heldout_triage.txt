@@ -1,0 +1,153 @@
+Set heldout: 119 synthetic utterances — relevant 58, irrelevant 43, ambiguous 14, repeat 4
+Held-out set: report only. Do not change prompts or thresholds after looking at it.
+
+Keyword baseline — heldout set
+  precision            62.2 % (23/37; 95 % CI 46.1–75.9)
+  recall               39.7 % (23/58; 95 % CI 28.1–52.5)
+  F1                   0.484
+  false alerts         27.9 % (12/43; 95 % CI 16.7–42.7) of irrelevant utterances
+  false alerts / hour  67.0 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      50.0 % (2/4; 95 % CI 15.0–85.0)
+  important missed     85.7 % (6/7; 95 % CI 48.7–97.4)
+  goal named correctly 87.0 % (20/23; 95 % CI 67.9–95.5)
+  ambiguous items      1 alerted, 0 kept as uncertain, 13 nothing (of 14)
+  time per utterance   median < 0.01 s, p95 < 0.01 s; model median –; full judgements 0, stopped by the first pass 0, gated 0, fallbacks 0
+  by category          asr_error 3/7, causal 2/7, hypothetical 3/7, implicit 10/28, negation 3/7, obvious 8/13, repeated 2/4, sarcasm_quote 4/4, third_person 4/10, unrelated 17/18
+    ✗ h001 [obvious, expected relevant] Your report cards will be handed out on Wednesday. → none
+    ✗ h003 [obvious, expected relevant] Excuse me, miss, you dropped your wallet. → none
+    ✗ h005 [obvious, expected relevant] Fire in the science wing, evacuate through the main doors now. → none
+    ✗ h006 [implicit, expected relevant] The final has been moved up to next Tuesday. → none
+    ✗ h007 [implicit, expected relevant] She's letting us redo the lab report for a better score. → none
+    ✗ h008 [implicit, expected relevant] Participation is going to count for twenty percent from now on. → none
+    ✗ h009 [implicit, expected relevant] There's a pop quiz at the start of next period. → none
+    ✗ h010 [implicit, expected relevant] The homework portal closes at nine tonight instead of midnight. → none
+    ✗ h011 [implicit, expected relevant] We don't have to take the vocabulary test if we finish the reading log. → none
+    ✗ h012 [implicit, expected relevant] First period starts thirty minutes later all next week. → none
+    ✗ h013 [implicit, expected relevant] Your tutoring session got moved to Thursday at four. → none
+    ✗ h014 [implicit, expected relevant] Hey, hey, over here, I'm waving at you. → none
+    ✗ h016 [implicit, expected relevant] Everyone stay inside and lock the doors, this is a lockdown. → none
+    ✗ h017 [implicit, expected relevant] The teacher said the essay must be at least five pages now, not three. → none
+    ✗ h018 [implicit, expected relevant] Group presentations start Monday, and the order was drawn at random. → none
+    ✗ h019 [implicit, expected relevant] The science fair judging has been pushed back by a week. → none
+    ✗ h020 [causal, expected relevant] The wifi was down during the online quiz, so they're throwing out the results. → none
+    ✗ h021 [causal, expected relevant] The gym floor is being refinished, so PE will be outside this month. → none
+    ✗ h022 [causal, expected relevant] Because the bus broke down, the field trip is cancelled. → none
+    ✗ h023 [causal, expected relevant] There's smoke coming from the kitchen, they want everyone out of the cafeteria. → none
+    ✗ h025 [causal, expected relevant] Since the test was too hard, she's adding five points to everyone's score. → none
+    ✗ h041 [third_person, expected irrelevant] My dad's work schedule changed, so he's home on Fridays now. → alert
+    ✗ h046 [negation, expected relevant] You can't use a calculator on the test anymore. → none
+    ✗ h048 [negation, expected relevant] Do not use the elevators, take the stairs to the ground floor now. → none
+    ✗ h051 [hypothetical, expected irrelevant] It would be so nice if class got cancelled tomorrow. → alert
+    ✗ h053 [hypothetical, expected relevant] If you miss the lab, you get a zero unless you have a note. → none
+    ✗ h058 [asr_error, expected relevant] the final has been moved up to next choose day → none
+    ✗ h059 [asr_error, expected relevant] part his a pation is going to count for twenty percent → none
+    ✗ h060 [asr_error, expected relevant] fire in the science wing evacuate threw the main doors → none
+    ✗ h062 [asr_error, expected relevant] your tutoring session got moved to thursday at for → none
+    ✗ t007 [implicit, expected relevant] Liquids over one hundred milliliters are no longer allowed through this checkpoint. → none
+    ✗ t009 [third_person, expected irrelevant] Flight to Dallas is now boarding at gate A3. → alert
+    ✗ t010 [third_person, expected irrelevant] The Boston flight has been cancelled, please see an agent. → alert
+    ✗ t012 [third_person, expected irrelevant] My uncle lost his luggage in Denver once, took a week to get it back. → alert
+    ✗ t013 [hypothetical, expected irrelevant] If the Denver flight gets cancelled I'm renting a car. → alert
+    ✗ t014 [obvious, expected relevant] Please leave the terminal by the nearest exit, this is not a drill. → none
+    ✗ t017 [unrelated, expected irrelevant] The coffee place by gate twelve is closed for renovation. → alert
+    ✗ t018 [negation, expected irrelevant] They're not changing the Denver gate, it stays at B12. → alert
+    ✗ t024 [repeated, expected repeat] Again, passengers for Denver, your gate has changed to C4. → alert
+    ✗ w002 [obvious, expected relevant] The schedule for next week is posted, you're on mornings now. → none
+    ✗ w005 [implicit, expected relevant] The oat latte for Maya is up. → none
+    ✗ w011 [third_person, expected irrelevant] My sister's boss changed her shifts without telling her. → alert
+    ✗ w012 [third_person, expected irrelevant] I used to work nights at a bakery, it was exhausting. → alert
+    ✗ w014 [hypothetical, expected irrelevant] What if they made us work on New Year's Day? → alert
+    ✗ w016 [implicit, expected relevant] Table six has been waiting twenty minutes for their food. → none
+    ✗ w018 [negation, expected irrelevant] Nobody's hours are changing, that was just a rumor. → alert
+    ✗ w020 [implicit, expected relevant] Your break is moved to two thirty because of the rush. → none
+    ✗ w023 [implicit, expected relevant] Miss? Miss! Sorry, over here. → none
+    ✗ w025 [repeated, expected repeat] Once again, order forty-two is ready at the counter. → alert
+
+Sentence-embedding retrieval (threshold 0.6, chosen on dev) — heldout set
+  precision            56.2 % (54/96; 95 % CI 46.3–65.7)
+  recall               93.1 % (54/58; 95 % CI 83.6–97.3)
+  F1                   0.701
+  false alerts         88.4 % (38/43; 95 % CI 75.5–94.9) of irrelevant utterances
+  false alerts / hour  212.1 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      100.0 % (4/4; 95 % CI 51.0–100.0)
+  important missed     0.0 % (0/7; 95 % CI 0.0–35.4)
+  goal named correctly 46.3 % (25/54; 95 % CI 33.7–59.4)
+  ambiguous items      12 alerted, 0 kept as uncertain, 2 nothing (of 14)
+  time per utterance   median < 0.01 s, p95 < 0.01 s; model median –; full judgements 0, stopped by the first pass 0, gated 0, fallbacks 0
+  by category          asr_error 6/7, causal 6/7, hypothetical 1/7, implicit 26/28, negation 3/7, obvious 13/13, repeated 0/4, sarcasm_quote 0/4, third_person 1/10, unrelated 3/18
+    ✗ h019 [implicit, expected relevant] The science fair judging has been pushed back by a week. → none
+    ✗ h024 [causal, expected relevant] The grading scale is curved now, so an eighty-five is an A. → none
+    ✗ h026 [unrelated, expected irrelevant] I spilled coffee all over my keyboard yesterday. → alert
+    ✗ h027 [unrelated, expected irrelevant] Do you know a good place for tacos around here? → alert
+    ✗ h029 [unrelated, expected irrelevant] I think it's supposed to rain all weekend. → alert
+    ✗ h030 [unrelated, expected irrelevant] This song has been stuck in my head all day. → alert
+    ✗ h031 [unrelated, expected irrelevant] He finally fixed the squeaky door in the garage. → alert
+    ✗ h032 [unrelated, expected irrelevant] I need new headphones, these keep cutting out. → alert
+    ✗ h033 [unrelated, expected irrelevant] Are you going to the concert on Saturday? → alert
+    ✗ h034 [unrelated, expected irrelevant] The line at the pharmacy was out the door. → alert
+    ✗ h037 [unrelated, expected irrelevant] That video game comes out in the fall. → alert
+    ✗ h038 [third_person, expected irrelevant] My roommate failed her driving test twice. → alert
+    ✗ h039 [third_person, expected irrelevant] My cousin's teacher lets them retake every quiz. → alert
+    ✗ h040 [third_person, expected irrelevant] The other section had their midterm cancelled, lucky them. → alert
+    ✗ h041 [third_person, expected irrelevant] My dad's work schedule changed, so he's home on Fridays now. → alert
+    ✗ h042 [third_person, expected irrelevant] Their school had to evacuate last year because of a gas leak. → alert
+    ✗ h043 [negation, expected irrelevant] There's no change to the timetable, Monday is the same as always. → alert
+    ✗ h047 [negation, expected irrelevant] She did not move the deadline, it's still due Friday. → alert
+    ✗ h049 [hypothetical, expected irrelevant] What if we all just skipped the test, could she fail everyone? → alert
+    ✗ h050 [hypothetical, expected irrelevant] I hope they push the deadline back, I haven't started. → alert
+    ✗ h051 [hypothetical, expected irrelevant] It would be so nice if class got cancelled tomorrow. → alert
+    ✗ h052 [hypothetical, expected irrelevant] Suppose the power goes out, would they send us home? → alert
+    ✗ h054 [sarcasm_quote, expected irrelevant] Sure, and I'm going to get a hundred on the physics final, very likely. → alert
+    ✗ h055 [sarcasm_quote, expected irrelevant] On the show last night the alarm goes off and they all run outside screaming. → alert
+    ✗ h056 [sarcasm_quote, expected irrelevant] He told that joke about the teacher cancelling the final again. → alert
+    ✗ h057 [sarcasm_quote, expected irrelevant] My grandmother always says, when she was young, exams were cancelled for snow. → alert
+    ✗ h066 [repeated, expected repeat] As I said, the final has been moved up to next Tuesday. → alert
+    ✗ h067 [repeated, expected repeat] Once more, participation is going to count for twenty percent from now on. → alert
+    ✗ t009 [third_person, expected irrelevant] Flight to Dallas is now boarding at gate A3. → alert
+    ✗ t010 [third_person, expected irrelevant] The Boston flight has been cancelled, please see an agent. → alert
+    ✗ t011 [unrelated, expected irrelevant] I always get a pretzel at this airport, they're huge. → alert
+    ✗ t012 [third_person, expected irrelevant] My uncle lost his luggage in Denver once, took a week to get it back. → alert
+    ✗ t013 [hypothetical, expected irrelevant] If the Denver flight gets cancelled I'm renting a car. → alert
+    ✗ t015 [asr_error, expected relevant] the denver departure has been de laid by forty minutes → none
+    ✗ t017 [unrelated, expected irrelevant] The coffee place by gate twelve is closed for renovation. → alert
+    ✗ t018 [negation, expected irrelevant] They're not changing the Denver gate, it stays at B12. → alert
+    ✗ t020 [unrelated, expected irrelevant] Is this the line for security or for check-in? → alert
+    ✗ t024 [repeated, expected repeat] Again, passengers for Denver, your gate has changed to C4. → alert
+    ✗ w011 [third_person, expected irrelevant] My sister's boss changed her shifts without telling her. → alert
+    ✗ w013 [unrelated, expected irrelevant] Do you want room for cream in that? → alert
+    ✗ w014 [hypothetical, expected irrelevant] What if they made us work on New Year's Day? → alert
+    ✗ w016 [implicit, expected relevant] Table six has been waiting twenty minutes for their food. → none
+    ✗ w018 [negation, expected irrelevant] Nobody's hours are changing, that was just a rumor. → alert
+    ✗ w021 [unrelated, expected irrelevant] It's raining so hard out there. → alert
+    ✗ w022 [unrelated, expected irrelevant] Did you see the manager's new car? → alert
+    ✗ w025 [repeated, expected repeat] Once again, order forty-two is ready at the counter. → alert
+
+  wall time 306.9 s; this process 35 → 35 MB resident (the model itself runs in a system process and is not included)
+Foundation Models reasoning + verifier (production pipeline, first pass on) — heldout set
+  precision            90.9 % (50/55; 95 % CI 80.4–96.1)
+  recall               86.2 % (50/58; 95 % CI 75.1–92.8)
+  F1                   0.885
+  false alerts         11.6 % (5/43; 95 % CI 5.1–24.5) of irrelevant utterances
+  false alerts / hour  27.9 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      0.0 % (0/4; 95 % CI 0.0–49.0)
+  important missed     0.0 % (0/7; 95 % CI 0.0–35.4)
+  goal named correctly 96.0 % (48/50; 95 % CI 86.5–98.9)
+  ambiguous items      8 alerted, 0 kept as uncertain, 6 nothing (of 14)
+  time per utterance   median 3.37 s, p95 3.83 s; model median 3.37 s; full judgements 79, stopped by the first pass 40, gated 0, fallbacks 0
+  verifier corrections about_someone_else 2, headline_negation 9, headline_not_in_utterance 3, not_asserted 3
+  by category          asr_error 7/7, causal 5/7, hypothetical 7/7, implicit 24/28, negation 5/7, obvious 11/13, repeated 4/4, sarcasm_quote 4/4, third_person 7/10, unrelated 18/18
+    ✗ h004 [obvious, expected relevant] Announcement for our class, picture day is this Thursday. → irrelevant
+    ✗ h022 [causal, expected relevant] Because the bus broke down, the field trip is cancelled. → irrelevant
+    ✗ h041 [third_person, expected irrelevant] My dad's work schedule changed, so he's home on Fridays now. → relevant
+    ✗ h042 [third_person, expected irrelevant] Their school had to evacuate last year because of a gas leak. → relevant
+    ✗ h047 [negation, expected irrelevant] She did not move the deadline, it's still due Friday. → relevant (headline_negation)
+    ✗ t010 [third_person, expected irrelevant] The Boston flight has been cancelled, please see an agent. → relevant
+    ✗ t018 [negation, expected irrelevant] They're not changing the Denver gate, it stays at B12. → relevant (headline_negation)
+    ✗ w004 [obvious, expected relevant] Order forty-two is ready at the counter. → irrelevant
+    ✗ w005 [implicit, expected relevant] The oat latte for Maya is up. → irrelevant
+    ✗ w007 [implicit, expected relevant] Hey, do you work here? → irrelevant
+    ✗ w010 [causal, expected relevant] Jenna called in sick, so we need someone to stay until nine. → uncertain (about_someone_else)
+    ✗ w015 [implicit, expected relevant] I'd like a refund, this isn't what I ordered. → irrelevant
+    ✗ w016 [implicit, expected relevant] Table six has been waiting twenty minutes for their food. → irrelevant
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6/results/semantic_eval_window6/heldout_triage.json

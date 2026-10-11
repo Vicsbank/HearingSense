@@ -31,6 +31,8 @@ public struct AttentionEngine: Sendable {
     private var memory: [String: KindMemory] = [:]
     /// Times of recent presentations below `high` (the presentation budget).
     private var recentShows: [Date] = []
+    /// Window 6: statements presented as goal matches a short while ago (their signatures only).
+    private var goalMemory: [(signature: SemanticSignature, date: Date)] = []
     private var output: [AttentionDecision] = []
 
     public init(configuration: AttentionConfiguration = .standard, preferences: AttentionPreferences = .default) {
@@ -71,6 +73,9 @@ public struct AttentionEngine: Sendable {
         /// Once speech in this episode looked like a warning, later ordinary sentences of the
         /// same conversation do not lower it.
         var importantFloor: AttentionPriority?
+        /// Window 6: the episode is a goal match from the semantic engine (no sound, no
+        /// conversation attached).
+        var semantic: SemanticAttentionSignal?
         var occurrenceDates: [Date] = []
         var lastUpdate: Date?
         var peakPresented = AttentionPriority.ambient
@@ -109,6 +114,8 @@ public struct AttentionEngine: Sendable {
         var speechTier: SpeechAssessment.Tier?
         var cooldownKey: String?
         var cooldown: TimeInterval = 0
+        /// Overrides the category's symbol.
+        var symbolName: String?
         /// Warning signals are held back neither by a cooldown nor by the presentation budget.
         var bypassesCooldown = false
     }
@@ -142,6 +149,9 @@ public struct AttentionEngine: Sendable {
         case .speech(let result):
             statistics.speechInputs += 1
             handle(result)
+        case .semantic(let signal):
+            statistics.semanticInputs += 1
+            handle(signal)
         case .preferences(let updated, _):
             apply(updated)
         case .speechDataCleared:
@@ -491,6 +501,47 @@ public struct AttentionEngine: Sendable {
         }
     }
 
+    // MARK: - Goal matches (Window 6)
+
+    public static let goalMatchTitle = "Matches Your Goal"
+    public static let goalMatchKindID = "goal_match"
+    public static let goalMatchSymbol = "star.bubble"
+    /// Shown in place of a headline that could not be verified against what was said.
+    public static let goalMatchFallbackText = "Open Hearing Sense to read what was said"
+
+    /// A goal match is an episode of its own: it has no source that goes on, so it is shown for
+    /// the lifetime of its priority and then removed. The semantic engine decided that the
+    /// statement matters; here it is checked against preferences, repetition and the budget.
+    private mutating func handle(_ signal: SemanticAttentionSignal) {
+        let signature = SemanticSignature(text: signal.statement, isNegated: false)
+        let date = now, window = configuration.speech.goalRepeatWindow
+        let similarity = configuration.speech.sameMeaningSimilarity
+        goalMemory.removeAll { date.timeIntervalSince($0.date) > window }
+        let isRepeat = goalMemory.contains {
+            $0.signature.change(to: signature, sameMeaningSimilarity: similarity) == .cosmetic
+        }
+        var episode = newEpisode(category: .speech, kindID: Self.goalMatchKindID, title: Self.goalMatchTitle)
+        episode.semantic = signal
+        let id = episode.event.id
+        episodes[id] = episode
+        if isRepeat {
+            statistics.semanticRepeats += 1
+            emit(.suppress, id, reasons: [.goalMatch, .repeatedStatement, .recentlySeen], trigger: .semantic)
+        } else {
+            evaluate(id, trigger: .semantic, announce: true)
+            if episodes[id]?.event.isPresented == true || episodes[id]?.pending != nil {
+                goalMemory.append((signature, now))
+            }
+        }
+        // Nothing keeps going: once its presentation is over (or if it was never shown) the
+        // episode is forgotten.
+        if var stored = episodes[id] {
+            stored.allEnded = now
+            episodes[id] = stored
+        }
+        enforceCapacity(keeping: id)
+    }
+
     private mutating func attachSpeech(_ result: SpeechSemanticResult, facts: SpeechFacts, to episode: inout Episode,
                                        keepFirstObserved: Bool)
     {
@@ -589,6 +640,31 @@ public struct AttentionEngine: Sendable {
     private func assess(_ episode: Episode) -> Assessment {
         var result = Assessment()
         let mode = preferences.mode
+
+        if let signal = episode.semantic {
+            result.category = .speech
+            result.kindID = Self.goalMatchKindID
+            result.title = Self.goalMatchTitle
+            result.symbolName = Self.goalMatchSymbol
+            result.isUncertain = signal.isUncertain
+            if preferences.speech == .off || preferences.setting(for: .speech) == .muted {
+                result.reasons = [.goalMatch, preferences.speech == .off ? .speechAttentionOff : .userMuted]
+                return result
+            }
+            // The user asked for this in their own words: it is presented in every mode. Only an
+            // urgent statement interrupts; an uncertain one never does.
+            result.priority = signal.urgency == .high && !signal.isUncertain ? .high
+                : max(.normal, tuning.surfaceThreshold)
+            result.reasons = [.goalMatch, .relevantSpeech]
+            if signal.urgency == .high { result.reasons.append(.importantSpeech) }
+            result.speechTier = .informative
+            // Always something to read: the island presents speech only when it has text (Window
+            // 5's rule), and a match whose headline failed the checks must still be noticed.
+            let text = signal.headline.isEmpty ? Self.goalMatchFallbackText : signal.headline
+            result.content = AttentionPrivateContent(text: text, summaryRevision: 1, isNegated: false, isQuestion: false)
+            result.signature = SemanticSignature(text: text, isNegated: false)
+            return result
+        }
 
         var speech: SpeechAssessment?
         var isMusicAmbiguous = false
@@ -785,7 +861,7 @@ public struct AttentionEngine: Sendable {
 
         episode.event.category = assessment.category
         episode.event.kindID = assessment.kindID
-        episode.event.symbolName = assessment.category.systemImage
+        episode.event.symbolName = assessment.symbolName ?? assessment.category.systemImage
         episode.event.title = assessment.title
         episode.event.subtitle = assessment.subtitle
         episode.event.priority = assessment.priority
@@ -1126,8 +1202,9 @@ public struct AttentionEngine: Sendable {
     /// Drops every speech source and all speech-derived text (the user switched transcription
     /// off, so the speech pipeline discarded its events and will not finish them).
     private mutating func clearSpeech() {
+        goalMemory.removeAll()
         for id in episodes.keys.sorted() {
-            guard var episode = episodes[id], episode.speech != nil else { continue }
+            guard var episode = episodes[id], episode.speech != nil || episode.semantic != nil else { continue }
             if episode.leadKind == nil {
                 if episode.event.isPresented || episode.pending != nil {
                     endPresentation(id, reasons: [.speechDataCleared], trigger: .session, removes: false)
@@ -1168,6 +1245,7 @@ public struct AttentionEngine: Sendable {
             }
             remove(id)
         }
+        goalMemory.removeAll()
         soundIndex.removeAll()
         speechIndex.removeAll()
     }

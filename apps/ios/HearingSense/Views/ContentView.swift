@@ -14,6 +14,7 @@ struct ContentView: View {
                     ListeningButtons()
                     LiveActivityCard()
                     AttentionCard()
+                    ConversationCard()
                     RecognitionCard()
                     SpeechIntelligenceCard()
                     RecentEventsCard()

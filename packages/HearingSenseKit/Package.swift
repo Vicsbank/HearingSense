@@ -28,6 +28,15 @@
 //   the gate for expansion requests. Depends on HearingSenseDomain only.
 // - IslandViews (Window 5): the activity attributes and the SwiftUI pieces of the Dynamic Island
 //   and Lock Screen presentations, shared by the app and its widget extension.
+// - SemanticAttention (Window 6): the user's natural-language attention goals and the staged
+//   engine that matches nearby speech against them by reasoning about meaning (gate, on-device
+//   language model, deterministic evidence verification, novelty).
+// - ConversationUnderstanding (Window 6): the rolling buffer of recent speech, the recap engine
+//   with its fidelity checks, the state machine behind the Action Button, and the record type
+//   of saved summaries. Foundation and FoundationModels only.
+// - SemanticEvaluation + hs-semantic-eval (Window 6, macOS tool): labelled synthetic utterances
+//   (development and held-out), the comparison with keyword and embedding baselines, and
+//   synthetic conversations with the facts a recap must contain.
 //
 // Platform-independent logic is tested on the Mac with `swift test`. iOS-only code
 // (AVAudioSession) is compiled under `#if os(iOS)` and tested with xcodebuild on an
@@ -52,6 +61,9 @@ let package = Package(
         .executable(name: "hs-attention-eval", targets: ["AttentionReplayTool"]),
         .library(name: "IslandPresentation", targets: ["IslandPresentation"]),
         .library(name: "IslandViews", targets: ["IslandViews"]),
+        .library(name: "SemanticAttention", targets: ["SemanticAttention"]),
+        .library(name: "ConversationUnderstanding", targets: ["ConversationUnderstanding"]),
+        .executable(name: "hs-semantic-eval", targets: ["SemanticEvaluationTool"]),
     ],
     targets: [
         .target(name: "HearingSenseAudio"),
@@ -75,7 +87,16 @@ let package = Package(
         .executableTarget(name: "AttentionReplayTool",
                           dependencies: ["AttentionReplay", "Attention", "HearingSenseDomain", "HearingSenseAudio",
                                          "IslandPresentation", "IslandViews", "SoundEventDetection"]),
+        .target(name: "SemanticAttention", dependencies: ["HearingSenseDomain"]),
+        .target(name: "ConversationUnderstanding"),
+        .target(name: "SemanticEvaluation", dependencies: ["SemanticAttention", "ConversationUnderstanding"],
+                resources: [.process("Resources")]),
+        .executableTarget(name: "SemanticEvaluationTool",
+                          dependencies: ["SemanticEvaluation", "SemanticAttention", "ConversationUnderstanding"]),
+        .testTarget(name: "ConversationUnderstandingTests", dependencies: ["ConversationUnderstanding", "SemanticEvaluation"]),
         .testTarget(name: "HearingSenseAudioTests", dependencies: ["HearingSenseAudio"]),
+        .testTarget(name: "SemanticAttentionTests",
+                    dependencies: ["SemanticAttention", "SemanticEvaluation", "Attention", "HearingSenseDomain"]),
         .testTarget(name: "AttentionTests",
                     dependencies: ["Attention", "AttentionReplay", "HearingSenseDomain", "SoundEventDetection"]),
         .testTarget(name: "IslandPresentationTests",

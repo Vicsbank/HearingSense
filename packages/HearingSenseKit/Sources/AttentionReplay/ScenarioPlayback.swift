@@ -50,7 +50,7 @@ extension AttentionScenario {
                     transcriptionAvailability: old.transcriptionAvailability, modelAvailability: old.modelAvailability,
                     latency: old.latency, failure: old.failure)
                 result.append(TimedInput(offset: offset, input: .speech(moved)))
-            case .preferences, .sessionStarted, .sessionEnded, .speechDataCleared, .tick:
+            case .preferences, .sessionStarted, .sessionEnded, .speechDataCleared, .semantic, .tick:
                 continue
             }
         }

@@ -181,6 +181,11 @@ public enum AttentionReason: String, Hashable, Sendable, Codable, CaseIterable {
     case sessionEnded = "session_ended"
     case speechDataCleared = "speech_data_cleared"
     case capacityEvicted = "capacity_evicted"
+    // Attention goals (Window 6)
+    /// What was said matters for one of the user's own goals (decided by the semantic engine).
+    case goalMatch = "goal_match"
+    /// The same statement was presented for a goal a short while ago.
+    case repeatedStatement = "repeated_statement"
 }
 
 /// Lifecycle of an attention episode.

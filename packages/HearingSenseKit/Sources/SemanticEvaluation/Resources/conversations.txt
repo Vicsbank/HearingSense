@@ -1,0 +1,126 @@
+# Hearing Sense — conversation recap evaluation (Window 6).
+# Synthetic conversations written for this project; no real conversation. Nobody is named after a real person.
+# C|id|split|description          split: dev (prompts may be tuned on it) or heldout (report only)
+# U|start|end|utterance           seconds from the start of the scene
+# M|start|end                     speech that could not be transcribed
+# P                               everything after this line is "said later" (the continued-session test)
+# F|groups                        a fact the recap must contain: groups joined by +, alternatives by /
+#                                 (matched by word stem, case-insensitive)
+# NEG|groups                      a fact whose negation must survive
+C|c01|dev|study group arranges a meeting for a chemistry project
+U|0|4|So for the chemistry project, are we still meeting on Thursday?
+U|5|10|No, Thursday doesn't work, the library closes at five that day.
+U|11|15|What about Saturday morning then, around ten?
+U|16|21|Saturday at ten works for me, but not at the library, it's closed on weekends.
+U|22|27|We could use the study room in the science building, room 204.
+U|28|33|Okay, room 204, Saturday at ten. Who is bringing the lab data?
+U|34|39|I have the data on my laptop, but the graphs are not finished.
+U|40|46|Then please finish the graphs by Friday night so we can write the report on Saturday.
+P
+U|60|65|One more thing, the report is due next Wednesday, not Monday.
+U|66|72|And the teacher said it has to be at least six pages.
+U|73|78|Fine, then let's split it, three pages each.
+F|saturday+ten/10
+F|204
+F|graph+friday
+NEG|thursday+not/doesn't/won't/can't/closed/closes/no
+F|wednesday
+F|six/6+page
+C|c02|dev|a pharmacist explains how to take a medicine
+U|0|5|Here is your prescription. Take one tablet twice a day with food.
+U|6|11|Twice a day, so morning and evening?
+U|12|18|Yes, and do not take it together with grapefruit juice.
+U|19|24|How long do I need to take it?
+U|25|31|For ten days. Finish all of them even if you feel better after three days.
+U|32|38|If you get a rash, stop taking it and call your doctor right away.
+U|39|44|Do I need to come back for a check?
+U|45|51|No appointment needed, but the refill is not automatic, you have to call us.
+F|twice/two+day
+NEG|grapefruit+not/don't/avoid/without/no
+F|ten/10+day
+F|rash+stop/doctor
+NEG|refill+not/call
+C|c03|dev|a conversation with missing speech and a correction
+U|0|5|The bus to the museum leaves at nine fifteen from the main entrance.
+U|6|10|Bring a packed lunch, there is no cafeteria at the museum.
+M|11|22
+U|23|28|Sorry, correction, the bus leaves at nine thirty, not nine fifteen.
+U|29|34|And we will be back at school by three.
+U|35|40|Permission slips have to be signed by tomorrow.
+F|nine thirty/9:30/930/thirty
+F|lunch
+F|three/3
+F|slip/permission+tomorrow
+C|h01|heldout|a landlord and a tenant about a repair
+U|0|5|The plumber is coming on Tuesday between eight and noon to fix the kitchen sink.
+U|6|10|Tuesday morning, okay. Do I need to be home?
+U|11|17|Someone has to let him in. If you can't, leave the key with the neighbor in apartment 3B.
+U|18|23|I can't be there Tuesday, I'll leave the key with 3B.
+U|24|30|Good. He will also check the bathroom tap, but he won't replace it this time.
+U|31|36|And the water will be shut off for about an hour.
+U|37|42|Will I be charged for this?
+U|43|48|No, the repair is covered, you don't pay anything.
+P
+U|62|68|Actually, the plumber just texted, he moved it to Wednesday, same time.
+U|69|74|Wednesday is better, then I can be home myself.
+U|75|80|Great, so no key needed.
+F|plumber+sink
+F|eight/8+noon/12
+F|3b/neighbor/neighbour+key
+NEG|tap+not/won't/no
+F|water+hour
+NEG|charge/pay/cover+not/no/don't/covered
+F|wednesday
+C|h02|heldout|coworkers plan a client presentation
+U|0|5|The client meeting moved from Monday to Thursday at two.
+U|6|11|Thursday at two, in their office or ours?
+U|12|17|In ours, conference room B. They are sending four people.
+U|18|24|Then we need the slides ready by Wednesday noon so legal can review them.
+U|25|31|I'll do the budget section. The total is forty thousand, not thirty-five.
+U|32|38|Make sure the timeline slide says twelve weeks.
+U|39|44|Who is presenting the demo?
+U|45|51|Priya will do the demo, but the login feature is not ready, so skip it.
+F|thursday+two/2
+F|room b/conference
+F|wednesday+slide
+F|forty/40
+F|twelve/12+week
+NEG|login+not/skip/without
+C|h03|heldout|a doctor's receptionist reschedules an appointment
+U|0|5|Your appointment on the fourteenth has to be moved, the doctor is away that week.
+U|6|10|Oh. What do you have instead?
+U|11|16|I can offer the twenty-first at nine in the morning or the twenty-third at four.
+U|17|21|The twenty-third at four is better for me.
+U|22|28|Booked. Please come fifteen minutes early and bring your insurance card.
+U|29|34|Do I need to fast before the blood test?
+U|35|41|Yes, nothing to eat for eight hours before, water is fine.
+U|42|47|And the old referral is no longer valid, you need a new one from your family doctor.
+F|twenty-third/23+four/4
+F|fifteen/15+early/minute
+F|insurance
+F|eight/8+hour
+NEG|referral+not/no longer/new
+C|h04|heldout|two friends, casual, with a plan at the end
+U|0|4|Did you see that documentary about octopuses?
+U|5|9|Yes, the one where it escapes from the tank, incredible.
+U|10|15|I never knew they had three hearts.
+U|16|21|Anyway, are you coming to the lake on Sunday?
+U|22|27|I want to, but my car is in the shop until Monday.
+U|28|33|I can pick you up at seven thirty, we leave early to get a spot.
+U|34|38|Seven thirty, okay. Should I bring anything?
+U|39|44|Just sunscreen and maybe snacks, I have the cooler and the chairs.
+F|lake+sunday
+F|seven thirty/7:30/730/seven
+F|car+monday/shop
+F|sunscreen/snack
+C|h05|heldout|an announcement with hard-to-recognize passages
+U|0|6|Attention please, the north parking lot will be closed tomorrow from six a.m. for repaving.
+U|7|12|Please park in the south lot or on Elm Street.
+M|13|21
+U|22|28|Cars left in the north lot after six will be towed at the owner's expense.
+U|29|34|The lot reopens on Friday.
+F|north+closed/close
+F|six/6
+F|south/elm
+F|tow
+F|friday

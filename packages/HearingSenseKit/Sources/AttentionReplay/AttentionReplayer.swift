@@ -159,7 +159,7 @@ public enum AttentionReplayer {
             for decision in produced {
                 let isFromSource: Bool = switch decision.trigger {
                 case .sound, .speech: true
-                case .timer, .preferences, .session: false
+                case .timer, .preferences, .session, .semantic: false
                 }
                 let attributed = isFromSource ? sourceKey : key(for: decision.event)
                 let delay = attributed.flatMap { lastInput[$0] }.map { decision.decidedAt.timeIntervalSince($0) } ?? 0

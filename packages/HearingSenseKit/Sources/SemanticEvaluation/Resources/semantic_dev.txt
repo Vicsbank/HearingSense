@@ -1,0 +1,86 @@
+# Hearing Sense — semantic attention, DEVELOPMENT set (Window 6).
+# Synthetic, written for this project; no real conversation. Prompts and thresholds may be tuned on this file.
+# Fields: id | profile | category | expected | acceptable goals | flags | utterance | why
+# expected: relevant (an alert is wanted), irrelevant (no alert), ambiguous (either is defensible; reported
+# separately, not scored), repeat (a repetition of the item named in flags: no second alert).
+# flags: important (a miss is costly), repeat_of=<id>, context=<earlier utterance>
+d001|student|obvious|relevant|grades,class||Your grades for the midterm will be posted tonight.|names grades directly
+d002|student|obvious|relevant|schedule,class||There's a change to the schedule, third period is now in room 12.|names a schedule change
+d003|student|obvious|relevant|attention||Excuse me, hey, you in the blue jacket, can you hear me?|someone addresses the listener
+d004|student|obvious|relevant|class,schedule||Important announcement for this class: the field trip forms are due tomorrow.|class announcement
+d005|student|obvious|relevant|emergency|important|This is an emergency, everyone leave the building through the north exit now.|emergency instruction
+d006|student|obvious|relevant|attention||Hey, sorry to bother you, I've been calling your name.|someone addresses the listener
+d007|student|implicit|relevant|grades,schedule,class||The exam has been postponed until Friday.|exam timing affects preparation
+d008|student|implicit|relevant|grades,class||You can resubmit the assignment by next Monday.|a resubmission can change the mark
+d009|student|implicit|relevant|grades,class||The rubric for the essay has changed, citations now count for a third.|how work is marked changed
+d010|student|implicit|relevant|grades,class||There will be an extra credit opportunity after the lab.|a chance to raise the mark
+d011|student|implicit|relevant|grades,class||The project now counts for twice as much as the quizzes.|weighting changed
+d012|student|implicit|relevant|grades,class||Late submissions will no longer be accepted starting this week.|a rule that can cost marks
+d013|student|implicit|relevant|schedule,class||We're meeting in the library instead of the classroom tomorrow.|place of a class changed
+d014|student|implicit|relevant|class,schedule||Mr. Alvarez is out sick, so there's a substitute for chemistry today.|class change
+d015|student|ambiguous|ambiguous|attention||Hello? Is this seat taken?|may or may not be addressed to the listener
+d016|student|implicit|relevant|emergency|important|Please move away from the windows and go to the gym immediately.|safety instruction without the word emergency
+d017|student|implicit|relevant|grades,class||The quiz I mentioned will be open book.|conditions of an assessment changed
+d018|student|implicit|relevant|schedule||Lunch is moved up to eleven thirty today because of the assembly.|timetable change
+d019|student|causal|relevant|grades,class||The printer in the lab is broken, so the reports have to be submitted online by midnight.|consequence: new submission rule and deadline
+d020|student|causal|relevant|schedule||Because of the snow, buses are running an hour late this afternoon.|consequence for the listener's day
+d021|student|causal|relevant|grades,class,schedule||The teacher lost the answer sheets, so everyone has to retake the test.|consequence: a retake
+d022|student|causal|relevant|grades,class||Attendance now counts toward the final mark.|new factor in the mark
+d023|student|causal|relevant|emergency|important|The gas line outside is leaking, the fire department wants this hallway cleared.|danger with an instruction
+d024|student|causal|relevant|grades,class||Since half the class failed, she's dropping the lowest quiz score.|marks recalculated
+d025|student|unrelated|irrelevant|||I think I left my umbrella at the coffee shop.|everyday talk
+d026|student|unrelated|irrelevant|||Did you watch the game last night? That last goal was unbelievable.|everyday talk
+d027|student|unrelated|irrelevant|||My cat knocked a plant off the shelf again this morning.|everyday talk
+d028|student|unrelated|irrelevant|||Can you pass me the ketchup, please?|everyday talk
+d029|student|unrelated|irrelevant|||The new season of that show comes out next month.|everyday talk
+d030|student|unrelated|irrelevant|||I'm so tired, I barely slept.|everyday talk
+d031|student|unrelated|irrelevant|||They're repainting the house across the street a weird green.|everyday talk
+d032|student|unrelated|irrelevant|||Do you want fries or a salad with that?|everyday talk
+d033|student|unrelated|irrelevant|||I need to charge my phone, it's at five percent.|everyday talk
+d034|student|unrelated|irrelevant|||That movie was way too long but the ending was good.|everyday talk
+d035|student|unrelated|irrelevant|||We should go hiking this weekend if it doesn't rain.|everyday talk
+d036|student|unrelated|irrelevant|||The traffic on the bridge was terrible this morning.|everyday talk
+d037|student|unrelated|irrelevant|||I can't find my other shoe anywhere.|everyday talk
+d038|student|unrelated|irrelevant|||This sandwich is actually pretty good.|everyday talk
+d039|student|third_person|irrelevant|||My friend got a better grade than I did on her history paper.|someone else's grade; nothing changes for the listener
+d040|student|third_person|irrelevant|||My brother's school moved all their exams to June.|another school
+d041|student|third_person|irrelevant|||Her cousin's flight got cancelled so she's stuck in Chicago.|someone else, unrelated
+d042|student|third_person|irrelevant|||At my old school the teachers never accepted late work.|another place, the past
+d043|student|third_person|irrelevant|||The seniors have their schedule changed, but it doesn't affect anyone else.|explicitly another group
+d044|student|third_person|irrelevant|||Did you hear that Jake's class has a fire drill tomorrow?|another class
+d045|student|negation|irrelevant|||No, the test is not cancelled, it's still on Thursday as planned.|nothing changes
+d046|student|negation|irrelevant|||Don't worry, there is no fire, it was just burnt toast.|negated danger, no instruction
+d047|student|negation|irrelevant|||The schedule is not changing next week, everything stays the same.|nothing changes
+d048|student|negation|relevant|grades,class||The essay will not be graded.|a negation that is itself the change
+d049|student|negation|relevant|class,schedule||You do not need to bring your laptop tomorrow, the lab is cancelled.|a cancelled class
+d050|student|negation|relevant|emergency|important|This is not a drill, exit the building now.|negation that strengthens the instruction
+d051|student|hypothetical|irrelevant|||What if they cancelled the final exam, that would be amazing.|imagined
+d052|student|hypothetical|irrelevant|||I wish the teacher would give us extra credit.|a wish
+d053|student|ambiguous|ambiguous|schedule,class||If it snows tomorrow they might close the school.|a guess about a real possibility
+d054|student|hypothetical|irrelevant|||Imagine if the fire alarm went off during the test.|imagined
+d055|student|hypothetical|irrelevant|||Maybe the deadline will get extended, who knows.|speculation
+d056|student|hypothetical|relevant|grades,class||If you submit after Friday, you lose ten percent.|a stated rule in conditional form
+d057|student|sarcasm_quote|irrelevant|||Oh sure, like the teacher is ever going to cancel homework.|sarcasm
+d058|student|sarcasm_quote|irrelevant|||In the movie the principal yells, everybody evacuate the building, and nobody moves.|quotation from a film
+d059|student|sarcasm_quote|irrelevant|||He was joking that the exam got moved to Saturday at midnight.|reported joke
+d060|student|sarcasm_quote|irrelevant|||She said, and I quote, I will never give extra credit, but that was years ago.|old quotation
+d061|student|sarcasm_quote|irrelevant|||Yeah right, an A for everyone, very funny.|sarcasm
+d062|student|asr_error|relevant|grades,schedule,class||the exam has been post pond until friday|recognition error in "postponed"
+d063|student|asr_error|relevant|grades,class||late some missions will no longer be accepted|recognition error in "submissions"
+d064|student|asr_error|relevant|emergency|important|every one leave the bill ding through the north exit|recognition error in "building"
+d065|student|asr_error|relevant|grades,class||their will be extra credit opportunity after the lab|recognition error in "there"
+d066|student|asr_error|irrelevant|||i left my um brella at the coffee shop|recognition error, unrelated
+d067|student|ambiguous|ambiguous|grades,class||the ruby rick for the essay has changed|the key word is garbled
+d068|student|incomplete|ambiguous|grades,class||The deadline for the|cut off before the statement
+d069|student|incomplete|ambiguous|grades,class||So about the exam, it's going to be|cut off before the statement
+d070|student|incomplete|ambiguous|grades,class||and then she said the final project is due|cut off and reported
+d071|student|incomplete|ambiguous|schedule||moved to Friday instead of|no subject
+d072|student|incomplete|ambiguous|emergency||Everyone needs to get out of|cut off instruction
+d073|student|repeated|repeat|grades,schedule,class|repeat_of=d007|Reminder, the exam has been postponed until Friday.|said before
+d074|student|repeated|repeat|grades,class|repeat_of=d012|Again, late submissions will no longer be accepted starting this week.|said before
+d075|student|ambiguous|ambiguous|attention||Somebody's phone is ringing.|might be the listener's
+d076|student|ambiguous|ambiguous|schedule||They changed the bus routes downtown.|may or may not concern the listener
+d077|student|ambiguous|ambiguous|attention||Is anyone sitting here?|may or may not be addressed to the listener
+d078|student|ambiguous|ambiguous|class||The office wants to see a few students after class.|may or may not include the listener
+d079|student|obvious|relevant|attention||Sir? Sir, you're next in line.|someone addresses the listener
+d080|student|ambiguous|ambiguous|attention||Hey Marcus, wait up!|the listener's name is not known

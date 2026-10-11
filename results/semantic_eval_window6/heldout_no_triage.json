@@ -1,0 +1,1606 @@
+{
+  "items" : 119,
+  "metrics" : [
+    {
+      "ambiguousAlerted" : 8,
+      "ambiguousTotal" : 14,
+      "ambiguousUncertain" : 2,
+      "assumedUtterancesPerHour" : 240,
+      "byCategory" : {
+        "asr_error" : {
+          "hits" : 7,
+          "total" : 7
+        },
+        "causal" : {
+          "hits" : 5,
+          "total" : 7
+        },
+        "hypothetical" : {
+          "hits" : 7,
+          "total" : 7
+        },
+        "implicit" : {
+          "hits" : 24,
+          "total" : 28
+        },
+        "negation" : {
+          "hits" : 5,
+          "total" : 7
+        },
+        "obvious" : {
+          "hits" : 11,
+          "total" : 13
+        },
+        "repeated" : {
+          "hits" : 4,
+          "total" : 4
+        },
+        "sarcasm_quote" : {
+          "hits" : 4,
+          "total" : 4
+        },
+        "third_person" : {
+          "hits" : 6,
+          "total" : 10
+        },
+        "unrelated" : {
+          "hits" : 18,
+          "total" : 18
+        }
+      },
+      "corrections" : {
+        "about_someone_else" : 3,
+        "headline_negation" : 9,
+        "headline_not_in_utterance" : 3,
+        "not_asserted" : 6
+      },
+      "f1" : 0.8771929824561403,
+      "fallbacks" : 0,
+      "falseAlertRate" : {
+        "hits" : 6,
+        "total" : 43
+      },
+      "falseAlertsPerHour" : 33.48837209302326,
+      "gated" : 0,
+      "goalAccuracy" : {
+        "hits" : 48,
+        "total" : 50
+      },
+      "importantMisses" : {
+        "hits" : 0,
+        "total" : 7
+      },
+      "medianModelSeconds" : 2.734550952911377,
+      "medianSeconds" : 2.7347980737686157,
+      "method" : "Foundation Models reasoning + verifier (production pipeline, first pass off)",
+      "modelCalls" : 119,
+      "p95Seconds" : 2.9955270290374756,
+      "precision" : {
+        "hits" : 50,
+        "total" : 56
+      },
+      "recall" : {
+        "hits" : 50,
+        "total" : 58
+      },
+      "repeatAlerts" : {
+        "hits" : 0,
+        "total" : 4
+      },
+      "split" : "heldout",
+      "triaged" : 0
+    }
+  ],
+  "note" : "Synthetic utterances, evaluated on a Mac. Not an iPhone measurement.",
+  "outcomes" : {
+    "model" : [
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h001",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 3.1458139419555664,
+        "seconds" : 3.146235942840576,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h002",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 3.003180980682373,
+        "seconds" : 3.0035159587860107,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h003",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 2.8591229915618896,
+        "seconds" : 2.859369993209839,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h004",
+        "isNovel" : true,
+        "modelSeconds" : 2.754502058029175,
+        "seconds" : 2.754568934440613,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h005",
+        "isNovel" : true,
+        "matchedGoal" : "emergency",
+        "modelSeconds" : 2.7443010807037354,
+        "seconds" : 2.7446789741516113,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h006",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 2.92917799949646,
+        "seconds" : 2.929487943649292,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h007",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.9340909719467163,
+        "seconds" : 2.9344229698181152,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h008",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.8170539140701294,
+        "seconds" : 2.8174049854278564,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h009",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.8781750202178955,
+        "seconds" : 2.8785120248794556,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h066",
+        "isNovel" : false,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.7807101011276245,
+        "seconds" : 2.7810590267181396,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h010",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.7144240140914917,
+        "seconds" : 2.71471905708313,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_negation"
+        ],
+        "id" : "h011",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.7256228923797607,
+        "seconds" : 2.7259440422058105,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "headline_not_in_utterance"
+        ],
+        "id" : "h067",
+        "isNovel" : false,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 3.042444944381714,
+        "seconds" : 3.042760968208313,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h012",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 2.814298987388611,
+        "seconds" : 2.8146029710769653,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h013",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 2.88919997215271,
+        "seconds" : 2.8894970417022705,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h014",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 2.734550952911377,
+        "seconds" : 2.7347980737686157,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "about_someone_else"
+        ],
+        "id" : "h015",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 2.785405993461609,
+        "seconds" : 2.785660982131958,
+        "stage" : "model",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h016",
+        "isNovel" : true,
+        "matchedGoal" : "emergency",
+        "modelSeconds" : 2.773940086364746,
+        "seconds" : 2.7742420434951782,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_negation"
+        ],
+        "id" : "h017",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.9802130460739136,
+        "seconds" : 2.9805270433425903,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h018",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 2.8700900077819824,
+        "seconds" : 2.8704389333724976,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h019",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.875120997428894,
+        "seconds" : 2.875486969947815,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h020",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.9149500131607056,
+        "seconds" : 2.915328025817871,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_not_in_utterance"
+        ],
+        "id" : "h021",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 2.7360509634017944,
+        "seconds" : 2.7363699674606323,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h022",
+        "isNovel" : true,
+        "modelSeconds" : 2.6532909870147705,
+        "seconds" : 2.6533730030059814,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h023",
+        "isNovel" : true,
+        "matchedGoal" : "emergency",
+        "modelSeconds" : 2.9276410341262817,
+        "seconds" : 2.9280569553375244,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h024",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.8738070726394653,
+        "seconds" : 2.8741179704666138,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h025",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.768060088157654,
+        "seconds" : 2.7683990001678467,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h026",
+        "isNovel" : true,
+        "modelSeconds" : 2.242825984954834,
+        "seconds" : 2.24289608001709,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h027",
+        "isNovel" : true,
+        "modelSeconds" : 2.5863540172576904,
+        "seconds" : 2.5864369869232178,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h028",
+        "isNovel" : true,
+        "modelSeconds" : 2.5856339931488037,
+        "seconds" : 2.5857110023498535,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "not_asserted"
+        ],
+        "id" : "h029",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.908790946006775,
+        "seconds" : 2.908982038497925,
+        "stage" : "model",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h030",
+        "isNovel" : true,
+        "modelSeconds" : 2.601016044616699,
+        "seconds" : 2.6010791063308716,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h031",
+        "isNovel" : true,
+        "modelSeconds" : 2.5833081007003784,
+        "seconds" : 2.583420991897583,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h032",
+        "isNovel" : true,
+        "modelSeconds" : 2.528140068054199,
+        "seconds" : 2.528233051300049,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h033",
+        "isNovel" : true,
+        "modelSeconds" : 2.502686023712158,
+        "seconds" : 2.502784013748169,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h034",
+        "isNovel" : true,
+        "modelSeconds" : 2.532699942588806,
+        "seconds" : 2.5327929258346558,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h035",
+        "isNovel" : true,
+        "modelSeconds" : 2.5891629457473755,
+        "seconds" : 2.5892460346221924,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h036",
+        "isNovel" : true,
+        "modelSeconds" : 2.5747311115264893,
+        "seconds" : 2.5748260021209717,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h037",
+        "isNovel" : true,
+        "modelSeconds" : 2.5771710872650146,
+        "seconds" : 2.577252984046936,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h038",
+        "isNovel" : true,
+        "modelSeconds" : 2.5382310152053833,
+        "seconds" : 2.5383180379867554,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h039",
+        "isNovel" : true,
+        "modelSeconds" : 2.7256569862365723,
+        "seconds" : 2.7257370948791504,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h040",
+        "isNovel" : true,
+        "modelSeconds" : 2.5968340635299683,
+        "seconds" : 2.596924066543579,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h041",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 2.7544349431991577,
+        "seconds" : 2.754802942276001,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h042",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 2.8742029666900635,
+        "seconds" : 2.8745429515838623,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h043",
+        "isNovel" : true,
+        "modelSeconds" : 2.672455072402954,
+        "seconds" : 2.67254102230072,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h044",
+        "isNovel" : true,
+        "modelSeconds" : 2.684206008911133,
+        "seconds" : 2.6842950582504272,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h045",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.702275037765503,
+        "seconds" : 2.7025339603424072,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h046",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.7658519744873047,
+        "seconds" : 2.766148090362549,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_negation"
+        ],
+        "id" : "h047",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 2.354405999183655,
+        "seconds" : 2.354668974876404,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h048",
+        "isNovel" : true,
+        "matchedGoal" : "emergency",
+        "modelSeconds" : 2.818869948387146,
+        "seconds" : 2.8192150592803955,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h049",
+        "isNovel" : true,
+        "modelSeconds" : 2.627142071723938,
+        "seconds" : 2.627226948738098,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "not_asserted",
+          "headline_negation"
+        ],
+        "id" : "h050",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.871584892272949,
+        "seconds" : 2.871765971183777,
+        "stage" : "model",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h051",
+        "isNovel" : true,
+        "modelSeconds" : 2.8290709257125854,
+        "seconds" : 2.8291369676589966,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "not_asserted"
+        ],
+        "id" : "h052",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.9953120946884155,
+        "seconds" : 2.9955270290374756,
+        "stage" : "model",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h053",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 3.0610640048980713,
+        "seconds" : 3.0613890886306763,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h054",
+        "isNovel" : true,
+        "modelSeconds" : 2.64614999294281,
+        "seconds" : 2.646241068840027,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h055",
+        "isNovel" : true,
+        "modelSeconds" : 2.657430052757263,
+        "seconds" : 2.6575320959091187,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h056",
+        "isNovel" : true,
+        "modelSeconds" : 2.583950996398926,
+        "seconds" : 2.584043025970459,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h057",
+        "isNovel" : true,
+        "modelSeconds" : 2.5206940174102783,
+        "seconds" : 2.5208029747009277,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h058",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 2.926828980445862,
+        "seconds" : 2.927119016647339,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h059",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.5077850818634033,
+        "seconds" : 2.5081270933151245,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h060",
+        "isNovel" : true,
+        "matchedGoal" : "emergency",
+        "modelSeconds" : 2.9379429817199707,
+        "seconds" : 2.9382760524749756,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h061",
+        "isNovel" : true,
+        "modelSeconds" : 2.577686905860901,
+        "seconds" : 2.5777629613876343,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h062",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 2.7010350227355957,
+        "seconds" : 2.701321005821228,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h063",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.411452054977417,
+        "seconds" : 2.411671996116638,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h064",
+        "isNovel" : true,
+        "matchedGoal" : "class",
+        "modelSeconds" : 2.8443599939346313,
+        "seconds" : 2.844604015350342,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h065",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 2.3009790182113647,
+        "seconds" : 2.3011980056762695,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h068",
+        "isNovel" : true,
+        "modelSeconds" : 2.5920640230178833,
+        "seconds" : 2.5921400785446167,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "h069",
+        "isNovel" : true,
+        "modelSeconds" : 2.19760799407959,
+        "seconds" : 2.197687029838562,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "h070",
+        "isNovel" : true,
+        "matchedGoal" : "schedule",
+        "modelSeconds" : 2.927973985671997,
+        "seconds" : 2.92822802066803,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t001",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.864799976348877,
+        "seconds" : 2.8651130199432373,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t002",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.7799320220947266,
+        "seconds" : 2.780248999595642,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t003",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.7803670167922974,
+        "seconds" : 2.78068208694458,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t004",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.9104210138320923,
+        "seconds" : 2.9107589721679688,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_negation"
+        ],
+        "id" : "t005",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.873737931251526,
+        "seconds" : 2.874068021774292,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t006",
+        "isNovel" : true,
+        "matchedGoal" : "bags",
+        "modelSeconds" : 2.683666944503784,
+        "seconds" : 2.6840699911117554,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "t024",
+        "isNovel" : false,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.833221912384033,
+        "seconds" : 2.83352792263031,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_negation"
+        ],
+        "id" : "t007",
+        "isNovel" : true,
+        "matchedGoal" : "bags",
+        "modelSeconds" : 2.898231029510498,
+        "seconds" : 2.898607015609741,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t008",
+        "isNovel" : true,
+        "matchedGoal" : "bags",
+        "modelSeconds" : 2.961166024208069,
+        "seconds" : 2.9615520238876343,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t009",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.8330209255218506,
+        "seconds" : 2.8332830667495728,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t010",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.8172500133514404,
+        "seconds" : 2.817551016807556,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "t011",
+        "isNovel" : true,
+        "modelSeconds" : 2.6005799770355225,
+        "seconds" : 2.600648045539856,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "t012",
+        "isNovel" : true,
+        "modelSeconds" : 2.6316111087799072,
+        "seconds" : 2.631709098815918,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "not_asserted"
+        ],
+        "id" : "t013",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.833953022956848,
+        "seconds" : 2.834167957305908,
+        "stage" : "model",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_negation"
+        ],
+        "id" : "t014",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.8057860136032104,
+        "seconds" : 2.806096076965332,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t015",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.7318559885025024,
+        "seconds" : 2.7321529388427734,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t016",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 3.0268139839172363,
+        "seconds" : 3.027238965034485,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "t017",
+        "isNovel" : true,
+        "modelSeconds" : 2.5919219255447388,
+        "seconds" : 2.592005968093872,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_negation"
+        ],
+        "id" : "t018",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.791106939315796,
+        "seconds" : 2.791382074356079,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t019",
+        "isNovel" : true,
+        "matchedGoal" : "bags",
+        "modelSeconds" : 2.896474003791809,
+        "seconds" : 2.8968489170074463,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "t020",
+        "isNovel" : true,
+        "modelSeconds" : 2.627629041671753,
+        "seconds" : 2.627701997756958,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t021",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.5493509769439697,
+        "seconds" : 2.549638032913208,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "not_asserted"
+        ],
+        "id" : "t022",
+        "isNovel" : true,
+        "matchedGoal" : "flight",
+        "modelSeconds" : 2.7978880405426025,
+        "seconds" : 2.7980730533599854,
+        "stage" : "model",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "t023",
+        "isNovel" : true,
+        "matchedGoal" : "bags",
+        "modelSeconds" : 2.7367210388183594,
+        "seconds" : 2.7370450496673584,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "w001",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.6550259590148926,
+        "seconds" : 2.655279040336609,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+          "headline_not_in_utterance"
+        ],
+        "id" : "w002",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.7507230043411255,
+        "seconds" : 2.7509700059890747,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "w003",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.6727190017700195,
+        "seconds" : 2.673011064529419,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w004",
+        "isNovel" : true,
+        "modelSeconds" : 2.541859984397888,
+        "seconds" : 2.541918992996216,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w005",
+        "isNovel" : true,
+        "modelSeconds" : 2.620313048362732,
+        "seconds" : 2.620380997657776,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "w006",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 2.6847050189971924,
+        "seconds" : 2.684998035430908,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w007",
+        "isNovel" : true,
+        "modelSeconds" : 2.4753090143203735,
+        "seconds" : 2.4753600358963013,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w025",
+        "isNovel" : true,
+        "modelSeconds" : 2.5526400804519653,
+        "seconds" : 2.552725911140442,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "w008",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.624305009841919,
+        "seconds" : 2.6246310472488403,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "w009",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.7886641025543213,
+        "seconds" : 2.7890169620513916,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "about_someone_else"
+        ],
+        "id" : "w010",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.7483060359954834,
+        "seconds" : 2.7485610246658325,
+        "stage" : "model",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "about_someone_else",
+          "headline_negation"
+        ],
+        "id" : "w011",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.8118399381637573,
+        "seconds" : 2.8120380640029907,
+        "stage" : "model",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w012",
+        "isNovel" : true,
+        "modelSeconds" : 2.54583203792572,
+        "seconds" : 2.545906901359558,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w013",
+        "isNovel" : true,
+        "modelSeconds" : 2.201936960220337,
+        "seconds" : 2.202003002166748,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+          "not_asserted"
+        ],
+        "id" : "w014",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.9450290203094482,
+        "seconds" : 2.945236921310425,
+        "stage" : "model",
+        "verdict" : "uncertain"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w015",
+        "isNovel" : true,
+        "modelSeconds" : 2.7325289249420166,
+        "seconds" : 2.732590913772583,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w016",
+        "isNovel" : true,
+        "modelSeconds" : 2.5396710634231567,
+        "seconds" : 2.5397619009017944,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w017",
+        "isNovel" : true,
+        "modelSeconds" : 2.2235209941864014,
+        "seconds" : 2.2236199378967285,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w018",
+        "isNovel" : true,
+        "modelSeconds" : 2.5584700107574463,
+        "seconds" : 2.5585548877716064,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "w019",
+        "isNovel" : true,
+        "matchedGoal" : "order",
+        "modelSeconds" : 2.6478919982910156,
+        "seconds" : 2.648163080215454,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "w020",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.7272729873657227,
+        "seconds" : 2.7275760173797607,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w021",
+        "isNovel" : true,
+        "modelSeconds" : 2.564107060432434,
+        "seconds" : 2.564162015914917,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "w022",
+        "isNovel" : true,
+        "modelSeconds" : 2.5462679862976074,
+        "seconds" : 2.546344041824341,
+        "stage" : "model",
+        "verdict" : "irrelevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "w023",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 2.7482069730758667,
+        "seconds" : 2.748415946960449,
+        "stage" : "model",
+        "verdict" : "relevant"
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "w024",
+        "isNovel" : true,
+        "matchedGoal" : "shift",
+        "modelSeconds" : 2.598639965057373,
+        "seconds" : 2.5989190340042114,
+        "stage" : "model",
+        "verdict" : "relevant"
+      }
+    ]
+  },
+  "split" : "heldout"
+}

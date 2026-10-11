@@ -116,6 +116,8 @@ public struct SpeechAttentionPolicy: Hashable, Sendable, Codable {
     public var sameMeaningSimilarity: Double
     /// A speech source with no update for this long is treated as ended.
     public var staleAfter: TimeInterval
+    /// Window 6: a goal match whose statement was presented within this time is not presented again.
+    public var goalRepeatWindow: TimeInterval = 300
 
     public init(urgentPhrases: [String], urgentShortUtteranceWords: [String], shortUtteranceMaximumWords: Int,
                 sustainedAfter: TimeInterval, cooldown: TimeInterval, rejoinWindow: TimeInterval,

@@ -197,6 +197,29 @@ public struct TranscriptQuality: Hashable, Sendable, Codable {
     }
 }
 
+/// One finalized utterance of a conversation. Sensitive: kept in memory only.
+public struct SpeechUtterance: Hashable, Sendable, Codable {
+    /// Position in the conversation, from 0.
+    public var index: Int
+    public var text: String
+    public var startDate: Date
+    public var endDate: Date
+    public var quality: TranscriptQuality.Rating
+    /// Probably sung or part of music rather than spoken nearby.
+    public var isPossiblyMusic: Bool
+
+    public init(index: Int, text: String, startDate: Date, endDate: Date, quality: TranscriptQuality.Rating,
+                isPossiblyMusic: Bool = false)
+    {
+        self.index = index
+        self.text = text
+        self.startDate = startDate
+        self.endDate = endDate
+        self.quality = quality
+        self.isPossiblyMusic = isPossiblyMusic
+    }
+}
+
 /// Transcribed speech. Sensitive: kept in memory only, never logged or persisted by default.
 public struct SpeechTranscript: Hashable, Sendable, Codable {
     public var text: String
@@ -379,8 +402,23 @@ public struct SpeechSemanticResult: Identifiable, Hashable, Sendable, Codable {
     public var updatedDate: Date
 
     /// Most recent utterance(s) of the conversation (bounded) plus the partial text of the
-    /// utterance in progress; nil at level 1.
-    public var transcript: SpeechTranscript?
+    /// utterance in progress; nil at level 1. Removing it removes every other speech text of
+    /// this result as well.
+    public var transcript: SpeechTranscript? {
+        didSet {
+            if transcript == nil {
+                recentUtterances = []
+                volatileText = nil
+            }
+        }
+    }
+    /// Window 6: the utterances finalized since the previous revision of this result, each on
+    /// its own with its times (`transcript` joins several for display). A revision that changes
+    /// something else repeats them: tell them apart by `SpeechUtterance.index`. Sensitive, like
+    /// the transcript.
+    public var recentUtterances: [SpeechUtterance] = []
+    /// Window 6: the words of the utterance in progress; the recognizer may still change them.
+    public var volatileText: String? = nil
     /// Number of finalized utterances (recognizer sentences) in this conversation so far.
     public var utteranceCount: Int
     public var summary: SpeechSummary?

@@ -1,0 +1,21 @@
+Set dev: 80 synthetic utterances — relevant 32, irrelevant 33, ambiguous 13, repeat 2
+
+  wall time 218.0 s; this process 14 → 23 MB resident (the model itself runs in a system process and is not included)
+Foundation Models reasoning + verifier (production pipeline, first pass off) — dev set
+  precision            91.4 % (32/35; 95 % CI 77.6–97.0)
+  recall               100.0 % (32/32; 95 % CI 89.3–100.0)
+  F1                   0.955
+  false alerts         9.1 % (3/33; 95 % CI 3.1–23.6) of irrelevant utterances
+  false alerts / hour  21.8 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      0.0 % (0/2; 95 % CI 0.0–65.8)
+  important missed     0.0 % (0/5; 95 % CI 0.0–43.4)
+  goal named correctly 93.8 % (30/32; 95 % CI 79.9–98.3)
+  ambiguous items      9 alerted, 1 kept as uncertain, 3 nothing (of 13)
+  time per utterance   median 2.76 s, p95 2.99 s; model median 2.76 s; full judgements 80, stopped by the first pass 0, gated 0, fallbacks 0
+  verifier corrections about_someone_else 1, headline_negation 6, not_asserted 5
+  by category          asr_error 5/5, causal 6/6, hypothetical 5/5, implicit 11/11, negation 6/6, obvious 7/7, repeated 2/2, sarcasm_quote 3/5, third_person 5/6, unrelated 14/14
+    ✗ d043 [third_person, expected irrelevant] The seniors have their schedule changed, but it doesn't affect anyone else. → relevant (headline_negation)
+    ✗ d058 [sarcasm_quote, expected irrelevant] In the movie the principal yells, everybody evacuate the building, and nobody moves. → relevant (headline_negation)
+    ✗ d059 [sarcasm_quote, expected irrelevant] He was joking that the exam got moved to Saturday at midnight. → relevant
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6/results/semantic_eval_window6/dev_no_triage.json

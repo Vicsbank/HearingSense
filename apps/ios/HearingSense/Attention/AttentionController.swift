@@ -47,6 +47,8 @@ final class AttentionController {
     /// Synthetic sound events of the debug injection, for consumers that normally get sound events
     /// from the recognition pipeline (Window 5's ambient icons). Never called for real events.
     @ObservationIgnored var onInjectedSound: ((AcousticEventUpdate) -> Void)?
+    /// Window 6: called when the attention session starts (true) and ends (false).
+    @ObservationIgnored var onSessionChange: ((Bool) -> Void)?
 
     @ObservationIgnored private var engine: AttentionEngine
     @ObservationIgnored private let defaults: UserDefaults
@@ -86,12 +88,14 @@ final class AttentionController {
     func sessionWillStart() {
         isSessionActive = true
         process(.sessionStarted(at: .now))
+        onSessionChange?(true)
     }
 
     /// Capture stopped (user, interruption or failure): nothing stays presented.
     func sessionDidEnd() {
         guard isSessionActive else { return }
         isSessionActive = false
+        onSessionChange?(false)
         process(.sessionEnded(at: .now))
         log(.recognition, "Attention session ended: \(statistics.count(.show)) shown, \(statistics.count(.update)) updated, "
             + "\(statistics.count(.suppress)) suppressed, \(statistics.count(.defer)) deferred")
@@ -107,6 +111,12 @@ final class AttentionController {
     func receive(_ result: SpeechSemanticResult) {
         guard isSessionActive else { return }
         process(.speech(result))
+    }
+
+    /// Window 6: a statement the semantic engine accepted for one of the user's goals.
+    func receive(_ signal: SemanticAttentionSignal) {
+        guard isSessionActive else { return }
+        process(.semantic(signal))
     }
 
     /// The speech pipeline discarded its events (transcription switched off).

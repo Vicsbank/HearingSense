@@ -146,7 +146,7 @@ public enum IslandReplayer {
             case .sound(let update):
                 feedEngine(step.input)
                 feedPipeline(.sound(update))
-            case .speech, .preferences, .speechDataCleared, .tick:
+            case .speech, .semantic, .preferences, .speechDataCleared, .tick:
                 feedEngine(step.input)
             }
         }

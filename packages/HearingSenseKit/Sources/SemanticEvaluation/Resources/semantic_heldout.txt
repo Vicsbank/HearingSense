@@ -1,0 +1,124 @@
+# Hearing Sense — semantic attention, HELD-OUT set (Window 6).
+# Synthetic, written for this project before any prompt was tuned; no real conversation.
+# DO NOT tune prompts, rules or thresholds on this file. Run it to report, not to develop.
+# Two of its three profiles (traveler, worker) use goals that do not occur in the development set.
+# Fields and labels as in semantic_dev.txt.
+h001|student|obvious|relevant|grades,class||Your report cards will be handed out on Wednesday.|names grades
+h002|student|obvious|relevant|schedule,class||Schedule change: gym class is swapped with art this afternoon.|names a schedule change
+h003|student|obvious|relevant|attention||Excuse me, miss, you dropped your wallet.|someone addresses the listener
+h004|student|obvious|relevant|class,schedule||Announcement for our class, picture day is this Thursday.|class announcement
+h005|student|obvious|relevant|emergency|important|Fire in the science wing, evacuate through the main doors now.|emergency instruction
+h006|student|implicit|relevant|grades,schedule,class||The final has been moved up to next Tuesday.|exam timing
+h007|student|implicit|relevant|grades,class||She's letting us redo the lab report for a better score.|a redo can change the mark
+h008|student|implicit|relevant|grades,class||Participation is going to count for twenty percent from now on.|weighting changed
+h009|student|implicit|relevant|grades,class,schedule||There's a pop quiz at the start of next period.|an assessment the listener did not expect
+h010|student|implicit|relevant|grades,class||The homework portal closes at nine tonight instead of midnight.|deadline moved earlier
+h011|student|implicit|relevant|grades,class||We don't have to take the vocabulary test if we finish the reading log.|a way to skip an assessment
+h012|student|implicit|relevant|schedule||First period starts thirty minutes later all next week.|timetable change
+h013|student|implicit|relevant|schedule||Your tutoring session got moved to Thursday at four.|appointment moved
+h014|student|implicit|relevant|attention||Hey, hey, over here, I'm waving at you.|someone tries to get the listener's attention
+h015|student|ambiguous|ambiguous|attention||Could the person with the red backpack come to the front desk?|only if the listener has a red backpack
+h016|student|implicit|relevant|emergency|important|Everyone stay inside and lock the doors, this is a lockdown.|safety instruction
+h017|student|implicit|relevant|grades,class||The teacher said the essay must be at least five pages now, not three.|requirement changed
+h018|student|implicit|relevant|class,grades,schedule||Group presentations start Monday, and the order was drawn at random.|assessed work is scheduled
+h019|student|implicit|relevant|schedule,class,grades||The science fair judging has been pushed back by a week.|an assessed event moved
+h020|student|causal|relevant|grades,class||The wifi was down during the online quiz, so they're throwing out the results.|consequence: quiz results void
+h021|student|causal|relevant|class,schedule||The gym floor is being refinished, so PE will be outside this month.|consequence: class place changed
+h022|student|causal|relevant|schedule,class||Because the bus broke down, the field trip is cancelled.|consequence: cancelled trip
+h023|student|causal|relevant|emergency|important|There's smoke coming from the kitchen, they want everyone out of the cafeteria.|danger with an instruction
+h024|student|causal|relevant|grades,class||The grading scale is curved now, so an eighty-five is an A.|marks recalculated
+h025|student|causal|relevant|grades,class||Since the test was too hard, she's adding five points to everyone's score.|marks raised
+h026|student|unrelated|irrelevant|||I spilled coffee all over my keyboard yesterday.|everyday talk
+h027|student|unrelated|irrelevant|||Do you know a good place for tacos around here?|everyday talk
+h028|student|unrelated|irrelevant|||My sister is getting a puppy next week.|everyday talk
+h029|student|unrelated|irrelevant|||I think it's supposed to rain all weekend.|everyday talk
+h030|student|unrelated|irrelevant|||This song has been stuck in my head all day.|everyday talk
+h031|student|unrelated|irrelevant|||He finally fixed the squeaky door in the garage.|everyday talk
+h032|student|unrelated|irrelevant|||I need new headphones, these keep cutting out.|everyday talk
+h033|student|unrelated|irrelevant|||Are you going to the concert on Saturday?|everyday talk
+h034|student|unrelated|irrelevant|||The line at the pharmacy was out the door.|everyday talk
+h035|student|unrelated|irrelevant|||I burned the rice again, so we ordered pizza.|everyday talk
+h036|student|unrelated|irrelevant|||Her birthday party was at the bowling alley.|everyday talk
+h037|student|unrelated|irrelevant|||That video game comes out in the fall.|everyday talk
+h038|student|third_person|irrelevant|||My roommate failed her driving test twice.|someone else, another kind of test
+h039|student|third_person|irrelevant|||My cousin's teacher lets them retake every quiz.|another class
+h040|student|third_person|irrelevant|||The other section had their midterm cancelled, lucky them.|explicitly another group
+h041|student|third_person|irrelevant|||My dad's work schedule changed, so he's home on Fridays now.|someone else's schedule
+h042|student|third_person|irrelevant|||Their school had to evacuate last year because of a gas leak.|another place, the past
+h043|student|negation|irrelevant|||There's no change to the timetable, Monday is the same as always.|nothing changes
+h044|student|ambiguous|ambiguous|emergency||No, we are not evacuating, the alarm was a mistake.|a false alarm: no instruction, but worth knowing
+h045|student|negation|relevant|grades,class||The quiz won't count toward your grade.|a negation that is itself the change
+h046|student|negation|relevant|grades,class||You can't use a calculator on the test anymore.|a new restriction
+h047|student|negation|irrelevant|||She did not move the deadline, it's still due Friday.|nothing changes
+h048|student|negation|relevant|emergency|important|Do not use the elevators, take the stairs to the ground floor now.|negated instruction in an evacuation
+h049|student|hypothetical|irrelevant|||What if we all just skipped the test, could she fail everyone?|imagined
+h050|student|hypothetical|irrelevant|||I hope they push the deadline back, I haven't started.|a hope
+h051|student|hypothetical|irrelevant|||It would be so nice if class got cancelled tomorrow.|a wish
+h052|student|hypothetical|irrelevant|||Suppose the power goes out, would they send us home?|imagined
+h053|student|hypothetical|relevant|grades,class||If you miss the lab, you get a zero unless you have a note.|a stated rule in conditional form
+h054|student|sarcasm_quote|irrelevant|||Sure, and I'm going to get a hundred on the physics final, very likely.|sarcasm
+h055|student|sarcasm_quote|irrelevant|||On the show last night the alarm goes off and they all run outside screaming.|a scene from a show
+h056|student|sarcasm_quote|irrelevant|||He told that joke about the teacher cancelling the final again.|reported joke
+h057|student|sarcasm_quote|irrelevant|||My grandmother always says, when she was young, exams were cancelled for snow.|old story
+h058|student|asr_error|relevant|grades,schedule,class||the final has been moved up to next choose day|recognition error in "Tuesday"
+h059|student|asr_error|relevant|grades,class||part his a pation is going to count for twenty percent|recognition error in "participation"
+h060|student|asr_error|relevant|emergency|important|fire in the science wing evacuate threw the main doors|recognition error in "through"
+h061|student|asr_error|irrelevant|||my sister is getting a puppy necks week|recognition error, unrelated
+h062|student|asr_error|relevant|schedule||your tutoring session got moved to thursday at for|recognition error in "four"
+h063|student|incomplete|ambiguous|grades,class||The assignment is now due|cut off before the detail
+h064|student|incomplete|ambiguous|schedule,class||Because of the storm, school will|cut off before the statement
+h065|student|incomplete|ambiguous|grades||extra credit if you|fragment
+h066|student|repeated|repeat|grades,schedule,class|repeat_of=h006|As I said, the final has been moved up to next Tuesday.|said before
+h067|student|repeated|repeat|grades,class|repeat_of=h008|Once more, participation is going to count for twenty percent from now on.|said before
+h068|student|ambiguous|ambiguous|schedule||They're closing one of the parking lots.|may or may not concern the listener
+h069|student|ambiguous|ambiguous|attention,class||Someone left their jacket in room four.|might be the listener's
+h070|student|ambiguous|ambiguous|schedule,class||Teachers have a meeting after school.|may or may not change the listener's day
+t001|traveler|obvious|relevant|flight||Flight to Denver is now boarding at gate B12.|names the flight
+t002|traveler|obvious|relevant|flight||The Denver departure has been delayed by forty minutes.|names the flight
+t003|traveler|obvious|relevant|flight||Passengers for Denver, your gate has changed to C4.|names the flight and gate
+t004|traveler|ambiguous|ambiguous|flight||All departures from concourse B are on hold because of lightning.|only if the listener's flight leaves from concourse B
+t005|traveler|implicit|relevant|flight||The crew for the Denver flight has not arrived yet, so boarding will start late.|consequence: later boarding
+t006|traveler|implicit|relevant|bags||Overhead bins are full, remaining passengers must check their bags at the gate.|carry-on must be checked
+t007|traveler|implicit|relevant|bags||Liquids over one hundred milliliters are no longer allowed through this checkpoint.|what may be carried
+t008|traveler|implicit|relevant|bags,flight||The baggage belt for the Denver arrival has been changed to carousel five.|where the luggage arrives
+t009|traveler|third_person|irrelevant|||Flight to Dallas is now boarding at gate A3.|another flight
+t010|traveler|third_person|irrelevant|||The Boston flight has been cancelled, please see an agent.|another flight
+t011|traveler|unrelated|irrelevant|||I always get a pretzel at this airport, they're huge.|everyday talk
+t012|traveler|third_person|irrelevant|||My uncle lost his luggage in Denver once, took a week to get it back.|someone else, the past
+t013|traveler|hypothetical|irrelevant|||If the Denver flight gets cancelled I'm renting a car.|a plan for an imagined case
+t014|traveler|obvious|relevant|emergency|important|Please leave the terminal by the nearest exit, this is not a drill.|emergency instruction
+t015|traveler|asr_error|relevant|flight||the denver departure has been de laid by forty minutes|recognition error in "delayed"
+t016|traveler|implicit|relevant|flight||Denver passengers, we're oversold and looking for volunteers to take a later flight.|the listener's seat may be affected
+t017|traveler|unrelated|irrelevant|||The coffee place by gate twelve is closed for renovation.|shares the word gate, nothing about the flight
+t018|traveler|negation|irrelevant|||They're not changing the Denver gate, it stays at B12.|nothing changes
+t019|traveler|implicit|relevant|bags||Carry-ons now have to fit in the smaller sizer, larger bags will be charged.|carry-on rule changed
+t020|traveler|unrelated|irrelevant|||Is this the line for security or for check-in?|a question about a line
+t021|traveler|obvious|relevant|flight|important|Final call for Denver, doors close in five minutes.|last chance to board
+t022|traveler|ambiguous|ambiguous|flight||I think it's supposed to snow in Denver this weekend.|weather at the destination, not the flight
+t023|traveler|ambiguous|ambiguous|bags||Unattended bags will be removed and may be destroyed.|a standing announcement
+t024|traveler|repeated|repeat|flight|repeat_of=t003|Again, passengers for Denver, your gate has changed to C4.|said before
+w001|worker|obvious|relevant|shift,attention||Can you cover the closing shift on Saturday?|a request that changes the listener's shift
+w002|worker|obvious|relevant|shift||The schedule for next week is posted, you're on mornings now.|shift changed
+w003|worker|implicit|relevant|shift||We're closing two hours early on Sunday for inventory.|hours change
+w004|worker|obvious|relevant|order||Order forty-two is ready at the counter.|an order is ready
+w005|worker|implicit|relevant|order||The oat latte for Maya is up.|an order is ready, without the word order
+w006|worker|implicit|relevant|order,attention||Excuse me, could I get some help finding a size?|a customer needs help
+w007|worker|implicit|relevant|attention,order||Hey, do you work here?|someone addresses the listener
+w008|worker|ambiguous|ambiguous|shift||The delivery truck is late, so stocking is pushed to tomorrow morning.|changes the work, maybe not the hours
+w009|worker|implicit|relevant|shift||Corporate is cutting everyone's hours by ten percent starting next month.|hours change
+w010|worker|causal|relevant|shift||Jenna called in sick, so we need someone to stay until nine.|consequence: a longer shift may be asked
+w011|worker|third_person|irrelevant|||My sister's boss changed her shifts without telling her.|someone else's shift
+w012|worker|third_person|irrelevant|||I used to work nights at a bakery, it was exhausting.|the speaker's past
+w013|worker|unrelated|irrelevant|||Do you want room for cream in that?|a colleague talking to a customer
+w014|worker|hypothetical|irrelevant|||What if they made us work on New Year's Day?|imagined
+w015|worker|implicit|relevant|order,attention||I'd like a refund, this isn't what I ordered.|a customer needs help
+w016|worker|implicit|relevant|order||Table six has been waiting twenty minutes for their food.|customers need attention
+w017|worker|ambiguous|ambiguous|order||The espresso machine is making that noise again.|may or may not need action
+w018|worker|negation|irrelevant|||Nobody's hours are changing, that was just a rumor.|nothing changes
+w019|worker|asr_error|relevant|order||order forty too is ready at the counter|recognition error in "two"
+w020|worker|implicit|relevant|shift||Your break is moved to two thirty because of the rush.|the listener's hours within the shift change
+w021|worker|unrelated|irrelevant|||It's raining so hard out there.|everyday talk
+w022|worker|unrelated|irrelevant|||Did you see the manager's new car?|everyday talk
+w023|worker|implicit|relevant|attention,order||Miss? Miss! Sorry, over here.|someone tries to get the listener's attention
+w024|worker|ambiguous|ambiguous|shift||Payroll made a mistake, checks will be a day late.|pay, not hours
+w025|worker|repeated|repeat|order|repeat_of=w004|Once again, order forty-two is ready at the counter.|said before

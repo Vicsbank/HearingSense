@@ -14,6 +14,8 @@ public enum AttentionInput: Hashable, Sendable {
     case speech(SpeechSemanticResult)
     /// The user changed the mode or a preference. Applies to the episodes that exist.
     case preferences(AttentionPreferences, at: Date)
+    /// Window 6: the semantic engine accepted a statement as relevant for one of the user's goals.
+    case semantic(SemanticAttentionSignal)
     /// The speech pipeline discarded its speech events (transcription was switched off): the
     /// engine drops every speech source and all speech-derived text.
     case speechDataCleared(at: Date)
@@ -27,6 +29,7 @@ public enum AttentionInput: Hashable, Sendable {
         case .sessionStarted(let date), .sessionEnded(let date), .tick(let date), .speechDataCleared(let date): date
         case .preferences(_, let date): date
         case .speech(let result): result.updatedDate
+        case .semantic(let signal): signal.date
         case .sound(let update):
             switch update {
             case .started(let event): event.confirmedDate
@@ -34,6 +37,39 @@ public enum AttentionInput: Hashable, Sendable {
             case .ended(let event): event.endedDate ?? event.lastObservedDate
             }
         }
+    }
+}
+
+/// A statement the semantic engine (Window 6) accepted as relevant for one of the user's goals.
+/// The attention engine does not judge its meaning again; it decides whether and how it is
+/// presented: preferences, repetition, the presentation budget and expiry stay here.
+public struct SemanticAttentionSignal: Hashable, Sendable {
+    public enum Urgency: String, Hashable, Sendable, Codable {
+        case low, normal, high
+    }
+
+    public var id: UUID
+    public var goalID: UUID
+    /// A few words for the expanded presentation ("Exam moved to Friday"). Speech-derived:
+    /// handled like a speech summary, never part of a title, a log or an export.
+    public var headline: String
+    /// The statement itself, used once to recognize a repetition and not kept.
+    public var statement: String
+    public var urgency: Urgency
+    /// The personal relevance is not established: presented, but not worded as a fact.
+    public var isUncertain: Bool
+    public var date: Date
+
+    public init(id: UUID = UUID(), goalID: UUID, headline: String, statement: String, urgency: Urgency = .normal,
+                isUncertain: Bool = false, date: Date)
+    {
+        self.id = id
+        self.goalID = goalID
+        self.headline = headline
+        self.statement = statement
+        self.urgency = urgency
+        self.isUncertain = isUncertain
+        self.date = date
     }
 }
 
@@ -60,12 +96,14 @@ public enum AttentionTrigger: Hashable, Sendable, Codable {
     case timer
     case preferences
     case session
+    case semantic
 
     public var summary: String {
         switch self {
         case .sound(let kindID, let phase): "sound \(kindID) \(phase.rawValue)"
         case .speech(let state, let level, let revision): "speech \(state.rawValue) L\(level) summary r\(revision)"
         case .timer: "timer"
+        case .semantic: "goal match"
         case .preferences: "preferences"
         case .session: "session"
         }
@@ -104,6 +142,9 @@ public struct AttentionStatistics: Hashable, Sendable, Codable {
     public var speechInputs = 0
     /// Speech revisions that changed nothing the engine uses (partial transcripts, timings).
     public var speechProgressIgnored = 0
+    /// Goal matches received from the semantic engine, and those dropped as repetitions.
+    public var semanticInputs = 0
+    public var semanticRepeats = 0
     public var decisions: [AttentionAction: Int] = [:]
     public var episodesCreated = 0
     public var fusions = 0

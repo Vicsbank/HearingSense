@@ -54,7 +54,7 @@ public struct SpeechSemanticAnalyzer: Sendable {
         }
 
         outcome.modelAvailability = await interpreter.availability(for: request.languageIdentifier)
-        guard outcome.modelAvailability.isUsable else {
+        guard outcome.modelAvailability.isUsable, policy.writesHeadlines else {
             outcome.duration = Self.seconds(since: started)
             return outcome
         }

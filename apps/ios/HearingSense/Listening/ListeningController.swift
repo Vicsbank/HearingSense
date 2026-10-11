@@ -41,6 +41,8 @@ final class ListeningController {
     let attention = AttentionController()
     /// Window 5: the Live Activity (Dynamic Island and Lock Screen) of the listening session.
     let liveActivity = LiveActivityController()
+    /// Window 6: attention goals, the recap behind the Action Button, live captions, saved summaries.
+    let conversation = ConversationIntelligenceController()
 
     @ObservationIgnored private var capture = MicrophoneCapture()
     @ObservationIgnored private let session = AudioSessionController()
@@ -96,8 +98,28 @@ final class ListeningController {
                                   })
         attention.onIntent = { [liveActivity] in liveActivity.receive($0) }
         attention.onInjectedSound = { [liveActivity] in liveActivity.receive($0) }
-        speech.setForwarding(result: { [attention] in attention.receive($0) },
-                             cleared: { [attention] in attention.speechDataCleared() })
+        speech.setForwarding(result: { [attention, conversation] in
+                                 attention.receive($0)
+                                 conversation.receive($0)
+                             },
+                             cleared: { [attention, conversation] in
+                                 attention.speechDataCleared()
+                                 conversation.speechDataCleared()
+                             })
+        // Window 6: accepted goal matches go through the attention engine like every other
+        // event; recap states go to the Live Activity as generic episodes. The conversation
+        // controller follows the attention controller's session, which starts and ends with capture.
+        conversation.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
+        conversation.onSignal = { [attention] in attention.receive($0) }
+        conversation.onStatusIntent = { [liveActivity] in liveActivity.receive($0) }
+        conversation.transcriptionProvider = { [speech] in speech.isTranscriptionEnabled }
+        attention.onSessionChange = { [conversation, speech] isActive in
+            if isActive {
+                conversation.sessionWillStart(isTranscriptionOn: speech.isTranscriptionEnabled)
+            } else {
+                conversation.sessionDidEnd()
+            }
+        }
         sessionObserver = AudioSessionObserver { [weak self] event in
             guard let self else { return }
             Task { @MainActor in self.handle(event) }
@@ -234,6 +256,8 @@ final class ListeningController {
             attention.reportText(),
             "",
             liveActivity.reportText(),
+            "",
+            conversation.reportText(),
             "",
             "Event log (oldest first):",
             log.exportText(),

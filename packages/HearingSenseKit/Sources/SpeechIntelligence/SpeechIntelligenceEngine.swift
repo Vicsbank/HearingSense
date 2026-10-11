@@ -223,6 +223,8 @@ private actor Core {
 
     private let transcriber: any SpeechTranscribing
     private let analyzer: SpeechSemanticAnalyzer
+    /// The utterances finalized since the last published result.
+    private var pendingUtterances: [SpeechUtterance] = []
     private let buffer: PreRollAudioBuffer
     private let configuration: SpeechIntelligenceConfiguration
     private let drivesItself: Bool
@@ -716,6 +718,13 @@ private actor Core {
         }
         current.utterances.append(FinalUtterance(index: current.totalUtterances, text: segment.text,
                                                  audioTime: segment.audioTime, quality: quality, context: context))
+        // Window 6: the utterance on its own, for captions, recaps and semantic attention.
+        let now = Date.now
+        pendingUtterances.append(SpeechUtterance(
+            index: current.totalUtterances, text: segment.text,
+            startDate: buffer.date(forAudioTime: segment.audioTime.start) ?? now,
+            endDate: buffer.date(forAudioTime: segment.audioTime.end) ?? now, quality: quality.rating,
+            isPossiblyMusic: context?.relevance == .possiblyMusic))
         current.totalUtterances += 1
         if current.utterances.count > configuration.maximumUtterancesKept {
             current.utterances.removeFirst(current.utterances.count - configuration.maximumUtterancesKept)
@@ -930,6 +939,11 @@ private actor Core {
             current.result.state = .detected
         }
         current.result.transcriptionAvailability = capabilities.transcription
+        if current.result.transcript != nil {
+            if !pendingUtterances.isEmpty { current.result.recentUtterances = pendingUtterances }
+            current.result.volatileText = partial.isEmpty ? nil : partial
+        }
+        pendingUtterances.removeAll()
         emitResult(&current)
         conversation = current
     }
