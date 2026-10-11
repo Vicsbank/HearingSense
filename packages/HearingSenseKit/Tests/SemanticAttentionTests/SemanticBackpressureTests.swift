@@ -72,9 +72,12 @@ import Testing
 
     @Test func aSentenceThatWaitedTooLongIsGivenUpAndSaidSo() async {
         var configuration = SemanticAttentionEngine.Configuration.standard
-        configuration.maximumWait = 0.05
+        configuration.maximumWait = 0.2
         configuration.servingOrder = .oldestFirst
-        let reasoner = ScriptedReasoner([Fixture.exam: Fixture.relevant(headline: "")], delay: .milliseconds(150))
+        // Margins wide enough for a busy machine (the test failed on a simulator that shared the
+        // Mac with the language model): the first sentence is taken up well within the limit,
+        // and its judgement lasts three times the limit, so the second one has waited too long.
+        let reasoner = ScriptedReasoner([Fixture.exam: Fixture.relevant(headline: "")], delay: .milliseconds(600))
         let engine = await Fixture.engine(reasoner, configuration: configuration)
         await engine.submit(Fixture.utterance(Self.talk[0]))
         try? await Task.sleep(for: .milliseconds(15))
@@ -84,7 +87,7 @@ import Testing
         let given = decisions.first { $0.utteranceID == late.id }
         #expect(given?.stage == .expired)
         #expect(given?.isAccepted == false)
-        #expect((given?.queueWait ?? 0) > 0.05)
+        #expect((given?.queueWait ?? 0) > 0.2)
         #expect(await engine.statistics.expired == 1)
         #expect(await engine.statistics.dropped == 1)
         #expect(await reasoner.judged == [Self.talk[0]])

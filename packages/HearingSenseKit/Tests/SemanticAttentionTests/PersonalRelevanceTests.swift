@@ -224,7 +224,7 @@ import Testing
     }
 
     @Test func aSentenceSaidToAnotherPersonAboutSomethingForEveryoneStillAlerts() async {
-        let sentence = "Peter, the launch time for all boats moves to nine."
+        let sentence = "Peter, tell your crew the launch time for all boats moves to nine."
         let reasoner = ScriptedReasoner([sentence: Fixture.relevant(headline: "")])
         await reasoner.setConcerns([sentence: .everyones])
         let engine = await engine(reasoner)
