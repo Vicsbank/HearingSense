@@ -1,0 +1,5807 @@
+{
+  "confusion" : {
+    "embedding" : {
+      "ambiguousAlerted" : 17,
+      "ambiguousSilent" : 2,
+      "ambiguousUncertain" : 0,
+      "byCategory" : {
+        "asr_error" : {
+          "hits" : 9,
+          "total" : 13
+        },
+        "attention" : {
+          "hits" : 13,
+          "total" : 13
+        },
+        "causal" : {
+          "hits" : 7,
+          "total" : 11
+        },
+        "hypothetical" : {
+          "hits" : 2,
+          "total" : 11
+        },
+        "implicit" : {
+          "hits" : 29,
+          "total" : 31
+        },
+        "multi" : {
+          "hits" : 5,
+          "total" : 9
+        },
+        "negation" : {
+          "hits" : 9,
+          "total" : 18
+        },
+        "obvious" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "past" : {
+          "hits" : 2,
+          "total" : 7
+        },
+        "repeated" : {
+          "hits" : 0,
+          "total" : 4
+        },
+        "sarcasm_quote" : {
+          "hits" : 2,
+          "total" : 8
+        },
+        "third_person" : {
+          "hits" : 1,
+          "total" : 20
+        },
+        "unrelated" : {
+          "hits" : 7,
+          "total" : 29
+        },
+        "urgent_short" : {
+          "hits" : 15,
+          "total" : 19
+        }
+      },
+      "byProfile" : {
+        "clinic" : {
+          "fn" : 1,
+          "fp" : 17,
+          "tn" : 3,
+          "tp" : 24
+        },
+        "commuter" : {
+          "fp" : 24,
+          "tn" : 1,
+          "tp" : 25
+        },
+        "pupil" : {
+          "fn" : 5,
+          "fp" : 24,
+          "tn" : 6,
+          "tp" : 26
+        },
+        "shop" : {
+          "fn" : 2,
+          "fp" : 19,
+          "tn" : 2,
+          "tp" : 22
+        }
+      },
+      "falseNegativeIDs" : [
+        "sp003",
+        "sp011",
+        "sp013",
+        "sp018",
+        "sp035",
+        "sk013",
+        "sw006",
+        "sw015"
+      ],
+      "falseNegatives" : 8,
+      "falsePositiveIDs" : [
+        "sp014",
+        "sp015",
+        "sp016",
+        "sp017",
+        "sp019",
+        "sp020",
+        "sp021",
+        "sp025",
+        "sp026",
+        "sp027",
+        "sp031",
+        "sp032",
+        "sp033",
+        "sp038",
+        "sp041",
+        "sp043",
+        "sp044",
+        "sp045",
+        "sp046",
+        "sp048",
+        "sp050",
+        "sp062",
+        "sp063",
+        "sp066",
+        "sc012",
+        "sc013",
+        "sc014",
+        "sc016",
+        "sc017",
+        "sc020",
+        "sc021",
+        "sc023",
+        "sc024",
+        "sc025",
+        "sc026",
+        "sc029",
+        "sc032",
+        "sc034",
+        "sc035",
+        "sc036",
+        "sc037",
+        "sc038",
+        "sc039",
+        "sc040",
+        "sc045",
+        "sc052",
+        "sc053",
+        "sc055",
+        "sk015",
+        "sk016",
+        "sk017",
+        "sk018",
+        "sk020",
+        "sk021",
+        "sk024",
+        "sk025",
+        "sk028",
+        "sk029",
+        "sk035",
+        "sk038",
+        "sk039",
+        "sk040",
+        "sk041",
+        "sk047",
+        "sk049",
+        "sw016",
+        "sw017",
+        "sw018",
+        "sw019",
+        "sw020",
+        "sw021",
+        "sw024",
+        "sw025",
+        "sw027",
+        "sw028",
+        "sw032",
+        "sw035",
+        "sw036",
+        "sw037",
+        "sw039",
+        "sw040",
+        "sw041",
+        "sw042",
+        "sw048"
+      ],
+      "falsePositives" : 84,
+      "groups" : {
+        "context (several sentences) accuracy" : {
+          "hits" : 5,
+          "total" : 9
+        },
+        "explicit relevance recall" : {
+          "hits" : 21,
+          "total" : 21
+        },
+        "hypothetical accuracy" : {
+          "hits" : 2,
+          "total" : 11
+        },
+        "implicit relevance recall" : {
+          "hits" : 36,
+          "total" : 42
+        },
+        "important-event recall" : {
+          "hits" : 16,
+          "total" : 16
+        },
+        "negation accuracy" : {
+          "hits" : 9,
+          "total" : 18
+        },
+        "past and quotation accuracy" : {
+          "hits" : 4,
+          "total" : 15
+        },
+        "personal relevance accuracy" : {
+          "hits" : 1,
+          "total" : 20
+        },
+        "recognition-error accuracy" : {
+          "hits" : 9,
+          "total" : 13
+        },
+        "repetition accuracy" : {
+          "hits" : 0,
+          "total" : 4
+        },
+        "short urgent instruction recall" : {
+          "hits" : 12,
+          "total" : 12
+        },
+        "unrelated talk accuracy" : {
+          "hits" : 7,
+          "total" : 29
+        }
+      },
+      "modelDecisions" : 0,
+      "secondsP50" : 0.004979968070983887,
+      "secondsP95" : 0.007284998893737793,
+      "secondsP99" : 0.018612980842590332,
+      "stages" : {
+        "-" : 220
+      },
+      "trueNegatives" : 12,
+      "truePositives" : 97
+    },
+    "keyword" : {
+      "ambiguousAlerted" : 6,
+      "ambiguousSilent" : 13,
+      "ambiguousUncertain" : 0,
+      "byCategory" : {
+        "asr_error" : {
+          "hits" : 6,
+          "total" : 13
+        },
+        "attention" : {
+          "hits" : 0,
+          "total" : 13
+        },
+        "causal" : {
+          "hits" : 2,
+          "total" : 11
+        },
+        "hypothetical" : {
+          "hits" : 7,
+          "total" : 11
+        },
+        "implicit" : {
+          "hits" : 5,
+          "total" : 31
+        },
+        "multi" : {
+          "hits" : 5,
+          "total" : 9
+        },
+        "negation" : {
+          "hits" : 10,
+          "total" : 18
+        },
+        "obvious" : {
+          "hits" : 5,
+          "total" : 8
+        },
+        "past" : {
+          "hits" : 5,
+          "total" : 7
+        },
+        "repeated" : {
+          "hits" : 4,
+          "total" : 4
+        },
+        "sarcasm_quote" : {
+          "hits" : 4,
+          "total" : 8
+        },
+        "third_person" : {
+          "hits" : 14,
+          "total" : 20
+        },
+        "unrelated" : {
+          "hits" : 22,
+          "total" : 29
+        },
+        "urgent_short" : {
+          "hits" : 5,
+          "total" : 19
+        }
+      },
+      "byProfile" : {
+        "clinic" : {
+          "fn" : 22,
+          "fp" : 5,
+          "tn" : 15,
+          "tp" : 3
+        },
+        "commuter" : {
+          "fn" : 15,
+          "fp" : 8,
+          "tn" : 17,
+          "tp" : 10
+        },
+        "pupil" : {
+          "fn" : 30,
+          "fp" : 2,
+          "tn" : 28,
+          "tp" : 1
+        },
+        "shop" : {
+          "fn" : 19,
+          "fp" : 6,
+          "tn" : 15,
+          "tp" : 5
+        }
+      },
+      "falseNegativeIDs" : [
+        "sp001",
+        "sp003",
+        "sp004",
+        "sp005",
+        "sp006",
+        "sp007",
+        "sp008",
+        "sp009",
+        "sp010",
+        "sp011",
+        "sp012",
+        "sp013",
+        "sp018",
+        "sp022",
+        "sp023",
+        "sp024",
+        "sp029",
+        "sp035",
+        "sp036",
+        "sp037",
+        "sp052",
+        "sp053",
+        "sp054",
+        "sp057",
+        "sp058",
+        "sp059",
+        "sp060",
+        "sp061",
+        "sp065",
+        "sp067",
+        "sc002",
+        "sc003",
+        "sc005",
+        "sc008",
+        "sc009",
+        "sc028",
+        "sc041",
+        "sc042",
+        "sc043",
+        "sc044",
+        "sc046",
+        "sc047",
+        "sc048",
+        "sc050",
+        "sc051",
+        "sk001",
+        "sk003",
+        "sk004",
+        "sk005",
+        "sk006",
+        "sk008",
+        "sk009",
+        "sk010",
+        "sk011",
+        "sk012",
+        "sk013",
+        "sk019",
+        "sk023",
+        "sk027",
+        "sk030",
+        "sk031",
+        "sk042",
+        "sk043",
+        "sk044",
+        "sk045",
+        "sk046",
+        "sk048",
+        "sw002",
+        "sw003",
+        "sw004",
+        "sw005",
+        "sw006",
+        "sw007",
+        "sw008",
+        "sw010",
+        "sw012",
+        "sw013",
+        "sw015",
+        "sw022",
+        "sw023",
+        "sw030",
+        "sw043",
+        "sw044",
+        "sw045",
+        "sw046",
+        "sw047"
+      ],
+      "falseNegatives" : 86,
+      "falsePositiveIDs" : [
+        "sp016",
+        "sp049",
+        "sc012",
+        "sc014",
+        "sc021",
+        "sc024",
+        "sc025",
+        "sc034",
+        "sc039",
+        "sc040",
+        "sk015",
+        "sk020",
+        "sk028",
+        "sk029",
+        "sk037",
+        "sw020",
+        "sw025",
+        "sw028",
+        "sw029",
+        "sw041",
+        "sw042"
+      ],
+      "falsePositives" : 21,
+      "groups" : {
+        "context (several sentences) accuracy" : {
+          "hits" : 5,
+          "total" : 9
+        },
+        "explicit relevance recall" : {
+          "hits" : 5,
+          "total" : 21
+        },
+        "hypothetical accuracy" : {
+          "hits" : 7,
+          "total" : 11
+        },
+        "implicit relevance recall" : {
+          "hits" : 7,
+          "total" : 42
+        },
+        "important-event recall" : {
+          "hits" : 1,
+          "total" : 16
+        },
+        "negation accuracy" : {
+          "hits" : 10,
+          "total" : 18
+        },
+        "past and quotation accuracy" : {
+          "hits" : 9,
+          "total" : 15
+        },
+        "personal relevance accuracy" : {
+          "hits" : 14,
+          "total" : 20
+        },
+        "recognition-error accuracy" : {
+          "hits" : 6,
+          "total" : 13
+        },
+        "repetition accuracy" : {
+          "hits" : 4,
+          "total" : 4
+        },
+        "short urgent instruction recall" : {
+          "hits" : 1,
+          "total" : 12
+        },
+        "unrelated talk accuracy" : {
+          "hits" : 22,
+          "total" : 29
+        }
+      },
+      "modelDecisions" : 0,
+      "secondsP50" : 0.00012695789337158203,
+      "secondsP95" : 0.0001690387725830078,
+      "secondsP99" : 0.00021195411682128906,
+      "stages" : {
+        "-" : 220
+      },
+      "trueNegatives" : 75,
+      "truePositives" : 19
+    }
+  },
+  "items" : 220,
+  "metrics" : [
+    {
+      "ambiguousAlerted" : 6,
+      "ambiguousTotal" : 19,
+      "ambiguousUncertain" : 0,
+      "assumedUtterancesPerHour" : 240,
+      "byCategory" : {
+        "asr_error" : {
+          "hits" : 6,
+          "total" : 13
+        },
+        "attention" : {
+          "hits" : 0,
+          "total" : 13
+        },
+        "causal" : {
+          "hits" : 2,
+          "total" : 11
+        },
+        "hypothetical" : {
+          "hits" : 7,
+          "total" : 11
+        },
+        "implicit" : {
+          "hits" : 5,
+          "total" : 31
+        },
+        "multi" : {
+          "hits" : 5,
+          "total" : 9
+        },
+        "negation" : {
+          "hits" : 10,
+          "total" : 18
+        },
+        "obvious" : {
+          "hits" : 5,
+          "total" : 8
+        },
+        "past" : {
+          "hits" : 5,
+          "total" : 7
+        },
+        "repeated" : {
+          "hits" : 4,
+          "total" : 4
+        },
+        "sarcasm_quote" : {
+          "hits" : 4,
+          "total" : 8
+        },
+        "third_person" : {
+          "hits" : 14,
+          "total" : 20
+        },
+        "unrelated" : {
+          "hits" : 22,
+          "total" : 29
+        },
+        "urgent_short" : {
+          "hits" : 5,
+          "total" : 19
+        }
+      },
+      "corrections" : {
+
+      },
+      "f1" : 0.26206896551724135,
+      "fallbacks" : 0,
+      "falseAlertRate" : {
+        "hits" : 21,
+        "total" : 92
+      },
+      "falseAlertsPerHour" : 54.78260869565217,
+      "gated" : 0,
+      "goalAccuracy" : {
+        "hits" : 16,
+        "total" : 19
+      },
+      "importantMisses" : {
+        "hits" : 15,
+        "total" : 16
+      },
+      "medianSeconds" : 0.00012695789337158203,
+      "method" : "Keyword baseline",
+      "modelCalls" : 0,
+      "p95Seconds" : 0.0001690387725830078,
+      "precision" : {
+        "hits" : 19,
+        "total" : 40
+      },
+      "recall" : {
+        "hits" : 19,
+        "total" : 105
+      },
+      "repeatAlerts" : {
+        "hits" : 0,
+        "total" : 4
+      },
+      "split" : "sealed",
+      "triaged" : 0
+    },
+    {
+      "ambiguousAlerted" : 17,
+      "ambiguousTotal" : 19,
+      "ambiguousUncertain" : 0,
+      "assumedUtterancesPerHour" : 240,
+      "byCategory" : {
+        "asr_error" : {
+          "hits" : 9,
+          "total" : 13
+        },
+        "attention" : {
+          "hits" : 13,
+          "total" : 13
+        },
+        "causal" : {
+          "hits" : 7,
+          "total" : 11
+        },
+        "hypothetical" : {
+          "hits" : 2,
+          "total" : 11
+        },
+        "implicit" : {
+          "hits" : 29,
+          "total" : 31
+        },
+        "multi" : {
+          "hits" : 5,
+          "total" : 9
+        },
+        "negation" : {
+          "hits" : 9,
+          "total" : 18
+        },
+        "obvious" : {
+          "hits" : 8,
+          "total" : 8
+        },
+        "past" : {
+          "hits" : 2,
+          "total" : 7
+        },
+        "repeated" : {
+          "hits" : 0,
+          "total" : 4
+        },
+        "sarcasm_quote" : {
+          "hits" : 2,
+          "total" : 8
+        },
+        "third_person" : {
+          "hits" : 1,
+          "total" : 20
+        },
+        "unrelated" : {
+          "hits" : 7,
+          "total" : 29
+        },
+        "urgent_short" : {
+          "hits" : 15,
+          "total" : 19
+        }
+      },
+      "corrections" : {
+
+      },
+      "f1" : 0.6783216783216782,
+      "fallbacks" : 0,
+      "falseAlertRate" : {
+        "hits" : 80,
+        "total" : 92
+      },
+      "falseAlertsPerHour" : 208.69565217391303,
+      "gated" : 0,
+      "goalAccuracy" : {
+        "hits" : 58,
+        "total" : 97
+      },
+      "importantMisses" : {
+        "hits" : 0,
+        "total" : 16
+      },
+      "medianSeconds" : 0.004979968070983887,
+      "method" : "Sentence-embedding retrieval (threshold 0.6, chosen on dev)",
+      "modelCalls" : 0,
+      "p95Seconds" : 0.007284998893737793,
+      "precision" : {
+        "hits" : 97,
+        "total" : 181
+      },
+      "recall" : {
+        "hits" : 97,
+        "total" : 105
+      },
+      "repeatAlerts" : {
+        "hits" : 4,
+        "total" : 4
+      },
+      "split" : "sealed",
+      "triaged" : 0
+    }
+  ],
+  "note" : "Synthetic utterances, evaluated on a Mac. Not an iPhone measurement.",
+  "outcomes" : {
+    "embedding" : [
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp001",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6615331940165081,
+        "seconds" : 0.0225980281829834
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp002",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6882833455982321,
+        "seconds" : 0.006997942924499512
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp003",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5484697741166468,
+        "seconds" : 0.005920052528381348
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp004",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6939246252881479,
+        "seconds" : 0.00489199161529541
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp005",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6693596735845212,
+        "seconds" : 0.005182027816772461
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp006",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6449283757927738,
+        "seconds" : 0.00516200065612793
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp007",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.7092382851426221,
+        "seconds" : 0.005262970924377441
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp008",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6074112425623517,
+        "seconds" : 0.005166053771972656
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp009",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.669726141396592,
+        "seconds" : 0.0071059465408325195
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp010",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6812753508212017,
+        "seconds" : 0.007166028022766113
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp011",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5362258452709091,
+        "seconds" : 0.008085966110229492
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp012",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6315204016634598,
+        "seconds" : 0.007726073265075684
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp013",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5939458353431197,
+        "seconds" : 0.005838990211486816
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp014",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6315381578992731,
+        "seconds" : 0.004176020622253418
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp015",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6537743032739164,
+        "seconds" : 0.006339073181152344
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp016",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6720212131975591,
+        "seconds" : 0.0056819915771484375
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp017",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6528048160804231,
+        "seconds" : 0.004948019981384277
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp018",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5977853710295933,
+        "seconds" : 0.005430936813354492
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp019",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6377435658637823,
+        "seconds" : 0.0061190128326416016
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp020",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6858867157485554,
+        "seconds" : 0.005017995834350586
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp021",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6100623896530379,
+        "seconds" : 0.006299018859863281
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp022",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6136975003663672,
+        "seconds" : 0.0055779218673706055
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp023",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7600553078633261,
+        "seconds" : 0.005136966705322266
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp024",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6275944826733917,
+        "seconds" : 0.006504058837890625
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp025",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.7389212830905783,
+        "seconds" : 0.004263043403625488
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp026",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.750136324281834,
+        "seconds" : 0.0045490264892578125
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp027",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.7274987133938864,
+        "seconds" : 0.0056580305099487305
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp028",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7038498817588184,
+        "seconds" : 0.004824995994567871
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp029",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.689949022337026,
+        "seconds" : 0.0074460506439208984
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp030",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5412195974950578,
+        "seconds" : 0.005459904670715332
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp031",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6942089189639727,
+        "seconds" : 0.005257964134216309
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp032",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6654189881796648,
+        "seconds" : 0.004720926284790039
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp033",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.7199806314202497,
+        "seconds" : 0.006585955619812012
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp034",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.587753124752371,
+        "seconds" : 0.006096959114074707
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp035",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5425304055748007,
+        "seconds" : 0.003896951675415039
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp036",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.683924409268835,
+        "seconds" : 0.005114912986755371
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp037",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6511291182952842,
+        "seconds" : 0.005267977714538574
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp038",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6807473036148604,
+        "seconds" : 0.00533604621887207
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp039",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.7123180009428226,
+        "seconds" : 0.004243016242980957
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp040",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6617720021617606,
+        "seconds" : 0.003246903419494629
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp041",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6071988142256501,
+        "seconds" : 0.005307912826538086
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp042",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.7289486084432035,
+        "seconds" : 0.005686044692993164
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp043",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6233079121913087,
+        "seconds" : 0.003714919090270996
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp044",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7353493125421131,
+        "seconds" : 0.0037800073623657227
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp045",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6152466242237402,
+        "seconds" : 0.0045670270919799805
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp046",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6248429321454905,
+        "seconds" : 0.004702925682067871
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp047",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5820231547937919,
+        "seconds" : 0.004228949546813965
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp048",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6544371130340235,
+        "seconds" : 0.003804922103881836
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp049",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5955021336019544,
+        "seconds" : 0.005316019058227539
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp050",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6591318091014289,
+        "seconds" : 0.004388928413391113
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp051",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5346923191333076,
+        "seconds" : 0.005890011787414551
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp052",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.719114799930719,
+        "seconds" : 0.005390048027038574
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp053",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.798851252053778,
+        "seconds" : 0.004907965660095215
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp054",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.79400000787771,
+        "seconds" : 0.004827976226806641
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp055",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.7386279022349278,
+        "seconds" : 0.0036530494689941406
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp056",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.7636261502692733,
+        "seconds" : 0.004448056221008301
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp057",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6557480019352389,
+        "seconds" : 0.002786993980407715
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp058",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7029093593155173,
+        "seconds" : 0.004625082015991211
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp059",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.7168506692144808,
+        "seconds" : 0.002322077751159668
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp060",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.7400993746960455,
+        "seconds" : 0.004477024078369141
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp061",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7201275203950555,
+        "seconds" : 0.0043849945068359375
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp062",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6544216816389201,
+        "seconds" : 0.005181074142456055
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp063",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7576801281785506,
+        "seconds" : 0.0036020278930664062
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp064",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5806439484042284,
+        "seconds" : 0.0043419599533081055
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp065",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6682091039111604,
+        "seconds" : 0.0040940046310424805
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp066",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6251482923493148,
+        "seconds" : 0.004227995872497559
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp067",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 0.6632102398928819,
+        "seconds" : 0.004311084747314453
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc001",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6827680713370209,
+        "seconds" : 0.021406054496765137
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc002",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6814170910738597,
+        "seconds" : 0.0047910213470458984
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc003",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7310019834918052,
+        "seconds" : 0.005102992057800293
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc004",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.7472347037331071,
+        "seconds" : 0.00639498233795166
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc005",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6130111146841506,
+        "seconds" : 0.005383968353271484
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc006",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6542598981182057,
+        "seconds" : 0.006374001502990723
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc007",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5695488558352395,
+        "seconds" : 0.004622936248779297
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc008",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6480709063194467,
+        "seconds" : 0.007284998893737793
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc009",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6721175913003621,
+        "seconds" : 0.007393002510070801
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc010",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6843780982850871,
+        "seconds" : 0.005506992340087891
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc011",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7700505989447002,
+        "seconds" : 0.006255984306335449
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc012",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6443871502830203,
+        "seconds" : 0.005388975143432617
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc013",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6725400656295947,
+        "seconds" : 0.005269050598144531
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc014",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6967649007499359,
+        "seconds" : 0.004259943962097168
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc015",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6359462814072881,
+        "seconds" : 0.005089998245239258
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc016",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6057801802383597,
+        "seconds" : 0.005599021911621094
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc017",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.70839208530206,
+        "seconds" : 0.005635976791381836
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc018",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6962977628276201,
+        "seconds" : 0.006508946418762207
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc019",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6619932841910465,
+        "seconds" : 0.005056977272033691
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc020",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.688467955942445,
+        "seconds" : 0.006474018096923828
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc021",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.7053175223365826,
+        "seconds" : 0.003594040870666504
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc022",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7263759370215243,
+        "seconds" : 0.005504965782165527
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc023",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6196409896820352,
+        "seconds" : 0.005064964294433594
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc024",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6797193370427493,
+        "seconds" : 0.004552960395812988
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc025",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6534066296459228,
+        "seconds" : 0.0046890974044799805
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc026",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6681067691584878,
+        "seconds" : 0.006765007972717285
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc027",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6195808816638793,
+        "seconds" : 0.004262089729309082
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc028",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6322998662468973,
+        "seconds" : 0.0035130977630615234
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc029",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.724058305757324,
+        "seconds" : 0.004004955291748047
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc030",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6821796389219139,
+        "seconds" : 0.003103017807006836
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc031",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6552440360343204,
+        "seconds" : 0.003358006477355957
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc032",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6810925142761197,
+        "seconds" : 0.005943894386291504
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc033",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5644731719242448,
+        "seconds" : 0.003795027732849121
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc034",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.729350080932899,
+        "seconds" : 0.004474997520446777
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc035",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.607901628229211,
+        "seconds" : 0.0037679672241210938
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc036",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.7779839141724372,
+        "seconds" : 0.004423975944519043
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc037",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6789542147541289,
+        "seconds" : 0.004415988922119141
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc038",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6089131720434828,
+        "seconds" : 0.005221009254455566
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc039",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6450417576252225,
+        "seconds" : 0.004097938537597656
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc040",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.6545632388439991,
+        "seconds" : 0.0051850080490112305
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc041",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.7530618708101993,
+        "seconds" : 0.004611015319824219
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc042",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7100766898018622,
+        "seconds" : 0.004204988479614258
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc043",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7493186790860318,
+        "seconds" : 0.005768895149230957
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc044",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6911160271642808,
+        "seconds" : 0.0036829710006713867
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc045",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.7047630691351483,
+        "seconds" : 0.004960060119628906
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc046",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6925828875116653,
+        "seconds" : 0.0035480260848999023
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc047",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7471927819108461,
+        "seconds" : 0.0035140514373779297
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc048",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.696224875007299,
+        "seconds" : 0.003920078277587891
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc049",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7759599223712064,
+        "seconds" : 0.0030510425567626953
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc050",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6750765813260188,
+        "seconds" : 0.005051016807556152
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc051",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7216669610993652,
+        "seconds" : 0.004617929458618164
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc052",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7948181168591789,
+        "seconds" : 0.0047119855880737305
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc053",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7331950633327992,
+        "seconds" : 0.005156040191650391
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc054",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.7037690564343234,
+        "seconds" : 0.0047370195388793945
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc055",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6696889226849057,
+        "seconds" : 0.0037800073623657227
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk001",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.7008626110479096,
+        "seconds" : 0.018612980842590332
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk002",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.6780160712828505,
+        "seconds" : 0.004631996154785156
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk003",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6391889596417472,
+        "seconds" : 0.0047969818115234375
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk004",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.6642403736869944,
+        "seconds" : 0.006657004356384277
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk005",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.6452756042890031,
+        "seconds" : 0.00501704216003418
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk006",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.7454340387270281,
+        "seconds" : 0.0067369937896728516
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk007",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6449538008523765,
+        "seconds" : 0.005116939544677734
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk008",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.6670171739822954,
+        "seconds" : 0.0047719478607177734
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk009",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6404366421863178,
+        "seconds" : 0.008104920387268066
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk010",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.7869608666517136,
+        "seconds" : 0.005437016487121582
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk011",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7300504566556846,
+        "seconds" : 0.005901932716369629
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk012",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6112548663190287,
+        "seconds" : 0.006307005882263184
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk013",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5960249041764194,
+        "seconds" : 0.007073044776916504
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk014",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5857661334590171,
+        "seconds" : 0.005144000053405762
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk015",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6583937109044166,
+        "seconds" : 0.005632996559143066
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk016",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6904102189135913,
+        "seconds" : 0.004461050033569336
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk017",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.6408672614154913,
+        "seconds" : 0.003971099853515625
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk018",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.7021531721831565,
+        "seconds" : 0.004170060157775879
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk019",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.6793642744239767,
+        "seconds" : 0.006947994232177734
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk020",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.7103466490494901,
+        "seconds" : 0.005732059478759766
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk021",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.725980157384063,
+        "seconds" : 0.0061070919036865234
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk022",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.7113054514558003,
+        "seconds" : 0.005915045738220215
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk023",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.709272507918933,
+        "seconds" : 0.005241990089416504
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk024",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.7463285081416144,
+        "seconds" : 0.00486302375793457
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk025",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.7858123614540643,
+        "seconds" : 0.004203081130981445
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk026",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.7489610712772298,
+        "seconds" : 0.005619049072265625
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk027",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6502164554122305,
+        "seconds" : 0.007011055946350098
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk028",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.6440153790421466,
+        "seconds" : 0.006242036819458008
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk029",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6389055906923174,
+        "seconds" : 0.0074920654296875
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk030",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.609523739583869,
+        "seconds" : 0.004655003547668457
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk031",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.6684607596846817,
+        "seconds" : 0.004441976547241211
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk032",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.589904021126698,
+        "seconds" : 0.0048410892486572266
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk033",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.7033747685639143,
+        "seconds" : 0.0030660629272460938
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk034",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.7672023078839023,
+        "seconds" : 0.003265976905822754
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk035",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.650502167375655,
+        "seconds" : 0.0058400630950927734
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk036",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5917596589707634,
+        "seconds" : 0.003777027130126953
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk037",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5467881559786875,
+        "seconds" : 0.004897952079772949
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk038",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6302102140022527,
+        "seconds" : 0.004830002784729004
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk039",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7651149056236353,
+        "seconds" : 0.004350066184997559
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk040",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.6716123885632085,
+        "seconds" : 0.00380098819732666
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk041",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6895072591865203,
+        "seconds" : 0.0051850080490112305
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk042",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.742039924943388,
+        "seconds" : 0.006085038185119629
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk043",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6885437062157678,
+        "seconds" : 0.0048629045486450195
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk044",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.6783216118082941,
+        "seconds" : 0.005209922790527344
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk045",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.7157612783603768,
+        "seconds" : 0.003587961196899414
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk046",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7687733791564646,
+        "seconds" : 0.004803061485290527
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk047",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.7698613311786651,
+        "seconds" : 0.004174947738647461
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk048",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.7240207922479232,
+        "seconds" : 0.004084944725036621
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk049",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.683150284796856,
+        "seconds" : 0.0038529634475708008
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw001",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.8323174252811547,
+        "seconds" : 0.01640307903289795
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw002",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.6777158057284545,
+        "seconds" : 0.004942893981933594
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw003",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6474344143149551,
+        "seconds" : 0.004873991012573242
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw004",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6510837301494175,
+        "seconds" : 0.0051070451736450195
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw005",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.6715874906837239,
+        "seconds" : 0.006049990653991699
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw006",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5940072701951875,
+        "seconds" : 0.005205035209655762
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw007",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.7167279869770687,
+        "seconds" : 0.005712032318115234
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw008",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.7160720043181684,
+        "seconds" : 0.005608081817626953
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw009",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6350194228048839,
+        "seconds" : 0.004571080207824707
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw010",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6604986099117152,
+        "seconds" : 0.00503695011138916
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw011",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.661073147597884,
+        "seconds" : 0.004138946533203125
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw012",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.686084129045286,
+        "seconds" : 0.0050209760665893555
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw013",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.6102230760533431,
+        "seconds" : 0.004518985748291016
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw014",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.7206908092066505,
+        "seconds" : 0.006348013877868652
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw015",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5184641628649032,
+        "seconds" : 0.006541013717651367
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw016",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.6815712778558556,
+        "seconds" : 0.0045250654220581055
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw017",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.669186240675353,
+        "seconds" : 0.004413008689880371
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw018",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6245747703753245,
+        "seconds" : 0.00415802001953125
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw019",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.6613470165062885,
+        "seconds" : 0.004850983619689941
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw020",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.7196607820591214,
+        "seconds" : 0.004577994346618652
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw021",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6142237056603184,
+        "seconds" : 0.0053369998931884766
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw022",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6553187379777784,
+        "seconds" : 0.005030989646911621
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw023",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.651484353874802,
+        "seconds" : 0.004737973213195801
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw024",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6575119767582931,
+        "seconds" : 0.005424022674560547
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw025",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.7350646939595862,
+        "seconds" : 0.004619956016540527
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw026",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.7040565204260292,
+        "seconds" : 0.004676938056945801
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw027",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6304981450734874,
+        "seconds" : 0.0053369998931884766
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw028",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.7430676142764658,
+        "seconds" : 0.0058629512786865234
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw029",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5833290039180352,
+        "seconds" : 0.006649017333984375
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw030",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.7127399298612258,
+        "seconds" : 0.006339073181152344
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw031",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.7474986116530855,
+        "seconds" : 0.007238984107971191
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw032",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6373184510170407,
+        "seconds" : 0.0045490264892578125
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw033",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6836117194166602,
+        "seconds" : 0.00341796875
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw034",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.706921655881432,
+        "seconds" : 0.0031059980392456055
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw035",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.6486129408944252,
+        "seconds" : 0.005218029022216797
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw036",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6278261261972786,
+        "seconds" : 0.004266977310180664
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw037",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.699571528314505,
+        "seconds" : 0.00516200065612793
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw038",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0.5837668846463889,
+        "seconds" : 0.004118919372558594
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw039",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.7328638908481159,
+        "seconds" : 0.004909992218017578
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw040",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6571117442324605,
+        "seconds" : 0.003466010093688965
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw041",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.6446244024962691,
+        "seconds" : 0.004189014434814453
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw042",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.6527427673538871,
+        "seconds" : 0.004430055618286133
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw043",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.7489584483493228,
+        "seconds" : 0.006197929382324219
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw044",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.8279687734129711,
+        "seconds" : 0.005699038505554199
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw045",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.7464951893698971,
+        "seconds" : 0.004979968070983887
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw046",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.7553368672493086,
+        "seconds" : 0.004118919372558594
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw047",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.7254747686382018,
+        "seconds" : 0.004889965057373047
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw048",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.6150341431972186,
+        "seconds" : 0.003204941749572754
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw049",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.6951675676891328,
+        "seconds" : 0.0037620067596435547
+      }
+    ],
+    "keyword" : [
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp001",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0003859996795654297
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp002",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 1,
+        "seconds" : 0.00021195411682128906
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp003",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001710653305053711
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp004",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014507770538330078
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp005",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014102458953857422
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp006",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014793872833251953
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp007",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012695789337158203
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp008",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013494491577148438
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp009",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00016796588897705078
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp010",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00016498565673828125
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp011",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001779794692993164
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp012",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00016999244689941406
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp013",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014603137969970703
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp014",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012695789337158203
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp015",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014507770538330078
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp016",
+        "isNovel" : true,
+        "matchedGoal" : "attention",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.0001360177993774414
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp017",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013303756713867188
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp018",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014197826385498047
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp019",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001310110092163086
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp020",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001690387725830078
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp021",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00016188621520996094
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp022",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014603137969970703
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp023",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014197826385498047
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp024",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001499652862548828
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp025",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012993812561035156
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp026",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013005733489990234
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp027",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014197826385498047
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp028",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001310110092163086
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp029",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013709068298339844
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp030",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013399124145507812
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp031",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013196468353271484
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp032",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012099742889404297
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp033",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001379251480102539
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp034",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001380443572998047
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp035",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001150369644165039
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp036",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013697147369384766
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp037",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001380443572998047
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp038",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013494491577148438
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp039",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 1,
+        "seconds" : 0.0001150369644165039
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp040",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 9.298324584960938e-05
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp041",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001289844512939453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp042",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011801719665527344
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp043",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011992454528808594
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp044",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011408329010009766
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp045",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001239776611328125
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp046",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012791156768798828
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp047",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012099742889404297
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp048",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011801719665527344
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sp049",
+        "isNovel" : true,
+        "matchedGoal" : "grades",
+        "modelSeconds" : 0,
+        "score" : 1,
+        "seconds" : 0.00013196468353271484
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp050",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012099742889404297
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp051",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001289844512939453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp052",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00015997886657714844
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp053",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012505054473876953
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp054",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001289844512939453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp055",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010502338409423828
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp056",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010597705841064453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp057",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 8.404254913330078e-05
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp058",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010406970977783203
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp059",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.000102996826171875
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp060",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012695789337158203
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp061",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012302398681640625
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp062",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001289844512939453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp063",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 9.703636169433594e-05
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp064",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011992454528808594
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp065",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001100301742553711
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp066",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010395050048828125
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sp067",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010800361633300781
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc001",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00014495849609375
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc002",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013208389282226562
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc003",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013697147369384766
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc004",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.0001609325408935547
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc005",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014293193817138672
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc006",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00016105175018310547
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc007",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001289844512939453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc008",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00015795230865478516
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc009",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001690387725830078
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc010",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.0001430511474609375
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc011",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00014209747314453125
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc012",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00014197826385498047
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc013",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013399124145507812
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc014",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00011599063873291016
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc015",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013697147369384766
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc016",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013208389282226562
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc017",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011897087097167969
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc018",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00015604496002197266
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc019",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00012695789337158203
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc020",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014102458953857422
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc021",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00010597705841064453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc022",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013005733489990234
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc023",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013005733489990234
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc024",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.0001709461212158203
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc025",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.0001399517059326172
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc026",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00015294551849365234
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc027",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00012099742889404297
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc028",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001169443130493164
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc029",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011396408081054688
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc030",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 9.310245513916016e-05
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc031",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010597705841064453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc032",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014197826385498047
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc033",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011301040649414062
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc034",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.6666666666666666,
+        "seconds" : 0.00011897087097167969
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc035",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010991096496582031
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc036",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011491775512695312
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc037",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001150369644165039
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc038",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00015795230865478516
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc039",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00013399124145507812
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc040",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00013196468353271484
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc041",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012004375457763672
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc042",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011289119720458984
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc043",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012493133544921875
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc044",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010204315185546875
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc045",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013196468353271484
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc046",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010895729064941406
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc047",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010406970977783203
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc048",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 9.59634780883789e-05
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc049",
+        "isNovel" : true,
+        "matchedGoal" : "danger",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 9.906291961669922e-05
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc050",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011491775512695312
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc051",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010704994201660156
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc052",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011098384857177734
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc053",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001289844512939453
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sc054",
+        "isNovel" : true,
+        "matchedGoal" : "transit",
+        "modelSeconds" : 0,
+        "score" : 0.3333333333333333,
+        "seconds" : 0.00012004375457763672
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sc055",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 9.894371032714844e-05
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk001",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001010894775390625
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk002",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.00011599063873291016
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk003",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001239776611328125
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk004",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014102458953857422
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk005",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012099742889404297
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk006",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014603137969970703
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk007",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.0001289844512939453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk008",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012600421905517578
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk009",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001729726791381836
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk010",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013303756713867188
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk011",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001430511474609375
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk012",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014698505401611328
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk013",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00015497207641601562
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk014",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001150369644165039
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk015",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.0001239776611328125
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk016",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012004375457763672
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk017",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010693073272705078
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk018",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011599063873291016
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk019",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014495849609375
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk020",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.00012409687042236328
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk021",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012695789337158203
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk022",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.00011909008026123047
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk023",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001239776611328125
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk024",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0002009868621826172
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk025",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012803077697753906
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk026",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001380443572998047
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk027",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001519918441772461
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk028",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 1,
+        "seconds" : 0.00014102458953857422
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk029",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.0001519918441772461
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk030",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012505054473876953
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk031",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011801719665527344
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk032",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001289844512939453
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk033",
+        "isNovel" : true,
+        "matchedGoal" : "turn",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 9.40561294555664e-05
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk034",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.00010001659393310547
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk035",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001399517059326172
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk036",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012004375457763672
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sk037",
+        "isNovel" : true,
+        "matchedGoal" : "medicine",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.00012505054473876953
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk038",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001169443130493164
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk039",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00015497207641601562
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk040",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011408329010009766
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk041",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012993812561035156
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk042",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010395050048828125
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk043",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010597705841064453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk044",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010597705841064453
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk045",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.000102996826171875
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk046",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010192394256591797
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk047",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011599063873291016
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk048",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011098384857177734
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sk049",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 9.703636169433594e-05
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw001",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.4,
+        "seconds" : 0.00014400482177734375
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw002",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012600421905517578
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw003",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00014007091522216797
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw004",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013196468353271484
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw005",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001519918441772461
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw006",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001430511474609375
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw007",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001430511474609375
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw008",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00022304058074951172
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw009",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.00014102458953857422
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw010",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001360177993774414
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw011",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.00011801719665527344
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw012",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012803077697753906
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw013",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011897087097167969
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw014",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.2,
+        "seconds" : 0.0001360177993774414
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw015",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001500844955444336
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw016",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011897087097167969
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw017",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011599063873291016
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw018",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011301040649414062
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw019",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012993812561035156
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw020",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.0001150369644165039
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw021",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012302398681640625
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw022",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012004375457763672
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw023",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012099742889404297
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw024",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012505054473876953
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw025",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.2,
+        "seconds" : 0.0001119375228881836
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw026",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.00012004375457763672
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw027",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013005733489990234
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw028",
+        "isNovel" : true,
+        "matchedGoal" : "hours",
+        "modelSeconds" : 0,
+        "score" : 0.5,
+        "seconds" : 0.00012993812561035156
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw029",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.2,
+        "seconds" : 0.00013494491577148438
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw030",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001430511474609375
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw031",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.4,
+        "seconds" : 0.00015401840209960938
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw032",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011992454528808594
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw033",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 9.906291961669922e-05
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw034",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.2,
+        "seconds" : 9.500980377197266e-05
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw035",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00013303756713867188
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw036",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011301040649414062
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw037",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012195110321044922
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw038",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010800361633300781
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw039",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00011897087097167969
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw040",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 9.691715240478516e-05
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw041",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.2,
+        "seconds" : 0.0001150369644165039
+      },
+      {
+        "alerted" : true,
+        "corrections" : [
+
+        ],
+        "id" : "sw042",
+        "isNovel" : true,
+        "matchedGoal" : "customers",
+        "modelSeconds" : 0,
+        "score" : 0.2,
+        "seconds" : 0.00011599063873291016
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw043",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00012505054473876953
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw044",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001150369644165039
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw045",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010395050048828125
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw046",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.00010502338409423828
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw047",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.0001239776611328125
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw048",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 9.000301361083984e-05
+      },
+      {
+        "alerted" : false,
+        "corrections" : [
+
+        ],
+        "id" : "sw049",
+        "isNovel" : true,
+        "modelSeconds" : 0,
+        "score" : 0,
+        "seconds" : 0.000102996826171875
+      }
+    ]
+  },
+  "split" : "sealed"
+}

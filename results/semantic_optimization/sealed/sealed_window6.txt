@@ -1,0 +1,78 @@
+Set sealed: 220 synthetic utterances — relevant 105, irrelevant 92, ambiguous 19, repeat 4
+SEALED set: run once with the frozen configuration. Never tune on it.
+
+  wall time 493.8 s; this process 14 → 26 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, style window6, first pass on, second look off — sealed set
+  precision            90.6 % (77/85; 95 % CI 82.5–95.2)
+  recall               73.3 % (77/105; 95 % CI 64.2–80.9)
+  F1                   0.811
+  false alerts         7.6 % (7/92; 95 % CI 3.7–14.9) of irrelevant utterances
+  false alerts / hour  18.3 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      25.0 % (1/4; 95 % CI 4.6–69.9)
+  important missed     31.2 % (5/16; 95 % CI 14.2–55.6)
+  goal named correctly 92.2 % (71/77; 95 % CI 84.0–96.4)
+  ambiguous items      12 alerted, 1 kept as uncertain, 6 nothing (of 19)
+  time per utterance   median 3.13 s, p95 3.72 s; model median 2.39 s; full judgements 124, stopped by the first pass 93, gated 0, fallbacks 3
+  verifier corrections about_someone_else 3, headline_negation 8, headline_not_in_utterance 10, no_goal 1, not_asserted 5, reason_detail 3
+  by category          asr_error 10/13, attention 4/13, causal 10/11, hypothetical 11/11, implicit 22/31, multi 9/9, negation 17/18, obvious 8/8, past 6/7, repeated 3/4, sarcasm_quote 8/8, third_person 15/20, unrelated 29/29, urgent_short 13/19
+  confusion            TP 77  FP 8  FN 28  TN 88  (ambiguous, not scored: 12 alerted, 1 uncertain, 6 silent)
+  precision            90.6 % (77/85; 95 % CI 82.5–95.2)
+  recall               73.3 % (77/105; 95 % CI 64.2–80.9)
+  F1                   0.811
+  false-positive rate  8.3 % (8/96; 95 % CI 4.3–15.6)
+  false-negative rate  26.7 % (28/105; 95 % CI 19.1–35.8)
+  balanced accuracy    82.5 %
+  important-event recall                68.8 % (11/16; 95 % CI 44.4–85.8)
+  short urgent instruction recall       66.7 % (8/12; 95 % CI 39.1–86.2)
+  implicit relevance recall             76.2 % (32/42; 95 % CI 61.5–86.5)
+  explicit relevance recall             57.1 % (12/21; 95 % CI 36.5–75.5)
+  negation accuracy                     94.4 % (17/18; 95 % CI 74.2–99.0)
+  hypothetical accuracy                 100.0 % (11/11; 95 % CI 74.1–100.0)
+  personal relevance accuracy           75.0 % (15/20; 95 % CI 53.1–88.8)
+  past and quotation accuracy           93.3 % (14/15; 95 % CI 70.2–98.8)
+  recognition-error accuracy            76.9 % (10/13; 95 % CI 49.7–91.8)
+  context (several sentences) accuracy  100.0 % (9/9; 95 % CI 70.1–100.0)
+  unrelated talk accuracy               100.0 % (29/29; 95 % CI 88.3–100.0)
+  repetition accuracy                   75.0 % (3/4; 95 % CI 30.1–95.4)
+  by profile           clinic TP 12 FP 2 FN 13 TN 18; commuter TP 20 FP 2 FN 5 TN 23; pupil TP 29 FP 4 FN 2 TN 26; shop TP 16 FP 0 FN 8 TN 21
+  decided at           fallback 3, model 124, triage 93
+  seconds per item     p50 3.13  p95 3.72  p99 3.84   model only: p50 2.39  p95 2.91  p99 3.00
+  output tokens        73.1 per model decision (220 model decisions)
+    ✗ sp016 [third_person, expected irrelevant] My sister's teacher lets them retake any test they want. → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ sp017 [third_person, expected irrelevant] Over at the college they mark everything on a curve. → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ sp031 [past, expected irrelevant] When I took this course the final was all multiple choice. → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ sp041 [repeated, expected repeat] Remember, the midterm now covers chapters one through nine. → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ sp052 [attention, expected relevant] Hey, you with the headphones, is this your bag? → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sp053 [attention, expected relevant] Pardon me, I think you're in my seat. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sc013 [third_person, expected irrelevant] The northbound side has delays, but we're fine going south. → relevant @model kind=statement subject=listenerOrGroup goal=transit
+    ✗ sc041 [attention, expected relevant] Excuse me, is anyone sitting next to you? → irrelevant @model kind=question subject=listenerOrGroup goal=-
+    ✗ sc042 [attention, expected relevant] Sorry, you dropped your glove back there. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sc043 [attention, expected relevant] Hi, do you know if this stops at the hospital? → irrelevant @model kind=question subject=listenerOrGroup goal=-
+    ✗ sc044 [attention, expected relevant] Sir, your backpack is open. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sc048 [urgent_short, expected relevant] Heads up, coming through! → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sc052 [urgent_short, expected irrelevant] Get out, you did not just say that. → relevant @model kind=statement subject=listenerOrGroup goal=danger (headline_negation)
+    ✗ sk001 [attention, expected relevant] You're next, come on through. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sk003 [implicit, expected relevant] The doctor is running about an hour behind today. → irrelevant @model kind=statement subject=listenerOrGroup goal=-
+    ✗ sk006 [implicit, expected relevant] We need you to fill in this form again before you can go in. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sk008 [implicit, expected relevant] Don't have grapefruit while you're on these tablets. → irrelevant @fallback kind=unclear subject=unclear goal=-
+    ✗ sk009 [causal, expected relevant] The pharmacy gave you the wrong strength, so cut each pill in half until the new ones come. → irrelevant @fallback kind=unclear subject=unclear goal=-
+    ✗ sk011 [implicit, expected relevant] This has to be taken with food or it will upset your stomach. → irrelevant @model kind=statement subject=listenerOrGroup goal=-
+    ✗ sk017 [third_person, expected irrelevant] My dad's surgery got rescheduled twice. → relevant @model kind=statement subject=listenerOrGroup goal=turn
+    ✗ sk018 [third_person, expected irrelevant] Her doctor switched her to a different inhaler. → relevant @model kind=statement subject=listenerOrGroup goal=medicine
+    ✗ sk023 [negation, expected relevant] We can't see you today without the referral letter. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sk031 [asr_error, expected relevant] swallow the cap sule hole do not chew it → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sk042 [attention, expected relevant] Ma'am, we're ready for you now. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sk043 [urgent_short, expected relevant] Careful, the floor's wet right there. → irrelevant @model kind=statement subject=listenerOrGroup goal=-
+    ✗ sk044 [urgent_short, expected relevant] Don't sit there, the chair's broken. → irrelevant @model kind=statement subject=listenerOrGroup goal=-
+    ✗ sk045 [urgent_short, expected relevant] Mind your fingers in the door! → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sk046 [urgent_short, expected relevant] Someone's fainted, give them room! → uncertain @model kind=statement subject=someoneElse goal=danger (about_someone_else)
+    ✗ sw003 [implicit, expected relevant] Someone's been standing at the fitting rooms for a while. → uncertain @model kind=reported subject=listenerOrGroup goal=attention (not_asserted)
+    ✗ sw004 [implicit, expected relevant] The pickup for Hernandez is bagged and on the shelf. → irrelevant @model kind=statement subject=listenerOrGroup goal=-
+    ✗ sw005 [implicit, expected relevant] Two coffees and a bagel for the gentleman by the window are done. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sw006 [implicit, expected relevant] This lady is looking for the same shoes in a size eight. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sw008 [implicit, expected relevant] That man wants to return a blender without a receipt. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ sw030 [asr_error, expected relevant] sum one at the back door is asking for the manager or any one → uncertain @model kind=statement subject=someoneElse goal=attention (about_someone_else)
+    ✗ sw031 [asr_error, expected relevant] they need you on the floor a custom her kneads a hand with the lad her → irrelevant @fallback kind=unclear subject=unclear goal=-
+    ✗ sw043 [attention, expected relevant] Hi, sorry, are you the one I ask about refunds? → irrelevant @triage kind=unclear subject=unclear goal=-
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-opt/results/semantic_optimization/sealed/sealed_window6.json

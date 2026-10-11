@@ -1,0 +1,60 @@
+Set sealed: 220 synthetic utterances — relevant 105, irrelevant 92, ambiguous 19, repeat 4
+SEALED set: run once with the frozen configuration. Never tune on it.
+
+  wall time 437.6 s; this process 14 → 26 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, style lean, first pass off, second look on — sealed set
+  precision            86.6 % (103/119; 95 % CI 79.3–91.6)
+  recall               98.1 % (103/105; 95 % CI 93.3–99.5)
+  F1                   0.920
+  false alerts         16.3 % (15/92; 95 % CI 10.1–25.2) of irrelevant utterances
+  false alerts / hour  39.1 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      25.0 % (1/4; 95 % CI 4.6–69.9)
+  important missed     0.0 % (0/16; 95 % CI 0.0–19.4)
+  goal named correctly 86.4 % (89/103; 95 % CI 78.5–91.7)
+  ambiguous items      17 alerted, 0 kept as uncertain, 2 nothing (of 19)
+  time per utterance   median 1.99 s, p95 3.73 s; model median 1.99 s; full judgements 220, stopped by the first pass 0, gated 0, fallbacks 0
+  verifier corrections headline_not_shortened 5, no_goal 4, second_look 7
+  by category          asr_error 13/13, attention 12/13, causal 11/11, hypothetical 11/11, implicit 30/31, multi 8/9, negation 16/18, obvious 8/8, past 7/7, repeated 3/4, sarcasm_quote 8/8, third_person 16/20, unrelated 22/29, urgent_short 18/19
+  confusion            TP 103  FP 16  FN 2  TN 80  (ambiguous, not scored: 17 alerted, 0 uncertain, 2 silent)
+  precision            86.6 % (103/119; 95 % CI 79.3–91.6)
+  recall               98.1 % (103/105; 95 % CI 93.3–99.5)
+  F1                   0.920
+  false-positive rate  16.7 % (16/96; 95 % CI 10.5–25.4)
+  false-negative rate  1.9 % (2/105; 95 % CI 0.5–6.7)
+  balanced accuracy    90.7 %
+  important-event recall                100.0 % (16/16; 95 % CI 80.6–100.0)
+  short urgent instruction recall       100.0 % (12/12; 95 % CI 75.7–100.0)
+  implicit relevance recall             97.6 % (41/42; 95 % CI 87.7–99.6)
+  explicit relevance recall             95.2 % (20/21; 95 % CI 77.3–99.2)
+  negation accuracy                     88.9 % (16/18; 95 % CI 67.2–96.9)
+  hypothetical accuracy                 100.0 % (11/11; 95 % CI 74.1–100.0)
+  personal relevance accuracy           80.0 % (16/20; 95 % CI 58.4–91.9)
+  past and quotation accuracy           100.0 % (15/15; 95 % CI 79.6–100.0)
+  recognition-error accuracy            100.0 % (13/13; 95 % CI 77.2–100.0)
+  context (several sentences) accuracy  88.9 % (8/9; 95 % CI 56.5–98.0)
+  unrelated talk accuracy               75.9 % (22/29; 95 % CI 57.9–87.8)
+  repetition accuracy                   75.0 % (3/4; 95 % CI 30.1–95.4)
+  by profile           clinic TP 24 FP 4 FN 1 TN 16; commuter TP 25 FP 3 FN 0 TN 22; pupil TP 31 FP 5 FN 0 TN 25; shop TP 23 FP 4 FN 1 TN 17
+  decided at           model 220
+  seconds per item     p50 1.99  p95 3.73  p99 4.00   model only: p50 1.99  p95 3.73  p99 4.00
+  output tokens        32.4 per model decision (220 model decisions)
+    ✗ sp021 [negation, expected irrelevant] No, we are not having a quiz tomorrow, same plan as always. → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ sp041 [repeated, expected repeat] Remember, the midterm now covers chapters one through nine. → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ sp044 [unrelated, expected irrelevant] Is it supposed to rain on Saturday? → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ sp047 [unrelated, expected irrelevant] Her birthday party is at the bowling alley. → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ sp048 [unrelated, expected irrelevant] The vending machine ate my dollar again. → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ sc013 [third_person, expected irrelevant] The northbound side has delays, but we're fine going south. → relevant @model kind=statement subject=listenerOrGroup goal=transit
+    ✗ sc052 [urgent_short, expected irrelevant] Get out, you did not just say that. → relevant @model kind=statement subject=listenerOrGroup goal=danger
+    ✗ sc053 [third_person, expected irrelevant] He told me to step back and think about my career. → relevant @model kind=question subject=listenerOrGroup goal=attention
+    ✗ sk017 [third_person, expected irrelevant] My dad's surgery got rescheduled twice. → relevant @model kind=statement subject=listenerOrGroup goal=turn
+    ✗ sk018 [third_person, expected irrelevant] Her doctor switched her to a different inhaler. → relevant @model kind=statement subject=listenerOrGroup goal=medicine
+    ✗ sk040 [unrelated, expected irrelevant] My daughter starts swimming lessons tomorrow. → relevant @model kind=statement subject=listenerOrGroup goal=turn
+    ✗ sk041 [unrelated, expected irrelevant] I need a prescription for more patience with this traffic. → relevant @model kind=statement subject=listenerOrGroup goal=medicine
+    ✗ sk042 [attention, expected relevant] Ma'am, we're ready for you now. → irrelevant @model kind=question subject=listenerOrGroup goal=- (no_goal)
+    ✗ sw003 [implicit, expected relevant] Someone's been standing at the fitting rooms for a while. → irrelevant @model kind=statement subject=someoneElse goal=-
+    ✗ sw020 [negation, expected irrelevant] Your hours aren't changing, ignore that email. → relevant @model kind=statement subject=listenerOrGroup goal=hours
+    ✗ sw038 [unrelated, expected irrelevant] Parking downtown is impossible on weekends. → relevant @model kind=statement subject=listenerOrGroup goal=hours
+    ✗ sw040 [unrelated, expected irrelevant] We're having tacos tonight. → relevant @model kind=statement subject=listenerOrGroup goal=hours
+    ✗ sw048 [multi, expected irrelevant] Anything but pizza. → relevant @model kind=statement subject=listenerOrGroup goal=customers
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-opt/results/semantic_optimization/sealed/sealed_optimized.json
