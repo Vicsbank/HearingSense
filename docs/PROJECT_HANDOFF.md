@@ -10,9 +10,12 @@ D1–D4: synthetic demo scenes, microphone off. Compact, expanded and Lock Scree
 on the device; silent updates did not wake the locked screen (student-observed). D5–D6 then ran
 with the real microphone (classification only; 34.9 minutes locked, 0 classifier failures, 256
 updates per hour). After that session the icon rules, the alert-protection rule and two detection
-rules were revised (kind `door_movement` split from `door`; `screaming` needs two windows) —
-unit-tested and replayed on the recorded events, **not yet run on the iPhone** (the current build
-is installed, no listening run was made with it). Next: retest R1–R2 (test results §8).** Read `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`, then
+rules were revised (kind `door_movement` split from `door`; `screaming` needs two windows), speech
+without a summary became icon-only in the island, and a 5-minute retest R1 ran on the iPhone
+(confirmation → update median 0.02 s instead of 2.2 s; 282 updates per hour). R1 found four more
+problems; their fixes are unit-tested and replayed on the recordings but **have not run on the
+iPhone** (the final build is installed). Next: R2–R3 (test results §9), microphone authorization
+needed. Commits: `dc1f6cf` (Window 5), `1d06721` (device session), then the retest commit.** Read `docs/WINDOW5_DYNAMIC_ISLAND_REPORT.md`, then
 `docs/testing/WINDOW5_TEST_RESULTS.md` (§5 device results, §7 the remaining device steps).
 Next window: **Window 6 — Integration, Evaluation and Optimization** (not started; do not start it
 without the student's instruction).
@@ -256,7 +259,12 @@ wake a locked screen) are summarized in §1 of the report.
 8. After D5–D6 (real microphone): icon channel rewritten to "newest sound first" with an idle hold;
    only high-priority episodes and speech summaries are protected; resolved episodes do not return;
    taxonomy kind `door_movement`; `screaming` confirmation rule; `hs-attention-eval
-   island-device-trace`. 54 tests in `IslandPresentationTests`, 310 in the package.
+   island-device-trace`.
+9. Student's decisions before the retest, and the retest R1: speech without a summary is icon-only
+   in the island (`IslandPolicy.speechNeedsSummary`); same-kind de-duplication, switch cooldown and
+   "timely or not at all" in the icon channel; `--hs-autostop-after`. After R1: `door_slam` moved to
+   `door_movement`, strong sounds ignore the same-kind cooldown, 20 s protection for high-priority
+   episodes, 3.5 s minimum display. 58 tests in `IslandPresentationTests`, 314 in the package.
 
 ## 5. Repository structure (current)
 
@@ -368,8 +376,16 @@ Full list: `docs/IOS_ARCHITECTURE.md` §9. Most important:
   sound behind continuous speech. Episodes below `IslandPolicy.protectedPriority` (high) without a
   summary give way to newer ordinary sounds.
 - (W5, after the device session) `SoundTaxonomy.appleV1` has 51 kinds: `door_movement` (labels
-  `door`, `door_sliding`; icon only, two-window confirmation) is separate from `door` (knock, bell,
-  slam, tap). Earlier documents say 50.
+  `door`, `door_sliding`, `door_slam`; icon only, two-window confirmation) is separate from `door`
+  (knock, bell, tap). Earlier documents say 50.
+- (W5) A timed microphone test must end by itself: `--hs-autostop-after <s>` in the app and an
+  exit trap in the Mac script that relaunches the app without `--hs-autostart`. Never leave the
+  microphone on while waiting for the student (D6 ran 35 minutes instead of 10 that way).
+- (W5) Force transcription off for a run with launch arguments after `--`:
+  `devicectl … launch … org.hearingsense.HearingSense -- --hs-autostart -speech.transcriptionEnabled NO`
+  (argument-domain default; the stored switch is not changed) and check "Transcription switch: off"
+  in the export before any sound. The switch was found on before R1 and the UI toggle through
+  iphone-use did not change it.
 - (W5) Evaluate icon-rule changes on recorded device events before a device run:
   `hs-attention-eval island-device-trace results/device_window5/<export>.txt`.
 - (W5) `xcrun simctl io screenshot` often omits the Dynamic Island; capture through the Simulator
@@ -483,15 +499,19 @@ Details and methods: `docs/testing/WINDOW5_TEST_RESULTS.md`. All input is script
 | Lock estimate | Simulator | First version said "unlocked" on a locked Simulator and sent an expansion request; final version: `unknown`, silent update |
 | D1–D4 with synthetic demo scenes, microphone off (compact / expanded / Lock Screen rendering, Spotify split island, silent updates while locked, automatic expansion on) | **Physical iPhone 18 Pro**, iOS 27.2 | Rendering as designed; locked screen not woken, no sound, no vibration, also when an expansion request reached iOS 2 s and 20 s after locking (student-observed, once each, silent sound); data protection lags the lock by 4–12 s; evidence in `docs/device-tests/2026-10-10-window5/`, `results/device_window5/` |
 | D5–D6 with the real microphone, classification only, clips from the Mac speakers | **Physical iPhone 18 Pro** | Island follows real sounds; Spotify on the phone speaker splits the island and keeps playing; 34.9 min locked: 2 793 windows, 0 failures, 256 updates/h; D6's subjective checks (screen wake, sound, vibration, Lock Screen content) **not verified** |
-| Revised icon / alert / detection rules (after D6) | Mac tests and replay of the recorded events | 310 package tests pass; confirmed sounds that become the icon 44→68 of 73, 90th-percentile delay 5.8→1.8 s, icon changes 295→477 per hour on the first 10 minutes of D6; **not run on the device** |
+| Retest R1: revised rules, 5 minutes, real microphone, transcription forced off and checked | **Physical iPhone 18 Pro** | Confirmation → update median 0.02 s (D6: 2.22 s); 282 updates/h; a 5-clip burst gave 2 updates; 3 dog clips one icon; "Nearby Speech" without a summary stayed an icon; `door` icon only; knock alert with expansion. Found: a false alert from `door_slam`, a strong sneeze hidden by the same-kind cooldown, a 48 s door episode, a 1.0 s icon; the siren clip was not recognized |
+| Final rules (four fixes after R1) | Mac tests and replay of the recorded events (simulation) | 314 package tests pass; on the D6 / R1 recordings 247–359 icon changes per hour, 58 of 73 / 90 of 104 / 23 of 37 confirmed sounds become the icon; **not run on the device** |
 | Battery (D7), speech text with real speech (D8), 8-hour limit | Physical iPhone | **Not run** (postponed by the student) |
 
 ## 8. Known issues
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
-| **(W5) The revised rules have not run on the iPhone** | Newest-sound icon rule, protection of high-priority episodes only, `door_movement`, the `screaming` rule: tested on the Mac and replayed on recorded events only | Retest R1–R2 in `docs/testing/WINDOW5_TEST_RESULTS.md` §8 (microphone authorization needed); the current build is installed |
-| (W5) Faster icons cost updates | Replay of the D6 recording: about 300–480 icon changes per hour in a lively room (first rules: 200–295; measured 256 updates/h) | Bounded by 12 changes per minute; `AmbientIconPolicy.firstVersion` keeps the calmer rules for comparison; battery unmeasured (D7 postponed) |
+| **(W5) The four fixes made after retest R1 have not run on the iPhone** | `door_slam` as a door sound, strong sounds ignoring the same-kind cooldown (15 s), 20 s protection of high-priority episodes, 3.5 s minimum display: tested on the Mac and replayed on recorded events only | R2–R3 in `docs/testing/WINDOW5_TEST_RESULTS.md` §9 (microphone authorization needed); the final build is installed |
+| (W5) Faster icons cost updates | Measured 256/h (first rules, D6) and 282/h (revised, R1) in a lively room; the final rules replay to about 250–360 icon changes per hour | Bounded by 12 changes per minute; `AmbientIconPolicy.firstVersion` keeps the calmer rules for comparison; battery unmeasured (D7 postponed) |
+| (W5) "Nearby Speech" rule lives in the presentation layer | The island shows speech without a summary as an icon only (student's decision), but the attention engine still creates the episode: the app's Attention card can show a "Nearby Speech" the island does not | Move the rule into `SpeechAssessment` (about a dozen Window 4 tests use textless speech as their vehicle and need rework) |
+| (W5) The in-app stop of a timed test is unconfirmed | `--hs-autostop-after` was added; in R1 the export was written 0.7 s before it was due, then the Mac relaunched the app | In the next timed run pull the export a few seconds after the stop is due, before relaunching |
+| (W2, seen in R1) A siren clip was not recognized in a loud room | The most important kind of miss; 3 of 3 in the earlier, quieter runs | Repeat in R2; no scores are kept, so log candidate scores of warning kinds in the export if it repeats |
 | (W2/W4, found in W5) False alerts and misrecognitions with real sound | D6: 6 of 9 high-priority episodes in 10 minutes were room sounds; rain, footsteps, glass clips misrecognized; "Nearby Speech" 12 times in 17 minutes with transcription off | `door` / `screaming` addressed (one room, one evening: provisional). Open: whether textless "Nearby Speech" should be an episode at all in Quiet/Balanced (student's decision); re-tune with more device data |
 | (W5) The lock state is an estimate | Data protection lags the lock by 4–12 s (measured). The estimate now also treats iOS's early "will become unavailable" notice as locked (seen at the moment of locking in two runs; not yet exercised in a device run) | Keep automatic expansion off by default until the notice has been seen reliably; an undocumented Darwin notification could serve as an extra veto — the student's decision, not adopted |
 | (W5) Automatic expansion is off by default | The island never expands by itself unless the user turns the setting on; text needs a touch and hold | On the device an expansion request did not wake the locked screen in two runs (silent sound, Always-On on). The student may decide to turn the default on; repeat with the alert sound on first |
@@ -669,9 +689,9 @@ Share** exports the route snapshot and event log as text.
 
 ## 12. Recommended next steps
 
-00. (After Window 5) D1–D6 are done (2026-10-10). Next: with the current build (installed) run the
-   retest R1–R2 of `docs/testing/WINDOW5_TEST_RESULTS.md` §8 (microphone authorization; the
-   student watches the locked screen in R2). D7 and D8 are postponed by the student. Open
+00. (After Window 5) D1–D6 and the retest R1 are done (2026-10-10/11). Next: with the final build
+   (installed) run R2–R3 of `docs/testing/WINDOW5_TEST_RESULTS.md` §9 (microphone authorization;
+   the student watches the locked screen in R3). D7 and D8 are postponed by the student. Open
    decisions for the student: "Expand for important events" on by default or not; whether textless
    "Nearby Speech" stays an attention episode; committing the changes made after `dc1f6cf`. D6
    also served as A3 (classifier 35 minutes locked without a failure, once). Window 6 only when

@@ -1,15 +1,36 @@
 73 confirmed events over 611 s from ../../results/device_window5/d6_locked_10min_diag.txt
 
-rules           icon changes  per hour  events shown  delay p50 s  delay p90 s  shown < 2 s 
-first version   50            295       44 of 73      0.0          5.8          0           
-current         81            477       68 of 73      0.0          1.8          0           
+rules           icon changes  per hour  events shown  delay p50 s  delay p90 s  shown < 2 s same kind back < 30 s
+first version   50            295       44 of 73      0.0          5.8          0           16
+newest first    81            477       68 of 73      0.0          1.8          0           36
+current         61            359       58 of 73      0.0          4.3          0           25
+
+Measured on the device (from the export, not replayed):
+  sound → confirmed (classifier windows, audio clock): median 2.25 s, 90th percentile 2.25 s, n = 73
+  confirmed → update handed to ActivityKit: median 2.22 s, 90th percentile 5.91 s, n = 22 (16 updates without a sound confirmed in the 12 s before: returns to an earlier icon, the plain glyph, speech episodes)
+  Activity.update call: median 4.2 ms, maximum 27.0 ms, n = 38
+
 104 confirmed events over 1296 s from ../../results/device_window5/d6_locked_final_diag.txt
 
-rules           icon changes  per hour  events shown  delay p50 s  delay p90 s  shown < 2 s 
-first version   72            200       72 of 104     0.0          4.2          0           
-current         115           319       104 of 104    0.0          0.5          0           
-19 confirmed events over 116 s from ../../results/device_window5/d5a_real_sounds_diag.txt
+rules           icon changes  per hour  events shown  delay p50 s  delay p90 s  shown < 2 s same kind back < 30 s
+first version   72            200       72 of 104     0.0          4.2          0           29
+newest first    115           319       104 of 104    0.0          0.5          0           61
+current         89            247       90 of 104     0.0          1.8          0           41
 
-rules           icon changes  per hour  events shown  delay p50 s  delay p90 s  shown < 2 s 
-first version   16            496       12 of 19      0.0          5.0          0           
-current         22            682       17 of 19      0.0          3.0          0           
+Measured on the device (from the export, not replayed):
+  sound → confirmed (classifier windows, audio clock): median 2.25 s, 90th percentile 3.00 s, n = 104
+  confirmed → update handed to ActivityKit: median 0.59 s, 90th percentile 8.12 s, n = 47 (74 updates without a sound confirmed in the 12 s before: returns to an earlier icon, the plain glyph, speech episodes)
+  Activity.update call: median 4.3 ms, maximum 27.0 ms, n = 121
+
+37 confirmed events over 296 s from ../../results/device_window5/r1_retest_diag.txt
+
+rules           icon changes  per hour  events shown  delay p50 s  delay p90 s  shown < 2 s same kind back < 30 s
+first version   11            134       10 of 37      0.0          3.5          0           4
+newest first    39            474       29 of 37      0.0          1.7          0           19
+current         28            340       23 of 37      0.0          4.2          0           12
+
+Measured on the device (from the export, not replayed):
+  sound → confirmed (classifier windows, audio clock): median 2.25 s, 90th percentile 3.00 s, n = 37
+  confirmed → update handed to ActivityKit: median 0.02 s, 90th percentile 3.48 s, n = 17 (7 updates without a sound confirmed in the 12 s before: returns to an earlier icon, the plain glyph, speech episodes)
+  Activity.update call: median 9.6 ms, maximum 26.5 ms, n = 24
+

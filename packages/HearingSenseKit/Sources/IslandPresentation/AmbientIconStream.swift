@@ -35,6 +35,19 @@ public struct AmbientIconPolicy: Hashable, Sendable {
     /// that kept going — speech in a room — hid every lower-ranked sound; the student saw a strong
     /// sneeze not appear on the iPhone).
     public var freshFor: TimeInterval
+    /// A fresh sound gets the icon only if that can happen within this time of its confirmation;
+    /// otherwise it is not shown as a newcomer at all. No late jumps.
+    public var timelyWithin: TimeInterval
+    /// A fresh sound that ranks below the shown icon may replace it only after the shown icon had
+    /// this long (a higher or equal rank needs `minimumDisplay` only). The switch cooldown.
+    public var lowerRankCooldown: TimeInterval
+    /// A kind whose icon was on display within this time does not get the icon as a newcomer
+    /// again (it can still be shown as the highest-ranked ongoing sound). Same-kind de-duplication:
+    /// in a room, laughter or coughing every few seconds would otherwise keep flipping the icon.
+    public var sameKindCooldown: TimeInterval
+    /// A sound with at least this peak score ignores `sameKindCooldown`. (Retest on the iPhone: a
+    /// sneeze at 0.99 was not shown because a cough had used the same icon 18 s earlier.)
+    public var strongPeak: Double
     /// Extra time the last icon stays before the island goes back to the plain listening glyph.
     /// A sound that starts meanwhile replaces it directly, which saves the update in between.
     /// (iPhone, 35 minutes in a lived-in room: the island went "icon → glyph → icon" within
@@ -59,7 +72,8 @@ public struct AmbientIconPolicy: Hashable, Sendable {
     public var kindRank: [String: Int]
 
     public init(minimumQuality: EventQuality, minimumDisplay: TimeInterval, linger: TimeInterval,
-                freshFor: TimeInterval, idleHold: TimeInterval, showsEndedSoundsLate: Bool,
+                freshFor: TimeInterval, timelyWithin: TimeInterval, lowerRankCooldown: TimeInterval,
+                sameKindCooldown: TimeInterval, strongPeak: Double, idleHold: TimeInterval, showsEndedSoundsLate: Bool,
                 maximumChangesPerMinute: Int, staleAfter: TimeInterval, excludedKindIDs: Set<String>,
                 categoryRank: [SoundCategory: Int], kindRank: [String: Int])
     {
@@ -67,6 +81,10 @@ public struct AmbientIconPolicy: Hashable, Sendable {
         self.minimumDisplay = minimumDisplay
         self.linger = linger
         self.freshFor = freshFor
+        self.timelyWithin = timelyWithin
+        self.lowerRankCooldown = lowerRankCooldown
+        self.sameKindCooldown = sameKindCooldown
+        self.strongPeak = strongPeak
         self.idleHold = idleHold
         self.showsEndedSoundsLate = showsEndedSoundsLate
         self.maximumChangesPerMinute = maximumChangesPerMinute
@@ -74,6 +92,17 @@ public struct AmbientIconPolicy: Hashable, Sendable {
         self.excludedKindIDs = excludedKindIDs
         self.categoryRank = categoryRank
         self.kindRank = kindRank
+    }
+
+    /// "Newest sound first" without the cooldowns (the rules of the first device retest plan),
+    /// for comparisons on recorded device traces.
+    public static var newestFirstWithoutCooldowns: AmbientIconPolicy {
+        var policy = standard
+        policy.minimumDisplay = 2
+        policy.timelyWithin = .infinity
+        policy.lowerRankCooldown = 2
+        policy.sameKindCooldown = 0
+        return policy
     }
 
     /// The rules as first shipped in Window 5, kept for before/after comparisons on recorded
@@ -90,9 +119,13 @@ public struct AmbientIconPolicy: Hashable, Sendable {
 
     public static let standard = AmbientIconPolicy(
         minimumQuality: .moderate,
-        minimumDisplay: 2,
+        minimumDisplay: 3.5,
         linger: 5,
         freshFor: 5,
+        timelyWithin: 2.5,
+        lowerRankCooldown: 6,
+        sameKindCooldown: 15,
+        strongPeak: 0.9,
         idleHold: 5,
         showsEndedSoundsLate: false,
         maximumChangesPerMinute: 12,
@@ -190,6 +223,7 @@ public struct AmbientIconStream: Sendable {
         var isEligible: Bool
         /// When the event became eligible for an icon (confirmed, or its evidence improved).
         var eligibleSince: Date?
+        var peak: Double = 0
     }
 
     private var tracked: [AcousticEventID: Tracked] = [:]
@@ -198,6 +232,8 @@ public struct AmbientIconStream: Sendable {
     private var currentRank = 0
     /// Since when nothing wants the island although an icon is still shown.
     private var idleSince: Date?
+    /// When each kind's icon was last taken off the display.
+    private var lastShown: [String: Date] = [:]
     private var lastChange: Date?
     private var recentChanges: [Date] = []
 
@@ -217,6 +253,7 @@ public struct AmbientIconStream: Sendable {
             tracked.removeAll()
             currentID = nil
             idleSince = nil
+            lastShown.removeAll()
             nextDeadline = nil
             // Session boundaries are not rate-limited: the icon of a session that ended must go.
             guard current != nil else { return nil }
@@ -246,6 +283,7 @@ public struct AmbientIconStream: Sendable {
         // The primary label can change while an event is ongoing (dog → dog_bark): the icon follows.
         entry.icon = icon
         entry.lastObserved = max(entry.lastObserved, event.lastObservedDate)
+        entry.peak = max(entry.peak, event.evidence.peakScore.rawValue)
         if !entry.isEligible, event.quality >= policy.minimumQuality {
             entry.isEligible = true
             entry.eligibleSince = AmbientIconInput.sound(update).date
@@ -288,12 +326,29 @@ public struct AmbientIconStream: Sendable {
         if let currentID, let shown = tracked[currentID], let best, best.value.rank <= shown.rank {
             wantedID = currentID
         }
-        // The newest sound wins while it is fresh, whatever its rank.
+        // The newest sound wins while it is fresh, whatever its rank — if it can be shown in time
+        // (`timelyWithin`), and not when its kind was on display a moment ago (`sameKindCooldown`).
+        // The shown icon must have had `minimumDisplay`, or `lowerRankCooldown` when the newcomer
+        // ranks below it. A newcomer that would only get the icon late does not get it at all.
         var freshUntil: Date?
-        let newest = tracked.compactMap { id, entry -> (id: AcousticEventID, since: Date, rank: Int)? in
+        var freshEarliest: Date?
+        let shownSince = lastChange ?? now
+        let newest = tracked.compactMap { id, entry -> (id: AcousticEventID, since: Date, rank: Int, earliest: Date)? in
             guard entry.isEligible, let since = entry.eligibleSince, since.addingTimeInterval(policy.freshFor) > now
             else { return nil }
-            return (id, since, entry.rank)
+            if id == currentID || entry.icon == current { return (id, since, entry.rank, now) }
+            if entry.peak < policy.strongPeak, let last = lastShown[entry.icon.kindID],
+               last.addingTimeInterval(policy.sameKindCooldown) > now
+            {
+                return nil
+            }
+            var earliest = since
+            if current != nil {
+                let needed = entry.rank < currentRank ? policy.lowerRankCooldown : policy.minimumDisplay
+                earliest = max(since, shownSince.addingTimeInterval(needed))
+            }
+            guard earliest <= since.addingTimeInterval(policy.timelyWithin) else { return nil }
+            return (id, since, entry.rank, earliest)
         }.max { lhs, rhs in
             if lhs.since != rhs.since { return lhs.since < rhs.since }
             if lhs.rank != rhs.rank { return lhs.rank < rhs.rank }
@@ -302,6 +357,7 @@ public struct AmbientIconStream: Sendable {
         if let newest {
             wantedID = newest.id
             freshUntil = newest.since.addingTimeInterval(policy.freshFor)
+            freshEarliest = newest.earliest
         }
         let wanted = wantedID.flatMap { tracked[$0]?.icon }
 
@@ -312,6 +368,7 @@ public struct AmbientIconStream: Sendable {
             idleSince = nil
         } else {
             var allowed = earliestChange(after: now)
+            if let freshEarliest { allowed = max(allowed, freshEarliest) }
             if wanted == nil {
                 // Going back to the plain glyph waits a little: the next sound may come first.
                 let since = idleSince ?? now
@@ -355,6 +412,7 @@ public struct AmbientIconStream: Sendable {
     }
 
     private mutating func publish(_ icon: AmbientIcon?, at now: Date) -> Change {
+        if let previous = current { lastShown[previous.kindID] = now }
         current = icon
         lastChange = now
         recentChanges.append(now)

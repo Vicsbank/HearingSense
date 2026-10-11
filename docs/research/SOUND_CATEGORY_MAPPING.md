@@ -87,8 +87,8 @@ human activity 39 · animals 42 · music 74 · weather & nature 14 · crowd 5 ·
 | Kind (`id`) | Display name | Temporal profile | Labels (original identifiers) |
 |---|---|---|---|
 | `tools` | Tools | intermittent | `lawn_mower`, `chainsaw`, `ratchet_and_pawl`, `hammer`, `saw`, `power_tool`, `drill`, `hedge_trimmer`, `chopping_wood` |
-| `door` | Door or knock | transient | `door_bell`, `door_slam`, `knock`, `tap` |
-| `door_movement` | Door | transient, two windows | `door`, `door_sliding` — split off on 2026-10-10 after the Window 5 device session: 12 confirmed `door` events in a lived-in room, none a knock (`docs/testing/WINDOW5_TEST_RESULTS.md` §6.1) |
+| `door` | Door or knock | transient | `door_bell`, `knock`, `tap` |
+| `door_movement` | Door | transient, two windows | `door`, `door_sliding`, `door_slam` — split off on 2026-10-10 after the Window 5 device session: 12 confirmed `door` events in a lived-in room, none a knock (`docs/testing/WINDOW5_TEST_RESULTS.md` §6.1) |
 | `small_objects` | Handling objects | transient | `squeak`, `drawer_open_close`, `zipper`, `keys_jangling`, `coin_dropping`, `scissors`, `camera`, `crushing`, `crumpling_crinkling`, `tearing`, `click` |
 | `kitchen` | Kitchen sounds | intermittent | `dishes_pots_pans`, `cutlery_silverware`, `chopping_food`, `frying_food`, `microwave_oven`, `blender`, `glass_clink`, `boiling` |
 | `water_use` | Running water | continuous | `water_tap_faucet`, `sink_filling_washing`, `bathtub_filling_washing`, `toilet_flush`, `liquid_splashing`, `liquid_sloshing`, `liquid_squishing`, `liquid_dripping`, `liquid_pouring`, `liquid_trickle_dribble`, `liquid_filling_container`, `liquid_spraying`, `water_pump`, `underwater_bubbling` |

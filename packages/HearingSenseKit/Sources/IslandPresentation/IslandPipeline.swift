@@ -62,6 +62,12 @@ public struct IslandPolicy: Hashable, Sendable {
     /// Episodes of at least this priority (and episodes showing a speech summary) cannot be
     /// replaced by an ordinary sound's icon. Lower ones give way to a newer ordinary sound.
     public var protectedPriority: AttentionPriority
+    /// How long after the engine last changed it a high-priority episode or a summary keeps that
+    /// protection. Urgent episodes keep it throughout.
+    public var protectedFor: TimeInterval
+    /// A speech episode below `protectedPriority` is shown as an episode only when it has a
+    /// validated summary; without one it stays an icon of the ambient channel.
+    public var speechNeedsSummary: Bool
     /// Shortest time between two expansion requests; an urgent episode ignores it.
     public var alertMinimumInterval: TimeInterval
     /// Request an expansion when an episode first shows a speech summary (if the user allows
@@ -76,13 +82,16 @@ public struct IslandPolicy: Hashable, Sendable {
     public var maximumTextLength: Int
 
     public init(ambient: AmbientIconPolicy, minimumUpdateInterval: TimeInterval, attentionMinimumHold: TimeInterval,
-                protectedPriority: AttentionPriority = .high, alertMinimumInterval: TimeInterval, alertsOnFirstSummary: Bool, keepAliveInterval: TimeInterval,
+                protectedPriority: AttentionPriority = .high, protectedFor: TimeInterval = 20,
+                speechNeedsSummary: Bool = true, alertMinimumInterval: TimeInterval, alertsOnFirstSummary: Bool, keepAliveInterval: TimeInterval,
                 staleAfter: TimeInterval, maximumTextLength: Int)
     {
         self.ambient = ambient
         self.minimumUpdateInterval = minimumUpdateInterval
         self.attentionMinimumHold = attentionMinimumHold
         self.protectedPriority = protectedPriority
+        self.protectedFor = protectedFor
+        self.speechNeedsSummary = speechNeedsSummary
         self.alertMinimumInterval = alertMinimumInterval
         self.alertsOnFirstSummary = alertsOnFirstSummary
         self.keepAliveInterval = keepAliveInterval
@@ -106,6 +115,8 @@ public struct IslandStatistics: Hashable, Sendable, Codable {
     /// "+N more" count of an attention episode) and no update was sent for it.
     public var secondaryChangesNotSent = 0
     public var attentionEpisodes = 0
+    /// Speech episodes of the attention engine that had no summary and stayed an icon.
+    public var speechWithoutSummary = 0
     public var alertRequests = 0
     public var alertRequestsRateLimited = 0
 
@@ -169,6 +180,7 @@ public struct IslandPipeline: Sendable {
     private var lastSentAt: Date?
     private var hasPendingChange = false
     private var lastAlertAt: Date?
+    private var lastEvaluated: Date?
 
     public init(policy: IslandPolicy = .standard, settings: IslandSettings = .default) {
         self.policy = policy
@@ -183,6 +195,7 @@ public struct IslandPipeline: Sendable {
 
     public mutating func process(_ input: IslandInput) -> [IslandCommand] {
         let now = input.date
+        lastEvaluated = now
         var alertCandidate: (id: AttentionEventID, request: IslandAlertRequest, isUrgent: Bool)?
 
         switch input {
@@ -279,6 +292,21 @@ public struct IslandPipeline: Sendable {
             }
             return nil
         case .present, .update:
+            // Nearby speech with nothing to read (no summary) is an ordinary sound in every mode:
+            // the icon channel shows it, it is never an episode in the island and never asks for
+            // an expansion. A possible spoken warning (high priority) is not affected. Decided by
+            // the student after the device session, where "Nearby Speech" without text was
+            // presented 12 times in 17 minutes.
+            if policy.speechNeedsSummary, intent.category == .speech, !intent.hasPrivateDetail,
+               intent.priority < policy.protectedPriority
+            {
+                if items[intent.id] != nil {
+                    items[intent.id] = nil
+                } else if intent.action == .present {
+                    statistics.speechWithoutSummary += 1
+                }
+                return nil
+            }
             var item = items[intent.id] ?? Item(intent: intent, firstShown: now, lastChanged: now)
             if items[intent.id] == nil { statistics.attentionEpisodes += 1 }
             item.intent = intent
@@ -364,7 +392,13 @@ public struct IslandPipeline: Sendable {
             // appeared after it, so the icon channel stays live. (On the iPhone, in a room with
             // people talking, "Nearby Speech" episodes held the island for most of 35 minutes and
             // a sneeze never showed.)
-            let isProtected = intent.priority >= policy.protectedPriority || summary != nil
+            // Urgent episodes are protected for as long as the engine presents them; high-priority
+            // ones and summaries for `protectedFor` after the engine last changed them. (Retest
+            // on the iPhone: a door episode joined by the room's speech held the island for 48 s
+            // and hid a dog and footsteps.)
+            let isRecent = item.lastChanged.addingTimeInterval(policy.protectedFor) > now
+            let isProtected = intent.priority >= .urgent
+                || ((intent.priority >= policy.protectedPriority || summary != nil) && isRecent)
             if !isProtected, let ambientIcon, let ambientSince, ambientSince > item.lastChanged {
                 return IslandContent(mode: .ambient, symbolName: ambientIcon.symbolName,
                                      spokenLabel: ambientIcon.spokenName, since: ambientSince)
@@ -418,7 +452,11 @@ public struct IslandPipeline: Sendable {
         let involvesAttention = content.mode == .attention || shown.mode == .attention
             || content.mode == .paused || shown.mode == .paused
         let isQuiet = alert == nil && !involvesAttention
-        if isQuiet, lastSentAt.addingTimeInterval(policy.minimumUpdateInterval) > now {
+        // An icon that is on the island stays for the icon channel's minimum display time, also
+        // when it only just took over from an episode (seen on the iPhone: 1.0 s).
+        let quietInterval = shown.mode == .ambient ? max(policy.minimumUpdateInterval, policy.ambient.minimumDisplay)
+            : policy.minimumUpdateInterval
+        if isQuiet, lastSentAt.addingTimeInterval(quietInterval) > now {
             if hasPendingChange { statistics.coalesced += 1 }
             hasPendingChange = true
             return nil
@@ -439,9 +477,13 @@ public struct IslandPipeline: Sendable {
         if let deadline = ambient.nextDeadline { deadlines.append(deadline) }
         if let holdDeadline { deadlines.append(holdDeadline) }
         deadlines += items.values.compactMap(\.removeAt)
+        // Protection of a high-priority episode runs out: look again.
+        deadlines += items.values.map { $0.lastChanged.addingTimeInterval(policy.protectedFor) }
+            .filter { $0 > (lastEvaluated ?? .distantPast) }
         if isLive, let lastSentAt {
-            deadlines.append(lastSentAt.addingTimeInterval(hasPendingChange ? policy.minimumUpdateInterval
-                    : policy.keepAliveInterval))
+            let quietInterval = shown?.mode == .ambient ? max(policy.minimumUpdateInterval, policy.ambient.minimumDisplay)
+                : policy.minimumUpdateInterval
+            deadlines.append(lastSentAt.addingTimeInterval(hasPendingChange ? quietInterval : policy.keepAliveInterval))
         }
         nextDeadline = deadlines.min()
     }

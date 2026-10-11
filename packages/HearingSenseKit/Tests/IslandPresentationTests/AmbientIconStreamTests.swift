@@ -36,10 +36,10 @@ import Testing
         driver.send(sound("rain", 1, at: 0).started())
         driver.send(sound("dog", 2, at: 1).started())  // newer, but rain was shown 1 s ago
         #expect(driver.stream.current?.symbolName == "cloud.rain")
-        driver.advance(to: 1.9)
+        driver.advance(to: 3.4)
         #expect(driver.stream.current?.symbolName == "cloud.rain")
         driver.advance(to: 10)
-        #expect(driver.timeline == ["0:cloud.rain", "2:dog"])
+        #expect(driver.timeline == ["0:cloud.rain", "3.5:dog"])
     }
 
     /// The student's observation on the iPhone: with speech going on, a strong sneeze did not
@@ -57,6 +57,45 @@ import Testing
         driver.send(speech.updated(at: T.date(25)))
         driver.advance(to: 30)
         #expect(driver.timeline == ["0:person.wave.2", "21:lungs", "26:person.wave.2"])
+    }
+
+    /// Same-kind de-duplication and its exception, both from the iPhone retest: three dog clips
+    /// in 20 s should not flip the icon three times, but a sneeze at 0.99 was hidden because a
+    /// cough had used the same icon 18 s earlier.
+    @Test func aKindShownAMomentAgoDoesNotTakeTheIconAgainUnlessItIsStrong() {
+        /// A brief sound with an explicit peak score, confirmed at `time`, ended 1.5 s later.
+        func brief(_ kind: String, _ number: Int, at time: TimeInterval, peak: Double) -> [AcousticEventUpdate] {
+            let evidence = EventEvidence(supportingWindows: 2, observedWindows: 2, peakScore: ClassifierScore(peak),
+                                         scoreSum: peak * 2)
+            var event = ConfirmedAcousticEvent(
+                id: AcousticEventID(rawValue: SyntheticSound.uuid(number)), kind: SyntheticSound.kind(kind),
+                source: .soundClassifier(SyntheticSound.model), primaryLabel: SoundLabel(kind), phase: .confirmed,
+                audioStart: 0, audioConfirmed: 0, audioLastObserved: 0, startDate: T.date(time), confirmedDate: T.date(time),
+                lastObservedDate: T.date(time), evidence: evidence, quality: EventQuality.assess(evidence))
+            let started = AcousticEventUpdate.started(event)
+            event.phase = .ended
+            event.endedDate = T.date(time + 1.5)
+            return [started, .ended(event)]
+        }
+        var driver = AmbientDriver()
+        var speech = sound("speech", 1, at: 0)
+        driver.send(speech.started())
+        driver.send(speech.updated(at: T.date(15)))   // the speech keeps going
+        func play(_ updates: [AcousticEventUpdate], thenSpeechAt time: TimeInterval) {
+            for update in updates { driver.send(update) }
+            driver.send(speech.updated(at: T.date(time)))
+        }
+        play(brief("dog", 2, at: 20, peak: 0.7), thenSpeechAt: 24)
+        play(brief("dog", 3, at: 30, peak: 0.7), thenSpeechAt: 34)   // 5 s after the dog icon left: not again
+        driver.advance(to: 40)
+        #expect(driver.timeline == ["0:person.wave.2", "20:dog", "25:person.wave.2"])
+        // After the cooldown the same kind is a newcomer again.
+        play(brief("dog", 4, at: 45, peak: 0.7), thenSpeechAt: 49)
+        driver.advance(to: 52)
+        #expect(driver.timeline.suffix(2) == ["45:dog", "50:person.wave.2"])
+        // A strong one does not wait for the cooldown.
+        play(brief("dog", 5, at: 57, peak: 0.95), thenSpeechAt: 60)
+        #expect(driver.timeline.suffix(1) == ["57:dog"])
     }
 
     @Test func aLowerRankedNewSoundShowsFirstThenTheHigherRankedOneReturns() {
@@ -205,6 +244,6 @@ import Testing
             return driver.timeline
         }
         #expect(run() == run())
-        #expect(run() == ["0:cloud.rain", "3:dog", "11:cloud.rain", "25:-"])
+        #expect(run() == ["0:cloud.rain", "3.5:dog", "11:cloud.rain", "25:-"])
     }
 }

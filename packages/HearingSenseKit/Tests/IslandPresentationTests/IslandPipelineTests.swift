@@ -196,9 +196,9 @@ import Testing
     /// protected.
     @Test func aLowerPriorityEpisodeGivesWayToANewerOrdinarySound() {
         var driver = IslandDriver()
-        var speechSound = sound("speech", 1, at: 2)
-        driver.send(.sound(speechSound.started()))
-        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech)))
+        var rain = sound("rain", 1, at: 2)
+        driver.send(.sound(rain.started()))
+        driver.send(.intent(intent(1, "Dog", priority: .normal, at: 5, category: .animals)))
         #expect(driver.shown?.mode == .attention)
         var sneeze = sound("body_sounds", 2, at: 8)
         driver.send(.sound(sneeze.started()))
@@ -207,30 +207,93 @@ import Testing
         #expect(driver.alerts.isEmpty)
         // The engine changes the episode: it is in front again.
         driver.send(.sound(sneeze.ended(at: T.date(9))))
-        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .update, at: 20, category: .speech,
+        driver.send(.intent(intent(1, "Dog", priority: .normal, action: .update, at: 20, category: .animals,
                                    subtitle: "Still going")))
         #expect(driver.shown?.mode == .attention)
 
-        // A summary protects the episode, and so does a high priority.
-        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .update, at: 22, category: .speech,
+        // A summary protects an episode, and so does a high priority.
+        driver.send(.intent(intent(2, "Nearby Speech", priority: .normal, at: 24, category: .speech,
                                    summary: "Biology Test Tomorrow")))
-        driver.send(.sound(sound("dog", 3, at: 24).started()))
+        driver.send(.sound(sound("bird", 3, at: 26).started()))
         #expect(driver.shown?.headline == "Biology Test Tomorrow")
-        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .dismiss, at: 30, category: .speech)))
-        driver.send(.intent(intent(2, "Door or knock", priority: .high, at: 31)))
-        driver.send(.sound(sound("bird", 4, at: 33).started()))
+        driver.send(.intent(intent(2, "Nearby Speech", priority: .normal, action: .dismiss, at: 30, category: .speech)))
+        driver.send(.intent(intent(3, "Door or knock", priority: .high, at: 31)))
+        driver.send(.sound(sound("cat", 4, at: 33).started()))
         #expect(driver.shown?.headline == "Door or knock")
-        _ = speechSound.ended(at: T.date(40))
+        _ = rain.ended(at: T.date(40))
+    }
+
+    /// Retest on the iPhone: a door episode that the room's speech kept alive held the island for
+    /// 48 s and hid a dog. A high-priority episode is protected for a limited time after the
+    /// engine last changed it; an urgent one for as long as it is presented.
+    @Test func aHighPriorityEpisodeIsProtectedForALimitedTimeAndAnUrgentOneThroughout() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Door or knock", priority: .high, at: 5)))
+        driver.send(.sound(sound("dog", 1, at: 15).started()))
+        #expect(driver.shown?.headline == "Door or knock")
+        driver.advance(to: 26)   // 20 s after the episode's last change the newer dog shows
+        #expect(driver.shown?.mode == .ambient)
+        #expect(driver.shown?.symbolName == "dog")
+        // The engine changes the episode: protected again.
+        driver.send(.intent(intent(1, "Door or knock", priority: .high, action: .update, at: 30, subtitle: "Repeated 2 times")))
+        driver.send(.sound(sound("bird", 2, at: 32).started()))
+        #expect(driver.shown?.headline == "Door or knock")
+
+        var urgent = IslandDriver()
+        urgent.send(.intent(intent(1, "Siren", priority: .urgent, at: 5, category: .emergencySignals)))
+        urgent.send(.sound(sound("dog", 1, at: 15).started()))
+        urgent.advance(to: 120)
+        #expect(urgent.shown?.headline == "Siren")
+    }
+
+    /// Seen on the iPhone: when an episode left, the icon that took over was replaced 1.0 s later.
+    @Test func anIconThatTookOverFromAnEpisodeStaysForTheMinimumDisplayTime() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Door or knock", priority: .high, at: 5)))
+        var laughter = sound("laughter", 1, at: 20)
+        driver.send(.sound(laughter.started()))
+        driver.send(.intent(intent(1, "Door or knock", priority: .high, action: .dismiss, at: 24)))
+        #expect(driver.shown?.symbolName == "face.smiling")
+        driver.send(.sound(sound("farm_animal", 2, at: 25).started()))  // 1 s later, a newer sound
+        #expect(driver.shown?.symbolName == "face.smiling")
+        driver.advance(to: 27.5)
+        #expect(driver.shown?.symbolName == "pawprint")
+        let ambientUpdates = driver.updates.filter { $0.date >= T.date(24) }.map { T.seconds($0.date) }
+        #expect(ambientUpdates == [24, 27.5])
+        _ = laughter.ended(at: T.date(40))
+    }
+
+    /// The student's decision after the device session: speech with nothing to read is an
+    /// ordinary sound in every mode — an icon, never an episode, never an expansion.
+    @Test func nearbySpeechWithoutASummaryIsOnlyAnIcon() {
+        var driver = IslandDriver()
+        driver.send(.sound(sound("speech", 1, at: 2).started()))
+        #expect(driver.shown?.symbolName == "person.wave.2")
+        let before = driver.commands.count
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech)))
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .update, at: 12, category: .speech,
+                                   subtitle: "Still going")))
+        driver.advance(to: 15)
+        #expect(driver.commands.count == before)
+        #expect(driver.shown?.mode == .ambient)
+        #expect(driver.alerts.isEmpty)
+        #expect(driver.pipeline.statistics.speechWithoutSummary == 1)
+        #expect(driver.pipeline.presentedCount == 0)
+        // A possible spoken warning is high priority: it is an episode and may ask for an expansion.
+        driver.send(.intent(intent(2, "Possible Spoken Warning", priority: .high, at: 20, category: .speech, uncertain: true)))
+        #expect(driver.shown?.mode == .attention)
+        #expect(driver.shown?.headline == "Possible Spoken Warning")
+        #expect(driver.alerts.count == 1)
     }
 
     @Test func aResolvedEpisodeDoesNotComeBackToTheFrontAfterAnotherOne() {
         var driver = IslandDriver()
         driver.send(.intent(intent(1, "Dog", priority: .normal, at: 5, category: .animals)))
-        driver.send(.intent(intent(2, "Nearby Speech", priority: .normal, at: 9, category: .speech)))
-        #expect(driver.shown?.headline == "Nearby Speech")
-        // The dog ended and lingers until 30 s; the speech episode is gone at 20 s.
+        driver.send(.intent(intent(2, "Shouting", priority: .normal, at: 9, category: .distressSounds)))
+        #expect(driver.shown?.headline == "Shouting")
+        // The dog ended and lingers until 30 s; the shouting episode is gone at 20 s.
         driver.send(.intent(intent(1, "Dog", priority: .normal, action: .dismiss, at: 10, expires: 30, category: .animals)))
-        driver.send(.intent(intent(2, "Nearby Speech", priority: .normal, action: .dismiss, at: 20, category: .speech)))
+        driver.send(.intent(intent(2, "Shouting", priority: .normal, action: .dismiss, at: 20, category: .distressSounds)))
         #expect(driver.shown?.mode == .listening)
         driver.advance(to: 31)
         #expect(driver.commands.filter { $0.date > T.date(20) }.isEmpty)
@@ -283,9 +346,9 @@ import Testing
 
     @Test func aSpeechSummaryIsTheHeadlineWhenTheSettingAllowsIt() {
         var driver = IslandDriver()
+        // Without a summary the speech is not an episode in the island (see below).
         driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech)))
-        #expect(driver.shown?.headline == "Nearby Speech")
-        #expect(driver.shown?.headlineIsSpeech == false)
+        #expect(driver.shown?.mode == .listening)
         driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .update, at: 9, category: .speech,
                                    summary: "Biology Test Tomorrow")))
         #expect(driver.shown?.headline == "Biology Test Tomorrow")

@@ -27,7 +27,16 @@ struct HearingSenseApp: App {
                         exporter.start()
                         self.exporter = exporter
                     }
-                    if DebugDiagnosticsExporter.isAutostartRequested { await controller.start() }
+                    if DebugDiagnosticsExporter.isAutostartRequested {
+                        await controller.start()
+                        if let seconds = DebugDiagnosticsExporter.autostopAfter {
+                            // Not tied to the view: it must fire in the background too.
+                            Task { @MainActor [controller] in
+                                try? await Task.sleep(for: .seconds(seconds))
+                                controller.stop()
+                            }
+                        }
+                    }
                     // Presentation check without a microphone; see LiveActivityController.
                     if let scene = LiveActivityController.requestedDemo {
                         controller.liveActivity.runDemo(scene, attention: controller.attention,

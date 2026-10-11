@@ -140,13 +140,14 @@ extension SoundTaxonomy {
             kind("bicycle_skateboard", "Bicycle or skateboard", .transportation, .intermittent, ["bicycle", "skateboard"]),
 
             // Household
-            // Someone at the door (knock, bell, slam) is kept apart from a door merely moving.
-            // Measured on the iPhone in a lived-in room (Window 5 device session, 35 minutes):
-            // the label `door` was confirmed 12 times and none was a knock, while `knock` was
-            // confirmed 3 times, each a played knock. As one kind every one of them was a
-            // high-priority "Door or knock".
-            kind("door", "Door or knock", .household, .transient, ["door_bell", "door_slam", "knock", "tap"]),
-            kind("door_movement", "Door", .household, .transient, ["door", "door_sliding"]),
+            // Someone at the door (knock, bell) is kept apart from a door moving or slamming.
+            // Measured on the iPhone in a lived-in room (Window 5 device sessions): the label
+            // `door` was confirmed 12 times and none was a knock, while `knock` was confirmed 4
+            // times, each a played knock; in the retest one `door_slam` (0.78) from the room became
+            // a high-priority "Door or knock" with an expansion request. As one kind every one of
+            // them was an alert.
+            kind("door", "Door or knock", .household, .transient, ["door_bell", "knock", "tap"]),
+            kind("door_movement", "Door", .household, .transient, ["door", "door_sliding", "door_slam"]),
             kind("phone", "Phone ringing", .household, .intermittent, ["telephone", "telephone_bell_ringing", "ringtone"]),
             kind("beep", "Beep", .household, .intermittent, ["beep"]),
             kind("kitchen", "Kitchen sounds", .household, .intermittent,

@@ -7,8 +7,9 @@ protocol: `docs/testing/WINDOW5_TEST_RESULTS.md`.
 **Status: implemented, integrated in the app, tested on the Mac, in the iPhone 18 Pro Simulator and
 — device steps D1–D4 — on the physical iPhone 18 Pro, always with synthetic events and the
 microphone off — and, for D5–D6, with the real microphone (sound classification only) and clips
-from a loudspeaker. The icon and alert rules were revised after D6 and the revised rules have not
-run on the device yet. Battery cost (D7) and speech text with real speech (D8) are postponed.**
+from a loudspeaker. The icon and alert rules were revised after D6 and retested on the device
+(R1); four further fixes from that retest have not run on the device. Battery cost (D7) and speech
+text with real speech (D8) are postponed.**
 
 Device summary (details and evidence: `docs/testing/WINDOW5_TEST_RESULTS.md` §5): the compact,
 expanded and Lock Screen presentations render as designed; icon changes are smooth; with Spotify
@@ -74,7 +75,10 @@ suppresses as ambient. It never produces text, an alert or a priority.
 | Only confirmed events | — | The detector's k-of-n confirmation is the temporal smoothing of the classifier |
 | Evidence quality | ≥ moderate | A weak event gets an icon only when a later update raises its quality |
 | Which icon | the newest confirmed sound for 5 s, then the highest-ranked sound still going on | Revised after the device session: with rank alone, speech in a room hid every other sound and the student saw a strong sneeze not appear |
-| Minimum display | 2 s (first version 4 s) | A shown icon is not replaced earlier |
+| Timely or not at all | a newcomer that cannot be shown within 2.5 s of its confirmation is not shown as a newcomer | No late jumps |
+| Same kind | not again as a newcomer within 15 s of its icon leaving, unless the peak is ≥ 0.9 | Three dog clips in 20 s gave one dog icon on the iPhone; a sneeze at 0.99 must not be hidden by an earlier cough |
+| Switch cooldown | a newcomer that ranks below the shown icon needs that icon to have had 6 s | Fewer hops away from the sound that matters more |
+| Minimum display | 3.5 s (first version 4 s), also enforced when an icon takes over from an episode | A shown icon is not replaced earlier |
 | Linger after the sound ended | 5 s | A knock stays visible long enough to be seen |
 | A sound that is over | keeps the icon if it has it, does not get it late | No 4 s appearance of something that ended earlier |
 | Back to the plain glyph | 5 s after the last icon would go | A following sound replaces the icon directly: one update instead of two |
@@ -97,10 +101,18 @@ front) and removes each at the engine's dismissal or expiry.
 
 Protected, as the brief words it, are a high-priority event and a speech summary: while one is
 shown the ambient icon is tracked underneath and comes back afterwards; in the expanded view it
-appears as a small secondary glyph. An episode of lower priority without a summary (a dog,
-"Nearby Speech" with transcription off) gives way to an ordinary sound that appeared after it.
-(Revised after the device session: such episodes held the island for most of 35 minutes in a room
-with people talking.)
+appears as a small secondary glyph. The protection of a high-priority episode or a summary lasts
+20 s after the engine last changed it (on the iPhone a door episode that the room's speech had
+joined held the island for 48 s); an urgent episode is protected throughout. An episode of lower
+priority without a summary (a dog) gives way to an ordinary sound that appeared after it.
+
+**Nearby speech without a summary is not an episode in the island** (the student's decision after
+the device session, where it was presented 12 times in 17 minutes): in every mode it is the speech
+icon of the ambient channel, with no expansion request. A possible spoken warning (high priority)
+is unaffected. This rule lives in `IslandPipeline` (`IslandPolicy.speechNeedsSummary`); the
+attention engine itself still creates the episode, so the app's Attention card can list a "Nearby
+Speech" that the island does not show. Moving the rule into the engine means reworking about a
+dozen Window 4 tests and was left as a separate step.
 
 Text: the engine's generic title ("Door or knock", "Siren") and subtitle. For speech, when "Show
 speech summaries" is on and the engine supplied a validated summary, the summary is the headline
@@ -179,10 +191,12 @@ delivers a late summary with "no interruption": the summary is only readable exp
   expanded view draws. Those are no longer sent by themselves: now 73 / 82 / 88 and
   127 / 168 / 188 per hour, 130 of the latter being icon changes of a deliberately dense scene;
   0 rule violations in 57 runs. The rate during real listening has not been measured.
-- Real listening on the iPhone (D6, 34.9 minutes locked in a lived-in room, first rules):
-  **256 updates per hour**, 9 ms per call, no failed classifier window. With the revised icon rules
-  the recorded events replay to roughly 300–480 icon changes per hour in that room: faster icons
-  cost updates. Not yet run on the device.
+- Real listening on the iPhone, first rules (D6, 34.9 minutes locked in a lived-in room):
+  **256 updates per hour**, 9 ms per call, no failed classifier window. Revised rules (retest R1,
+  5 minutes): **282 updates per hour**, with the delay from confirmation to update down from a
+  median of 2.2 s to 0.02 s. The final rules replay to about 250–360 icon changes per hour on
+  those recordings (simulation). The classifier's own 2.25 s from sound to confirmation is now
+  nearly all of the delay.
 - If the app stops without ending the activity (crash, termination, or suspension when no
   listening session keeps it alive), the island keeps its last content until the stale date, up to
   15 minutes. Seen on the iPhone with the demo scenes.
@@ -210,14 +224,16 @@ delivers a late summary with "no interruption": the summary is only readable exp
 
 ## 8. Limitations
 
-1. **Device evidence is thin.** D1–D4 ran once each with scripted events; D5–D6 ran once with the
-   microphone in one room, on USB power. The revised icon and alert rules (test results §6.1) have
-   not run on the device. Unknown: battery cost; throttling by iOS; the activity after 8 hours; an
-   expansion request with the alert sound on; the minimal presentation; D6's subjective checks.
+1. **Device evidence is thin.** D1–D4 ran once each with scripted events; D5–D6 and the retest R1
+   ran once with the microphone in one room, on USB power. The four fixes made after R1 (test
+   results §7.1) have not run on the device. Unknown: battery cost; throttling by iOS; the activity
+   after 8 hours; an expansion request with the alert sound on; the minimal presentation; D6's
+   subjective checks.
 1a. **Recognition quality limits the island.** In D6 six of nine high-priority episodes in ten
-   minutes were room sounds (now addressed for `door` and `screaming` only); rain, footsteps and
-   breaking glass clips were misrecognized; with music from the phone's own speaker a dog and a
-   knock were not heard.
+   minutes were room sounds (addressed for `door`, `door_slam` and `screaming` only); rain,
+   footsteps and breaking glass clips were misrecognized; with music from the phone's own speaker
+   a dog and a knock were not heard; in R1 the siren clip was not recognized at all in a louder
+   room. The island can only be as right as the classifier.
 2. The lock estimate cannot be made reliable with documented API (§4.1).
 3. Attention icons are category-level (Window 4's `symbolName`); the specific label icons are used
    by the ambient channel only.
@@ -235,6 +251,6 @@ delivers a late summary with "no interruption": the summary is only readable exp
 
 ## 9. Next steps
 
-D1–D6 are done (`docs/testing/WINDOW5_TEST_RESULTS.md` §5–§6). Next: the retest R1–R2 of the
-revised rules (§8 there), with microphone authorization. D7 (battery) and D8 (transcription) are
-postponed by the student.
+D1–D6 and the retest R1 are done (`docs/testing/WINDOW5_TEST_RESULTS.md` §5–§7). Next: R2–R3
+(§9 there) for the fixes made after R1, with microphone authorization. D7 (battery) and D8
+(transcription) are postponed by the student.

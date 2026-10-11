@@ -426,8 +426,10 @@ case "island-device-trace":
     print("\(traced.count) confirmed events over \(number(span, 0)) s from \(arguments[1])")
     print("Icon channel only; rebuilt from the export's event log (confirmation and end times).\n")
     print(pad("rules", 16) + pad("icon changes", 14) + pad("per hour", 10) + pad("events shown", 14) + pad("delay p50 s", 13)
-        + pad("delay p90 s", 13) + pad("shown < 2 s", 12))
-    for (name, policy) in [("first version", AmbientIconPolicy.firstVersion), ("current", AmbientIconPolicy.standard)] {
+        + pad("delay p90 s", 13) + pad("shown < 2 s", 12) + "same kind back < 30 s")
+    for (name, policy) in [("first version", AmbientIconPolicy.firstVersion),
+                           ("newest first", AmbientIconPolicy.newestFirstWithoutCooldowns),
+                           ("current", AmbientIconPolicy.standard)] {
         var stream = AmbientIconStream(policy: policy)
         var changes: [AmbientIconStream.Change] = []
         stream.process(.sessionStarted(at: first.confirmed.addingTimeInterval(-1)))
@@ -457,16 +459,59 @@ case "island-device-trace":
         }
         delays.sort()
         var shortest = 0
-        for (index, change) in changes.enumerated() where change.icon != nil && index + 1 < changes.count {
-            if changes[index + 1].date.timeIntervalSince(change.date) < 2 { shortest += 1 }
+        var repeats = 0
+        var lastSeen: [String: Date] = [:]
+        for (index, change) in changes.enumerated() {
+            if change.icon != nil, index + 1 < changes.count, changes[index + 1].date.timeIntervalSince(change.date) < 2 {
+                shortest += 1
+            }
+            // The same kind's icon coming back within 30 s of having been replaced.
+            if let kind = change.icon?.kindID, let last = lastSeen[kind], change.date.timeIntervalSince(last) < 30 { repeats += 1 }
+            if index > 0, let previous = changes[index - 1].icon?.kindID { lastSeen[previous] = change.date }
         }
         func quantile(_ fraction: Double) -> Double? {
             delays.isEmpty ? nil : delays[min(Int(Double(delays.count) * fraction), delays.count - 1)]
         }
         print(pad(name, 16) + pad("\(changes.count)", 14) + pad(number(Double(changes.count) / max(span, 1) * 3600, 0), 10)
             + pad("\(delays.count) of \(eligible)", 14) + pad(number(quantile(0.5), 1), 13) + pad(number(quantile(0.9), 1), 13)
-            + pad("\(shortest)", 12))
+            + pad("\(shortest)", 12) + "\(repeats)")
     }
+
+    // What the device itself recorded, kept apart from the replay above: how long recognition
+    // took (first supporting window to confirmation, on the audio clock) and how long after the
+    // confirmation the matching update was handed to ActivityKit.
+    let latencyPattern = /Event confirmed: .+ latency ([0-9.]+) s audio/
+    let onsetToConfirm = text.split(separator: "\n").compactMap { line -> Double? in
+        line.firstMatch(of: latencyPattern).flatMap { Double($0.1) }
+    }.sorted()
+    let updatePattern = /^\s+(\d\d:\d\d:\d\d\.\d+) ([0-9.]+) ms\s+(ambient|attention) (\S+)(?: \S+ “([^”]+)”)?/
+    var confirmToUpdate: [Double] = []
+    var callMilliseconds: [Double] = []
+    var unmatched = 0
+    for line in text.split(separator: "\n") {
+        guard let match = line.firstMatch(of: updatePattern), let date = clock(match.1), let call = Double(match.2) else { continue }
+        callMilliseconds.append(call)
+        let symbol = String(match.4)
+        let title = match.5.map(String.init)
+        let source = traced.last { item in
+            guard item.confirmed <= date.addingTimeInterval(0.05), date.timeIntervalSince(item.confirmed) < 12 else { return false }
+            if match.3 == "attention" { return title == item.event.kind.displayName }
+            return SoundSymbolCatalog.symbol(for: item.event).name == symbol
+        }
+        if let source { confirmToUpdate.append(max(date.timeIntervalSince(source.confirmed), 0)) } else { unmatched += 1 }
+    }
+    confirmToUpdate.sort()
+    callMilliseconds.sort()
+    func middle(_ values: [Double], _ fraction: Double) -> Double? {
+        values.isEmpty ? nil : values[min(Int(Double(values.count) * fraction), values.count - 1)]
+    }
+    print("\nMeasured on the device (from the export, not replayed):")
+    print("  sound → confirmed (classifier windows, audio clock): median \(number(middle(onsetToConfirm, 0.5), 2)) s, "
+        + "90th percentile \(number(middle(onsetToConfirm, 0.9), 2)) s, n = \(onsetToConfirm.count)")
+    print("  confirmed → update handed to ActivityKit: median \(number(middle(confirmToUpdate, 0.5), 2)) s, "
+        + "90th percentile \(number(middle(confirmToUpdate, 0.9), 2)) s, n = \(confirmToUpdate.count) "
+        + "(\(unmatched) updates without a sound confirmed in the 12 s before: returns to an earlier icon, the plain glyph, speech episodes)")
+    print("  Activity.update call: median \(number(middle(callMilliseconds, 0.5), 1)) ms, maximum \(number(callMilliseconds.last, 1)) ms, n = \(callMilliseconds.count)")
 
 default:
     print("Unknown command \(command). Commands: scenarios, trace, soak, determinism, list, island, island-trace, island-symbols, island-device-trace")

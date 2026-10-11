@@ -203,10 +203,10 @@ played clips (two knocks, a siren). The other 6 were room sounds: 5 "Door or kno
 the label `door` was confirmed 12 times and none was a knock (one coincided with the glass-breaking
 clip), while the label `knock` was confirmed 3 times, each a played knock.
 
-- The kind `door` ("Door or knock") now holds `knock`, `door_bell`, `door_slam`, `tap`. The labels
-  `door` and `door_sliding` are a new kind `door_movement` ("Door"): an ordinary sound with an
-  icon, never an alert in Quiet or Balanced, and confirmed by two windows only (4 of the 12 came
-  from one window). 51 kinds now.
+- The kind `door` ("Door or knock") now holds `knock`, `door_bell`, `tap`. The labels `door` and
+  `door_sliding` (and, after the retest of §7, `door_slam`) are a new kind `door_movement`
+  ("Door"): an ordinary sound with an icon, never an alert in Quiet or Balanced, and confirmed by
+  two windows only (4 of the 12 came from one window). 51 kinds now.
 - `screaming` needs two windows or one window at 0.95, like the other warning signals.
 - Not changed: "Nearby Speech" episodes (12 in the last 17 minutes of D6, real speech in the room,
   transcription off) — see the icon rules below; and the misrecognitions listed above.
@@ -241,26 +241,100 @@ the export, the rest rebuilt, attention engine not included):
 The model reproduces the device: 50 icon changes for the first 10 minutes against 52 counted on
 the iPhone. **The price of the faster icons is more updates** — in a room this lively roughly
 300–480 icon changes per hour, bounded by 12 per minute. The new rules are unit-tested and
-replayed; **they have not run on the iPhone yet** (the build is installed; no listening run was
-made with it).
+replayed. They ran on the iPhone in the retest R1 (§7), after the student's decisions were added.
 
-## 7. Not verified
+## 7. Retest R1 on the iPhone (2026-10-11 UTC, 5 minutes, real microphone)
 
-- The current icon and alert rules on the device (§6.1): a retest with the microphone is needed.
-- D6's subjective checks (above).
+Authorized by the student for five minutes with the microphone and the Mac's speakers; no
+transcription (D8) and no battery test (D7). Build: commit `1d06721` plus the rules of §6.1 with
+the student's three decisions (speech without a summary is an icon in every mode; newest sound
+first, with same-kind de-duplication and a switch cooldown; no raw audio kept).
+
+Safeguards as run: transcription was forced off for this launch by a launch argument
+(`-speech.transcriptionEnabled NO`; the stored switch had been found on) and checked in the export
+before the first clip ("Transcription switch: off", 0 utterances, 0.0 s transcribed at the end). The
+app was started with `--hs-autostop-after 300`. The Mac script relaunched the app with the
+microphone off 5 min 5 s after the start. **Whether the app's own 300 s stop fired is not
+confirmed**: the last export was written 0.7 s before it was due.
+
+Phone unlocked, Settings in front, 17 clips, the room in normal use (speech, laughter). The
+student's setting "Expand for important events" was on. 398 classifier windows, 0 failures.
+
+**Kept apart: what the device did, and what a replay says.**
+
+### 7.1 Measured on the device in R1
+
+| Question | Result |
+|---|---|
+| New sound → icon | Confirmation to update handed to ActivityKit: **median 0.02 s** (17 matched updates; D6 with the first rules: 2.22 s). Examples: laughter 11 ms, cough 17 ms, knock 26 ms, dog 0.85 s (it waited for the minimum display of the icon before it) |
+| Sound → confirmation (classifier, unchanged) | median 2.25 s, 90th percentile 3.0 s on the audio clock, n = 37. This is now nearly all of the delay the user sees |
+| Flicker in a burst (5 overlapping clips in 17 s) | 2 updates: laughter icon for 5 s, back to speech. No alternation |
+| Same kind repeated (3 dog clips in 20 s) | 1 dog icon; the third clip did not show it again |
+| Updates | 24 in 293 s (282 per hour), shortest gap 1.0 s; 43 secondary-only changes not sent; `Activity.update` 9.6 ms median, 26.5 ms maximum |
+| "Nearby Speech" without a summary | The engine presented it 3 times; the island showed the speech icon only, 0 episodes, 0 expansion requests |
+| Door sounds | `door` confirmed 3 times as the new kind "Door": icon only, no alert |
+| Knock | Recognized (0.72, two windows); episode and expansion request 26 ms after confirmation; the island expanded (strip captures, `r1_retest_timeline.png`) |
+
+Problems found in R1 (real device):
+
+1. **A false "Door or knock" with an expansion request**: the label `door_slam` (0.78) from the
+   room. → `door_slam` moved to the kind "Door" (icon only).
+2. **A sneeze at 0.99 was not shown**: a cough had used the same icon 18 s earlier and the
+   same-kind cooldown (30 s) held it back. → cooldown 15 s, and a peak of 0.9 or more ignores it.
+3. **A door episode held the island for 48 s** (the room's speech had joined it) and hid a dog
+   and footsteps. → a high-priority episode or a summary is protected for 20 s after the engine
+   last changed it; an urgent one throughout.
+4. **Two icons within 2 s for one rain clip** (water, then tap) and **an icon replaced after
+   1.0 s** when an episode left. → minimum display 3.5 s, also enforced in the pipeline.
+5. Recognition (classifier, not presentation): the siren clip was **not** recognized in this run
+   (3 of 3 before), nor the first sneeze, the second knock clip, clapping, coughing and breaking
+   glass in the burst; the door creak was heard as burp, crying and cow. The room was louder than
+   in the earlier runs; no scores are kept, so the cause is not known.
+
+### 7.2 Replay of the recorded events with the final rules (simulation, not a device run)
+
+`hs-attention-eval island-device-trace` on the exports (`results/device_window5/
+icon_channel_trace_replay.txt`). Icon channel only; confirmation and end times are from the
+device, everything between is rebuilt; the attention engine is not included. For R1 the replay of
+the rules that ran gives 29 icon changes, the number counted on the iPhone.
+
+| Recording | Rules | Icon changes per hour | Confirmed sounds that became the icon | Same kind back within 30 s |
+|---|---|---|---|---|
+| D6, first 10 min (73 events) | first version | 295 | 44 | 16 |
+| | newest first, no cooldowns | 477 | 68 | 36 |
+| | final | 359 | 58 | 25 |
+| D6, last 22 min (104 events) | first version | 200 | 72 | 29 |
+| | newest first, no cooldowns | 319 | 104 | 61 |
+| | final | 247 | 90 | 41 |
+| R1 (37 events) | first version | 134 | 10 | 4 |
+| | newest first, no cooldowns | 474 | 29 | 19 |
+| | final | 340 | 23 | 12 |
+
+Scripted Window 4 scenes with the final rules: 77 / 81 / 84 updates per hour (18 scenes) and
+177 / 194 / 206 (generated hour); 0 rule violations in 57 runs; 314 package tests pass.
+
+**The final rules (the four fixes of §7.1) have not run on the iPhone.** The build is installed;
+verifying them needs another microphone authorization.
+
+## 8. Not verified
+
+- The four fixes made after R1, on the device.
+- The app's own stop after `--hs-autostop-after` (the Mac-side stop worked).
+- D6's subjective checks: Lock Screen content, screen wake, sound, vibration during 35 minutes.
 - An expansion request with "Play the alert sound" on (all runs used the silent file).
 - More than one observation of each locked-screen case; the phone was on USB power throughout.
 - iOS's "Allow Live Activities?" prompt: not confirmed whether it appeared.
 - The minimal presentation on the device; VoiceOver on the activity.
-- Update throttling by iOS (no sign of it in 150 updates, but nothing measures it directly),
-  battery and thermal cost off the charger, the 8-hour end and the restart.
-- Speech text in the island with real speech (D8), battery (D7): postponed by the student.
+- Update throttling by iOS (no sign of it in about 200 updates, but nothing measures it
+  directly), the 8-hour end and the restart.
+- Battery and thermal cost off the charger (D7) and speech text with real speech (D8): postponed
+  by the student.
 
-## 8. Remaining device steps (each needs microphone authorization)
+## 9. Remaining device steps (each needs microphone authorization)
 
 | # | Step | Looks for |
 |---|---|---|
-| R1 | Retest of §6.1: 5 minutes unlocked with Settings in front, clips including a sneeze, a door creak, footsteps, a knock, a dog, with the room as it is | A new sound becomes the icon within about 2 s; no "Door or knock" from door sounds; update log |
-| R2 | The same locked, with the student watching the screen | No wake, no sound, no vibration (D6's unverified items) |
+| R2 | 5 minutes as R1 with the final build | No alert from a slammed door; a strong sneeze shows although a cough was shown shortly before; an icon after a knock episode within about 20 s; no icon shorter than 3.5 s; siren recognized or not (repeat) |
+| R3 | The same locked, with the student watching the screen | No wake, no sound, no vibration (D6's unverified items) |
 | D7 | 30–60 minutes off the charger with the activity on, then off | Battery and thermal difference (postponed) |
 | D8 | Real knock / speech with transcription on | Episode text; summary only in the expanded island (postponed) |

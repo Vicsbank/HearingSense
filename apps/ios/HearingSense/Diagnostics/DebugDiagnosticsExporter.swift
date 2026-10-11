@@ -25,6 +25,16 @@ final class DebugDiagnosticsExporter {
     static var isExportRequested: Bool { ProcessInfo.processInfo.arguments.contains(exportArgument) }
     static var isAutostartRequested: Bool { ProcessInfo.processInfo.arguments.contains(autostartArgument) }
 
+    /// `--hs-autostop-after <seconds>`: the app itself stops listening (microphone off) after this
+    /// long, so a timed device test ends on time even if the Mac that started it does nothing more.
+    static let autostopArgument = "--hs-autostop-after"
+    static var autostopAfter: TimeInterval? {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: autostopArgument), index + 1 < arguments.count,
+              let seconds = TimeInterval(arguments[index + 1]), seconds > 0 else { return nil }
+        return seconds
+    }
+
     private let controller: ListeningController
     private var heartbeats: [String] = []
     private var task: Task<Void, Never>?

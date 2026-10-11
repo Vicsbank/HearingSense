@@ -109,10 +109,9 @@ public enum IslandReplayer {
             // and does not get it back.)
             // Protected episodes only (high priority or a speech summary): a lower one gives way to
             // a newer ordinary sound.
-            let protected = engine.snapshot.presented.contains { event in
-                event.lifecycle != .resolved
-                    && (event.priority >= policy.protectedPriority || (settings.showsSpeechSummaries && event.privateContent != nil))
-            }
+            // Checked for urgent episodes, which are protected throughout; high-priority ones and
+            // summaries are protected for a limited time after their last change (unit-tested).
+            let protected = engine.snapshot.presented.contains { $0.lifecycle != .resolved && $0.priority >= .urgent }
             if protected, pipeline.isLive, pipeline.shown?.mode != .attention {
                 violations.append("\(scenario.id): engine presents an episode but the activity shows "
                     + "\(pipeline.shown?.mode.rawValue ?? "nothing")")
