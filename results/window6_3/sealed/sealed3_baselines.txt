@@ -1,0 +1,381 @@
+Excluded 0 item(s) whose sentence also occurs in a set used for tuning: 
+Set sealed3: 315 synthetic utterances — relevant 152, irrelevant 145, ambiguous 8, repeat 10
+SEALED set: run once with the frozen configuration. Never tune on it.
+
+Keyword baseline — sealed3 set
+  precision            51.9 % (95/183; 95 % CI 44.7–59.0)
+  recall               62.5 % (95/152; 95 % CI 54.6–69.8)
+  F1                   0.567
+  false alerts         57.2 % (83/145; 95 % CI 49.1–65.0) of irrelevant utterances
+  false alerts / hour  137.4 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      50.0 % (5/10; 95 % CI 23.7–76.3)
+  important missed     33.3 % (10/30; 95 % CI 19.2–51.2)
+  goal named correctly 75.8 % (72/95; 95 % CI 66.3–83.3)
+  ambiguous items      3 alerted, 0 kept as uncertain, 5 nothing (of 8)
+  time per utterance   median < 0.01 s, p95 < 0.01 s; model median –; full judgements 0, stopped by the first pass 0, gated 0, fallbacks 0
+  by category          asr_error 6/10, attention 4/15, causal 8/10, group_all 10/15, hypothetical 3/10, idiom 6/10, implicit 16/35, incomplete 1/5, multi 9/20, my_group 12/12, negation 5/15, obvious 14/15, other_addressee 6/20, other_affects 12/15, other_group 4/20, past 3/10, repeated 5/10, sarcasm_quote 5/10, third_person 2/10, unrelated 27/30, urgent_short 4/10
+  confusion            TP 95  FP 88  FN 57  TN 67  (ambiguous, not scored: 3 alerted, 0 uncertain, 5 silent)
+  precision            51.9 % (95/183; 95 % CI 44.7–59.0)
+  recall               62.5 % (95/152; 95 % CI 54.6–69.8)
+  F1                   0.567
+  false-positive rate  56.8 % (88/155; 95 % CI 48.9–64.3)
+  false-negative rate  37.5 % (57/152; 95 % CI 30.2–45.4)
+  balanced accuracy    52.9 %
+  important-event recall                66.7 % (20/30; 95 % CI 48.8–80.8)
+  short urgent instruction recall       40.0 % (4/10; 95 % CI 16.8–68.7)
+  implicit relevance recall             53.3 % (24/45; 95 % CI 39.1–67.1)
+  explicit relevance recall             60.0 % (18/30; 95 % CI 42.3–75.4)
+  announcement to all or own group      81.5 % (22/27; 95 % CI 63.3–91.8)
+  said to others, concerns all          80.0 % (12/15; 95 % CI 54.8–93.0)
+  another person addressed              30.0 % (6/20; 95 % CI 14.5–51.9)
+  another group addressed               20.0 % (4/20; 95 % CI 8.1–41.6)
+  negation accuracy                     33.3 % (5/15; 95 % CI 15.2–58.3)
+  hypothetical accuracy                 30.0 % (3/10; 95 % CI 10.8–60.3)
+  personal relevance accuracy           20.0 % (2/10; 95 % CI 5.7–51.0)
+  past and quotation accuracy           40.0 % (8/20; 95 % CI 21.9–61.3)
+  idiom accuracy                        60.0 % (6/10; 95 % CI 31.3–83.2)
+  recognition-error accuracy            60.0 % (6/10; 95 % CI 31.3–83.2)
+  context (several sentences) accuracy  45.0 % (9/20; 95 % CI 25.8–65.8)
+  unrelated talk accuracy               90.0 % (27/30; 95 % CI 74.4–96.5)
+  repetition accuracy                   50.0 % (5/10; 95 % CI 23.7–76.3)
+  cut-off sentence accuracy             20.0 % (1/5; 95 % CI 3.6–62.4)
+  by profile           car_ferry TP 20 FP 12 FN 11 TN 19; festival_camp TP 18 FP 21 FN 10 TN 10; film_set TP 15 FP 18 FN 16 TN 13; food_bank TP 16 FP 19 FN 15 TN 12; hostel TP 26 FP 18 FN 5 TN 13
+  decided at           - 315
+  seconds per item     p50 0.00  p95 0.00  p99 0.00   model only: p50 –  p95 –  p99 –
+  output tokens        – per model decision (0 model decisions)
+    ✗ fs003 [other_addressee, expected irrelevant] Oliver, wardrobe wants you back, your jacket is the wrong colour. → alert @- kind=- subject=- goal=called
+    ✗ fs004 [implicit, expected relevant] The second unit just finished early and they're resetting the cameras for the crowd shots. → none @- kind=- subject=- goal=-
+    ✗ fs005 [attention, expected relevant] Nadia, can you come over here a second? → none @- kind=- subject=- goal=-
+    ✗ fs009 [implicit, expected relevant] Heads up, the crane arm is about to swing right over holding. → none @- kind=- subject=- goal=-
+    ✗ fs010 [other_group, expected irrelevant] Group A, you're needed on set right away. → alert @- kind=- subject=- goal=schedule
+    ✗ fs014 [causal, expected relevant] The generator has gone down, so nobody is shooting anything for at least an hour. → none @- kind=- subject=- goal=-
+    ✗ fs015 [third_person, expected irrelevant] My cousin was an extra on a series in Toronto and their wrap times were always past midnight. → alert @- kind=- subject=- goal=schedule
+    ✗ fs016 [urgent_short, expected relevant] Clear the lane, now! → none @- kind=- subject=- goal=-
+    ✗ fs017 [negation, expected irrelevant] Nothing's changed for the afternoon, the call sheet stays as printed. → alert @- kind=- subject=- goal=called
+    ✗ fs019 [other_addressee, expected irrelevant] They're calling for you on set, Hannah. → alert @- kind=- subject=- goal=called
+    ✗ fs020 [multi, expected relevant] They're on the rail by the door now, go and grab yours. → none @- kind=- subject=- goal=-
+    ✗ fs022 [repeated, expected repeat] Reminder, lunch is at half past twelve today, thirty minutes earlier than usual. → alert @- kind=- subject=- goal=schedule
+    ✗ fs023 [sarcasm_quote, expected irrelevant] Oh sure, we'll definitely wrap on time, just like every other day this week. → alert @- kind=- subject=- goal=schedule
+    ✗ fs026 [attention, expected relevant] Excuse me, Nadia, did you sign the release form this morning? → none @- kind=- subject=- goal=-
+    ✗ fs027 [implicit, expected relevant] They're about to drive the picture car through this lane at speed. → none @- kind=- subject=- goal=-
+    ✗ fs028 [past, expected irrelevant] Back in the nineties extras brought their own costumes, nobody gave you anything. → alert @- kind=- subject=- goal=costume
+    ✗ fs033 [other_addressee, expected irrelevant] Dev, your call time tomorrow is six, don't be late. → alert @- kind=- subject=- goal=called
+    ✗ fs034 [group_all, expected relevant] Everybody stay behind the yellow tape while the stunt is rigged, no exceptions. → none @- kind=- subject=- goal=-
+    ✗ fs039 [third_person, expected irrelevant] A friend of mine does costumes for an opera house in Leeds, she says the fittings never end. → alert @- kind=- subject=- goal=costume
+    ✗ fs041 [other_affects, expected relevant] Marcus, the fire effect goes off beside holding in two minutes, get everyone back. → none @- kind=- subject=- goal=-
+    ✗ fs044 [other_group, expected irrelevant] Group B, hand your umbrellas back to props before you go. → alert @- kind=- subject=- goal=costume
+    ✗ fs046 [hypothetical, expected irrelevant] Imagine if they called us to set and nobody had their costume on. → alert @- kind=- subject=- goal=called
+    ✗ fs047 [urgent_short, expected relevant] Watch your back, light coming down! → none @- kind=- subject=- goal=-
+    ✗ fs049 [implicit, expected relevant] We're losing the light, so they're jumping straight to the market scene. → none @- kind=- subject=- goal=-
+    ✗ fs050 [other_addressee, expected irrelevant] Sam, you need to move your car, it's blocking the grip truck. → alert @- kind=- subject=- goal=schedule
+    ✗ fs052 [multi, expected irrelevant] She's wanted in makeup right now and they can't find her. → alert @- kind=- subject=- goal=called
+    ✗ fs053 [attention, expected relevant] Hey, you with the earphones, are you with the market crowd? → none @- kind=- subject=- goal=-
+    ✗ fs054 [unrelated, expected irrelevant] That new phone of hers has a huge camera. → alert @- kind=- subject=- goal=costume
+    ✗ fs056 [negation, expected irrelevant] Nobody needs to move, the truck is going around the other side. → alert @- kind=- subject=- goal=schedule
+    ✗ fs057 [asr_error, expected relevant] Stand clear of the dolly track, the camera car is reversing threw here. → none @- kind=- subject=- goal=-
+    ✗ fs058 [other_group, expected irrelevant] Camera department, your call tomorrow is five a.m. → alert @- kind=- subject=- goal=called
+    ✗ fs059 [multi, expected relevant] It's going to come down if nobody moves away from it. → none @- kind=- subject=- goal=-
+    ✗ fs060 [implicit, expected relevant] Catering is closing the line in ten minutes because the afternoon got moved up. → none @- kind=- subject=- goal=-
+    ✗ fs062 [incomplete, expected irrelevant] So what they want the background to do after lunch is → alert @- kind=- subject=- goal=called
+    ✗ cf002 [obvious, expected relevant] We will be arriving in port about forty minutes late. → none @- kind=- subject=- goal=-
+    ✗ cf003 [other_addressee, expected irrelevant] Mrs Okafor, your table in the restaurant is ready. → alert @- kind=- subject=- goal=food
+    ✗ cf004 [implicit, expected relevant] The captain says we're waiting outside the harbour for another ship to clear the berth. → none @- kind=- subject=- goal=-
+    ✗ cf005 [attention, expected relevant] Tomas, is this seat next to you taken? → none @- kind=- subject=- goal=-
+    ✗ cf006 [past, expected irrelevant] When I was a kid this crossing took six hours and there was no restaurant at all. → alert @- kind=- subject=- goal=food
+    ✗ cf009 [implicit, expected relevant] The floor by the bar is covered in broken glass, they're keeping people out. → none @- kind=- subject=- goal=-
+    ✗ cf013 [hypothetical, expected irrelevant] If the sea gets any rougher I'm going to regret that lunch. → alert @- kind=- subject=- goal=safety
+    ✗ cf017 [negation, expected irrelevant] No, the shop isn't closing, they're just restocking the shelves. → alert @- kind=- subject=- goal=food
+    ✗ cf019 [other_addressee, expected irrelevant] Jonas, go down and check you locked the van. → alert @- kind=- subject=- goal=arrival
+    ✗ cf020 [multi, expected relevant] They say it could take an hour to get them open. → none @- kind=- subject=- goal=-
+    ✗ cf023 [sarcasm_quote, expected irrelevant] Sure, and the captain's going to come down and carry your bags to the car himself. → alert @- kind=- subject=- goal=arrival
+    ✗ cf026 [attention, expected relevant] Excuse me, sir, is this your bag in the aisle? → none @- kind=- subject=- goal=-
+    ✗ cf028 [past, expected irrelevant] Years ago they let you sleep in your car on the deck, imagine that. → alert @- kind=- subject=- goal=arrival
+    ✗ cf029 [asr_error, expected relevant] We expect to birth at seven fifteen, twenty minutes behind schedule. → none @- kind=- subject=- goal=-
+    ✗ cf036 [implicit, expected relevant] Last orders for hot meals are being taken right now. → none @- kind=- subject=- goal=-
+    ✗ cf040 [repeated, expected repeat] Remember, with the dockers on strike we'll sit at least an hour before anyone drives off. → alert @- kind=- subject=- goal=food
+    ✗ cf042 [unrelated, expected irrelevant] The kids want to see if there are dolphins. → alert @- kind=- subject=- goal=food
+    ✗ cf046 [hypothetical, expected irrelevant] Imagine if they told everyone to get into the lifeboats, I'd be useless. → alert @- kind=- subject=- goal=safety
+    ✗ cf049 [implicit, expected relevant] You can see the harbour lights already, we're early. → none @- kind=- subject=- goal=-
+    ✗ cf055 [group_all, expected relevant] Would all passengers please return to the seating areas and remain seated until further notice. → none @- kind=- subject=- goal=-
+    ✗ cf056 [negation, expected irrelevant] Nothing new from the bridge, same arrival time as they said before. → alert @- kind=- subject=- goal=food
+    ✗ cf058 [other_group, expected irrelevant] Cabin passengers, please leave your cabins and hand in your keys thirty minutes before arrival. → alert @- kind=- subject=- goal=food
+    ✗ cf059 [multi, expected relevant] No, it shut ten minutes ago, only the vending machines now. → none @- kind=- subject=- goal=-
+    ✗ fb003 [other_addressee, expected irrelevant] Gareth, your break was supposed to end ten minutes ago. → alert @- kind=- subject=- goal=breaks
+    ✗ fb004 [implicit, expected relevant] The van's stuck in traffic, it won't be here before eleven. → none @- kind=- subject=- goal=-
+    ✗ fb005 [attention, expected relevant] Priya, could you give me a hand lifting this? → none @- kind=- subject=- goal=-
+    ✗ fb007 [group_all, expected relevant] Everyone, we're finishing at half past two today, not four. → none @- kind=- subject=- goal=-
+    ✗ fb008 [idiom, expected irrelevant] Give me a break, you can't be serious. → alert @- kind=- subject=- goal=breaks
+    ✗ fb010 [other_group, expected irrelevant] Packing team, your lunch is at one today. → alert @- kind=- subject=- goal=breaks
+    ✗ fb013 [hypothetical, expected irrelevant] If a pallet ever fell on me I think I'd sue. → alert @- kind=- subject=- goal=safety
+    ✗ fb015 [third_person, expected irrelevant] My daughter volunteers at a shelter in Glasgow, and their deliveries never turn up on time. → alert @- kind=- subject=- goal=breaks
+    ✗ fb017 [negation, expected irrelevant] No, the delivery schedule hasn't changed, it's the same as last week. → alert @- kind=- subject=- goal=supplies
+    ✗ fb018 [implicit, expected relevant] The coordinator wants the hall empty by three because the scouts have it booked. → none @- kind=- subject=- goal=-
+    ✗ fb019 [other_addressee, expected irrelevant] Someone's at the front desk asking for you, Monique. → alert @- kind=- subject=- goal=wanted
+    ✗ fb023 [sarcasm_quote, expected irrelevant] Oh yes, because carrying forty kilos of potatoes is exactly how I wanted to spend my break. → alert @- kind=- subject=- goal=breaks
+    ✗ fb024 [other_affects, expected relevant] Packing team, the fire door on your side is blocked, so everybody goes out through the front if the alarm sounds. → none @- kind=- subject=- goal=-
+    ✗ fb025 [other_group, expected irrelevant] Drivers, the delivery sheets are on the clipboard by the door. → alert @- kind=- subject=- goal=supplies
+    ✗ fb026 [attention, expected relevant] Excuse me, Priya, do you know where the date labels are kept? → none @- kind=- subject=- goal=-
+    ✗ fb027 [implicit, expected relevant] Someone's spilled cooking oil all along the aisle by the scales. → none @- kind=- subject=- goal=-
+    ✗ fb028 [past, expected irrelevant] Last Christmas we sorted four tonnes in a single day, it was mad. → alert @- kind=- subject=- goal=supplies
+    ✗ fb031 [multi, expected irrelevant] They cut his break down to ten minutes without warning. → alert @- kind=- subject=- goal=breaks
+    ✗ fb033 [other_addressee, expected irrelevant] Winston, you sort the cereal boxes, I'll do the tea. → alert @- kind=- subject=- goal=supplies
+    ✗ fb034 [group_all, expected relevant] Attention all volunteers, the back half of the warehouse is closed while the racking is repaired. → none @- kind=- subject=- goal=-
+    ✗ fb036 [implicit, expected relevant] The urn's on and there are biscuits out in the side room. → none @- kind=- subject=- goal=-
+    ✗ fb039 [third_person, expected irrelevant] A man at my brother's warehouse got hit by a forklift last year, broke his ankle. → alert @- kind=- subject=- goal=safety
+    ✗ fb041 [other_affects, expected relevant] Luis, tell the drivers the second van is cancelled, there'll be no more deliveries today. → none @- kind=- subject=- goal=-
+    ✗ fb044 [other_group, expected irrelevant] Table 2, you're on the baby food and nappies next. → alert @- kind=- subject=- goal=supplies
+    ✗ fb046 [hypothetical, expected irrelevant] I wish they'd give us a longer lunch, even just once. → alert @- kind=- subject=- goal=breaks
+    ✗ fb047 [urgent_short, expected relevant] Everybody out of the loading bay, now! → none @- kind=- subject=- goal=-
+    ✗ fb048 [sarcasm_quote, expected irrelevant] My grandad always said, never stand behind a horse or in front of a forklift. → alert @- kind=- subject=- goal=safety
+    ✗ fb049 [implicit, expected relevant] This is the last crate of tins, after that it's all pasta and rice. → none @- kind=- subject=- goal=-
+    ✗ fb053 [attention, expected relevant] Priya, the coordinator wants a word when you've got a minute. → none @- kind=- subject=- goal=-
+    ✗ fb056 [negation, expected irrelevant] Nobody has to move, the pallets fit where they are. → alert @- kind=- subject=- goal=safety
+    ✗ fb057 [asr_error, expected relevant] Fork lift is reversing, stand clear of the I'll. → none @- kind=- subject=- goal=-
+    ✗ fb058 [other_group, expected irrelevant] Front desk volunteers, you need to clear the entrance area before the doors open. → alert @- kind=- subject=- goal=wanted
+    ✗ fb060 [implicit, expected relevant] They found broken glass in one of the jam crates, so check every jar before you shelve it. → none @- kind=- subject=- goal=-
+    ✗ fb062 [incomplete, expected irrelevant] And when the next lorry gets here what we need table four to → alert @- kind=- subject=- goal=supplies
+    ✗ ho003 [other_addressee, expected irrelevant] Jasper, reception says your locker key deposit is still unpaid. → alert @- kind=- subject=- goal=room
+    ✗ ho004 [implicit, expected relevant] Somebody just took their stuff out of the washer by the window. → none @- kind=- subject=- goal=-
+    ✗ ho008 [idiom, expected irrelevant] That new guy in the bar is on fire tonight, he's won every round. → alert @- kind=- subject=- goal=safety
+    ✗ ho010 [other_group, expected irrelevant] Dorm 4, your room is being cleaned now, can you wait in the lounge. → alert @- kind=- subject=- goal=room
+    ✗ ho013 [hypothetical, expected irrelevant] If the alarm went off at three in the morning I honestly wouldn't even wake up. → alert @- kind=- subject=- goal=safety
+    ✗ ho015 [third_person, expected irrelevant] My mate stayed in a hostel in Porto where the fire alarm went off every single night. → alert @- kind=- subject=- goal=safety
+    ✗ ho017 [negation, expected irrelevant] Nothing's changed with the lockers, same codes as yesterday. → alert @- kind=- subject=- goal=room
+    ✗ ho019 [other_addressee, expected irrelevant] There's someone at the door asking for you, Ingrid. → alert @- kind=- subject=- goal=name
+    ✗ ho020 [multi, expected relevant] It's empty now if you want it. → none @- kind=- subject=- goal=-
+    ✗ ho025 [other_group, expected irrelevant] The cycling group, your breakfast is at seven and your bikes need to be out of the luggage room by eight. → alert @- kind=- subject=- goal=room
+    ✗ ho028 [past, expected irrelevant] Two years ago they had a kitchen fire here and had to close for a month. → alert @- kind=- subject=- goal=kitchen
+    ✗ ho031 [multi, expected irrelevant] They made everyone leave their room at six in the morning. → alert @- kind=- subject=- goal=room
+    ✗ ho039 [third_person, expected irrelevant] My sister's flat in Bristol has one washing machine between twelve people. → alert @- kind=- subject=- goal=kitchen
+    ✗ ho040 [repeated, expected repeat] Don't forget to clear out your dorm 6 locker before twelve. → alert @- kind=- subject=- goal=room
+    ✗ ho044 [other_group, expected irrelevant] Private rooms on the top floor, your checkout is extended to noon. → alert @- kind=- subject=- goal=room
+    ✗ ho047 [urgent_short, expected relevant] Don't touch that socket, it's sparking! → none @- kind=- subject=- goal=-
+    ✗ ho049 [implicit, expected relevant] The stair lights are out and someone's already slipped on the bottom step. → none @- kind=- subject=- goal=-
+    ✗ ho050 [other_addressee, expected irrelevant] Tess, move your backpack off my bunk, please. → alert @- kind=- subject=- goal=safety
+    ✗ ho052 [multi, expected irrelevant] He's downstairs asking for her right now. → alert @- kind=- subject=- goal=name
+    ✗ ho053 [attention, expected relevant] Sorry, excuse me, is the bottom bunk yours? → none @- kind=- subject=- goal=-
+    ✗ ho056 [negation, expected irrelevant] That's not the fire alarm, it's just somebody's phone. → alert @- kind=- subject=- goal=safety
+    ✗ ho058 [other_group, expected irrelevant] Staff, your lockers in the office are being replaced on Monday. → alert @- kind=- subject=- goal=room
+    ✗ ho062 [incomplete, expected irrelevant] If you're in one of the dorms on the second floor then tomorrow you → alert @- kind=- subject=- goal=room
+    ✗ fc004 [implicit, expected relevant] They've run a hose to the taps by the big oak and the water's back on. → none @- kind=- subject=- goal=-
+    ✗ fc005 [attention, expected relevant] Excuse me, mate, is anyone sitting here? → none @- kind=- subject=- goal=-
+    ✗ fc006 [past, expected irrelevant] Ten years ago this whole festival was one stage and a cider van. → alert @- kind=- subject=- goal=lineup
+    ✗ fc007 [group_all, expected relevant] This is a site-wide announcement, please do not drink from the taps until further notice. → none @- kind=- subject=- goal=-
+    ✗ fc008 [idiom, expected irrelevant] It's the calm before the storm, my exams start next week. → alert @- kind=- subject=- goal=safety
+    ✗ fc009 [implicit, expected relevant] The wind's picking up fast and gazebos are starting to go over. → none @- kind=- subject=- goal=-
+    ✗ fc010 [other_group, expected irrelevant] Stewards on the night shift, move over to gate C for your briefing. → alert @- kind=- subject=- goal=safety
+    ✗ fc014 [causal, expected relevant] The tanker didn't come, so the taps will be dry by lunchtime. → none @- kind=- subject=- goal=-
+    ✗ fc015 [third_person, expected irrelevant] My brother went to a festival in Croatia where the main stage got cancelled two nights running. → alert @- kind=- subject=- goal=lineup
+    ✗ fc016 [urgent_short, expected relevant] Get away from the trees, now! → none @- kind=- subject=- goal=-
+    ✗ fc017 [negation, expected irrelevant] No changes to tonight's running order, everything is as printed. → alert @- kind=- subject=- goal=lineup
+    ✗ fc019 [other_addressee, expected irrelevant] Nurse Bailey, you're wanted at the medical tent right away. → alert @- kind=- subject=- goal=safety
+    ✗ fc020 [multi, expected relevant] It says it's shut until the morning. → none @- kind=- subject=- goal=-
+    ✗ fc022 [repeated, expected repeat] Once again, the tap water on site is not safe to drink for now. → alert @- kind=- subject=- goal=facilities
+    ✗ fc025 [other_group, expected irrelevant] Bar staff, your showers behind crew catering are open till midnight. → alert @- kind=- subject=- goal=facilities
+    ✗ fc026 [attention, expected relevant] Hey, sorry, you dropped your wristband. → none @- kind=- subject=- goal=-
+    ✗ fc028 [past, expected irrelevant] Last year the showers ran out of hot water by eight every morning. → alert @- kind=- subject=- goal=facilities
+    ✗ fc030 [unrelated, expected irrelevant] My wellies have a hole in them already. → alert @- kind=- subject=- goal=safety
+    ✗ fc031 [multi, expected irrelevant] They evacuated the whole site because of a dust storm. → alert @- kind=- subject=- goal=safety
+    ✗ fc033 [other_addressee, expected irrelevant] Marta, your burger van's water tank is nearly empty, shall I fetch more? → alert @- kind=- subject=- goal=facilities
+    ✗ fc037 [idiom, expected irrelevant] I'm in hot water with my boss for taking Friday off. → alert @- kind=- subject=- goal=facilities
+    ✗ fc039 [third_person, expected irrelevant] My aunt's village flooded last spring and they all had to leave their houses. → alert @- kind=- subject=- goal=safety
+    ✗ fc040 [repeated, expected repeat] Remember the headliner's on at half ten now on the main stage. → alert @- kind=- subject=- goal=lineup
+    ✗ fc044 [other_group, expected irrelevant] Artists playing the second stage, check in at the production office an hour before your set. → alert @- kind=- subject=- goal=lineup
+    ✗ fc046 [hypothetical, expected irrelevant] I wish they'd move the folk stage further from the dance tent. → alert @- kind=- subject=- goal=safety
+    ✗ fc047 [urgent_short, expected relevant] Hey, your tent's blowing away! → none @- kind=- subject=- goal=-
+    ✗ fc048 [sarcasm_quote, expected irrelevant] Then the ranger in the film yells everybody off the mountain, storm's coming, and of course nobody moves. → alert @- kind=- subject=- goal=safety
+    ✗ fc056 [negation, expected irrelevant] The showers aren't closing, that was just a rumour. → alert @- kind=- subject=- goal=facilities
+    ✗ fc057 [asr_error, expected relevant] A whether warning has been issued, please secure your tense. → none @- kind=- subject=- goal=-
+    ✗ fc058 [other_group, expected irrelevant] Traders must move their vehicles off the market field by nine tomorrow. → alert @- kind=- subject=- goal=safety
+    ✗ fc062 [incomplete, expected irrelevant] The organisers have asked us to let you know that from tonight the → alert @- kind=- subject=- goal=safety
+
+Sentence-embedding retrieval (threshold 0.6, chosen on dev) — sealed3 set
+  precision            50.9 % (146/287; 95 % CI 45.1–56.6)
+  recall               96.1 % (146/152; 95 % CI 91.7–98.2)
+  F1                   0.665
+  false alerts         90.3 % (131/145; 95 % CI 84.4–94.2) of irrelevant utterances
+  false alerts / hour  216.8 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      100.0 % (10/10; 95 % CI 72.2–100.0)
+  important missed     3.3 % (1/30; 95 % CI 0.6–16.7)
+  goal named correctly 58.2 % (85/146; 95 % CI 50.1–65.9)
+  ambiguous items      8 alerted, 0 kept as uncertain, 0 nothing (of 8)
+  time per utterance   median < 0.01 s, p95 < 0.01 s; model median –; full judgements 0, stopped by the first pass 0, gated 0, fallbacks 0
+  by category          asr_error 10/10, attention 15/15, causal 10/10, group_all 13/15, hypothetical 1/10, idiom 2/10, implicit 33/35, incomplete 0/5, multi 10/20, my_group 12/12, negation 5/15, obvious 15/15, other_addressee 0/20, other_affects 14/15, other_group 2/20, past 1/10, repeated 0/10, sarcasm_quote 0/10, third_person 2/10, unrelated 5/30, urgent_short 10/10
+  confusion            TP 146  FP 141  FN 6  TN 14  (ambiguous, not scored: 8 alerted, 0 uncertain, 0 silent)
+  precision            50.9 % (146/287; 95 % CI 45.1–56.6)
+  recall               96.1 % (146/152; 95 % CI 91.7–98.2)
+  F1                   0.665
+  false-positive rate  91.0 % (141/155; 95 % CI 85.4–94.5)
+  false-negative rate  3.9 % (6/152; 95 % CI 1.8–8.3)
+  balanced accuracy    52.5 %
+  important-event recall                96.7 % (29/30; 95 % CI 83.3–99.4)
+  short urgent instruction recall       100.0 % (10/10; 95 % CI 72.2–100.0)
+  implicit relevance recall             95.6 % (43/45; 95 % CI 85.2–98.8)
+  explicit relevance recall             100.0 % (30/30; 95 % CI 88.6–100.0)
+  announcement to all or own group      92.6 % (25/27; 95 % CI 76.6–97.9)
+  said to others, concerns all          93.3 % (14/15; 95 % CI 70.2–98.8)
+  another person addressed              0.0 % (0/20; 95 % CI 0.0–16.1)
+  another group addressed               10.0 % (2/20; 95 % CI 2.8–30.1)
+  negation accuracy                     33.3 % (5/15; 95 % CI 15.2–58.3)
+  hypothetical accuracy                 10.0 % (1/10; 95 % CI 1.8–40.4)
+  personal relevance accuracy           20.0 % (2/10; 95 % CI 5.7–51.0)
+  past and quotation accuracy           5.0 % (1/20; 95 % CI 0.9–23.6)
+  idiom accuracy                        20.0 % (2/10; 95 % CI 5.7–51.0)
+  recognition-error accuracy            100.0 % (10/10; 95 % CI 72.2–100.0)
+  context (several sentences) accuracy  50.0 % (10/20; 95 % CI 29.9–70.1)
+  unrelated talk accuracy               16.7 % (5/30; 95 % CI 7.3–33.6)
+  repetition accuracy                   0.0 % (0/10; 95 % CI 0.0–27.8)
+  cut-off sentence accuracy             0.0 % (0/5; 95 % CI 0.0–43.4)
+  by profile           car_ferry TP 31 FP 29 FN 0 TN 2; festival_camp TP 27 FP 27 FN 1 TN 4; film_set TP 28 FP 26 FN 3 TN 5; food_bank TP 29 FP 28 FN 2 TN 3; hostel TP 31 FP 31 FN 0 TN 0
+  decided at           - 315
+  seconds per item     p50 0.01  p95 0.01  p99 0.03   model only: p50 –  p95 –  p99 –
+  output tokens        – per model decision (0 model decisions)
+    ✗ fs001 [unrelated, expected irrelevant] What a finish in the match last night, I couldn't believe it. → alert @- kind=- subject=- goal=safety
+    ✗ fs003 [other_addressee, expected irrelevant] Oliver, wardrobe wants you back, your jacket is the wrong colour. → alert @- kind=- subject=- goal=safety
+    ✗ fs004 [implicit, expected relevant] The second unit just finished early and they're resetting the cameras for the crowd shots. → none @- kind=- subject=- goal=-
+    ✗ fs006 [past, expected irrelevant] On my last shoot they kept us in holding until two in the morning. → alert @- kind=- subject=- goal=safety
+    ✗ fs010 [other_group, expected irrelevant] Group A, you're needed on set right away. → alert @- kind=- subject=- goal=safety
+    ✗ fs011 [unrelated, expected irrelevant] I've been trying to sell my old bike for weeks. → alert @- kind=- subject=- goal=costume
+    ✗ fs013 [hypothetical, expected irrelevant] If they ever wrapped early I think I'd faint. → alert @- kind=- subject=- goal=safety
+    ✗ fs017 [negation, expected irrelevant] Nothing's changed for the afternoon, the call sheet stays as printed. → alert @- kind=- subject=- goal=safety
+    ✗ fs019 [other_addressee, expected irrelevant] They're calling for you on set, Hannah. → alert @- kind=- subject=- goal=called
+    ✗ fs021 [unrelated, expected irrelevant] This coffee tastes like it was brewed yesterday. → alert @- kind=- subject=- goal=costume
+    ✗ fs022 [repeated, expected repeat] Reminder, lunch is at half past twelve today, thirty minutes earlier than usual. → alert @- kind=- subject=- goal=schedule
+    ✗ fs023 [sarcasm_quote, expected irrelevant] Oh sure, we'll definitely wrap on time, just like every other day this week. → alert @- kind=- subject=- goal=safety
+    ✗ fs024 [other_affects, expected relevant] Group B's scene is running long, so everything after it slides by an hour. → none @- kind=- subject=- goal=-
+    ✗ fs025 [other_group, expected irrelevant] Stunt team, safety briefing by the crash mats in two minutes. → alert @- kind=- subject=- goal=schedule
+    ✗ fs028 [past, expected irrelevant] Back in the nineties extras brought their own costumes, nobody gave you anything. → alert @- kind=- subject=- goal=costume
+    ✗ fs033 [other_addressee, expected irrelevant] Dev, your call time tomorrow is six, don't be late. → alert @- kind=- subject=- goal=schedule
+    ✗ fs037 [idiom, expected irrelevant] That last take was a car crash from start to finish. → alert @- kind=- subject=- goal=schedule
+    ✗ fs039 [third_person, expected irrelevant] A friend of mine does costumes for an opera house in Leeds, she says the fittings never end. → alert @- kind=- subject=- goal=costume
+    ✗ fs040 [repeated, expected repeat] Like I said, with the power out there's no filming for an hour or more. → alert @- kind=- subject=- goal=safety
+    ✗ fs042 [unrelated, expected irrelevant] I can never remember where I parked. → alert @- kind=- subject=- goal=safety
+    ✗ fs044 [other_group, expected irrelevant] Group B, hand your umbrellas back to props before you go. → alert @- kind=- subject=- goal=safety
+    ✗ fs046 [hypothetical, expected irrelevant] Imagine if they called us to set and nobody had their costume on. → alert @- kind=- subject=- goal=safety
+    ✗ fs048 [sarcasm_quote, expected irrelevant] And then the guy in the film goes, everybody get out, the building's going to blow. → alert @- kind=- subject=- goal=called
+    ✗ fs049 [implicit, expected relevant] We're losing the light, so they're jumping straight to the market scene. → none @- kind=- subject=- goal=-
+    ✗ fs050 [other_addressee, expected irrelevant] Sam, you need to move your car, it's blocking the grip truck. → alert @- kind=- subject=- goal=called
+    ✗ fs052 [multi, expected irrelevant] She's wanted in makeup right now and they can't find her. → alert @- kind=- subject=- goal=safety
+    ✗ fs054 [unrelated, expected irrelevant] That new phone of hers has a huge camera. → alert @- kind=- subject=- goal=costume
+    ✗ fs056 [negation, expected irrelevant] Nobody needs to move, the truck is going around the other side. → alert @- kind=- subject=- goal=safety
+    ✗ fs062 [incomplete, expected irrelevant] So what they want the background to do after lunch is → alert @- kind=- subject=- goal=called
+    ✗ cf001 [unrelated, expected irrelevant] I always forget how expensive the chocolate is on these boats. → alert @- kind=- subject=- goal=food
+    ✗ cf003 [other_addressee, expected irrelevant] Mrs Okafor, your table in the restaurant is ready. → alert @- kind=- subject=- goal=food
+    ✗ cf006 [past, expected irrelevant] When I was a kid this crossing took six hours and there was no restaurant at all. → alert @- kind=- subject=- goal=food
+    ✗ cf008 [idiom, expected irrelevant] We're all in the same boat with these prices, aren't we. → alert @- kind=- subject=- goal=arrival
+    ✗ cf010 [other_group, expected irrelevant] Foot passengers, please gather at the forward gangway for disembarkation. → alert @- kind=- subject=- goal=safety
+    ✗ cf013 [hypothetical, expected irrelevant] If the sea gets any rougher I'm going to regret that lunch. → alert @- kind=- subject=- goal=arrival
+    ✗ cf015 [third_person, expected irrelevant] My uncle works on the ferries up north, and they cancel sailings for the wind every other week. → alert @- kind=- subject=- goal=safety
+    ✗ cf017 [negation, expected irrelevant] No, the shop isn't closing, they're just restocking the shelves. → alert @- kind=- subject=- goal=food
+    ✗ cf019 [other_addressee, expected irrelevant] Jonas, go down and check you locked the van. → alert @- kind=- subject=- goal=arrival
+    ✗ cf021 [unrelated, expected irrelevant] My phone has no signal out here at all. → alert @- kind=- subject=- goal=arrival
+    ✗ cf022 [repeated, expected repeat] Just to repeat, we're coming into terminal two today, not our usual berth. → alert @- kind=- subject=- goal=arrival
+    ✗ cf023 [sarcasm_quote, expected irrelevant] Sure, and the captain's going to come down and carry your bags to the car himself. → alert @- kind=- subject=- goal=arrival
+    ✗ cf025 [other_group, expected irrelevant] Drivers on deck 5, you may now return to your vehicles. → alert @- kind=- subject=- goal=arrival
+    ✗ cf028 [past, expected irrelevant] Years ago they let you sleep in your car on the deck, imagine that. → alert @- kind=- subject=- goal=arrival
+    ✗ cf030 [unrelated, expected irrelevant] We should send Gran a postcard when we get there. → alert @- kind=- subject=- goal=arrival
+    ✗ cf031 [multi, expected irrelevant] They were held outside the port for three hours. → alert @- kind=- subject=- goal=safety
+    ✗ cf033 [other_addressee, expected irrelevant] Could Daniel Reyes please come to the information desk, your daughter is waiting for you. → alert @- kind=- subject=- goal=arrival
+    ✗ cf039 [third_person, expected irrelevant] Our neighbours got stuck in port for nine hours last summer on the way to the islands. → alert @- kind=- subject=- goal=safety
+    ✗ cf040 [repeated, expected repeat] Remember, with the dockers on strike we'll sit at least an hour before anyone drives off. → alert @- kind=- subject=- goal=arrival
+    ✗ cf042 [unrelated, expected irrelevant] The kids want to see if there are dolphins. → alert @- kind=- subject=- goal=spoken
+    ✗ cf044 [other_group, expected irrelevant] Freight drivers, your meal vouchers are valid in the truckers' lounge until nine. → alert @- kind=- subject=- goal=food
+    ✗ cf046 [hypothetical, expected irrelevant] Imagine if they told everyone to get into the lifeboats, I'd be useless. → alert @- kind=- subject=- goal=arrival
+    ✗ cf048 [sarcasm_quote, expected irrelevant] And the old man in the story shouts abandon ship, abandon ship, and nobody listens. → alert @- kind=- subject=- goal=food
+    ✗ cf050 [other_addressee, expected irrelevant] Ruth, move your suitcase, it's blocking the lady's wheelchair. → alert @- kind=- subject=- goal=food
+    ✗ cf052 [multi, expected irrelevant] They just called her to come and collect it at the desk. → alert @- kind=- subject=- goal=food
+    ✗ cf054 [unrelated, expected irrelevant] I think I left the charger in the other bag. → alert @- kind=- subject=- goal=arrival
+    ✗ cf056 [negation, expected irrelevant] Nothing new from the bridge, same arrival time as they said before. → alert @- kind=- subject=- goal=arrival
+    ✗ cf058 [other_group, expected irrelevant] Cabin passengers, please leave your cabins and hand in your keys thirty minutes before arrival. → alert @- kind=- subject=- goal=food
+    ✗ cf062 [incomplete, expected irrelevant] Passengers travelling with vehicles are advised that the → alert @- kind=- subject=- goal=safety
+    ✗ fb001 [unrelated, expected irrelevant] My knees are not what they used to be. → alert @- kind=- subject=- goal=safety
+    ✗ fb003 [other_addressee, expected irrelevant] Gareth, your break was supposed to end ten minutes ago. → alert @- kind=- subject=- goal=supplies
+    ✗ fb006 [past, expected irrelevant] When this place opened we had one shelf and a borrowed van. → alert @- kind=- subject=- goal=supplies
+    ✗ fb007 [group_all, expected relevant] Everyone, we're finishing at half past two today, not four. → none @- kind=- subject=- goal=-
+    ✗ fb008 [idiom, expected irrelevant] Give me a break, you can't be serious. → alert @- kind=- subject=- goal=wanted
+    ✗ fb010 [other_group, expected irrelevant] Packing team, your lunch is at one today. → alert @- kind=- subject=- goal=breaks
+    ✗ fb011 [unrelated, expected irrelevant] That bakery on Mill Street does the best sourdough. → alert @- kind=- subject=- goal=safety
+    ✗ fb013 [hypothetical, expected irrelevant] If a pallet ever fell on me I think I'd sue. → alert @- kind=- subject=- goal=safety
+    ✗ fb015 [third_person, expected irrelevant] My daughter volunteers at a shelter in Glasgow, and their deliveries never turn up on time. → alert @- kind=- subject=- goal=safety
+    ✗ fb017 [negation, expected irrelevant] No, the delivery schedule hasn't changed, it's the same as last week. → alert @- kind=- subject=- goal=breaks
+    ✗ fb019 [other_addressee, expected irrelevant] Someone's at the front desk asking for you, Monique. → alert @- kind=- subject=- goal=wanted
+    ✗ fb021 [unrelated, expected irrelevant] I think it's going to rain later. → alert @- kind=- subject=- goal=wanted
+    ✗ fb022 [repeated, expected repeat] Don't forget, today we stop at two thirty instead of four. → alert @- kind=- subject=- goal=breaks
+    ✗ fb023 [sarcasm_quote, expected irrelevant] Oh yes, because carrying forty kilos of potatoes is exactly how I wanted to spend my break. → alert @- kind=- subject=- goal=safety
+    ✗ fb028 [past, expected irrelevant] Last Christmas we sorted four tonnes in a single day, it was mad. → alert @- kind=- subject=- goal=safety
+    ✗ fb031 [multi, expected irrelevant] They cut his break down to ten minutes without warning. → alert @- kind=- subject=- goal=supplies
+    ✗ fb033 [other_addressee, expected irrelevant] Winston, you sort the cereal boxes, I'll do the tea. → alert @- kind=- subject=- goal=safety
+    ✗ fb037 [idiom, expected irrelevant] He's skating on thin ice with the coordinator. → alert @- kind=- subject=- goal=wanted
+    ✗ fb040 [repeated, expected repeat] Remember the rear of the warehouse stays shut while they fix the racks. → alert @- kind=- subject=- goal=breaks
+    ✗ fb042 [unrelated, expected irrelevant] I've had this song stuck in my head all morning. → alert @- kind=- subject=- goal=wanted
+    ✗ fb044 [other_group, expected irrelevant] Table 2, you're on the baby food and nappies next. → alert @- kind=- subject=- goal=breaks
+    ✗ fb046 [hypothetical, expected irrelevant] I wish they'd give us a longer lunch, even just once. → alert @- kind=- subject=- goal=wanted
+    ✗ fb048 [sarcasm_quote, expected irrelevant] My grandad always said, never stand behind a horse or in front of a forklift. → alert @- kind=- subject=- goal=safety
+    ✗ fb050 [other_addressee, expected irrelevant] Aisha, mind your fingers on that crate lid, it bit me earlier. → alert @- kind=- subject=- goal=supplies
+    ✗ fb052 [multi, expected irrelevant] A whole stack came down on top of them. → alert @- kind=- subject=- goal=supplies
+    ✗ fb054 [unrelated, expected irrelevant] Parking round here is a nightmare on Saturdays. → alert @- kind=- subject=- goal=breaks
+    ✗ fb055 [group_all, expected relevant] Everybody, a big bread delivery is coming in ten minutes and it all needs sorting before noon. → none @- kind=- subject=- goal=-
+    ✗ fb056 [negation, expected irrelevant] Nobody has to move, the pallets fit where they are. → alert @- kind=- subject=- goal=safety
+    ✗ fb058 [other_group, expected irrelevant] Front desk volunteers, you need to clear the entrance area before the doors open. → alert @- kind=- subject=- goal=safety
+    ✗ fb062 [incomplete, expected irrelevant] And when the next lorry gets here what we need table four to → alert @- kind=- subject=- goal=supplies
+    ✗ ho001 [unrelated, expected irrelevant] The wifi only really works in the lounge. → alert @- kind=- subject=- goal=room
+    ✗ ho003 [other_addressee, expected irrelevant] Jasper, reception says your locker key deposit is still unpaid. → alert @- kind=- subject=- goal=kitchen
+    ✗ ho006 [past, expected irrelevant] This building used to be a shoe factory before they turned it into a hostel. → alert @- kind=- subject=- goal=kitchen
+    ✗ ho008 [idiom, expected irrelevant] That new guy in the bar is on fire tonight, he's won every round. → alert @- kind=- subject=- goal=room
+    ✗ ho010 [other_group, expected irrelevant] Dorm 4, your room is being cleaned now, can you wait in the lounge. → alert @- kind=- subject=- goal=room
+    ✗ ho011 [unrelated, expected irrelevant] I've been travelling for three months and I still overpack. → alert @- kind=- subject=- goal=safety
+    ✗ ho013 [hypothetical, expected irrelevant] If the alarm went off at three in the morning I honestly wouldn't even wake up. → alert @- kind=- subject=- goal=safety
+    ✗ ho015 [third_person, expected irrelevant] My mate stayed in a hostel in Porto where the fire alarm went off every single night. → alert @- kind=- subject=- goal=room
+    ✗ ho017 [negation, expected irrelevant] Nothing's changed with the lockers, same codes as yesterday. → alert @- kind=- subject=- goal=room
+    ✗ ho019 [other_addressee, expected irrelevant] There's someone at the door asking for you, Ingrid. → alert @- kind=- subject=- goal=name
+    ✗ ho021 [unrelated, expected irrelevant] That street food market by the river is unreal. → alert @- kind=- subject=- goal=safety
+    ✗ ho022 [repeated, expected repeat] Just so you know, no cooking tomorrow morning, the kitchen's shut for the pest people. → alert @- kind=- subject=- goal=room
+    ✗ ho023 [sarcasm_quote, expected irrelevant] Oh perfect, a top bunk next to the door, exactly what I dreamed of. → alert @- kind=- subject=- goal=room
+    ✗ ho025 [other_group, expected irrelevant] The cycling group, your breakfast is at seven and your bikes need to be out of the luggage room by eight. → alert @- kind=- subject=- goal=room
+    ✗ ho028 [past, expected irrelevant] Two years ago they had a kitchen fire here and had to close for a month. → alert @- kind=- subject=- goal=kitchen
+    ✗ ho030 [unrelated, expected irrelevant] My flip flops broke on the first day. → alert @- kind=- subject=- goal=safety
+    ✗ ho031 [multi, expected irrelevant] They made everyone leave their room at six in the morning. → alert @- kind=- subject=- goal=room
+    ✗ ho033 [other_addressee, expected irrelevant] Felipe, you need to check out by eleven or they'll charge you another night. → alert @- kind=- subject=- goal=name
+    ✗ ho037 [idiom, expected irrelevant] My budget's gone up in smoke already. → alert @- kind=- subject=- goal=safety
+    ✗ ho039 [third_person, expected irrelevant] My sister's flat in Bristol has one washing machine between twelve people. → alert @- kind=- subject=- goal=kitchen
+    ✗ ho040 [repeated, expected repeat] Don't forget to clear out your dorm 6 locker before twelve. → alert @- kind=- subject=- goal=room
+    ✗ ho042 [unrelated, expected irrelevant] We ended up splitting a taxi from the station, it was cheaper than the tram. → alert @- kind=- subject=- goal=kitchen
+    ✗ ho044 [other_group, expected irrelevant] Private rooms on the top floor, your checkout is extended to noon. → alert @- kind=- subject=- goal=room
+    ✗ ho046 [hypothetical, expected irrelevant] I wish they'd let us check out at two, just once. → alert @- kind=- subject=- goal=name
+    ✗ ho048 [sarcasm_quote, expected irrelevant] So in the book the landlady bangs on every door shouting everybody out, the house is burning. → alert @- kind=- subject=- goal=room
+    ✗ ho050 [other_addressee, expected irrelevant] Tess, move your backpack off my bunk, please. → alert @- kind=- subject=- goal=safety
+    ✗ ho052 [multi, expected irrelevant] He's downstairs asking for her right now. → alert @- kind=- subject=- goal=name
+    ✗ ho054 [unrelated, expected irrelevant] They were playing cards in the lounge until two last night. → alert @- kind=- subject=- goal=room
+    ✗ ho056 [negation, expected irrelevant] That's not the fire alarm, it's just somebody's phone. → alert @- kind=- subject=- goal=safety
+    ✗ ho058 [other_group, expected irrelevant] Staff, your lockers in the office are being replaced on Monday. → alert @- kind=- subject=- goal=room
+    ✗ ho062 [incomplete, expected irrelevant] If you're in one of the dorms on the second floor then tomorrow you → alert @- kind=- subject=- goal=room
+    ✗ fc001 [unrelated, expected irrelevant] I can't believe nobody in our group brought a bottle opener. → alert @- kind=- subject=- goal=talk
+    ✗ fc003 [other_addressee, expected irrelevant] Darren, your steward shift at gate B starts at six, don't be late. → alert @- kind=- subject=- goal=lineup
+    ✗ fc008 [idiom, expected irrelevant] It's the calm before the storm, my exams start next week. → alert @- kind=- subject=- goal=safety
+    ✗ fc010 [other_group, expected irrelevant] Stewards on the night shift, move over to gate C for your briefing. → alert @- kind=- subject=- goal=facilities
+    ✗ fc011 [unrelated, expected irrelevant] I haven't slept properly since Thursday. → alert @- kind=- subject=- goal=lineup
+    ✗ fc013 [hypothetical, expected irrelevant] If it floods I'm sleeping in the car, I don't care. → alert @- kind=- subject=- goal=safety
+    ✗ fc015 [third_person, expected irrelevant] My brother went to a festival in Croatia where the main stage got cancelled two nights running. → alert @- kind=- subject=- goal=lineup
+    ✗ fc017 [negation, expected irrelevant] No changes to tonight's running order, everything is as printed. → alert @- kind=- subject=- goal=safety
+    ✗ fc019 [other_addressee, expected irrelevant] Nurse Bailey, you're wanted at the medical tent right away. → alert @- kind=- subject=- goal=safety
+    ✗ fc022 [repeated, expected repeat] Once again, the tap water on site is not safe to drink for now. → alert @- kind=- subject=- goal=facilities
+    ✗ fc023 [sarcasm_quote, expected irrelevant] Oh brilliant, mud up to my knees, this is exactly the luxury glamping they promised. → alert @- kind=- subject=- goal=facilities
+    ✗ fc025 [other_group, expected irrelevant] Bar staff, your showers behind crew catering are open till midnight. → alert @- kind=- subject=- goal=facilities
+    ✗ fc028 [past, expected irrelevant] Last year the showers ran out of hot water by eight every morning. → alert @- kind=- subject=- goal=facilities
+    ✗ fc030 [unrelated, expected irrelevant] My wellies have a hole in them already. → alert @- kind=- subject=- goal=talk
+    ✗ fc031 [multi, expected irrelevant] They evacuated the whole site because of a dust storm. → alert @- kind=- subject=- goal=safety
+    ✗ fc033 [other_addressee, expected irrelevant] Marta, your burger van's water tank is nearly empty, shall I fetch more? → alert @- kind=- subject=- goal=safety
+    ✗ fc037 [idiom, expected irrelevant] I'm in hot water with my boss for taking Friday off. → alert @- kind=- subject=- goal=facilities
+    ✗ fc039 [third_person, expected irrelevant] My aunt's village flooded last spring and they all had to leave their houses. → alert @- kind=- subject=- goal=safety
+    ✗ fc040 [repeated, expected repeat] Remember the headliner's on at half ten now on the main stage. → alert @- kind=- subject=- goal=facilities
+    ✗ fc042 [unrelated, expected irrelevant] Georgia said she can give us a lift back on Monday. → alert @- kind=- subject=- goal=facilities
+    ✗ fc044 [other_group, expected irrelevant] Artists playing the second stage, check in at the production office an hour before your set. → alert @- kind=- subject=- goal=facilities
+    ✗ fc048 [sarcasm_quote, expected irrelevant] Then the ranger in the film yells everybody off the mountain, storm's coming, and of course nobody moves. → alert @- kind=- subject=- goal=safety
+    ✗ fc050 [other_addressee, expected irrelevant] Mister Hughes, the security office needs you to sign for the radios. → alert @- kind=- subject=- goal=facilities
+    ✗ fc052 [multi, expected irrelevant] They've been told to pack up and be gone by six. → alert @- kind=- subject=- goal=talk
+    ✗ fc056 [negation, expected irrelevant] The showers aren't closing, that was just a rumour. → alert @- kind=- subject=- goal=safety
+    ✗ fc058 [other_group, expected irrelevant] Traders must move their vehicles off the market field by nine tomorrow. → alert @- kind=- subject=- goal=facilities
+    ✗ fc059 [multi, expected relevant] She's been replaced by a local band at the same time. → none @- kind=- subject=- goal=-
+    ✗ fc062 [incomplete, expected irrelevant] The organisers have asked us to let you know that from tonight the → alert @- kind=- subject=- goal=talk
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-3/results/window6_3/sealed/sealed3_baselines.json
