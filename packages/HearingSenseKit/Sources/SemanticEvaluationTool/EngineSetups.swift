@@ -21,7 +21,7 @@ struct EngineSetup {
             if let turns = option("--reuse").flatMap({ Int($0) }) { reuse.maximumTurns = max(1, turns) }
             if arguments.contains("--no-restate") { reuse.restatesGoals = false }
             let steps = arguments.contains("--steps") ? true
-                : arguments.contains("--no-steps") ? false : FoundationModelRelevanceReasoner.currentAsksInSteps
+                : arguments.contains("--no-steps") ? false : FoundationModelRelevanceReasoner.currentAsksKindFirstWhenBusy
             var configuration = SemanticAttentionEngine.Configuration.standard
             if option("--order") == "oldest" { configuration.servingOrder = .oldestFirst }
             if arguments.contains("--no-confirm") { configuration.confirmsRelevant = false }
@@ -29,11 +29,11 @@ struct EngineSetup {
             if let wait = option("--max-wait").flatMap({ Double($0) }) { configuration.maximumWait = wait }
             var label = "Window 6.2"
             label += reuse.maximumTurns > 1 ? ", session reused up to \(reuse.maximumTurns) while sentences wait" : ", a session per sentence"
-            if steps { label += ", kind first" }
+            if steps { label += ", kind first when no session is prepared" }
             if !configuration.confirmsRelevant { label += ", no second look" }
             if configuration.servingOrder == .oldestFirst { label += ", oldest first" }
             return EngineSetup(name: label,
-                               reasoner: FoundationModelRelevanceReasoner(style: .staged, reuse: reuse, asksInSteps: steps),
+                               reasoner: FoundationModelRelevanceReasoner(style: .staged, reuse: reuse, asksKindFirstWhenBusy: steps),
                                configuration: configuration)
         default:
             return nil

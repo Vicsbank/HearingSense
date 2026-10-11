@@ -1,0 +1,19 @@
+Probe spoken-shots3b on dev2: 171 items, session of 1, order as written
+  TP 76 FP 11 FN 6 TN 62  P 87.4 R 92.7  ambiguous alerted 9/12  failed 5  mean 2.55 s, 27.5 tokens out
+    ✗ false alert e010 [past] The teacher discussed last year's grading system. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert e022 [third_person] The eighth graders have a different timetable from Monday. → kind=change goal=2 verdict=relevant turn=1
+    ✗ false alert e052 [unrelated] That hill is too steep, the road grade must be ten percent. → kind=warning goal=4 verdict=urgent turn=1
+    ✗ false alert e069 [multi] I can't, I have to babysit. → kind=change goal=2 verdict=relevant turn=1
+    ✗ false alert o019 [third_person] Their deadline got pulled in, not ours. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert o031 [past] On my last project the deadline moved six times. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert o034 [sarcasm_quote] He does this impression of the boss saying, drop everything, I need it yesterday. → kind=warning goal=2 verdict=urgent turn=1
+    ✗ false alert o037 [asr_error] i herd it might snow on fry day → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert m016 [third_person] Someone was at my mother's door selling solar panels. → kind=change goal=2 verdict=relevant turn=1
+    ✗ false alert m025 [sarcasm_quote] He always says, the package will arrive when it arrives. → kind=change goal=2 verdict=relevant turn=1
+    ✗ false alert m047 [multi] Around seven I think. → kind=change goal=1 verdict=relevant turn=1
+    ✗ missed e014 [implicit] I'll be checking notebooks at random this week. → kind=other goal=0 verdict=irrelevant turn=1
+    ✗ missed e016 [implicit] Art is in the computer lab for the rest of the month. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed e020 [causal] Nobody read the instructions, so I'm marking this one out of ten instead of twenty. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed o011 [implicit] When you get a chance, take a look at the budget sheet. → kind=noChange goal=1 verdict=relevant turn=1
+    ✗ missed m006 [implicit] Maya's staying for choir until five tonight. → kind=noChange goal=1 verdict=relevant turn=1
+    ✗ missed m043 [urgent_short] The baby's got hold of the scissors. → kind= goal=0 verdict= turn=1

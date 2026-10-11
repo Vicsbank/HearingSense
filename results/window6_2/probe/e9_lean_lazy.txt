@@ -1,0 +1,16 @@
+Probe lean-lazy on dev3: 223 items, session of 1, order as written
+  TP 91 FP 11 FN 3 TN 95  P 89.2 R 96.8  ambiguous alerted 14/15  failed 0  mean 1.97 s, 23.4 tokens out
+    ✗ false alert te012 [idiom] I'm so tired I could sleep through a fire alarm. → kind=warning goal=4 verdict=urgent turn=1 check=two-requests
+    ✗ false alert te052 [idiom] Get out, no way she said that. → kind=warning goal=4 verdict=urgent turn=1 check=two-requests
+    ✗ false alert at004 [third_person] The junior squad has their game moved to Sunday. → kind=change goal=1 verdict=urgent turn=1 check=two-requests
+    ✗ false alert co026 [third_person] Her talk was moved to Friday, which she hates. → kind=change goal=1 verdict=relevant turn=1 check=two-requests
+    ✗ false alert co027 [unrelated] I need to find a pharmacy before it closes at eight. → kind=change goal=1 verdict=relevant turn=1 check=two-requests
+    ✗ false alert co041 [asr_error] I mist my train this mourning buy a minute. → kind=change goal=1 verdict=urgent turn=1 check=two-requests
+    ✗ false alert co049 [third_person] My boss is presenting at a different conference in Lisbon this week. → kind=change goal=1 verdict=relevant turn=1 check=two-requests
+    ✗ false alert ck010 [negation] Breaks are at the usual times today. → kind=change goal=3 verdict=relevant turn=1 check=two-requests
+    ✗ false alert ck026 [third_person] The servers have a meeting about the new uniforms. → kind=change goal=1 verdict=relevant turn=1 check=two-requests
+    ✗ false alert ck049 [third_person] Salad station is out of croutons again. → kind=change goal=1 verdict=relevant turn=1 check=two-requests
+    ✗ false alert ck052 [past] Last night the grill orders didn't stop until eleven. → kind=change goal=1 verdict=relevant turn=1 check=two-requests
+    ✗ missed co005 [attention] Sorry, is this seat taken? → kind=noChange goal=0 verdict=irrelevant turn=1
+    ✗ missed co028 [attention] Hi there, could you tell me how to get to the registration desk? → kind=noChange goal=0 verdict=irrelevant turn=1
+    ✗ missed ck013 [implicit] Hold the burgers for table four, they're still on appetizers. → kind=noChange goal=0 verdict=irrelevant turn=1

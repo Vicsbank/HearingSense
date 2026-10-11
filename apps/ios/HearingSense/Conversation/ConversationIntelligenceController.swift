@@ -635,7 +635,8 @@ final class ConversationIntelligenceController {
                 + "transcripts \(statistics.speculativeCalls) (used \(statistics.speculativeHits), abandoned \(statistics.speculativeCancelled))"
                 + " · decisions later than the deadline \(statistics.deadlineMisses)",
             "While behind: newest sentence served first \(statistics.servedNewestFirst) time(s) · answers from a session that "
-                + "continued \(statistics.continuedSessions) · requests asked again after a failure \(statistics.retries)",
+                + "continued \(statistics.continuedSessions) (silent ones judged again \(statistics.rechecks), alerts found "
+                + "that way \(statistics.recheckAlerts)) · requests asked again after a failure \(statistics.retries)",
             "Waiting for a turn, median: \(Self.median(statistics.queueWaits).map(Self.seconds) ?? "–") · utterance to decision, "
                 + "median: \(Self.median(statistics.latencies).map(Self.seconds) ?? "–")",
             "Recent speech for recaps: \(keepsRecentSpeech ? "on" : "off") · look-back \(Int(lookBack)) s · "

@@ -1,0 +1,60 @@
+Set dev3: 223 synthetic utterances — relevant 94, irrelevant 106, ambiguous 15, repeat 8
+
+  wall time 430.0 s; this process 14 → 26 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, Window 6.1 — dev3 set
+  precision            84.5 % (93/110; 95 % CI 76.6–90.1)
+  recall               98.9 % (93/94; 95 % CI 94.2–99.8)
+  F1                   0.912
+  false alerts         9.4 % (10/106; 95 % CI 5.2–16.5) of irrelevant utterances
+  false alerts / hour  22.6 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      87.5 % (7/8; 95 % CI 52.9–97.8)
+  important missed     0.0 % (0/11; 95 % CI 0.0–25.9)
+  goal named correctly 90.3 % (84/93; 95 % CI 82.6–94.8)
+  ambiguous items      14 alerted, 1 kept as uncertain, 0 nothing (of 15)
+  time per utterance   median 1.99 s, p95 3.50 s; model median 1.99 s; full judgements 223, stopped by the first pass 0, gated 0, fallbacks 0
+  verifier corrections headline_not_shortened 12, no_goal 1, second_look 4
+  by category          asr_error 8/8, attention 14/14, causal 13/13, hypothetical 8/8, idiom 10/12, implicit 30/30, multi 7/8, negation 17/18, obvious 12/13, past 10/10, repeated 1/8, sarcasm_quote 8/8, third_person 16/20, unrelated 30/32, urgent_short 6/6
+  confusion            TP 93  FP 17  FN 1  TN 97  (ambiguous, not scored: 14 alerted, 1 uncertain, 0 silent)
+  precision            84.5 % (93/110; 95 % CI 76.6–90.1)
+  recall               98.9 % (93/94; 95 % CI 94.2–99.8)
+  F1                   0.912
+  false-positive rate  14.9 % (17/114; 95 % CI 9.5–22.6)
+  false-negative rate  1.1 % (1/94; 95 % CI 0.2–5.8)
+  balanced accuracy    92.0 %
+  important-event recall                100.0 % (11/11; 95 % CI 74.1–100.0)
+  short urgent instruction recall       100.0 % (6/6; 95 % CI 61.0–100.0)
+  implicit relevance recall             100.0 % (43/43; 95 % CI 91.8–100.0)
+  explicit relevance recall             96.3 % (26/27; 95 % CI 81.7–99.3)
+  negation accuracy                     94.4 % (17/18; 95 % CI 74.2–99.0)
+  hypothetical accuracy                 100.0 % (8/8; 95 % CI 67.6–100.0)
+  personal relevance accuracy           80.0 % (16/20; 95 % CI 58.4–91.9)
+  past and quotation accuracy           100.0 % (18/18; 95 % CI 82.4–100.0)
+  idiom accuracy                        83.3 % (10/12; 95 % CI 55.2–95.3)
+  recognition-error accuracy            100.0 % (8/8; 95 % CI 67.6–100.0)
+  context (several sentences) accuracy  87.5 % (7/8; 95 % CI 52.9–97.8)
+  unrelated talk accuracy               93.8 % (30/32; 95 % CI 79.9–98.3)
+  repetition accuracy                   12.5 % (1/8; 95 % CI 2.2–47.1)
+  by profile           athlete TP 24 FP 2 FN 0 TN 26; attendee TP 23 FP 5 FN 0 TN 24; cook TP 22 FP 5 FN 1 TN 24; tenant TP 24 FP 5 FN 0 TN 23
+  decided at           model 223
+  seconds per item     p50 1.99  p95 3.50  p99 3.75   model only: p50 1.99  p95 3.50  p99 3.75
+  output tokens        34.2 per model decision (223 model decisions)
+    ✗ te008 [unrelated, expected irrelevant] It's supposed to snow again on Thursday. → relevant @model kind=statement subject=listenerOrGroup goal=danger
+    ✗ te012 [idiom, expected irrelevant] I'm so tired I could sleep through a fire alarm. → relevant @model kind=statement subject=listenerOrGroup goal=danger
+    ✗ te037 [repeated, expected repeat] Again, no elevator on Wednesday, it's being inspected all day. → relevant @model kind=statement subject=listenerOrGroup goal=building
+    ✗ te052 [idiom, expected irrelevant] Get out, no way she said that. → relevant @model kind=statement subject=listenerOrGroup goal=danger
+    ✗ te056 [repeated, expected repeat] As I mentioned, the rent increase of sixty dollars begins in March. → relevant @model kind=statement subject=listenerOrGroup goal=rent
+    ✗ at004 [third_person, expected irrelevant] The junior squad has their game moved to Sunday. → relevant @model kind=statement subject=listenerOrGroup goal=practice
+    ✗ at056 [repeated, expected repeat] Like I said, Thursday's practice is off because the field is closed. → relevant @model kind=statement subject=listenerOrGroup goal=practice
+    ✗ co020 [unrelated, expected irrelevant] They ran out of the vegetarian sandwiches again. → relevant @model kind=statement subject=listenerOrGroup goal=mytalk
+    ✗ co026 [third_person, expected irrelevant] Her talk was moved to Friday, which she hates. → relevant @model kind=statement subject=listenerOrGroup goal=sessions
+    ✗ co035 [repeated, expected repeat] Once more, the keynote is in ballroom B, not the main hall. → relevant @model kind=statement subject=listenerOrGroup goal=sessions
+    ✗ co038 [third_person, expected irrelevant] The sponsors get a separate lunch on the top floor. → relevant @model kind=statement subject=listenerOrGroup goal=mytalk
+    ✗ co055 [repeated, expected repeat] Just so everyone knows, that design workshop this afternoon is not happening. → relevant @model kind=statement subject=listenerOrGroup goal=mytalk
+    ✗ ck001 [obvious, expected relevant] Grill, two ribeyes medium rare and one well done. → irrelevant @model kind=noChange subject=listenerOrGroup goal=- (second_look)
+    ✗ ck010 [negation, expected irrelevant] Breaks are at the usual times today. → relevant @model kind=statement subject=listenerOrGroup goal=shift
+    ✗ ck036 [repeated, expected repeat] Again for the grill, two ribeyes medium rare, one well done. → relevant @model kind=statement subject=listenerOrGroup goal=orders
+    ✗ ck044 [multi, expected irrelevant] Couldn't tell you, I haven't even had coffee yet. → relevant @model kind=statement subject=listenerOrGroup goal=chef
+    ✗ ck049 [third_person, expected irrelevant] Salad station is out of croutons again. → relevant @model kind=statement subject=listenerOrGroup goal=shift
+    ✗ ck056 [repeated, expected repeat] Don't forget, your break is at three thirty now, not before. → relevant @model kind=statement subject=listenerOrGroup goal=shift
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-2/results/window6_2/engine/w61_dev3.json

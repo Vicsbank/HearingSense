@@ -1,0 +1,16 @@
+Check confirm-earlier on the positive answers of lean (dev3)
+  before: TP 91 FP 11 FN 3 TN 95  P 89.2 R 96.8  ambiguous alerted 14/15  failed 0  mean 1.81 s, 26.2 tokens out
+  TP 90 FP 8 FN 4 TN 98  P 91.8 R 95.7  ambiguous alerted 14/15  failed 0  mean 1.81 s, 26.2 tokens out
+    ✗ false alert te012 [idiom] I'm so tired I could sleep through a fire alarm. → kind=warning goal=4 verdict=urgent turn=1 check=wish
+    ✗ false alert te052 [idiom] Get out, no way she said that. → kind=warning goal=4 verdict=urgent turn=1 check=hereAndNow
+    ✗ false alert co027 [unrelated] I need to find a pharmacy before it closes at eight. → kind=change goal=1 verdict=relevant turn=1 check=hereAndNow
+    ✗ false alert co038 [third_person] The sponsors get a separate lunch on the top floor. → kind=change goal=1 verdict=relevant turn=1 check=hereAndNow
+    ✗ false alert co041 [asr_error] I mist my train this mourning buy a minute. → kind=change goal=1 verdict=urgent turn=1 check=hereAndNow
+    ✗ false alert ck010 [negation] Breaks are at the usual times today. → kind=change goal=3 verdict=relevant turn=1 check=hereAndNow
+    ✗ false alert ck026 [third_person] The servers have a meeting about the new uniforms. → kind=change goal=1 verdict=relevant turn=1 check=hereAndNow
+    ✗ false alert ck049 [third_person] Salad station is out of croutons again. → kind=change goal=1 verdict=relevant turn=1 check=hereAndNow
+    ✗ missed co005 [attention] Sorry, is this seat taken? → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed co028 [attention] Hi there, could you tell me how to get to the registration desk? → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed ck001 [obvious] Grill, two ribeyes medium rare and one well done. → kind=change goal=1 verdict=relevant turn=1 check=nothingChanges
+    ✗ missed ck013 [implicit] Hold the burgers for table four, they're still on appetizers. → kind=noChange goal=1 verdict=irrelevant turn=1
+  check: 124 requests, mean 0.86 s

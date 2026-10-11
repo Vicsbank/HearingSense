@@ -1,0 +1,14 @@
+Probe lean-shots4 on dev2: 53 items, session of 1, order as written
+  TP 20 FP 7 FN 5 TN 21  P 74.1 R 80.0  ambiguous alerted 0/0  failed 0  mean 2.74 s, 25.6 tokens out
+    ✗ false alert e022 [third_person] The eighth graders have a different timetable from Monday. → kind=change goal=2 verdict=relevant turn=1
+    ✗ false alert e037 [sarcasm_quote] In the book the headmaster announces that exams are abolished. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert e052 [unrelated] That hill is too steep, the road grade must be ten percent. → kind=warning goal=4 verdict=relevant turn=1
+    ✗ false alert e069 [multi] I can't, I have to babysit. → kind=request goal=2 verdict=relevant turn=1
+    ✗ false alert o019 [third_person] Their deadline got pulled in, not ours. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert o031 [past] On my last project the deadline moved six times. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert o034 [sarcasm_quote] He does this impression of the boss saying, drop everything, I need it yesterday. → kind=request goal=2 verdict=relevant turn=1
+    ✗ missed e014 [implicit] I'll be checking notebooks at random this week. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed e016 [implicit] Art is in the computer lab for the rest of the month. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed e020 [causal] Nobody read the instructions, so I'm marking this one out of ten instead of twenty. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed m006 [implicit] Maya's staying for choir until five tonight. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed m043 [urgent_short] The baby's got hold of the scissors. → kind=others goal=0 verdict=irrelevant turn=1

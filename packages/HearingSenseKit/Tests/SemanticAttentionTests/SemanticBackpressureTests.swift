@@ -90,6 +90,40 @@ import Testing
         #expect(await reasoner.judged == [Self.talk[0]])
     }
 
+    @Test func aSentenceSilencedByAContinuedSessionIsJudgedAgainWhenNothingWaits() async {
+        // Under load the session that just answered takes the next sentence too. Its "silent"
+        // is looked at again in a session of its own; here that second judgement alerts.
+        let reasoner = ScriptedReasoner([Fixture.exam: Fixture.relevant(headline: "")])
+        await reasoner.setContinuedAnswers([Fixture.exam: .none, Self.talk[0]: .none])
+        let engine = await Fixture.engine(reasoner)
+        let exam = Fixture.utterance(Fixture.exam)
+        await engine.submit(exam)
+        await engine.submit(Fixture.utterance(Self.talk[0], at: 1))
+        // Silent, silent, then the alert of the second judgement for the first sentence.
+        let decisions = await decisions(of: engine, count: 3)
+        #expect(decisions.count == 3)
+        #expect(decisions.prefix(2).allSatisfy { !$0.isAccepted && $0.usedContinuedSession })
+        #expect(decisions.last?.utteranceID == exam.id)
+        #expect(decisions.last?.isAccepted == true)
+        #expect(decisions.last?.usedContinuedSession == false)
+        #expect(decisions.last?.corrections.contains("alert_on_second_judgement") == true)
+        // The other sentence was judged again too, stayed silent and produced no second decision.
+        try? await Task.sleep(for: .milliseconds(50))
+        #expect(await reasoner.judged.count == 4)
+        #expect(await engine.statistics.rechecks == 2)
+        #expect(await engine.statistics.recheckAlerts == 1)
+    }
+
+    @Test func aSilentAnswerOfASessionOfItsOwnIsNotJudgedAgain() async {
+        let reasoner = ScriptedReasoner()
+        let engine = await Fixture.engine(reasoner)
+        await engine.submit(Fixture.utterance(Self.talk[0]))
+        _ = await decisions(of: engine, count: 1)
+        try? await Task.sleep(for: .milliseconds(50))
+        #expect(await reasoner.judged == [Self.talk[0]])
+        #expect(await engine.statistics.rechecks == 0)
+    }
+
     @Test func aSentencePushedOutOfAFullLineIsReportedAsDroppedNotExpired() async {
         var configuration = SemanticAttentionEngine.Configuration.standard
         configuration.queueCapacity = 1

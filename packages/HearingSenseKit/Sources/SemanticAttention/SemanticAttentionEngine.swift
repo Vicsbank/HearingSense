@@ -28,10 +28,14 @@ import Foundation
 /// Decisions hold speech-derived text. `statistics` and `redactedSummary` do not.
 public actor SemanticAttentionEngine {
     public struct Configuration: Hashable, Sendable {
-        /// Utterances that may wait while one is being evaluated.
-        public var queueCapacity = 12
-        /// An utterance older than this when its turn comes is dropped (reported and counted).
-        public var maximumWait: TimeInterval = 20
+        /// Utterances that may wait while one is being evaluated. Large enough that the time
+        /// limit (`maximumWait`) is what ends a wait, not this number.
+        public var queueCapacity = 36
+        /// An utterance older than this when its turn comes is given up (reported and counted).
+        /// Thirty seconds since Window 6.2: a sentence left behind while speech went on is still
+        /// worth deciding in the next pause ("the exam moved to Friday" half a minute late), and
+        /// with the newest sentence served first the old ones delay nobody.
+        public var maximumWait: TimeInterval = 30
         /// A decision later than this after submission is counted as a missed deadline. It is
         /// still made: "the exam moved to Friday" is worth knowing five seconds late.
         public var deadline: TimeInterval = 4
@@ -56,6 +60,16 @@ public actor SemanticAttentionEngine {
         public var confirmsWarnings = true
         /// Tell the second look which accepted statements a sentence may repeat (Window 6.2).
         public var asksAboutRepetition = true
+        /// A sentence that stayed silent on the word of a session that had already answered for
+        /// other sentences (only while sentences were waiting) is judged once more, in a session
+        /// of its own, as soon as nothing waits. If it alerts then, the alert is late but not
+        /// lost. Measured: with a continued session 3–4 of 223 decisions differ from those of a
+        /// session per sentence; in the stream benchmarks one relevant sentence of six stayed
+        /// silent that way.
+        public var rechecksContinuedAnswers = true
+        /// Sentences kept for that second judgement, and how old one may be.
+        public var recheckCapacity = 24
+        public var recheckLifetime: TimeInterval = 60
         /// Prepare the next request's session whenever nothing is waiting (Window 6.2). Off for
         /// a reasoner that keeps one session for several sentences: preparing another one makes
         /// the system forget what the kept one has read.
@@ -139,6 +153,10 @@ public actor SemanticAttentionEngine {
         /// First answers given by a session that had answered for an earlier sentence (only
         /// while sentences were waiting; see `FoundationModelRelevanceReasoner.Reuse`).
         public var continuedSessions = 0
+        /// Of those that stayed silent: judged again in a session of their own, and how many of
+        /// these alerted after all (late).
+        public var rechecks = 0
+        public var recheckAlerts = 0
         public var accepted = 0
         public var uncertain = 0
         public var repeated = 0
@@ -201,6 +219,8 @@ public actor SemanticAttentionEngine {
     private var worker: Task<Void, Never>?
     /// Sentences that look like a warning have a lane of their own: they do not stand behind
     /// an ordinary sentence that is itself waiting for the model (for a recap to finish, say).
+    /// Decided silent by a continued session; judged again when nothing waits.
+    private var recheckQueue: [Entry] = []
     private var urgentQueue: [Entry] = []
     private var urgentWorker: Task<Void, Never>?
     private var cache: [String: CacheEntry] = [:]
@@ -248,6 +268,11 @@ public actor SemanticAttentionEngine {
 
     public var queueLength: Int { queue.count }
 
+    /// Nothing waits, nothing is being evaluated, and no second judgement is due.
+    public var isIdle: Bool {
+        worker == nil && urgentWorker == nil && queue.isEmpty && urgentQueue.isEmpty && recheckQueue.isEmpty
+    }
+
     /// Sentences submitted and not yet being evaluated, the warning lane included.
     public var waitingCount: Int { queue.count + urgentQueue.count }
 
@@ -256,7 +281,7 @@ public actor SemanticAttentionEngine {
     public func setPaused(_ isPaused: Bool) {
         guard isPaused != self.isPaused else { return }
         self.isPaused = isPaused
-        if !isPaused, !queue.isEmpty || provisional != nil { startWorkerIfNeeded() }
+        if !isPaused, !queue.isEmpty || provisional != nil || !recheckQueue.isEmpty { startWorkerIfNeeded() }
     }
 
     public func prewarm() async {
@@ -274,6 +299,7 @@ public actor SemanticAttentionEngine {
         urgentWorker?.cancel()
         urgentWorker = nil
         urgentQueue.removeAll()
+        recheckQueue.removeAll()
         speculativeTask?.task.cancel()
         speculativeTask = nil
         provisional = nil
@@ -386,10 +412,16 @@ public actor SemanticAttentionEngine {
                     var decision = await evaluate(entry.utterance, priority: entry.isUrgent ? .urgentCandidate : .attention)
                     guard generation == self.generation, !Task.isCancelled else { return }
                     finish(&decision, entry: entry, started: started)
+                    if configuration.rechecksContinuedAnswers, decision.usedContinuedSession, decision.verdict == .irrelevant {
+                        if recheckQueue.count >= configuration.recheckCapacity { recheckQueue.removeFirst() }
+                        recheckQueue.append(entry)
+                    }
                 }
             } else if let utterance = provisional {
                 provisional = nil
                 await speculate(on: utterance, generation: generation)
+            } else if !recheckQueue.isEmpty {
+                await recheck(recheckQueue.removeFirst(), generation: generation)
             } else {
                 break
             }
@@ -402,6 +434,22 @@ public actor SemanticAttentionEngine {
             let goals = selectGoals(for: "")
             Task { [reasoner] in await reasoner.prewarm(goals: goals) }
         }
+    }
+
+    /// The second judgement of a sentence that a continued session called silent: in a session
+    /// of its own, with nothing of the earlier answer used. Only an alert is reported (as a
+    /// second, late decision for the same utterance); a second "silent" changes nothing.
+    private func recheck(_ entry: Entry, generation: Int) async {
+        guard Date().timeIntervalSince(entry.submitted) <= configuration.recheckLifetime else { return }
+        statistics.rechecks += 1
+        cache[cacheKey(entry.utterance)] = nil
+        await reasoner.forget()
+        let started = Date()
+        var decision = await evaluate(entry.utterance, priority: .background)
+        guard generation == self.generation, !Task.isCancelled, decision.isAccepted else { return }
+        statistics.recheckAlerts += 1
+        decision.corrections.append("alert_on_second_judgement")
+        finish(&decision, entry: entry, started: started)
     }
 
     /// The sentence to evaluate next, after giving up those that have waited too long.

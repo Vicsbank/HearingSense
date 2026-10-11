@@ -293,6 +293,8 @@ public enum SemanticProbe {
         case role
         /// listener or someoneElse.
         case who
+        /// The number of the goal the sentence is about, 0 for none ("0" or "goal").
+        case topic
     }
 
     /// Runs a check on every positive answer and records what it said.
@@ -335,6 +337,9 @@ public enum SemanticProbe {
                 case .role:
                     answers[index].check = try await session.respond(to: prompt, generating: ProbeRole.self, options: options)
                         .content.what.rawValue
+                case .topic:
+                    let goal = try await session.respond(to: prompt, generating: ProbeTopicAnswer.self, options: options).content.goal
+                    answers[index].check = goal == 0 ? "none" : goal == answers[index].goal ? "same" : "another"
                 case .who:
                     answers[index].check = try await session.respond(to: prompt, generating: ProbeWhoAnswer.self, options: options)
                         .content.who.rawValue
@@ -599,4 +604,10 @@ struct ProbeGoalVerdict {
     @Guide(description: "Number of the one goal this matters for, 0 for none", .range(0 ... 6))
     var goal: Int
     var verdict: ProbeVerdict
+}
+
+@Generable
+struct ProbeTopicAnswer {
+    @Guide(description: "Number of the goal the sentence is about, 0 for none", .range(0 ... 6))
+    var goal: Int
 }

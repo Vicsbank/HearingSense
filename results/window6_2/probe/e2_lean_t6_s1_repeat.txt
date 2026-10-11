@@ -1,0 +1,14 @@
+Probe lean on dev3: 214 items, session of 6, order shuffled 1
+  TP 87 FP 9 FN 2 TN 97  P 90.6 R 97.8  ambiguous alerted 13/15  failed 0  mean 1.70 s, 32.6 tokens out
+  by place in the session (false alerts / sentences that should stay silent): 1: 1/21  2: 1/12  3: 3/18  4: 2/20  5: 1/15  6: 1/20
+    ✗ false alert te052 [idiom] Get out, no way she said that. → kind=warning goal=4 verdict=urgent turn=3
+    ✗ false alert at004 [third_person] The junior squad has their game moved to Sunday. → kind=change goal=1 verdict=urgent turn=5
+    ✗ false alert at010 [negation] Saturday's game is still at ten, nothing has changed. → kind=change goal=1 verdict=relevant turn=6
+    ✗ false alert co026 [third_person] Her talk was moved to Friday, which she hates. → kind=change goal=1 verdict=urgent turn=1
+    ✗ false alert co038 [third_person] The sponsors get a separate lunch on the top floor. → kind=change goal=1 verdict=relevant turn=2
+    ✗ false alert co027 [unrelated] I need to find a pharmacy before it closes at eight. → kind=change goal=2 verdict=relevant turn=3
+    ✗ false alert ck004 [third_person] Pastry needs more butter from the walk-in. → kind=change goal=1 verdict=urgent turn=4
+    ✗ false alert ck032 [idiom] I got burned on that used car deal, never again. → kind=warning goal=2 verdict=urgent turn=3
+    ✗ false alert ck052 [past] Last night the grill orders didn't stop until eleven. → kind=change goal=1 verdict=relevant turn=4
+    ✗ missed co039 [attention] Hey, I think you left your badge at the booth. → kind=other goal=0 verdict=irrelevant turn=1
+    ✗ missed co005 [attention] Sorry, is this seat taken? → kind=other goal=0 verdict=irrelevant turn=1

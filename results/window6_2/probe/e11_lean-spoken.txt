@@ -1,0 +1,12 @@
+Probe lean-spoken on dev3: 101 items, session of 1, order as written
+  TP 36 FP 9 FN 1 TN 55  P 80.0 R 97.3  ambiguous alerted 0/0  failed 0  mean 1.90 s, 25.4 tokens out
+    ✗ false alert te012 [idiom] I'm so tired I could sleep through a fire alarm. → kind=warning goal=4 verdict=urgent turn=1
+    ✗ false alert te052 [idiom] Get out, no way she said that. → kind=warning goal=4 verdict=urgent turn=1
+    ✗ false alert at004 [third_person] The junior squad has their game moved to Sunday. → kind=change goal=1 verdict=urgent turn=1
+    ✗ false alert co026 [third_person] Her talk was moved to Friday, which she hates. → kind=change goal=1 verdict=urgent turn=1
+    ✗ false alert co027 [unrelated] I need to find a pharmacy before it closes at eight. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert co041 [asr_error] I mist my train this mourning buy a minute. → kind=warning goal=1 verdict=urgent turn=1
+    ✗ false alert co049 [third_person] My boss is presenting at a different conference in Lisbon this week. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert ck004 [third_person] Pastry needs more butter from the walk-in. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert ck049 [third_person] Salad station is out of croutons again. → kind=change goal=1 verdict=relevant turn=1
+    ✗ missed co005 [attention] Sorry, is this seat taken? → kind=noChange goal=1 verdict=irrelevant turn=1

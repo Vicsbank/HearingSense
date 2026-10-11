@@ -23,6 +23,11 @@ actor ScriptedReasoner: SemanticRelevanceReasoning {
         self.delay = delay
     }
 
+    /// What a session that has answered for other sentences says the first time it is asked
+    /// about a sentence (Window 6.2). The second time the ordinary answer is given.
+    var continuedAnswers: [String: RelevanceJudgement] = [:]
+    func setContinuedAnswers(_ answers: [String: RelevanceJudgement]) { continuedAnswers = answers }
+
     func setConfirmations(_ confirmations: [String: StatementConfirmation]) { self.confirmations = confirmations }
     func setFailsConfirmation(_ fails: Bool) { failsConfirmation = fails }
 
@@ -46,6 +51,12 @@ actor ScriptedReasoner: SemanticRelevanceReasoning {
         judged.append(utterance.text)
         if delay > .zero { try await Task.sleep(for: delay) }
         if fails { throw SemanticReasonerError.modelFailure("scripted") }
+        if var continued = continuedAnswers.removeValue(forKey: utterance.text) {
+            var timing = ReasonerTiming()
+            timing.continuedSession = true
+            continued.timing = timing
+            return continued
+        }
         return judgements[utterance.text] ?? .none
     }
 

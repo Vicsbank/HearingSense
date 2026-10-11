@@ -69,6 +69,11 @@ public enum SemanticStreamBenchmark {
         /// (a request repeated after a failure, an early evaluation that was not used).
         public var extraModelCalls = 0
         public var modelFailures = 0
+        /// First answers given by a session that continued, the silent ones among them that were
+        /// judged again in a session of their own, and how many of those alerted after all.
+        public var continuedSessions = 0
+        public var rechecks = 0
+        public var recheckAlerts = 0
 
         public var report: String {
             """
@@ -85,6 +90,7 @@ public enum SemanticStreamBenchmark {
               relevant sentences   \(endToEndRelevant.text)
               waiting line: mean \(meanQueueLength.formatted(.number.precision(.fractionLength(2)))), longest \(maximumQueueLength); empty \(recoverySeconds.formatted(.number.precision(.fractionLength(2)))) s after the last sentence arrived; served newest first \(servedNewestFirst)
               second looks \(secondLooks); extra model requests \(extraModelCalls); model failures \(modelFailures)
+              answers from a continued session \(continuedSessions); judged again when nothing waited \(rechecks), alerts found that way \(recheckAlerts)
               under load: TP \(confusion.truePositives) FP \(confusion.falsePositives) FN \(confusion.falseNegatives) TN \(confusion.trueNegatives); missed \(confusion.falseNegativeIDs.joined(separator: " ")); false alerts \(confusion.falsePositiveIDs.joined(separator: " "))
             """
         }
@@ -170,6 +176,9 @@ public enum SemanticStreamBenchmark {
         while await collector.count < items.count, Date() < giveUp { try? await Task.sleep(for: .milliseconds(50)) }
         let seconds = Date().timeIntervalSince(started)
         let recovery = Date().timeIntervalSince(lastArrival)
+        // Second judgements of sentences that a continued session called silent come after that.
+        while await !engine.isIdle, Date() < giveUp { try? await Task.sleep(for: .milliseconds(50)) }
+        try? await Task.sleep(for: .milliseconds(100))
         sampler.cancel()
         let samples = await sampler.value
         consumer.cancel()
@@ -222,8 +231,11 @@ public enum SemanticStreamBenchmark {
         result.endToEndRelevant = Quantiles(relevantLatencies)
         result.servedNewestFirst = statistics.servedNewestFirst
         result.modelFailures = statistics.modelFailures
+        result.continuedSessions = statistics.continuedSessions
+        result.rechecks = statistics.rechecks
+        result.recheckAlerts = statistics.recheckAlerts
         result.extraModelCalls = max(0, statistics.modelCalls + statistics.triageCalls + statistics.speculativeCalls
-            + statistics.retries - evaluated.count { $0.stage == .model })
+            + statistics.retries - statistics.rechecks - evaluated.count { $0.stage == .model })
         return result
     }
 

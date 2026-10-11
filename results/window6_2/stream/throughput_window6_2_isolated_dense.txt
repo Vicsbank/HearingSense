@@ -1,0 +1,15 @@
+Window 6.2, a session per sentence — dense, 35 sentences in 80.5 s
+  decided 35, dropped 7 (relevant among them: te017 te027), without any decision 0
+  end to end           p50 5.52  p95 26.65  p99 30.95  max 30.95  (n 28)
+  waiting for a turn   p50 2.18  p95 24.66  p99 28.99  max 28.99  (n 28)
+  model                p50 1.98  p95 2.75  p99 3.00  max 3.00  (n 28)
+    one request        p50 1.96  p95 2.01  p99 3.00  max 3.00  (n 21)
+    with a second look p50 2.63  p95 2.75  p99 2.75  max 2.75  (n 7)
+  longest queue 16; first judgements 28 (20.9 per minute); later than the deadline 19
+  throughput 20.9 sentences per minute; output tokens 672
+  not evaluated: 7 (expired 7, pushed out 0); relevant among them: te017 te027
+  relevant sentences   p50 19.08  p95 23.95  p99 23.95  max 23.95  (n 4)
+  waiting line: mean 6.21, longest 16; empty 18.30 s after the last sentence arrived; served newest first 10
+  second looks 7; extra model requests 0; model failures 0
+  under load: TP 4 FP 1 FN 2 TN 24; missed te017 te027; false alerts te052
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-2/results/window6_2/stream/throughput_window6_2_isolated_dense.json

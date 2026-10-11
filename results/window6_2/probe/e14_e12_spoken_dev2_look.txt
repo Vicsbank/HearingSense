@@ -1,0 +1,13 @@
+Check second-look on the positive answers of lean-spoken (dev2)
+  before: TP 78 FP 12 FN 4 TN 61  P 86.7 R 95.1  ambiguous alerted 11/12  failed 0  mean 1.78 s, 26.3 tokens out
+  TP 78 FP 5 FN 4 TN 68  P 94.0 R 95.1  ambiguous alerted 9/12  failed 0  mean 1.78 s, 26.3 tokens out
+    ✗ false alert e022 [third_person] The eighth graders have a different timetable from Monday. → kind=change goal=2 verdict=urgent turn=1 check=hereAndNow
+    ✗ false alert e052 [unrelated] That hill is too steep, the road grade must be ten percent. → kind=warning goal=4 verdict=urgent turn=1 check=hereAndNow
+    ✗ false alert e069 [multi] I can't, I have to babysit. → kind=change goal=2 verdict=relevant turn=1 check=hereAndNow
+    ✗ false alert o037 [asr_error] i herd it might snow on fry day → kind=change goal=1 verdict=relevant turn=1 check=hereAndNow
+    ✗ false alert m047 [multi] Around seven I think. → kind=change goal=1 verdict=relevant turn=1 check=hereAndNow
+    ✗ missed e020 [causal] Nobody read the instructions, so I'm marking this one out of ten instead of twenty. → kind=noChange goal=0 verdict=relevant turn=1
+    ✗ missed o011 [implicit] When you get a chance, take a look at the budget sheet. → kind=noChange goal=1 verdict=relevant turn=1
+    ✗ missed o015 [causal] Priya is out today, so I'm giving her tickets to you. → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed m006 [implicit] Maya's staying for choir until five tonight. → kind=noChange goal=1 verdict=relevant turn=1
+  check: 105 requests, mean 0.85 s

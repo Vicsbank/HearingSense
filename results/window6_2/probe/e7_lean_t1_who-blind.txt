@@ -1,0 +1,42 @@
+Check who-blind on the positive answers of lean (dev3)
+  before: TP 84 FP 14 FN 5 TN 92  P 85.7 R 94.4  ambiguous alerted 15/15  failed 0  mean 2.06 s, 33.6 tokens out
+  TP 55 FP 4 FN 34 TN 102  P 93.2 R 61.8  ambiguous alerted 8/15  failed 0  mean 2.06 s, 33.6 tokens out
+    ✗ false alert te012 [idiom] I'm so tired I could sleep through a fire alarm. → kind=warning goal=4 verdict=urgent turn=1 check=listener
+    ✗ false alert te052 [idiom] Get out, no way she said that. → kind=warning goal=4 verdict=urgent turn=1 check=others
+    ✗ false alert co027 [unrelated] I need to find a pharmacy before it closes at eight. → kind=change goal=1 verdict=relevant turn=1 check=listener
+    ✗ false alert ck052 [past] Last night the grill orders didn't stop until eleven. → kind=change goal=1 verdict=relevant turn=1 check=listener
+    ✗ missed te003 [implicit] The plumbers need to shut the main valve tomorrow between nine and noon. → kind=change goal=2 verdict=relevant turn=1 check=others
+    ✗ missed te011 [causal] A pipe burst on the third floor, so they're cutting the water to the whole building tonight. → kind=change goal=2 verdict=urgent turn=1 check=others
+    ✗ missed te020 [implicit] They've got the lift running again as of this morning. → kind=change goal=2 verdict=relevant turn=1 check=others
+    ✗ missed te021 [multi] Not before six, they're still waiting on a part. → kind=change goal=2 verdict=relevant turn=1 check=others
+    ✗ missed te030 [implicit] The new owners want everyone to sign a twelve month agreement instead of going month to month. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed te034 [implicit] Somebody keeps ringing your buzzer. → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed te044 [attention] Hey, you dropped your keys back there. → kind=other goal=0 verdict=irrelevant turn=1
+    ✗ missed at003 [implicit] Coach wants everyone who missed Tuesday to sit out the first half. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed at007 [causal] The gym floor is being refinished, so we're training outside all week. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed at011 [implicit] Whoever runs the slowest mile today starts on the bench Friday. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed at022 [multi] No, go to the one by the river instead. → kind=change goal=1 verdict=urgent turn=1 check=others
+    ✗ missed at027 [implicit] Anyone without a signed medical form can't suit up on Saturday. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed at031 [causal] Two defenders are out sick, so I'm moving a couple of you to the back line tonight. → kind=change goal=1 verdict=urgent turn=1 check=others
+    ✗ missed at035 [implicit] They double booked the field, we get it an hour later than usual today. → kind=change goal=1 verdict=urgent turn=1 check=others
+    ✗ missed at047 [negation] Players who skip the warm-up will not be put on the field. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed co001 [obvious] The keynote has moved from the main hall to ballroom B. → kind=change goal=1 verdict=urgent turn=1 check=others
+    ✗ missed co003 [implicit] Speakers in the afternoon block only get fifteen minutes now instead of twenty. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed co005 [attention] Sorry, is this seat taken? → kind=other goal=0 verdict=irrelevant turn=1
+    ✗ missed co007 [causal] The projector in room three is broken, so that workshop is now in room seven. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed co009 [implicit] All presenters need to upload their slides at the front desk before noon. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed co021 [multi] No, they put it upstairs in the glass room. → kind=change goal=1 verdict=urgent turn=1 check=others
+    ✗ missed co025 [implicit] The session chair says the laptop on stage only takes PDF files. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed co028 [attention] Hi there, could you tell me how to get to the registration desk? → kind=other goal=0 verdict=irrelevant turn=1
+    ✗ missed co030 [causal] The morning ran long, so every afternoon speaker loses five minutes. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed co032 [implicit] They've swapped the order, the security talk comes before the cloud one now. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed co039 [attention] Hey, I think you left your badge at the booth. → kind=other goal=0 verdict=irrelevant turn=1
+    ✗ missed co042 [obvious] The afternoon workshop on design has been cancelled. → kind=change goal=1 verdict=urgent turn=1 check=others
+    ✗ missed ck005 [implicit] Table twelve wants that steak cooked more, it's coming back. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed ck013 [implicit] Hold the burgers for table four, they're still on appetizers. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed ck019 [negation] No more lamb chops tonight, we're out. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed ck023 [multi] Skin off and no butter, it's an allergy. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed ck025 [implicit] Schedule's up, check it, a few of you got moved to mornings. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed ck027 [asr_error] Grill, fire too chicken breasts for table ate. → kind=change goal=1 verdict=relevant turn=1 check=others
+    ✗ missed ck048 [causal] The party of ten just doubled their steak order, so drop ten more now. → kind=change goal=1 verdict=relevant turn=1 check=others
+  check: 117 requests, mean 0.59 s

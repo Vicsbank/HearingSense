@@ -25,6 +25,23 @@ enum ProbeCatalog {
             SemanticProbe.Variant(name: "lean-spoken", instructions: leanSpoken, form: .kindGoalVerdict),
             SemanticProbe.Variant(name: "lean-all", instructions: leanAll, form: .kindGoalVerdict),
             SemanticProbe.Variant(name: "lean-all-shots", instructions: leanAll + shots, form: .kindGoalVerdict),
+            // Examples revised after the full-set runs: the first set taught the model to call any
+            // sentence that names a person or a group "others" (recall 88-92 %).
+            SemanticProbe.Variant(name: "spoken-shots3", instructions: leanSpoken + shots3(otherGroup: true),
+                                  form: .kindGoalVerdict, limit: 48),
+            SemanticProbe.Variant(name: "spoken-shots3b", instructions: leanSpoken + shots3(otherGroup: false),
+                                  form: .kindGoalVerdict, limit: 48),
+            SemanticProbe.Variant(name: "all-shots3", instructions: leanAll + shots3(otherGroup: true),
+                                  form: .kindGoalVerdict, limit: 48),
+            // The same examples with the answers written as the model has to write them: with the
+            // short form ("change, 1, relevant") and no answer form in the request, some answers
+            // ran on to the token limit and were lost (5 of 223).
+            SemanticProbe.Variant(name: "spoken-shots4", instructions: leanSpoken + shots4, form: .kindGoalVerdict, limit: 48),
+            SemanticProbe.Variant(name: "lean-shots4", instructions: FoundationModelRelevanceReasoner.leanInstructions + shots4,
+                                  form: .kindGoalVerdict, limit: 48),
+            // The production text of Window 6.2 (`probe-text` says which measured variant it equals).
+            SemanticProbe.Variant(name: "staged", instructions: FoundationModelRelevanceReasoner.stagedInstructions,
+                                  form: .kindGoalVerdict, limit: 48),
             SemanticProbe.Variant(name: "about", instructions: aboutInstructions, form: .aboutKind),
             // Worked examples from a setting of their own, in the instructions: what a kept
             // session's history seems to give, without the dependence on what was said before.
@@ -226,6 +243,60 @@ enum ProbeCatalog {
     "They might add a tour on Sundays." hypothetical, 1, uncertain
     """
 
+    static func shots3(otherGroup: Bool) -> String {
+        """
+
+
+        Examples, for a museum guide whose goals are "1. Tell me if a tour's time or room changes. 2. Tell me when \
+        someone is talking to me. 3. Warn me about danger near me.":
+        "The two o'clock tour starts in the east wing today." change, 1, relevant
+        "The lights failed upstairs, so every tour skips room four." change, 1, relevant
+        "Tours will no longer start from the main desk." change, 1, relevant
+        "Dana is off sick, so her afternoon group is yours." change, 1, relevant
+        "All guides have to pick up new badges before the first tour." change, 1, relevant
+        "Excuse me, do you work here?" request, 2, relevant
+        "Hey, you left your radio on the bench." request, 2, relevant
+        "Everybody out, that alarm is real!" warning, 3, urgent
+        "My cousin's museum moved all its tours online." others, 0, irrelevant
+        \(otherGroup ? "\"The café staff upstairs start an hour earlier next week.\" others, 0, irrelevant\n" : "")\
+        "It is supposed to rain all weekend." other, 0, irrelevant
+        "I have to pick up my car before six." other, 0, irrelevant
+        "The tours are at the usual times today." noChange, 0, irrelevant
+        "Last year the tours started in the garden." past, 0, irrelevant
+        "Imagine if they let us do night tours." hypothetical, 0, irrelevant
+        "That last group nearly killed me with questions." reported, 0, irrelevant
+        "Oh sure, like they would ever cancel a tour for us." reported, 0, irrelevant
+        "They might add a tour on Sundays." hypothetical, 1, uncertain
+        """
+    }
+
+    static let shots4: String = {
+        let examples: [(String, String, Int, String)] = [
+            ("The two o'clock tour starts in the east wing today.", "change", 1, "relevant"),
+            ("The lights failed upstairs, so every tour skips room four.", "change", 1, "relevant"),
+            ("Tours will no longer start from the main desk.", "change", 1, "relevant"),
+            ("Dana is off sick, so her afternoon group is yours.", "change", 1, "relevant"),
+            ("All guides have to pick up new badges before the first tour.", "change", 1, "relevant"),
+            ("Excuse me, do you work here?", "request", 2, "relevant"),
+            ("Hey, you left your radio on the bench.", "request", 2, "relevant"),
+            ("Everybody out, that alarm is real!", "warning", 3, "urgent"),
+            ("My cousin's museum moved all its tours online.", "others", 0, "irrelevant"),
+            ("The café staff upstairs start an hour earlier next week.", "others", 0, "irrelevant"),
+            ("It is supposed to rain all weekend.", "other", 0, "irrelevant"),
+            ("I have to pick up my car before six.", "other", 0, "irrelevant"),
+            ("The tours are at the usual times today.", "noChange", 0, "irrelevant"),
+            ("Last year the tours started in the garden.", "past", 0, "irrelevant"),
+            ("Imagine if they let us do night tours.", "hypothetical", 0, "irrelevant"),
+            ("That last group nearly killed me with questions.", "reported", 0, "irrelevant"),
+            ("Oh sure, like they would ever cancel a tour for us.", "reported", 0, "irrelevant"),
+            ("They might add a tour on Sundays.", "hypothetical", 1, "uncertain"),
+        ]
+        return "\n\nExamples, for a museum guide whose goals are \"1. Tell me if a tour's time or room changes. 2. Tell me "
+            + "when someone is talking to me. 3. Warn me about danger near me.\":\n"
+            + examples.map { "\"\($0.0)\" {\"kind\": \"\($0.1)\", \"goal\": \($0.2), \"verdict\": \"\($0.3)\"}" }
+            .joined(separator: "\n")
+    }()
+
     static func sentencePrompt(_ text: String, _ context: [String]) -> String {
         func quoted(_ text: String) -> String { "\"" + text.replacingOccurrences(of: "\"", with: "'") + "\"" }
         var prompt = ""
@@ -263,6 +334,14 @@ enum ProbeCatalog {
         Most plain announcements, requests and warnings are forListener.
         """
     }
+
+    static let topicInstructions = """
+    A person who cannot hear wrote goals: things they want to be told about. One sentence was said near them; it \
+    comes from a speech recognizer and may have errors. Say which goal the sentence is about: the number of the \
+    goal it gives the listener something to know, do, expect or prepare about, judged by what follows for the \
+    listener and not by shared words. Answer 0 when it has nothing to do with any of the goals: everyday talk \
+    about food, weather, traffic, errands, health, hobbies or other people's lives.
+    """
 
     static let whoInstructions = """
     A sentence was said near a person, the listener. Their goals, things they want to be told about, show who \
@@ -342,6 +421,22 @@ enum ProbeCatalog {
                 check.instructionsWithEarlier = FoundationModelRelevanceReasoner.confirmInstructions + saidBeforeParagraph
                 return check
             }(),
+            // The second look as the engine of Window 6.2 takes it: warnings too, repetitions too.
+            {
+                var check = SemanticProbe.Check(name: "second-look", instructions: FoundationModelRelevanceReasoner.secondLookInstructions,
+                                                form: .about, keeps: ["hereAndNow", "hereAndNow+earlier"], checksWarnings: true) {
+                    text, context, _, _ in sentencePrompt(text, context)
+                }
+                check.instructionsWithEarlier = FoundationModelRelevanceReasoner.secondLookInstructions
+                    + FoundationModelRelevanceReasoner.repetitionInstructions
+                return check
+            }(),
+            // Which goal, asked again on its own (not told the first answer).
+            SemanticProbe.Check(name: "topic", instructions: topicInstructions, form: .topic, keeps: ["same", "another"],
+                                checksWarnings: true) { text, context, goals, _ in
+                "The listener's goals:\n" + goals.enumerated().map { "\($0.offset + 1). \($0.element)" }.joined(separator: "\n")
+                    + "\n" + sentencePrompt(text, context)
+            },
             SemanticProbe.Check(name: "role-topic", instructions: roleInstructions(offTopic: true), form: .role,
                                 keeps: ["forListener"], checksWarnings: true, prompt: rolePrompt),
         ] { all[check.name] = check }

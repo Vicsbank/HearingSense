@@ -77,6 +77,12 @@ case "run":
             dataset.items = dataset.items.filter { wanted.contains($0.id) }
         }
         development = try SemanticDataset.load(.dev)
+        if split == .sealed2 {
+            let (independent, excluded) = try dataset.independent()
+            dataset = independent
+            print("Excluded \(excluded.count) item(s) whose sentence also occurs in a set used for tuning: "
+                + excluded.joined(separator: " "))
+        }
     } catch {
         print("Could not load the dataset: \(error)")
         exit(1)
@@ -295,18 +301,17 @@ case "throughput", "speculation", "contention":
         let others = all.filter { $0.expected != .relevant && $0.context.isEmpty }
         items = []
         var nextRelevant = 0
-        var index = 0
-        // The other sentences are used again from the start when the stream is longer than they are.
-        while items.count < count, !others.isEmpty {
-            var item = others[index % others.count]
-            if index >= others.count { item.id += "+\(index / others.count)" }
+        // No sentence twice (a repeated sentence would be answered from the cache): the stream is
+        // as long as the profile's other sentences allow, at most `count`.
+        for (index, item) in others.enumerated() where items.count < count {
             items.append(item)
             // Every fifth place, taking every fourth relevant sentence so that all kinds occur.
-            if index % 5 == 2, relevant.indices.contains(nextRelevant), items.count < count {
+            // --mix sparse: every fifteenth place (two relevant sentences among thirty others),
+            // nearer to ordinary conversation, where most of what is said matters to no goal.
+            if index % (option("--mix") == "sparse" ? 15 : 5) == 2, relevant.indices.contains(nextRelevant), items.count < count {
                 items.append(relevant[nextRelevant])
                 nextRelevant += 4
             }
-            index += 1
         }
     }
     var json: Data?
@@ -506,6 +511,13 @@ case "probe-lead":
     print("Preparation lead time, \(variant.name), goals of \(profile), sentences that stay silent")
     await SemanticProbe.leadTimes(variant: variant, goals: SemanticDataset.goals(for: profile).map(\.goal), sentences: sentences,
                                   leads: [0.1, 0.3, 0.5, 0.7, 0.9, 1.2, 2.0]) { print("  " + $0) }
+
+case "probe-text":
+    // The production instructions must be the text that was measured.
+    for name in ["lean-spoken", "spoken-shots4", "lean-shots4", "lean"] {
+        print("staged == \(name): \(FoundationModelRelevanceReasoner.stagedInstructions == ProbeCatalog.variants[name]?.instructions)")
+    }
+    print(FoundationModelRelevanceReasoner.stagedInstructions.split(separator: " ").count, "words")
 
 case "probe-check":
     // A second request on every positive answer of an earlier probe run.

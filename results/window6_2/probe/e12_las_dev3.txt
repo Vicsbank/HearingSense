@@ -1,0 +1,15 @@
+Probe lean-all-shots on dev3: 223 items, session of 1, order as written
+  TP 86 FP 5 FN 8 TN 101  P 94.5 R 91.5  ambiguous alerted 14/15  failed 1  mean 2.53 s, 25.5 tokens out
+    ✗ false alert te012 [idiom] I'm so tired I could sleep through a fire alarm. → kind=warning goal=4 verdict=urgent turn=1
+    ✗ false alert te052 [idiom] Get out, no way she said that. → kind=warning goal=4 verdict=urgent turn=1
+    ✗ false alert at004 [third_person] The junior squad has their game moved to Sunday. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert co026 [third_person] Her talk was moved to Friday, which she hates. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert ck032 [idiom] I got burned on that used car deal, never again. → kind=warning goal=2 verdict=relevant turn=1
+    ✗ missed at011 [implicit] Whoever runs the slowest mile today starts on the bench Friday. → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed co009 [implicit] All presenters need to upload their slides at the front desk before noon. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed co023 [asr_error] The data privacy talk is know in the east haul at three. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed co025 [implicit] The session chair says the laptop on stage only takes PDF files. → kind=others goal=1 verdict=irrelevant turn=1
+    ✗ missed co051 [implicit] We're recording every talk in this track, so sign the release form before you go up. → kind=others goal=1 verdict=irrelevant turn=1
+    ✗ missed ck001 [obvious] Grill, two ribeyes medium rare and one well done. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed ck013 [implicit] Hold the burgers for table four, they're still on appetizers. → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed ck027 [asr_error] Grill, fire too chicken breasts for table ate. → kind=others goal=0 verdict=irrelevant turn=1

@@ -1,0 +1,16 @@
+Window 6.2, session reused up to 4 while sentences wait, kind first when no session is prepared — one sentence every 3.0 s, 35 sentences in 104.1 s
+  decided 35, dropped 0 (relevant among them: none), without any decision 0
+  end to end           p50 1.31  p95 2.11  p99 3.47  max 3.47  (n 35)
+  waiting for a turn   p50 0.00  p95 0.01  p99 0.46  max 0.46  (n 35)
+  model                p50 1.31  p95 2.10  p99 3.47  max 3.47  (n 35)
+    one request        p50 1.29  p95 1.82  p99 1.96  max 1.96  (n 25)
+    with a second look p50 2.04  p95 3.47  p99 3.47  max 3.47  (n 10)
+  longest queue 1; first judgements 35 (20.2 per minute); later than the deadline 0
+  throughput 20.2 sentences per minute; output tokens 828
+  not evaluated: 0 (expired 0, pushed out 0); relevant among them: none
+  relevant sentences   p50 2.05  p95 3.47  p99 3.47  max 3.47  (n 6)
+  waiting line: mean 0.01, longest 1; empty 2.07 s after the last sentence arrived; served newest first 0
+  second looks 10; extra model requests 0; model failures 0
+  answers from a continued session 0; judged again when nothing waited 0, alerts found that way 0
+  under load: TP 6 FP 1 FN 0 TN 24; missed ; false alerts te052
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-2/results/window6_2/stream/throughput_window6_2_3.0.json

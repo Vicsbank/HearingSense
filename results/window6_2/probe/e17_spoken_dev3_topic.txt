@@ -1,0 +1,16 @@
+Check topic on the positive answers of lean-spoken (dev3)
+  before: TP 92 FP 9 FN 2 TN 97  P 91.1 R 97.9  ambiguous alerted 13/15  failed 1  mean 1.86 s, 26.1 tokens out
+  TP 90 FP 8 FN 4 TN 98  P 91.8 R 95.7  ambiguous alerted 13/15  failed 1  mean 1.86 s, 26.1 tokens out
+    ✗ false alert te012 [idiom] I'm so tired I could sleep through a fire alarm. → kind=warning goal=4 verdict=urgent turn=1 check=same
+    ✗ false alert te052 [idiom] Get out, no way she said that. → kind=warning goal=4 verdict=urgent turn=1 check=same
+    ✗ false alert at004 [third_person] The junior squad has their game moved to Sunday. → kind=change goal=1 verdict=urgent turn=1 check=same
+    ✗ false alert co026 [third_person] Her talk was moved to Friday, which she hates. → kind=change goal=1 verdict=urgent turn=1 check=same
+    ✗ false alert co041 [asr_error] I mist my train this mourning buy a minute. → kind=warning goal=1 verdict=urgent turn=1 check=same
+    ✗ false alert co049 [third_person] My boss is presenting at a different conference in Lisbon this week. → kind=change goal=1 verdict=relevant turn=1 check=same
+    ✗ false alert ck004 [third_person] Pastry needs more butter from the walk-in. → kind=change goal=1 verdict=relevant turn=1 check=same
+    ✗ false alert ck049 [third_person] Salad station is out of croutons again. → kind=change goal=1 verdict=relevant turn=1 check=same
+    ✗ missed te027 [attention] Excuse me, could I talk to you for a second about the noise? → kind=request goal=3 verdict=urgent turn=1 check=none
+    ✗ missed te044 [attention] Hey, you dropped your keys back there. → kind=request goal=3 verdict=relevant turn=1 check=none
+    ✗ missed at031 [causal] Two defenders are out sick, so I'm moving a couple of you to the back line tonight. → kind= goal=0 verdict= turn=1
+    ✗ missed co005 [attention] Sorry, is this seat taken? → kind=noChange goal=1 verdict=irrelevant turn=1
+  check: 122 requests, mean 1.83 s

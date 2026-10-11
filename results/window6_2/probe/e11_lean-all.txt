@@ -1,0 +1,11 @@
+Probe lean-all on dev3: 101 items, session of 1, order as written
+  TP 33 FP 5 FN 4 TN 59  P 86.8 R 89.2  ambiguous alerted 0/0  failed 0  mean 1.89 s, 24.3 tokens out
+    ✗ false alert te012 [idiom] I'm so tired I could sleep through a fire alarm. → kind=warning goal=4 verdict=urgent turn=1
+    ✗ false alert te052 [idiom] Get out, no way she said that. → kind=warning goal=4 verdict=urgent turn=1
+    ✗ false alert co026 [third_person] Her talk was moved to Friday, which she hates. → kind=change goal=1 verdict=urgent turn=1
+    ✗ false alert ck044 [multi] Couldn't tell you, I haven't even had coffee yet. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert ck049 [third_person] Salad station is out of croutons again. → kind=change goal=1 verdict=relevant turn=1
+    ✗ missed te034 [implicit] Somebody keeps ringing your buzzer. → kind=others goal=3 verdict=irrelevant turn=1
+    ✗ missed at001 [obvious] Practice is moved to six thirty tomorrow morning. → kind=change goal=0 verdict=urgent turn=1
+    ✗ missed co005 [attention] Sorry, is this seat taken? → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed ck013 [implicit] Hold the burgers for table four, they're still on appetizers. → kind=others goal=0 verdict=irrelevant turn=1

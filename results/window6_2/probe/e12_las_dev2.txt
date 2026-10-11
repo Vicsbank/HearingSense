@@ -1,0 +1,17 @@
+Probe lean-all-shots on dev2: 171 items, session of 1, order as written
+  TP 72 FP 5 FN 10 TN 68  P 93.5 R 87.8  ambiguous alerted 9/12  failed 1  mean 2.56 s, 26.0 tokens out
+    ✗ false alert e022 [third_person] The eighth graders have a different timetable from Monday. → kind=change goal=2 verdict=relevant turn=1
+    ✗ false alert e052 [unrelated] That hill is too steep, the road grade must be ten percent. → kind=warning goal=4 verdict=relevant turn=1
+    ✗ false alert e069 [multi] I can't, I have to babysit. → kind=request goal=3 verdict=relevant turn=1
+    ✗ false alert o031 [past] On my last project the deadline moved six times. → kind=change goal=1 verdict=relevant turn=1
+    ✗ false alert o034 [sarcasm_quote] He does this impression of the boss saying, drop everything, I need it yesterday. → kind=warning goal=3 verdict=urgent turn=1
+    ✗ missed e004 [implicit] The grading rubric has changed. → kind=change goal=0 verdict=relevant turn=1
+    ✗ missed e014 [implicit] I'll be checking notebooks at random this week. → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed e016 [implicit] Art is in the computer lab for the rest of the month. → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed e020 [causal] Nobody read the instructions, so I'm marking this one out of ten instead of twenty. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed e024 [third_person] Mr. Lindqvist broke his arm, so we're having our quiz with the substitute. → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed e028 [negation] I won't be accepting emailed essays, paper only. → kind=noChange goal=1 verdict=irrelevant turn=1
+    ✗ missed e039 [asr_error] jim class is in the or the tory um today → kind=others goal=1 verdict=irrelevant turn=1
+    ✗ missed o011 [implicit] When you get a chance, take a look at the budget sheet. → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed o015 [causal] Priya is out today, so I'm giving her tickets to you. → kind=others goal=0 verdict=irrelevant turn=1
+    ✗ missed m006 [implicit] Maya's staying for choir until five tonight. → kind=noChange goal=1 verdict=irrelevant turn=1

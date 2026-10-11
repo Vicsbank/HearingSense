@@ -151,6 +151,19 @@ public struct SemanticDataset: Sendable {
         return try parse(String(contentsOf: url, encoding: .utf8), split: split)
     }
 
+    /// The sealed set without the items whose sentence also occurs, word for word, in a set
+    /// that was used for tuning (Window 6.2: the second sealed set has another author, and one
+    /// of its everyday sentences is also in the first development set). Returns the set and
+    /// the identifiers that were left out, so that a report can account for them.
+    public func independent(of tuning: [Split] = [.dev, .dev2, .dev3, .heldout, .sealed]) throws
+        -> (dataset: SemanticDataset, excluded: [String])
+    {
+        let seen = Set(try tuning.filter { $0 != split }.flatMap { try SemanticDataset.load($0).items }.map { $0.text.lowercased() })
+        var result = self
+        result.items = items.filter { !seen.contains($0.text.lowercased()) }
+        return (result, items.filter { seen.contains($0.text.lowercased()) }.map(\.id))
+    }
+
     static func parse(_ text: String, split: Split) throws -> SemanticDataset {
         var items: [Item] = []
         for line in text.split(whereSeparator: \.isNewline) where !line.hasPrefix("#") && !line.hasPrefix("@") {

@@ -1,0 +1,15 @@
+Window 6.1 — one sentence every 1.0 s, 35 sentences in 54.4 s
+  decided 35, dropped 4 (relevant among them: te027), without any decision 0
+  end to end           p50 11.99  p95 21.16  p99 21.40  max 21.40  (n 31)
+  waiting for a turn   p50 9.77  p95 18.55  p99 19.17  max 19.17  (n 31)
+  model                p50 1.35  p95 2.84  p99 4.05  max 4.05  (n 31)
+    one request        p50 1.20  p95 2.75  p99 2.84  max 2.84  (n 24)
+    with a second look p50 2.05  p95 4.05  p99 4.05  max 4.05  (n 7)
+  longest queue 12; first judgements 31 (34.2 per minute); later than the deadline 23
+  throughput 34.2 sentences per minute; output tokens 1089
+  not evaluated: 4 (expired 1, pushed out 3); relevant among them: te027
+  relevant sentences   p50 13.00  p95 21.40  p99 21.40  max 21.40  (n 5)
+  waiting line: mean 5.92, longest 12; empty 20.43 s after the last sentence arrived; served newest first 0
+  second looks 7; extra model requests 0; model failures 0
+  under load: TP 5 FP 3 FN 1 TN 22; missed te027; false alerts te008 te012 te052
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-2/results/window6_2/stream/throughput_window6_1_1.0.json
