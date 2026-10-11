@@ -12,6 +12,10 @@
 #   - Window 6.3 as it works while sentences wait (the session continues);
 #   - Window 6.2, each sentence by itself, and with the three said before it (as its app handed them in).
 # The script refuses to run a second time.
+#
+# It was run on 2026-10-11 with the build of commit 1e269b8, where "--config window6_3" was the frozen
+# configuration. That configuration is now called window6_3_frozen (the app's default has since changed in
+# one switch, see Configuration.holdsBackOtherGroups); the commands below name it so.
 set -u
 ROOT="${0:A:h:h}"
 OUT="$ROOT/results/window6_3/sealed"
@@ -28,9 +32,9 @@ run() { # $1: name, rest: arguments
   grep -m1 "confusion" "$OUT/$name.txt" | sed "s/^/$name:/"
 }
 run sealed3_baselines --methods keyword,embedding
-run sealed3_window6_3 --methods model --config window6_3 --reuse 1 --no-steps
-run sealed3_window6_3_conversation --methods model --config window6_3 --reuse 1 --no-steps --conversation 3
-run sealed3_window6_3_busy --methods model --config window6_3
+run sealed3_window6_3 --methods model --config window6_3_frozen --reuse 1 --no-steps
+run sealed3_window6_3_conversation --methods model --config window6_3_frozen --reuse 1 --no-steps --conversation 3
+run sealed3_window6_3_busy --methods model --config window6_3_frozen
 run sealed3_window6_2 --methods model --config window6_2 --reuse 1 --no-steps
 run sealed3_window6_2_conversation --methods model --config window6_2 --reuse 1 --no-steps --conversation 3
 echo "Wrote $OUT"

@@ -89,6 +89,16 @@ public actor SemanticAttentionEngine {
         /// wrote about themselves (`AudienceAnalyzer`): a sentence for another group, or for
         /// another person about that person's own business, is not alerted.
         public var usesAudienceCues = true
+        /// Window 6.3. Hold back a sentence that begins with a group of the same kind as the
+        /// listener's but another one ("blue bus" for a listener on the red bus) on the word of
+        /// the rule alone. **Off since the sealed evaluation.** It was on when the configuration
+        /// was frozen (`window6_3Frozen`), and on the sealed set it took back 7 correct alerts for
+        /// 4 false ones: "The laundry room closes at eight" for a listener in dorm 6, and
+        /// sentences that begin with another group but go on to say what follows for all. Recall
+        /// comes first in this project, so the rule no longer decides; the cue is still found and
+        /// reported with the decision. What it should become is a narrow question to the model,
+        /// as for a person called by name; that needs a new held-out set to be measured.
+        public var holdsBackOtherGroups = false
         /// Window 6.3. A sentence that calls the listener by name alerts under the goal about
         /// being spoken to, whatever the model made of it.
         public var alertsWhenCalledByName = true
@@ -102,6 +112,14 @@ public actor SemanticAttentionEngine {
         public init() {}
 
         public static let standard = Configuration()
+
+        /// The configuration that was frozen and run on the sealed set of Window 6.3 (commit
+        /// `1e269b8`): as `standard`, with the rule for another group deciding by itself.
+        public static var window6_3Frozen: Configuration {
+            var configuration = Configuration()
+            configuration.holdsBackOtherGroups = true
+            return configuration
+        }
 
         /// How the engine behaved in Window 6.2, for comparisons: nothing is known about the
         /// listener, and nothing is done about cut-off sentences.
@@ -685,8 +703,8 @@ public actor SemanticAttentionEngine {
         } else if !looksUrgent {
             switch cue.kind {
             case .otherGroup:
-                judgement.audience = .otherGroup
                 statistics.otherGroupSentences += 1
+                if configuration.holdsBackOtherGroups { judgement.audience = .otherGroup }
             case .otherPerson, .unknownPerson:
                 let started = Date()
                 // No answer: it was said to someone else, and nothing says it is for everyone.

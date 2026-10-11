@@ -703,8 +703,8 @@ extension ConversationIntelligenceController {
         "One more thing, the report is due next Wednesday, not Monday.",
         "And the teacher said it has to be at least six pages.",
         "Fine, then let's split it, three pages each.",
-        // Window 6.3: one sentence for another group, one that calls the listener by name.
-        "Group A, your presentation moves to nine tomorrow.",
+        // Window 6.3: one sentence said to someone else, one that calls the listener by name.
+        "Maria, your slides are still on my computer.",
         "Alex, can you bring the charger tomorrow?",
     ]
 

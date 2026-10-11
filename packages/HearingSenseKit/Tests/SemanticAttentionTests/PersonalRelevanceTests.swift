@@ -173,10 +173,22 @@ import Testing
         #expect(listener.spokenToGoal == 2)
     }
 
-    @Test func aSentenceForAnotherGroupIsListedNotAlerted() async {
+    @Test func aSentenceForAnotherGroupAlertsButCarriesTheCue() async {
+        // Since the sealed evaluation the rule for another group no longer decides by itself.
         let sentence = "Yellow boat, you launch at nine instead of ten."
         let reasoner = ScriptedReasoner([sentence: Fixture.relevant(headline: "")])
         let engine = await engine(reasoner)
+        let decision = await engine.evaluate(Fixture.utterance(sentence))
+        #expect(decision.isAccepted)
+        #expect(decision.audience == .otherGroup)
+        #expect(await reasoner.confirmed == [sentence])
+        #expect(await engine.statistics.otherGroupSentences == 1)
+    }
+
+    @Test func asFrozenASentenceForAnotherGroupIsListedNotAlerted() async {
+        let sentence = "Yellow boat, you launch at nine instead of ten."
+        let reasoner = ScriptedReasoner([sentence: Fixture.relevant(headline: "")])
+        let engine = await engine(reasoner, configuration: .window6_3Frozen)
         let decision = await engine.evaluate(Fixture.utterance(sentence))
         #expect(!decision.isAccepted)
         #expect(decision.verdict == .uncertain)
@@ -302,7 +314,7 @@ import Testing
     @Test func aChangedAboutLineIsReadAgain() async {
         let sentence = "Yellow boat, you launch at nine instead of ten."
         let reasoner = ScriptedReasoner([sentence: Fixture.relevant(headline: "")])
-        let engine = await engine(reasoner)
+        let engine = await engine(reasoner, configuration: .window6_3Frozen)
         #expect(await engine.evaluate(Fixture.utterance(sentence)).isAccepted == false)
         await engine.setGoals([Self.boats, Self.spoken, Fixture.emergency], about: "I'm Alma, on the yellow boat.")
         await engine.listenerIsDescribed()

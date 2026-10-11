@@ -568,7 +568,8 @@ struct AttentionGoalsView: View {
             } footer: {
                 Text("Your name and what is yours where you are: your group, class, team, table, room. "
                     + "It is only used to tell whether a sentence that names someone means you: "
-                    + "“Group A, you leave at four” stays quiet when you are in group B. "
+                    + "“Maria, your order is ready” stays quiet when your name is Alex, "
+                    + "and “Alex, is this seat free?” reaches you. "
                     + "It stays on this iPhone. Leave it empty and nothing is assumed about you.")
             }
 

@@ -1,0 +1,120 @@
+Excluded 0 item(s) whose sentence also occurs in a set used for tuning: 
+Set sealed3: 315 synthetic utterances — relevant 152, irrelevant 145, ambiguous 8, repeat 10
+SEALED set: run once with the frozen configuration. Never tune on it.
+
+  wall time 825.0 s; this process 16 → 26 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, Window 6.2, context given to every sentence, a session per sentence — sealed3 set
+  precision            68.8 % (148/215; 95 % CI 62.4–74.7)
+  recall               97.4 % (148/152; 95 % CI 93.4–99.0)
+  F1                   0.807
+  false alerts         42.1 % (61/145; 95 % CI 34.3–50.2) of irrelevant utterances
+  false alerts / hour  101.0 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      60.0 % (6/10; 95 % CI 31.3–83.2)
+  important missed     3.3 % (1/30; 95 % CI 0.6–16.7)
+  goal named correctly 67.6 % (100/148; 95 % CI 59.7–74.6)
+  ambiguous items      7 alerted, 0 kept as uncertain, 1 nothing (of 8)
+  time per utterance   median 2.76 s, p95 3.01 s; model median 2.76 s; full judgements 313, stopped by the first pass 0, gated 0, fallbacks 2
+  verifier corrections headline_not_shortened 25, hypothetical_marker 4, nothing_changes 6, said_before 4, second_look 8, urgency_unconfirmed 5
+  by category          asr_error 9/10, attention 15/15, causal 10/10, group_all 15/15, hypothetical 9/10, idiom 6/10, implicit 33/35, incomplete 0/5, multi 12/20, my_group 11/12, negation 14/15, obvious 15/15, other_addressee 0/20, other_affects 15/15, other_group 1/20, past 10/10, repeated 4/10, sarcasm_quote 8/10, third_person 10/10, unrelated 29/30, urgent_short 10/10
+  confusion            TP 148  FP 67  FN 4  TN 88  (ambiguous, not scored: 7 alerted, 0 uncertain, 1 silent)
+  precision            68.8 % (148/215; 95 % CI 62.4–74.7)
+  recall               97.4 % (148/152; 95 % CI 93.4–99.0)
+  F1                   0.807
+  false-positive rate  43.2 % (67/155; 95 % CI 35.7–51.1)
+  false-negative rate  2.6 % (4/152; 95 % CI 1.0–6.6)
+  balanced accuracy    77.1 %
+  important-event recall                96.7 % (29/30; 95 % CI 83.3–99.4)
+  short urgent instruction recall       100.0 % (10/10; 95 % CI 72.2–100.0)
+  implicit relevance recall             95.6 % (43/45; 95 % CI 85.2–98.8)
+  explicit relevance recall             100.0 % (30/30; 95 % CI 88.6–100.0)
+  announcement to all or own group      96.3 % (26/27; 95 % CI 81.7–99.3)
+  said to others, concerns all          100.0 % (15/15; 95 % CI 79.6–100.0)
+  another person addressed              0.0 % (0/20; 95 % CI 0.0–16.1)
+  another group addressed               5.0 % (1/20; 95 % CI 0.9–23.6)
+  negation accuracy                     93.3 % (14/15; 95 % CI 70.2–98.8)
+  hypothetical accuracy                 90.0 % (9/10; 95 % CI 59.6–98.2)
+  personal relevance accuracy           100.0 % (10/10; 95 % CI 72.2–100.0)
+  past and quotation accuracy           90.0 % (18/20; 95 % CI 69.9–97.2)
+  idiom accuracy                        60.0 % (6/10; 95 % CI 31.3–83.2)
+  recognition-error accuracy            90.0 % (9/10; 95 % CI 59.6–98.2)
+  context (several sentences) accuracy  60.0 % (12/20; 95 % CI 38.7–78.1)
+  unrelated talk accuracy               96.7 % (29/30; 95 % CI 83.3–99.4)
+  repetition accuracy                   40.0 % (4/10; 95 % CI 16.8–68.7)
+  cut-off sentence accuracy             0.0 % (0/5; 95 % CI 0.0–43.4)
+  by profile           car_ferry TP 30 FP 12 FN 1 TN 19; festival_camp TP 27 FP 16 FN 1 TN 15; film_set TP 30 FP 14 FN 1 TN 17; food_bank TP 30 FP 12 FN 1 TN 19; hostel TP 31 FP 13 FN 0 TN 18
+  decided at           fallback 2, model 313
+  seconds per item     p50 2.76  p95 3.01  p99 3.23   model only: p50 2.76  p95 3.01  p99 3.23
+  output tokens        27.6 per model decision (315 model decisions)
+    ✗ fs003 [other_addressee, expected irrelevant] Oliver, wardrobe wants you back, your jacket is the wrong colour. → relevant @model kind=question subject=listenerOrGroup goal=called
+    ✗ fs008 [idiom, expected irrelevant] That director is playing with fire, shouting at the producer like that. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fs012 [my_group, expected relevant] Group C, you're on set in five minutes. → irrelevant @fallback kind=unclear subject=unclear goal=-
+    ✗ fs019 [other_addressee, expected irrelevant] They're calling for you on set, Hannah. → relevant @model kind=question subject=listenerOrGroup goal=called
+    ✗ fs025 [other_group, expected irrelevant] Stunt team, safety briefing by the crash mats in two minutes. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fs031 [multi, expected irrelevant] They moved the whole thing forward two hours and didn't tell anyone. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ fs033 [other_addressee, expected irrelevant] Dev, your call time tomorrow is six, don't be late. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ fs040 [repeated, expected repeat] Like I said, with the power out there's no filming for an hour or more. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ fs044 [other_group, expected irrelevant] Group B, hand your umbrellas back to props before you go. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ fs048 [sarcasm_quote, expected irrelevant] And then the guy in the film goes, everybody get out, the building's going to blow. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fs050 [other_addressee, expected irrelevant] Sam, you need to move your car, it's blocking the grip truck. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fs052 [multi, expected irrelevant] She's wanted in makeup right now and they can't find her. → relevant @model kind=statement subject=listenerOrGroup goal=costume
+    ✗ fs056 [negation, expected irrelevant] Nobody needs to move, the truck is going around the other side. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fs058 [other_group, expected irrelevant] Camera department, your call tomorrow is five a.m. → relevant @model kind=statement subject=listenerOrGroup goal=called
+    ✗ fs062 [incomplete, expected irrelevant] So what they want the background to do after lunch is → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ cf003 [other_addressee, expected irrelevant] Mrs Okafor, your table in the restaurant is ready. → relevant @model kind=question subject=listenerOrGroup goal=spoken
+    ✗ cf010 [other_group, expected irrelevant] Foot passengers, please gather at the forward gangway for disembarkation. → relevant @model kind=statement subject=listenerOrGroup goal=spoken
+    ✗ cf019 [other_addressee, expected irrelevant] Jonas, go down and check you locked the van. → relevant @model kind=question subject=listenerOrGroup goal=spoken
+    ✗ cf022 [repeated, expected repeat] Just to repeat, we're coming into terminal two today, not our usual berth. → relevant @model kind=statement subject=listenerOrGroup goal=arrival
+    ✗ cf023 [sarcasm_quote, expected irrelevant] Sure, and the captain's going to come down and carry your bags to the car himself. → relevant @model kind=question subject=listenerOrGroup goal=spoken
+    ✗ cf025 [other_group, expected irrelevant] Drivers on deck 5, you may now return to your vehicles. → relevant @model kind=statement subject=listenerOrGroup goal=spoken
+    ✗ cf033 [other_addressee, expected irrelevant] Could Daniel Reyes please come to the information desk, your daughter is waiting for you. → relevant @model kind=question subject=listenerOrGroup goal=spoken
+    ✗ cf044 [other_group, expected irrelevant] Freight drivers, your meal vouchers are valid in the truckers' lounge until nine. → relevant @model kind=statement subject=listenerOrGroup goal=arrival (headline_not_shortened)
+    ✗ cf049 [implicit, expected relevant] You can see the harbour lights already, we're early. → irrelevant @model kind=noChange subject=listenerOrGroup goal=-
+    ✗ cf050 [other_addressee, expected irrelevant] Ruth, move your suitcase, it's blocking the lady's wheelchair. → relevant @model kind=statement subject=listenerOrGroup goal=spoken (urgency_unconfirmed)
+    ✗ cf052 [multi, expected irrelevant] They just called her to come and collect it at the desk. → relevant @model kind=question subject=listenerOrGroup goal=spoken
+    ✗ cf058 [other_group, expected irrelevant] Cabin passengers, please leave your cabins and hand in your keys thirty minutes before arrival. → relevant @model kind=statement subject=listenerOrGroup goal=spoken
+    ✗ cf062 [incomplete, expected irrelevant] Passengers travelling with vehicles are advised that the → relevant @model kind=statement subject=listenerOrGroup goal=spoken
+    ✗ fb003 [other_addressee, expected irrelevant] Gareth, your break was supposed to end ten minutes ago. → relevant @model kind=statement subject=listenerOrGroup goal=breaks
+    ✗ fb008 [idiom, expected irrelevant] Give me a break, you can't be serious. → relevant @model kind=question subject=listenerOrGroup goal=wanted
+    ✗ fb010 [other_group, expected irrelevant] Packing team, your lunch is at one today. → relevant @model kind=statement subject=listenerOrGroup goal=supplies
+    ✗ fb019 [other_addressee, expected irrelevant] Someone's at the front desk asking for you, Monique. → relevant @model kind=question subject=listenerOrGroup goal=wanted
+    ✗ fb022 [repeated, expected repeat] Don't forget, today we stop at two thirty instead of four. → relevant @model kind=statement subject=listenerOrGroup goal=breaks
+    ✗ fb025 [other_group, expected irrelevant] Drivers, the delivery sheets are on the clipboard by the door. → relevant @model kind=statement subject=listenerOrGroup goal=supplies
+    ✗ fb031 [multi, expected irrelevant] They cut his break down to ten minutes without warning. → relevant @model kind=statement subject=listenerOrGroup goal=wanted
+    ✗ fb033 [other_addressee, expected irrelevant] Winston, you sort the cereal boxes, I'll do the tea. → relevant @model kind=question subject=listenerOrGroup goal=wanted
+    ✗ fb036 [implicit, expected relevant] The urn's on and there are biscuits out in the side room. → irrelevant @model kind=noChange subject=listenerOrGroup goal=-
+    ✗ fb044 [other_group, expected irrelevant] Table 2, you're on the baby food and nappies next. → relevant @model kind=statement subject=listenerOrGroup goal=supplies
+    ✗ fb050 [other_addressee, expected irrelevant] Aisha, mind your fingers on that crate lid, it bit me earlier. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fb058 [other_group, expected irrelevant] Front desk volunteers, you need to clear the entrance area before the doors open. → relevant @model kind=question subject=listenerOrGroup goal=wanted
+    ✗ fb062 [incomplete, expected irrelevant] And when the next lorry gets here what we need table four to → relevant @model kind=statement subject=listenerOrGroup goal=supplies
+    ✗ ho003 [other_addressee, expected irrelevant] Jasper, reception says your locker key deposit is still unpaid. → relevant @model kind=statement subject=listenerOrGroup goal=room
+    ✗ ho010 [other_group, expected irrelevant] Dorm 4, your room is being cleaned now, can you wait in the lounge. → relevant @model kind=statement subject=listenerOrGroup goal=room
+    ✗ ho019 [other_addressee, expected irrelevant] There's someone at the door asking for you, Ingrid. → relevant @model kind=question subject=listenerOrGroup goal=name
+    ✗ ho022 [repeated, expected repeat] Just so you know, no cooking tomorrow morning, the kitchen's shut for the pest people. → relevant @model kind=statement subject=listenerOrGroup goal=room
+    ✗ ho025 [other_group, expected irrelevant] The cycling group, your breakfast is at seven and your bikes need to be out of the luggage room by eight. → relevant @model kind=statement subject=listenerOrGroup goal=room (headline_not_shortened)
+    ✗ ho031 [multi, expected irrelevant] They made everyone leave their room at six in the morning. → relevant @model kind=statement subject=listenerOrGroup goal=room
+    ✗ ho033 [other_addressee, expected irrelevant] Felipe, you need to check out by eleven or they'll charge you another night. → relevant @model kind=statement subject=listenerOrGroup goal=room
+    ✗ ho040 [repeated, expected repeat] Don't forget to clear out your dorm 6 locker before twelve. → relevant @model kind=statement subject=listenerOrGroup goal=room
+    ✗ ho044 [other_group, expected irrelevant] Private rooms on the top floor, your checkout is extended to noon. → relevant @model kind=statement subject=listenerOrGroup goal=room
+    ✗ ho050 [other_addressee, expected irrelevant] Tess, move your backpack off my bunk, please. → relevant @model kind=question subject=listenerOrGroup goal=name
+    ✗ ho052 [multi, expected irrelevant] He's downstairs asking for her right now. → relevant @model kind=question subject=listenerOrGroup goal=name
+    ✗ ho058 [other_group, expected irrelevant] Staff, your lockers in the office are being replaced on Monday. → relevant @model kind=statement subject=listenerOrGroup goal=room
+    ✗ ho062 [incomplete, expected irrelevant] If you're in one of the dorms on the second floor then tomorrow you → relevant @model kind=statement subject=listenerOrGroup goal=room (headline_not_shortened)
+    ✗ fc003 [other_addressee, expected irrelevant] Darren, your steward shift at gate B starts at six, don't be late. → relevant @model kind=statement subject=listenerOrGroup goal=lineup
+    ✗ fc008 [idiom, expected irrelevant] It's the calm before the storm, my exams start next week. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fc010 [other_group, expected irrelevant] Stewards on the night shift, move over to gate C for your briefing. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fc013 [hypothetical, expected irrelevant] If it floods I'm sleeping in the car, I don't care. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fc019 [other_addressee, expected irrelevant] Nurse Bailey, you're wanted at the medical tent right away. → relevant @model kind=question subject=listenerOrGroup goal=talk
+    ✗ fc025 [other_group, expected irrelevant] Bar staff, your showers behind crew catering are open till midnight. → relevant @model kind=statement subject=listenerOrGroup goal=facilities
+    ✗ fc029 [asr_error, expected relevant] Tomorrow's opening act on the mane stage has been can sold. → irrelevant @model kind=noChange subject=listenerOrGroup goal=-
+    ✗ fc031 [multi, expected irrelevant] They evacuated the whole site because of a dust storm. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fc033 [other_addressee, expected irrelevant] Marta, your burger van's water tank is nearly empty, shall I fetch more? → relevant @model kind=question subject=listenerOrGroup goal=facilities
+    ✗ fc037 [idiom, expected irrelevant] I'm in hot water with my boss for taking Friday off. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fc040 [repeated, expected repeat] Remember the headliner's on at half ten now on the main stage. → relevant @model kind=statement subject=listenerOrGroup goal=lineup
+    ✗ fc042 [unrelated, expected irrelevant] Georgia said she can give us a lift back on Monday. → relevant @model kind=statement subject=listenerOrGroup goal=talk
+    ✗ fc044 [other_group, expected irrelevant] Artists playing the second stage, check in at the production office an hour before your set. → relevant @model kind=statement subject=listenerOrGroup goal=lineup
+    ✗ fc050 [other_addressee, expected irrelevant] Mister Hughes, the security office needs you to sign for the radios. → relevant @model kind=question subject=listenerOrGroup goal=talk
+    ✗ fc052 [multi, expected irrelevant] They've been told to pack up and be gone by six. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fc058 [other_group, expected irrelevant] Traders must move their vehicles off the market field by nine tomorrow. → relevant @model kind=statement subject=listenerOrGroup goal=safety
+    ✗ fc062 [incomplete, expected irrelevant] The organisers have asked us to let you know that from tonight the → relevant @model kind=statement subject=listenerOrGroup goal=talk
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-3/results/window6_3/sealed/sealed3_window6_2.json
