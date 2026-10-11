@@ -1,0 +1,229 @@
+# Hearing Sense — semantic attention, SEALED evaluation set (Window 6.1).
+# Synthetic, written for this project before any Window 6.1 prompt, rule or threshold was changed; no real
+# conversation. REPORT ONLY: run once with the frozen configuration. Never tune on this file, never copy a
+# sentence from it into a prompt, a rule or a test.
+# Fields: id | profile | category | expected | acceptable goals | flags | utterance | why
+# expected: relevant (an alert is wanted), irrelevant (no alert; "uncertain" in the app's list is fine),
+# ambiguous (either is defensible; reported separately, not scored), repeat (said before: no second alert).
+# flags: important (a miss is costly), urgent (a short instruction to act now), repeat_of=<id>,
+# context=<earlier utterance, no commas>
+sp001|pupil|obvious|relevant|grades||Your quiz scores are going into the gradebook this afternoon.|names scores and the gradebook
+sp002|pupil|obvious|relevant|grades||I'm lowering everyone's grade by a letter if the lab notebooks aren't signed.|names the grade
+sp003|pupil|implicit|relevant|grades||The midterm now covers chapters one through nine instead of one through six.|scope of an exam changed
+sp004|pupil|implicit|relevant|grades||You're allowed one page of notes during Thursday's test.|conditions of a test
+sp005|pupil|implicit|relevant|grades||Anyone who turns in the worksheet today gets two bonus points.|a chance to raise the mark
+sp006|pupil|implicit|relevant|grades||The oral presentation has been swapped for a written report.|the assessed task changed
+sp007|pupil|implicit|relevant|grades||Spelling mistakes will cost you marks from now on.|new marking rule
+sp008|pupil|implicit|relevant|grades||I'm only counting your best three labs out of five.|how the mark is computed
+sp009|pupil|implicit|relevant|grades||The reading response is due before first period, not at the end of the day.|deadline moved earlier
+sp010|pupil|implicit|relevant|grades||We're doing peer marking for this essay, so your partner decides half your score.|who marks changed
+sp011|pupil|causal|relevant|grades||The copier jammed, so there are no printed study guides, use the online one for Friday's test.|consequence for test preparation
+sp012|pupil|causal|relevant|grades||Too many people copied the homework, so from now on it's done in class and collected.|consequence: new rule for assessed work
+sp013|pupil|causal|relevant|grades||The substitute never collected the papers, so that assignment won't count.|an assignment dropped from the mark
+sp014|pupil|third_person|irrelevant|||My roommate bombed her statistics final last semester.|someone else, the past
+sp015|pupil|third_person|irrelevant|||The other section got an extra week for their project, lucky them.|explicitly another group
+sp016|pupil|third_person|irrelevant|||My sister's teacher lets them retake any test they want.|another class
+sp017|pupil|third_person|irrelevant|||Over at the college they mark everything on a curve.|another place
+sp018|pupil|third_person|relevant|grades||Mrs. Okafor is away Thursday, so our test moves to Monday.|a named person, but the listener's test moves
+sp019|pupil|negation|irrelevant|||The due date hasn't moved, it's still the twelfth.|nothing changes
+sp020|pupil|negation|irrelevant|||Relax, nothing about the marking policy is different this year.|nothing changes
+sp021|pupil|negation|irrelevant|||No, we are not having a quiz tomorrow, same plan as always.|nothing changes
+sp022|pupil|negation|relevant|grades||Homework will no longer be checked for completion, only for accuracy.|a negation that is the change
+sp023|pupil|negation|relevant|grades||You can't make up the lab if you miss it.|a rule that can cost marks
+sp024|pupil|negation|relevant|grades||Don't write in pencil on the final, pencil answers won't be marked.|instruction with a marking consequence
+sp025|pupil|hypothetical|irrelevant|||I hope she just gives everybody full marks.|a wish
+sp026|pupil|hypothetical|irrelevant|||Wouldn't it be great if finals were optional?|imagined
+sp027|pupil|hypothetical|irrelevant|||Suppose they dropped the essay, I'd have so much free time.|imagined
+sp028|pupil|hypothetical|ambiguous|grades||There might be a surprise test sometime next month.|a real possibility, not confirmed
+sp029|pupil|hypothetical|relevant|grades||If your phone goes off during the exam, you get a zero.|a stated rule in conditional form
+sp030|pupil|past|irrelevant|||Last year's class had to write three essays instead of two.|the past, another group
+sp031|pupil|past|irrelevant|||When I took this course the final was all multiple choice.|the speaker's past
+sp032|pupil|sarcasm_quote|irrelevant|||Somebody joked that the teacher lost all our tests.|reported joke
+sp033|pupil|sarcasm_quote|irrelevant|||Yeah, sure, and I'm going to get a hundred percent without studying.|sarcasm
+sp034|pupil|sarcasm_quote|irrelevant|||In that show the professor tells the whole class they've failed.|fiction
+sp035|pupil|asr_error|relevant|grades||the buy ology quiz is open book now|recognition error in "biology"
+sp036|pupil|asr_error|relevant|grades||extra point's for any one who hands in the poster early|recognition errors, a bonus
+sp037|pupil|asr_error|relevant|danger|important|every body out the fire a larm is reel this time|recognition errors, a real alarm
+sp038|pupil|asr_error|irrelevant|||i for got my lunch on the kitchen counter a gain|recognition errors, unrelated
+sp039|pupil|incomplete|ambiguous|grades||And the grade for that will be|cut off before the statement
+sp040|pupil|incomplete|ambiguous|grades||So the test on|cut off before the statement
+sp041|pupil|repeated|repeat|grades|repeat_of=sp003|Remember, the midterm now covers chapters one through nine.|said before
+sp042|pupil|ambiguous|ambiguous|grades||Some of you will need to redo this.|may or may not include the listener
+sp043|pupil|unrelated|irrelevant|||My dog chewed through another charger cable.|everyday talk
+sp044|pupil|unrelated|irrelevant|||Is it supposed to rain on Saturday?|everyday talk
+sp045|pupil|unrelated|irrelevant|||These headphones were on sale for half price.|everyday talk
+sp046|pupil|unrelated|irrelevant|||I can never remember which bin is for plastics.|everyday talk
+sp047|pupil|unrelated|irrelevant|||Her birthday party is at the bowling alley.|everyday talk
+sp048|pupil|unrelated|irrelevant|||The vending machine ate my dollar again.|everyday talk
+sp049|pupil|unrelated|irrelevant|||I'd grade that pizza a solid seven out of ten.|a goal word used for something else
+sp050|pupil|third_person|irrelevant|||My grandmother's test results came back fine.|a medical test, someone else
+sp051|pupil|unrelated|irrelevant|||He's a tenth grader at the school across town.|a goal word, nothing happens
+sp052|pupil|attention|relevant|attention||Hey, you with the headphones, is this your bag?|someone addresses the listener
+sp053|pupil|attention|relevant|attention||Pardon me, I think you're in my seat.|someone addresses the listener
+sp054|pupil|attention|relevant|attention||Excuse me, could you move your chair a little?|someone addresses the listener
+sp055|pupil|attention|ambiguous|attention||Does anybody have a pen?|addressed to the room
+sp056|pupil|attention|ambiguous|attention||Dana, can you grab the door?|the listener's name is not known
+sp057|pupil|urgent_short|relevant|danger|important,urgent|Get back!|a short instruction to move
+sp058|pupil|urgent_short|relevant|danger|important,urgent|Don't touch that, it's live.|a short warning without an alarm word
+sp059|pupil|urgent_short|relevant|danger,attention|important,urgent|Behind you!|a short warning
+sp060|pupil|urgent_short|relevant|danger|important,urgent|That shelf is about to tip over on you.|a hazard described, no alarm word
+sp061|pupil|urgent_short|relevant|danger|important|Something's burning in the back of the room.|a hazard described
+sp062|pupil|urgent_short|irrelevant|||Watch out for that new series, it's really good.|a warning phrase used casually
+sp063|pupil|urgent_short|irrelevant|||Stop, that's hilarious.|an alarm word used casually
+sp064|pupil|past|irrelevant|||The fire drill last week was so boring.|the past, no instruction
+sp065|pupil|multi|relevant|grades|context=About the history essay.|She's giving us until Wednesday now.|the deadline is understood from the sentence before
+sp066|pupil|multi|irrelevant||context=Did you bring your umbrella?|No, I left it at home.|everyday talk with context
+sp067|pupil|multi|relevant|grades|context=The science test is on Friday.|Actually, scratch that, it's Thursday.|a correction of the sentence before
+sc001|commuter|obvious|relevant|transit||This train will not be stopping at the next three stations.|the ride changes
+sc002|commuter|obvious|relevant|transit||Service on this line is suspended until further notice.|the ride changes
+sc003|commuter|implicit|relevant|transit||We're being held here because of a signal failure ahead.|a delay
+sc004|commuter|implicit|relevant|transit,danger||Everyone has to get off at the next stop and wait for the following train.|the listener must change
+sc005|commuter|implicit|relevant|transit||The last departure tonight is at ten fifteen instead of midnight.|timetable change
+sc006|commuter|implicit|relevant|transit||The doors in this carriage won't open at the next platform, please move forward.|the listener must move to get off
+sc007|commuter|ambiguous|ambiguous|transit||Fares are going up by fifty cents starting Monday.|a cost change; whether it changes the ride is a matter of reading the goal
+sc008|commuter|causal|relevant|transit||There's a tree on the tracks, so we're turning back to the last station.|consequence for the ride
+sc009|commuter|causal|relevant|transit||The driver's shift ended, so there'll be a ten minute wait while we swap crews.|a delay
+sc010|commuter|causal|relevant|transit||Because of the marathon, this bus is skipping every stop downtown.|stops skipped
+sc011|commuter|implicit|relevant|transit,attention||Your ticket isn't valid on this service, you'll need the next one.|addressed to the listener; the ride changes
+sc012|commuter|third_person|irrelevant|||My cousin's train got cancelled yesterday and she missed the wedding.|someone else, the past
+sc013|commuter|third_person|irrelevant|||The northbound side has delays, but we're fine going south.|explicitly not this ride
+sc014|commuter|third_person|irrelevant|||My brother drives a bus in another city.|someone else
+sc015|commuter|ambiguous|ambiguous|transit||Passengers for the airport shuttle should go to the other terminal.|another service; may or may not be the listener's
+sc016|commuter|negation|irrelevant|||No changes to the timetable today, everything is running normally.|nothing changes
+sc017|commuter|negation|irrelevant|||It's not delayed, the board is just broken.|nothing changes
+sc018|commuter|negation|relevant|transit||This train does not go to the city centre anymore, change at the next stop.|a negation that is the change
+sc019|commuter|negation|relevant|transit,danger||Do not board this train, it is not in service.|an instruction
+sc020|commuter|hypothetical|irrelevant|||If they ever built a direct line I'd save an hour a day.|imagined
+sc021|commuter|hypothetical|irrelevant|||I wish this bus had wifi.|a wish
+sc022|commuter|hypothetical|ambiguous|transit||There may be delays this evening if the storm arrives.|a real possibility, not confirmed
+sc023|commuter|past|irrelevant|||Last winter this line was shut for a whole month.|the past
+sc024|commuter|past|irrelevant|||They used to have a conductor on every train.|the past
+sc025|commuter|sarcasm_quote|irrelevant|||He joked that the train would arrive sometime next year.|reported joke
+sc026|commuter|sarcasm_quote|irrelevant|||In the film we watched the announcer says the whole network is shut down.|fiction
+sc027|commuter|asr_error|relevant|transit||the next bus is a bout forty minutes late|recognition error, a delay
+sc028|commuter|asr_error|relevant|transit||all change please this service terminates hear|recognition error, everyone must get off
+sc029|commuter|asr_error|irrelevant|||i think i left the of in on|recognition error, unrelated
+sc030|commuter|incomplete|ambiguous|transit||The next train to|cut off
+sc031|commuter|incomplete|ambiguous|transit||Due to a fault this service|cut off
+sc032|commuter|repeated|repeat|transit|repeat_of=sc002|Once more, service on this line is suspended until further notice.|said before
+sc033|commuter|unrelated|irrelevant|||This podcast episode is two hours long.|everyday talk
+sc034|commuter|unrelated|irrelevant|||I need to buy milk on the way home.|everyday talk
+sc035|commuter|unrelated|irrelevant|||Her new apartment has a great view.|everyday talk
+sc036|commuter|unrelated|irrelevant|||Did you see the size of that dog?|everyday talk
+sc037|commuter|unrelated|irrelevant|||My phone keeps autocorrecting my own name.|everyday talk
+sc038|commuter|unrelated|irrelevant|||They're opening a bakery where the bank used to be.|everyday talk
+sc039|commuter|unrelated|irrelevant|||I've been training for a half marathon.|a goal word used for something else
+sc040|commuter|unrelated|irrelevant|||The stock market is on a wild ride this week.|a goal word used for something else
+sc041|commuter|attention|relevant|attention||Excuse me, is anyone sitting next to you?|a stranger addresses the listener
+sc042|commuter|attention|relevant|attention||Sorry, you dropped your glove back there.|a stranger addresses the listener
+sc043|commuter|attention|relevant|attention||Hi, do you know if this stops at the hospital?|a stranger asks the listener
+sc044|commuter|attention|relevant|attention||Sir, your backpack is open.|a stranger addresses the listener
+sc045|commuter|third_person|irrelevant|||I told my boss I'd call him back after lunch.|someone's own affairs
+sc046|commuter|urgent_short|relevant|danger|important,urgent|Stand clear of the doors!|a short instruction to move
+sc047|commuter|urgent_short|relevant|danger|important,urgent|Step back from the edge.|a short instruction to move
+sc048|commuter|urgent_short|relevant|danger|important,urgent|Heads up, coming through!|a short warning to get out of the way
+sc049|commuter|urgent_short|relevant|danger|important,urgent|Out of the way!|a short warning
+sc050|commuter|urgent_short|relevant|danger|important,urgent|A cyclist is coming up fast behind you.|a hazard described, no alarm word
+sc051|commuter|urgent_short|relevant|danger|important|Hold on tight, we're braking hard.|an instruction to act now
+sc052|commuter|urgent_short|irrelevant|||Get out, you did not just say that.|an alarm phrase used casually
+sc053|commuter|third_person|irrelevant|||He told me to step back and think about my career.|a warning phrase in a report about someone's life
+sc054|commuter|multi|relevant|transit|context=Attention passengers on platform two.|Your train will now leave from platform five.|a platform change, addressed by the sentence before
+sc055|commuter|multi|irrelevant||context=How was your weekend?|Pretty quiet, we stayed in.|everyday talk with context
+sk001|clinic|attention|relevant|turn||You're next, come on through.|the listener's turn
+sk002|clinic|obvious|relevant|turn||Your appointment has been pushed to three o'clock.|appointment changed
+sk003|clinic|implicit|relevant|turn||The doctor is running about an hour behind today.|the listener's wait changes
+sk004|clinic|implicit|relevant|turn||We're closing early, so anyone not seen by four will have to rebook.|the appointment may be lost
+sk005|clinic|implicit|relevant|turn||They've moved you to room six down the hall.|where the appointment is
+sk006|clinic|implicit|relevant|turn||We need you to fill in this form again before you can go in.|a condition for the listener's turn
+sk007|clinic|obvious|relevant|medicine||Take this one twice a day now instead of once.|dose changed
+sk008|clinic|implicit|relevant|medicine||Don't have grapefruit while you're on these tablets.|how to take the medicine
+sk009|clinic|causal|relevant|medicine||The pharmacy gave you the wrong strength, so cut each pill in half until the new ones come.|consequence for the dose
+sk010|clinic|implicit|relevant|medicine||Stop the antibiotics if you get a rash and call us.|a rule for the medicine
+sk011|clinic|implicit|relevant|medicine||This has to be taken with food or it will upset your stomach.|how to take the medicine
+sk012|clinic|causal|relevant|turn||The scanner broke down, so all the afternoon scans are moving to tomorrow.|appointments moved
+sk013|clinic|causal|relevant|turn||Because the lab results aren't back, the doctor wants to see you next week instead.|appointment moved
+sk014|clinic|ambiguous|ambiguous|turn||Number forty-seven, please come to window two.|a number is called; the listener's number is not known
+sk015|clinic|third_person|irrelevant|||My neighbour has to take insulin four times a day.|someone else's medicine
+sk016|clinic|third_person|irrelevant|||The lady before me waited two hours last time.|someone else, the past
+sk017|clinic|third_person|irrelevant|||My dad's surgery got rescheduled twice.|someone else
+sk018|clinic|third_person|irrelevant|||Her doctor switched her to a different inhaler.|someone else's medicine
+sk019|clinic|third_person|relevant|turn||Doctor Reyes was called away, so your check-up will be with the nurse.|a named person, but the listener's appointment changes
+sk020|clinic|negation|irrelevant|||Your appointment time hasn't changed, you're still at two.|nothing changes
+sk021|clinic|negation|irrelevant|||No, you don't need to change anything about your prescription.|nothing changes
+sk022|clinic|negation|relevant|medicine||You should not take these together with ibuprofen.|a rule for the medicine
+sk023|clinic|negation|relevant|turn||We can't see you today without the referral letter.|the appointment will not happen
+sk024|clinic|hypothetical|irrelevant|||I wish they would just call everyone in order.|a wish
+sk025|clinic|hypothetical|irrelevant|||Imagine if they lost my file again.|imagined
+sk026|clinic|hypothetical|ambiguous|medicine||We might have to change your dose after the blood test.|a real possibility, not confirmed
+sk027|clinic|hypothetical|relevant|medicine||If you miss two doses in a row, start again from the first tablet.|a stated rule in conditional form
+sk028|clinic|past|irrelevant|||Years ago you had to take that medicine three times a day.|the past
+sk029|clinic|sarcasm_quote|irrelevant|||He said, take two and call me in the morning, like in the old joke.|a quoted joke
+sk030|clinic|asr_error|relevant|turn||your blood test has bean moved to next toos day|recognition errors, appointment moved
+sk031|clinic|asr_error|relevant|medicine||swallow the cap sule hole do not chew it|recognition errors, how to take the medicine
+sk032|clinic|asr_error|irrelevant|||i parked on the top floor of the car par king|recognition errors, unrelated
+sk033|clinic|incomplete|ambiguous|turn||Your next appointment is|cut off
+sk034|clinic|incomplete|ambiguous|medicine||You need to take this|cut off
+sk035|clinic|repeated|repeat|turn|repeat_of=sk003|Again, the doctor is running about an hour behind today.|said before
+sk036|clinic|unrelated|irrelevant|||This magazine is from three years ago.|everyday talk
+sk037|clinic|unrelated|irrelevant|||The coffee machine in the lobby only takes coins.|everyday talk
+sk038|clinic|unrelated|irrelevant|||I love the fish tank they put in here.|everyday talk
+sk039|clinic|unrelated|irrelevant|||It's so cold in this waiting room.|everyday talk
+sk040|clinic|unrelated|irrelevant|||My daughter starts swimming lessons tomorrow.|everyday talk
+sk041|clinic|unrelated|irrelevant|||I need a prescription for more patience with this traffic.|a goal word used as a joke
+sk042|clinic|attention|relevant|turn||Ma'am, we're ready for you now.|the listener's turn
+sk043|clinic|urgent_short|relevant|danger|important,urgent|Careful, the floor's wet right there.|a hazard next to the listener
+sk044|clinic|urgent_short|relevant|danger|important,urgent|Don't sit there, the chair's broken.|a short warning
+sk045|clinic|urgent_short|relevant|danger|important,urgent|Mind your fingers in the door!|a short warning
+sk046|clinic|urgent_short|relevant|danger|important|Someone's fainted, give them room!|an instruction to move
+sk047|clinic|urgent_short|irrelevant|||My heart stopped when I saw the bill.|an alarm phrase used as a figure of speech
+sk048|clinic|multi|relevant|medicine|context=About your blood pressure tablets.|We're going to double them starting tonight.|the dose change is understood from the sentence before
+sk049|clinic|multi|irrelevant||context=Is it still raining out?|It stopped a while ago.|everyday talk with context
+sw001|shop|obvious|relevant|customers||There's a customer at the register who needs help.|names a customer needing help
+sw002|shop|obvious|relevant|hours||You're scheduled for the closing shift on Friday now.|hours changed
+sw003|shop|implicit|relevant|customers||Someone's been standing at the fitting rooms for a while.|a customer waiting
+sw004|shop|implicit|relevant|customers||The pickup for Hernandez is bagged and on the shelf.|an order ready to hand out
+sw005|shop|implicit|relevant|customers||Two coffees and a bagel for the gentleman by the window are done.|an order ready
+sw006|shop|implicit|relevant|customers||This lady is looking for the same shoes in a size eight.|a customer needs something
+sw007|shop|implicit|relevant|customers||Aisle four has a spill and a shopper is asking for someone.|a customer needs staff
+sw008|shop|implicit|relevant|customers||That man wants to return a blender without a receipt.|a customer needs staff
+sw009|shop|implicit|relevant|hours||We're opening an hour earlier all through December.|hours change
+sw010|shop|implicit|relevant|hours||Overtime is paid at time and a half starting this month.|pay changes
+sw011|shop|implicit|relevant|hours||They cut Sunday shifts down to four hours.|hours change
+sw012|shop|implicit|relevant|hours||Your lunch is cut to thirty minutes on inventory days.|hours change
+sw013|shop|implicit|relevant|hours||Payday is moving from Friday to the fifteenth.|pay changes
+sw014|shop|causal|relevant|hours,attention||Kim called in sick, so I need you to stay until close.|consequence for the listener's hours
+sw015|shop|causal|relevant|hours||The delivery truck is late, so everyone on stock is starting at noon instead.|consequence for hours
+sw016|shop|third_person|irrelevant|||My wife's manager keeps changing her days off.|someone else
+sw017|shop|third_person|irrelevant|||At the other branch they get paid weekly.|another place
+sw018|shop|third_person|irrelevant|||My son got a raise at the garage.|someone else
+sw019|shop|third_person|irrelevant|||The café next door let half their staff go.|another business
+sw020|shop|negation|irrelevant|||Your hours aren't changing, ignore that email.|nothing changes
+sw021|shop|negation|irrelevant|||No one's waiting at the counter, it's dead today.|nothing to do
+sw022|shop|negation|relevant|hours||You're not on the schedule next week at all.|a negation that is the change
+sw023|shop|negation|relevant|hours||We don't get paid for the holiday this year.|pay changes
+sw024|shop|hypothetical|irrelevant|||If I won the lottery I'd never work another shift.|imagined
+sw025|shop|hypothetical|irrelevant|||I wish customers would read the signs.|a wish
+sw026|shop|hypothetical|ambiguous|hours||They might cut everyone's hours after the holidays.|a real possibility, not confirmed
+sw027|shop|past|irrelevant|||Back when I started here we closed at six every day.|the past
+sw028|shop|sarcasm_quote|irrelevant|||Oh yeah, I'm sure they'll double our pay any day now.|sarcasm
+sw029|shop|sarcasm_quote|irrelevant|||He kept saying, the customer is always right, like a parrot.|a quoted saying
+sw030|shop|asr_error|relevant|customers||sum one at the back door is asking for the manager or any one|recognition errors, someone needs staff
+sw031|shop|asr_error|relevant|customers||they need you on the floor a custom her kneads a hand with the lad her|recognition errors, a customer needs help
+sw032|shop|asr_error|irrelevant|||i mist the last episode of that cooking show|recognition errors, unrelated
+sw033|shop|incomplete|ambiguous|hours||Your shift on Saturday is|cut off
+sw034|shop|incomplete|ambiguous|customers||There's a customer who|cut off
+sw035|shop|repeated|repeat|customers|repeat_of=sw004|Again, the pickup for Hernandez is bagged and on the shelf.|said before
+sw036|shop|unrelated|irrelevant|||I'm thinking about painting my kitchen yellow.|everyday talk
+sw037|shop|unrelated|irrelevant|||That song has been stuck in my head all day.|everyday talk
+sw038|shop|unrelated|irrelevant|||Parking downtown is impossible on weekends.|everyday talk
+sw039|shop|unrelated|irrelevant|||My knee has been acting up since the hike.|everyday talk
+sw040|shop|unrelated|irrelevant|||We're having tacos tonight.|everyday talk
+sw041|shop|unrelated|irrelevant|||I ordered a new couch online last night.|a goal word used for something else
+sw042|shop|unrelated|irrelevant|||The customer service at my bank is terrible.|a goal word, someone's own affairs
+sw043|shop|attention|relevant|attention,customers||Hi, sorry, are you the one I ask about refunds?|someone addresses the listener
+sw044|shop|attention|relevant|attention,customers||Hello? Could I get some help over here?|someone asks for help
+sw045|shop|attention|relevant|attention||Hey, hey, I'm talking to you.|someone addresses the listener
+sw046|shop|attention|relevant|attention,customers||Miss, when you have a second.|someone addresses the listener
+sw047|shop|multi|relevant|hours|context=I checked the rota this morning.|They've got you down for both days this weekend.|hours, understood from the sentence before
+sw048|shop|multi|irrelevant||context=What do you want for lunch?|Anything but pizza.|everyday talk with context
+sw049|shop|ambiguous|ambiguous|attention||Careful, that ladder is slipping!|a warning, but this profile has no goal about danger

@@ -1,0 +1,51 @@
+Set dev2: 171 synthetic utterances — relevant 82, irrelevant 73, ambiguous 12, repeat 4
+
+  wall time 513.7 s; this process 14 → 25 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, style reasoned, first pass off — dev2 set
+  precision            82.7 % (62/75; 95 % CI 72.6–89.6)
+  recall               75.6 % (62/82; 95 % CI 65.3–83.6)
+  F1                   0.790
+  false alerts         15.1 % (11/73; 95 % CI 8.6–25.0) of irrelevant utterances
+  false alerts / hour  36.2 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      50.0 % (2/4; 95 % CI 15.0–85.0)
+  important missed     76.5 % (13/17; 95 % CI 52.7–90.4)
+  goal named correctly 88.7 % (55/62; 95 % CI 78.5–94.4)
+  ambiguous items      10 alerted, 0 kept as uncertain, 2 nothing (of 12)
+  time per utterance   median 3.03 s, p95 3.34 s; model median 3.03 s; full judgements 170, stopped by the first pass 0, gated 0, fallbacks 1
+  verifier corrections no_goal 25, reason_detail 1
+  by category          asr_error 10/10, attention 1/3, causal 7/8, hypothetical 8/8, implicit 26/29, multi 9/10, negation 14/16, obvious 5/5, past 4/6, repeated 2/4, sarcasm_quote 4/7, third_person 8/13, unrelated 22/22, urgent_short 6/18
+    ✗ e010 [past, expected irrelevant] The teacher discussed last year's grading system. → relevant @model
+    ✗ e014 [implicit, expected relevant] I'll be checking notebooks at random this week. → irrelevant @model
+    ✗ e022 [third_person, expected irrelevant] The eighth graders have a different timetable from Monday. → relevant @model
+    ✗ e037 [sarcasm_quote, expected irrelevant] In the book the headmaster announces that exams are abolished. → relevant @model
+    ✗ e045 [repeated, expected repeat] One more time, late work will no longer receive credit. → relevant @model
+    ✗ e055 [attention, expected relevant] You there, in the green hoodie, you forgot your notebook. → irrelevant @model (no_goal)
+    ✗ e056 [attention, expected relevant] Can I borrow your charger for a minute? → irrelevant @model (no_goal)
+    ✗ e058 [urgent_short, expected relevant] Watch out! → irrelevant @model (no_goal)
+    ✗ e059 [urgent_short, expected relevant] Don't go any farther. → irrelevant @model (no_goal)
+    ✗ e060 [urgent_short, expected relevant] That railing is about to fall. → irrelevant @model (no_goal)
+    ✗ e061 [urgent_short, expected relevant] There's something coming toward you. → irrelevant @model (no_goal)
+    ✗ e062 [urgent_short, expected relevant] Stay away from the window. → irrelevant @model (no_goal)
+    ✗ e063 [urgent_short, expected relevant] Duck! → irrelevant @model (no_goal)
+    ✗ e064 [urgent_short, expected relevant] The ceiling tile above you is coming loose. → irrelevant @model (no_goal)
+    ✗ o011 [implicit, expected relevant] When you get a chance, take a look at the budget sheet. → irrelevant @model
+    ✗ o015 [causal, expected relevant] Priya is out today, so I'm giving her tickets to you. → irrelevant @model (no_goal)
+    ✗ o017 [third_person, expected irrelevant] My wife's company moved all their meetings online. → relevant @model
+    ✗ o019 [third_person, expected irrelevant] Their deadline got pulled in, not ours. → relevant @model
+    ✗ o026 [negation, expected relevant] Do not use the back stairs, a step has collapsed. → irrelevant @model (no_goal)
+    ✗ o031 [past, expected irrelevant] On my last project the deadline moved six times. → relevant @model
+    ✗ o033 [sarcasm_quote, expected irrelevant] Oh sure, the deadline will definitely be extended, like that ever happens. → relevant @model
+    ✗ o034 [sarcasm_quote, expected irrelevant] He does this impression of the boss saying, drop everything, I need it yesterday. → relevant @model
+    ✗ o048 [urgent_short, expected relevant] Careful, hot coffee behind you. → irrelevant @model (no_goal)
+    ✗ o049 [urgent_short, expected relevant] Get away from that cabinet, it's tipping. → irrelevant @model (no_goal)
+    ✗ o050 [urgent_short, expected relevant] I smell gas in the kitchen, everybody out. → irrelevant @model (no_goal)
+    ✗ m004 [implicit, expected relevant] The school is closing at noon because of the storm. → irrelevant @model (no_goal)
+    ✗ m013 [third_person, expected irrelevant] My sister picks her twins up from a different school. → relevant @model
+    ✗ m016 [third_person, expected irrelevant] Someone was at my mother's door selling solar panels. → relevant @model
+    ✗ m020 [negation, expected relevant] The driver couldn't find the house and didn't leave the package. → irrelevant @model (no_goal)
+    ✗ m032 [repeated, expected repeat] Again, the school is closing at noon because of the storm. → relevant @model
+    ✗ m041 [urgent_short, expected relevant] Don't step there, broken glass. → irrelevant @model (no_goal)
+    ✗ m043 [urgent_short, expected relevant] The baby's got hold of the scissors. → irrelevant @fallback
+    ✗ m047 [multi, expected irrelevant] Around seven I think. → relevant @model
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-opt/results/semantic_optimization/ablation/reasoned_dev2.json

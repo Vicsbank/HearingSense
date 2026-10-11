@@ -11,10 +11,35 @@ actor ScriptedReasoner: SemanticRelevanceReasoning {
     private(set) var judged: [String] = []
     private(set) var triaged: [String] = []
 
-    init(_ judgements: [String: RelevanceJudgement] = [:], triage: [String: Bool] = [:], delay: Duration = .zero) {
+    /// Window 6.1: answers of the second look, group requests and what was asked of them.
+    var confirmations: [String: StatementConfirmation] = [:]
+    private(set) var confirmed: [String] = []
+    nonisolated let judgesTogether: Bool
+    var groupAnswer: (@Sendable ([String]) -> BatchJudgement)?
+    private(set) var groups: [[String]] = []
+
+    init(_ judgements: [String: RelevanceJudgement] = [:], triage: [String: Bool] = [:], delay: Duration = .zero,
+         judgesTogether: Bool = false)
+    {
         self.judgements = judgements
         self.triage = triage
         self.delay = delay
+        self.judgesTogether = judgesTogether
+    }
+
+    func setConfirmations(_ confirmations: [String: StatementConfirmation]) { self.confirmations = confirmations }
+    func setGroupAnswer(_ answer: @escaping @Sendable ([String]) -> BatchJudgement) { groupAnswer = answer }
+
+    func confirm(_ utterance: SemanticUtterance, goal: AttentionGoal) async throws -> StatementConfirmation? {
+        confirmed.append(utterance.text)
+        return confirmations[utterance.text] ?? .hereAndNow
+    }
+
+    func judgeTogether(_ utterances: [SemanticUtterance], goals: [AttentionGoal]) async throws -> BatchJudgement {
+        groups.append(utterances.map(\.text))
+        if delay > .zero { try await Task.sleep(for: delay) }
+        if fails { throw SemanticReasonerError.modelFailure("scripted") }
+        return groupAnswer?(utterances.map(\.text)) ?? BatchJudgement(line: 0, judgement: .none)
     }
 
     func setFails(_ fails: Bool) { self.fails = fails }
@@ -105,7 +130,10 @@ enum Fixture {
     @Test func theFirstPassStopsEverydayTalkBeforeTheFullJudgement() async {
         let talk = "This sandwich is actually pretty good."
         let reasoner = ScriptedReasoner([talk: Fixture.relevant()], triage: [talk: false])
-        let engine = await Fixture.engine(reasoner)
+        // The first pass is off by default since Window 6.1.
+        var configuration = SemanticAttentionEngine.Configuration.standard
+        configuration.usesTriage = true
+        let engine = await Fixture.engine(reasoner, configuration: configuration)
         let decision = await engine.evaluate(Fixture.utterance(talk))
         #expect(decision.stage == .triage)
         #expect(decision.verdict == .irrelevant)

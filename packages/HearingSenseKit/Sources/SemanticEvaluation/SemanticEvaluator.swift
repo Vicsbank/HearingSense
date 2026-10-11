@@ -14,10 +14,22 @@ public struct SemanticItemOutcome: Sendable, Codable {
     public var score: Double?
     public var seconds: Double
     public var modelSeconds: Double
+    /// Tokens the model wrote for this item (engine only, when the system reports them).
+    public var outputTokens: Int?
+    /// Seconds the item waited for its turn (stream benchmarks only).
+    public var queueSeconds: Double?
+    /// What kind of statement the model saw, and whom it concerns (engine only).
+    public var kind: String?
+    public var subject: String?
 
     public init(id: String, alerted: Bool, verdict: String?, matchedGoal: String?, stage: String?, corrections: [String],
-                isNovel: Bool, score: Double?, seconds: Double, modelSeconds: Double)
+                isNovel: Bool, score: Double?, seconds: Double, modelSeconds: Double, outputTokens: Int? = nil,
+                queueSeconds: Double? = nil, kind: String? = nil, subject: String? = nil)
     {
+        self.outputTokens = outputTokens
+        self.queueSeconds = queueSeconds
+        self.kind = kind
+        self.subject = subject
         self.id = id
         self.alerted = alerted
         self.verdict = verdict
@@ -133,7 +145,9 @@ public enum SemanticEvaluator {
     /// The production pipeline: gate, model, verifier, novelty. One engine per profile; the
     /// items are evaluated in file order, 20 seconds apart, as a conversation would arrive.
     public static func runEngine(_ dataset: SemanticDataset, reasoner: any SemanticRelevanceReasoning,
-                                 usesTriage: Bool = true, progress: (@Sendable (Int, Int) -> Void)? = nil) async -> [SemanticItemOutcome]
+                                 usesTriage: Bool = true, verifier: EvidenceVerifier = .standard,
+                                 configuration base: SemanticAttentionEngine.Configuration? = nil,
+                                 progress: (@Sendable (Int, Int) -> Void)? = nil) async -> [SemanticItemOutcome]
     {
         var outcomes: [SemanticItemOutcome] = []
         var engines: [String: SemanticAttentionEngine] = [:]
@@ -155,9 +169,9 @@ public enum SemanticEvaluator {
             if let existing = engines[item.profile] {
                 engine = existing
             } else {
-                var configuration = SemanticAttentionEngine.Configuration.standard
-                configuration.usesTriage = usesTriage
-                engine = SemanticAttentionEngine(reasoner: reasoner, scorer: SentenceEmbeddingScorer(),
+                var configuration = base ?? SemanticAttentionEngine.Configuration.standard
+                if base == nil { configuration.usesTriage = usesTriage }
+                engine = SemanticAttentionEngine(reasoner: reasoner, scorer: SentenceEmbeddingScorer(), verifier: verifier,
                                                  configuration: configuration)
                 await engine.setGoals(goals.map(\.goal))
                 engines[item.profile] = engine
@@ -170,7 +184,9 @@ public enum SemanticEvaluator {
             outcomes.append(SemanticItemOutcome(
                 id: item.id, alerted: decision.isAccepted, verdict: decision.verdict.rawValue, matchedGoal: key,
                 stage: decision.stage.rawValue, corrections: decision.corrections, isNovel: decision.isNovel, score: nil,
-                seconds: Date().timeIntervalSince(started), modelSeconds: decision.modelTime))
+                seconds: Date().timeIntervalSince(started), modelSeconds: decision.modelTime,
+                outputTokens: decision.outputTokens, kind: decision.statementKind.rawValue,
+                subject: decision.subject.rawValue))
             progress?(index + 1, dataset.items.count)
         }
         return outcomes

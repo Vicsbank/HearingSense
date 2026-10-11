@@ -1,0 +1,700 @@
+{
+  "batchCalls" : 0,
+  "confusion" : {
+    "ambiguousAlerted" : 2,
+    "ambiguousSilent" : 2,
+    "ambiguousUncertain" : 0,
+    "byCategory" : {
+      "asr_error" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "causal" : {
+        "hits" : 0,
+        "total" : 1
+      },
+      "hypothetical" : {
+        "hits" : 3,
+        "total" : 3
+      },
+      "implicit" : {
+        "hits" : 0,
+        "total" : 2
+      },
+      "negation" : {
+        "hits" : 4,
+        "total" : 4
+      },
+      "obvious" : {
+        "hits" : 0,
+        "total" : 1
+      },
+      "past" : {
+        "hits" : 3,
+        "total" : 3
+      },
+      "sarcasm_quote" : {
+        "hits" : 3,
+        "total" : 3
+      },
+      "third_person" : {
+        "hits" : 4,
+        "total" : 4
+      },
+      "unrelated" : {
+        "hits" : 8,
+        "total" : 8
+      },
+      "urgent_short" : {
+        "hits" : 2,
+        "total" : 2
+      }
+    },
+    "byProfile" : {
+      "student2" : {
+        "fn" : 4,
+        "tn" : 27,
+        "tp" : 2
+      }
+    },
+    "falseNegativeIDs" : [
+      "e001",
+      "e005",
+      "e014",
+      "e018"
+    ],
+    "falseNegatives" : 4,
+    "falsePositiveIDs" : [
+
+    ],
+    "falsePositives" : 0,
+    "groups" : {
+      "explicit relevance recall" : {
+        "hits" : 0,
+        "total" : 1
+      },
+      "hypothetical accuracy" : {
+        "hits" : 3,
+        "total" : 3
+      },
+      "implicit relevance recall" : {
+        "hits" : 0,
+        "total" : 3
+      },
+      "negation accuracy" : {
+        "hits" : 4,
+        "total" : 4
+      },
+      "past and quotation accuracy" : {
+        "hits" : 6,
+        "total" : 6
+      },
+      "personal relevance accuracy" : {
+        "hits" : 4,
+        "total" : 4
+      },
+      "recognition-error accuracy" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "unrelated talk accuracy" : {
+        "hits" : 8,
+        "total" : 8
+      }
+    },
+    "modelDecisions" : 18,
+    "modelSecondsP50" : 2.6094800233840942,
+    "modelSecondsP95" : 2.9696730375289917,
+    "modelSecondsP99" : 2.9696730375289917,
+    "outputTokensPerModelDecision" : 69.66666666666667,
+    "secondsP50" : 0,
+    "secondsP95" : 11.034929990768433,
+    "secondsP99" : 11.110927939414978,
+    "stages" : {
+      "dropped" : 19,
+      "model" : 12,
+      "triage" : 6
+    },
+    "trueNegatives" : 27,
+    "truePositives" : 2
+  },
+  "deadlineMisses" : 15,
+  "decided" : 37,
+  "dropped" : 19,
+  "droppedRelevant" : [
+    "e001",
+    "e005",
+    "e014",
+    "e018"
+  ],
+  "endToEnd" : {
+    "count" : 18,
+    "max" : 11.110927939414978,
+    "p50" : 6.418125033378601,
+    "p95" : 11.110927939414978,
+    "p99" : 11.110927939414978
+  },
+  "interval" : 1,
+  "maximumQueueLength" : 4,
+  "model" : {
+    "count" : 18,
+    "max" : 2.9696730375289917,
+    "p50" : 2.6094800233840942,
+    "p95" : 2.9696730375289917,
+    "p99" : 2.9696730375289917
+  },
+  "modelCalls" : 28,
+  "modelCallsPerMinute" : 37.23657861202426,
+  "modelOneRequest" : {
+    "count" : 18,
+    "max" : 2.9696730375289917,
+    "p50" : 2.6094800233840942,
+    "p95" : 2.9696730375289917,
+    "p99" : 2.9696730375289917
+  },
+  "modelWithSecondLook" : {
+    "count" : 0
+  },
+  "name" : "Window 6 engine, style window6",
+  "outcomes" : [
+    {
+      "alerted" : false,
+      "corrections" : [
+        "not_asserted"
+      ],
+      "id" : "e008",
+      "isNovel" : true,
+      "matchedGoal" : "grades",
+      "modelSeconds" : 2.7618000507354736,
+      "outputTokens" : 71,
+      "queueSeconds" : 0.0004119873046875,
+      "seconds" : 3.6151989698410034,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "e009",
+      "isNovel" : true,
+      "matchedGoal" : "grades",
+      "modelSeconds" : 2.6310030221939087,
+      "outputTokens" : 77,
+      "queueSeconds" : 2.552572011947632,
+      "seconds" : 6.0649919509887695,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e010",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e001",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e011",
+      "isNovel" : true,
+      "modelSeconds" : 2.3904529809951782,
+      "outputTokens" : 59,
+      "queueSeconds" : 3.072332978248596,
+      "seconds" : 6.344550967216492,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e012",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e021",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "about_someone_else"
+      ],
+      "id" : "e022",
+      "isNovel" : true,
+      "matchedGoal" : "schedule",
+      "modelSeconds" : 2.700677990913391,
+      "outputTokens" : 79,
+      "queueSeconds" : 3.382182002067566,
+      "seconds" : 6.984534978866577,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e023",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e005",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e025",
+      "isNovel" : true,
+      "modelSeconds" : 2.863377094268799,
+      "outputTokens" : 81,
+      "queueSeconds" : 3.936812996864319,
+      "seconds" : 7.704337000846863,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e026",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e030",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e031",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e032",
+      "isNovel" : true,
+      "modelSeconds" : 2.6616439819335938,
+      "outputTokens" : 77,
+      "queueSeconds" : 3.7674169540405273,
+      "seconds" : 7.2987589836120605,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e014",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e034",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e035",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e036",
+      "isNovel" : true,
+      "modelSeconds" : 0.8661460876464844,
+      "outputTokens" : 0,
+      "queueSeconds" : 3.2448569536209106,
+      "seconds" : 4.111084938049316,
+      "stage" : "triage",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e037",
+      "isNovel" : true,
+      "modelSeconds" : 2.8665850162506104,
+      "outputTokens" : 71,
+      "queueSeconds" : 3.133018970489502,
+      "seconds" : 6.626186013221741,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e041",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e018",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "e042",
+      "isNovel" : true,
+      "matchedGoal" : "grades",
+      "modelSeconds" : 2.7950509786605835,
+      "outputTokens" : 75,
+      "queueSeconds" : 3.6322250366210938,
+      "seconds" : 7.301280975341797,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e043",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e046",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e047",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e048",
+      "isNovel" : true,
+      "modelSeconds" : 0.8820120096206665,
+      "outputTokens" : 0,
+      "queueSeconds" : 3.2810750007629395,
+      "seconds" : 4.1631410121917725,
+      "stage" : "triage",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "e027",
+      "isNovel" : true,
+      "matchedGoal" : "grades",
+      "modelSeconds" : 2.6094800233840942,
+      "outputTokens" : 61,
+      "queueSeconds" : 3.1499619483947754,
+      "seconds" : 6.418125033378601,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e049",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e050",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 0,
+      "seconds" : 0,
+      "stage" : "dropped",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e051",
+      "isNovel" : true,
+      "modelSeconds" : 0.9154759645462036,
+      "outputTokens" : 0,
+      "queueSeconds" : 3.441896915435791,
+      "seconds" : 4.3574289083480835,
+      "stage" : "triage",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e052",
+      "isNovel" : true,
+      "modelSeconds" : 0.6684260368347168,
+      "outputTokens" : 0,
+      "queueSeconds" : 3.332892894744873,
+      "seconds" : 4.001416921615601,
+      "stage" : "triage",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e053",
+      "isNovel" : true,
+      "modelSeconds" : 0.9180730581283569,
+      "outputTokens" : 0,
+      "queueSeconds" : 7.555588006973267,
+      "seconds" : 8.473734974861145,
+      "stage" : "triage",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "e038",
+      "isNovel" : true,
+      "matchedGoal" : "grades",
+      "modelSeconds" : 2.9696730375289917,
+      "outputTokens" : 73,
+      "queueSeconds" : 7.466495037078857,
+      "seconds" : 11.110927939414978,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e057",
+      "isNovel" : true,
+      "modelSeconds" : 0.9229270219802856,
+      "outputTokens" : 0,
+      "queueSeconds" : 10.111961007118225,
+      "seconds" : 11.034929990768433,
+      "stage" : "triage",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e065",
+      "isNovel" : true,
+      "modelSeconds" : 2.2735280990600586,
+      "outputTokens" : 53,
+      "queueSeconds" : 0.005583047866821289,
+      "seconds" : 2.2797919511795044,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "e066",
+      "isNovel" : true,
+      "modelSeconds" : 2.272171974182129,
+      "outputTokens" : 59,
+      "queueSeconds" : 1.282515048980713,
+      "seconds" : 3.5555219650268555,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    }
+  ],
+  "outputTokens" : 836,
+  "queueWait" : {
+    "count" : 18,
+    "max" : 10.111961007118225,
+    "p50" : 3.332892894744873,
+    "p95" : 10.111961007118225,
+    "p99" : 10.111961007118225
+  },
+  "requeuedAfterBatch" : 0,
+  "secondLooks" : 0,
+  "seconds" : 45.11692702770233,
+  "sentences" : 37,
+  "sentencesPerMinute" : 23.93780053630131,
+  "settledByBatch" : 0,
+  "unaccounted" : 0
+}

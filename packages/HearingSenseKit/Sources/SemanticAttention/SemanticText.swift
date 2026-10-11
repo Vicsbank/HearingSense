@@ -45,6 +45,34 @@ enum SemanticText {
         return Double(wanted.intersection(available).count) / Double(wanted.count)
     }
 
+    /// The statement without the words that only announce a repetition ("Again, ...",
+    /// "One more time, ...", "Just a reminder, ..."), so that it compares equal to the first time.
+    static func withoutRepetitionMarker(_ text: String) -> String {
+        let lowered = text.lowercased()
+        for marker in repetitionMarkers where lowered.hasPrefix(marker) {
+            let rest = text.dropFirst(marker.count).drop { !($0.isLetter || $0.isNumber) }
+            if !rest.isEmpty { return String(rest) }
+        }
+        return text
+    }
+
+    static let repetitionMarkers = ["one more time", "once more", "once again", "again", "just a reminder", "a reminder",
+                                    "reminder", "as i said", "like i said", "remember", "i repeat", "to repeat"]
+
+    /// The utterance's own words as a headline: all of it when it is short, otherwise its
+    /// beginning, but only if nothing that must not be lost (a "not", a number, a day, a time)
+    /// lies in the part that is cut. Empty when it cannot be shortened safely.
+    static func extractiveHeadline(from text: String, maximumWords: Int) -> String {
+        let words = text.split(whereSeparator: \.isWhitespace).map(String.init)
+        func trimmed(_ words: [String]) -> String {
+            words.joined(separator: " ").trimmingCharacters(in: CharacterSet(charactersIn: " ,;:."))
+        }
+        guard words.count > maximumWords else { return trimmed(words) }
+        let head = trimmed(Array(words.prefix(maximumWords)))
+        guard isNegated(head) == isNegated(text), quantities(in: head) == quantities(in: text) else { return "" }
+        return head + "…"
+    }
+
     static func jaccard(_ first: Set<String>, _ second: Set<String>) -> Double {
         let union = first.union(second).count
         return union == 0 ? 1 : Double(first.intersection(second).count) / Double(union)
@@ -99,16 +127,39 @@ public struct UtteranceGate: Hashable, Sendable {
         return words.count <= maximumWords ? text : words.suffix(maximumWords).joined(separator: " ")
     }
 
-    /// Short utterances with a word of alarm are evaluated before anything that is waiting. (The
-    /// attention engine's own phrase rule reacts to "Watch out!" at once, without this module.)
+    /// Whether a short utterance may be a warning: it is then evaluated first, in a lane of its
+    /// own. This decides the order only. Whether it is a warning is the model's judgement, and
+    /// an utterance this does not flag is judged all the same, in its turn. (The attention
+    /// engine's own phrase rule reacts to "Watch out!" at once, without this module.)
+    ///
+    /// Three kinds of cue, so that it does not rest on a list of alarm words alone: a word of
+    /// alarm; the form of a short command ("Don't ...", "Get ...", "Stay ...", an exclamation);
+    /// a phrase that describes something happening to the listener ("about to", "behind you").
     public func isLikelyUrgent(_ text: String) -> Bool {
         let words = SemanticText.words(in: text)
-        return words.count <= 12 && words.contains { Self.alarmWords.contains($0) }
+        guard !words.isEmpty, words.count <= 20 else { return false }
+        if words.contains(where: { Self.alarmWords.contains($0) }) { return true }
+        let joined = " " + words.joined(separator: " ") + " "
+        if Self.hazardPhrases.contains(where: { joined.contains(" " + $0 + " ") }) { return true }
+        guard words.count <= 12 else { return false }
+        if Self.commandStarters.contains(words[0]) { return true }
+        return words.count <= 5 && text.trimmingCharacters(in: .whitespaces).hasSuffix("!")
     }
 
-    static let alarmWords: Set<String> = ["fire", "evacuate", "evacuation", "emergency", "danger", "help", "exit",
-                                          "exits", "immediately", "shelter", "lockdown", "ambulance", "police", "run",
-                                          "careful", "hurry", "stop", "warning"]
+    static let alarmWords: Set<String> = ["fire", "evacuate", "evacuation", "emergency", "danger", "dangerous", "help",
+                                          "exit", "exits", "immediately", "shelter", "lockdown", "ambulance", "police",
+                                          "run", "careful", "hurry", "stop", "warning", "duck", "leaking", "smoke", "gas"]
+
+    /// First words of a short command or call.
+    static let commandStarters: Set<String> = ["don't", "do", "never", "get", "stay", "move", "watch", "look", "mind",
+                                               "hold", "step", "stand", "keep", "back", "out", "behind", "heads",
+                                               "everybody", "everyone", "nobody", "quick", "wait", "leave"]
+
+    /// Something is happening to the listener or right beside them.
+    static let hazardPhrases = ["about to", "behind you", "above you", "on you", "toward you", "towards you", "at you",
+                                "near you", "coming through", "coming loose", "coming down", "is falling", "it's falling",
+                                "going to fall", "watch out", "look out", "get out", "get back", "get away", "get down",
+                                "stay away", "stay back", "keep away", "out of the way", "right there", "broken glass"]
 }
 
 /// Baseline 1: a goal matches when the utterance shares a content word with it. This is what the

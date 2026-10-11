@@ -8,9 +8,18 @@ import SemanticAttention
 /// this project; none is a real conversation.
 public struct SemanticDataset: Sendable {
     public enum Split: String, Sendable, CaseIterable {
-        case dev, heldout
+        /// Window 6: the first development set and the held-out set that has since been read
+        /// (a historical benchmark). Window 6.1: a second development set and a sealed set.
+        case dev, heldout, dev2, sealed
 
-        var resource: String { self == .dev ? "semantic_dev" : "semantic_heldout" }
+        var resource: String {
+            switch self {
+            case .dev: "semantic_dev"
+            case .heldout: "semantic_heldout"
+            case .dev2: "semantic_dev2"
+            case .sealed: "semantic_sealed"
+            }
+        }
     }
 
     public enum Expected: String, Sendable, CaseIterable {
@@ -32,6 +41,8 @@ public struct SemanticDataset: Sendable {
         /// Keys of the goals a match may name.
         public var acceptableGoals: [String]
         public var isImportant: Bool
+        /// A short instruction to act now.
+        public var isUrgent = false
         public var repeatOf: String?
         public var context: [String]
         public var text: String
@@ -58,6 +69,44 @@ public struct SemanticDataset: Sendable {
         "worker": [
             ("shift", "Tell me about anything that changes my work shift or my hours."),
             ("order", "Notify me when a customer order is ready or a customer needs help."),
+            ("attention", "Notify me if someone is trying to get my attention."),
+        ],
+        // Window 6.1, development set 2.
+        "student2": [
+            ("grades", "Notify me about anything that could affect my grades."),
+            ("schedule", "Tell me if my class schedule or a room changes."),
+            ("attention", "Tell me if someone is talking to me or wants my attention."),
+            ("danger", "Warn me if someone says something dangerous is happening near me."),
+        ],
+        "office": [
+            ("project", "Tell me about changes to my project's deadlines or meetings."),
+            ("tasks", "Let me know when someone asks me to do something."),
+            ("danger", "Warn me about anything dangerous happening nearby."),
+        ],
+        "home": [
+            ("kids", "Tell me about anything that changes when or where I pick up my kids."),
+            ("door", "Let me know if someone is at the door or a delivery arrives."),
+            ("danger", "Warn me about anything dangerous happening nearby."),
+        ],
+        // Window 6.1, sealed set. Three of the four profiles use goals that occur nowhere else.
+        "pupil": [
+            ("grades", "Notify me about anything that could affect my grades."),
+            ("attention", "Tell me if someone is talking to me or wants my attention."),
+            ("danger", "Warn me if someone says something dangerous is happening near me."),
+        ],
+        "commuter": [
+            ("transit", "Tell me about anything that changes my train or bus ride."),
+            ("danger", "Warn me if I need to move or get out of the way."),
+            ("attention", "Let me know if a stranger is speaking to me."),
+        ],
+        "clinic": [
+            ("turn", "Tell me when it is my turn or my appointment changes."),
+            ("medicine", "Let me know about anything that changes how I should take my medicine."),
+            ("danger", "Warn me about anything dangerous happening nearby."),
+        ],
+        "shop": [
+            ("customers", "Tell me when a customer needs me or an order is ready to hand out."),
+            ("hours", "Tell me about anything that changes my hours or my pay."),
             ("attention", "Notify me if someone is trying to get my attention."),
         ],
     ]
@@ -93,6 +142,8 @@ public struct SemanticDataset: Sendable {
             for flag in fields[5].split(separator: ",").map(String.init) {
                 if flag == "important" {
                     item.isImportant = true
+                } else if flag == "urgent" {
+                    item.isUrgent = true
                 } else if flag.hasPrefix("repeat_of=") {
                     item.repeatOf = String(flag.dropFirst("repeat_of=".count))
                 } else if flag.hasPrefix("context=") {

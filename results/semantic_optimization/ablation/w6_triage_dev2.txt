@@ -1,0 +1,44 @@
+Set dev2: 171 synthetic utterances — relevant 82, irrelevant 73, ambiguous 12, repeat 4
+
+  wall time 419.7 s; this process 14 → 25 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, style window6, first pass on — dev2 set
+  precision            91.2 % (62/68; 95 % CI 82.1–95.9)
+  recall               75.6 % (62/82; 95 % CI 65.3–83.6)
+  F1                   0.827
+  false alerts         6.8 % (5/73; 95 % CI 3.0–15.1) of irrelevant utterances
+  false alerts / hour  16.4 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      25.0 % (1/4; 95 % CI 4.6–69.9)
+  important missed     11.8 % (2/17; 95 % CI 3.3–34.3)
+  goal named correctly 98.4 % (61/62; 95 % CI 91.4–99.7)
+  ambiguous items      7 alerted, 1 kept as uncertain, 4 nothing (of 12)
+  time per utterance   median 3.28 s, p95 3.82 s; model median 3.28 s; full judgements 109, stopped by the first pass 59, gated 0, fallbacks 3
+  verifier corrections about_someone_else 6, headline_negation 7, headline_not_in_utterance 10, not_asserted 3, reason_detail 3
+  by category          asr_error 8/10, attention 0/3, causal 5/8, hypothetical 8/8, implicit 21/29, multi 9/10, negation 15/16, obvious 5/5, past 4/6, repeated 3/4, sarcasm_quote 5/7, third_person 12/13, unrelated 22/22, urgent_short 16/18
+    ✗ e010 [past, expected irrelevant] The teacher discussed last year's grading system. → relevant @model
+    ✗ e014 [implicit, expected relevant] I'll be checking notebooks at random this week. → irrelevant @triage
+    ✗ e015 [implicit, expected relevant] Group members will now be marked individually. → uncertain @model (about_someone_else)
+    ✗ e020 [causal, expected relevant] Nobody read the instructions, so I'm marking this one out of ten instead of twenty. → irrelevant @triage
+    ✗ e045 [repeated, expected repeat] One more time, late work will no longer receive credit. → relevant @model
+    ✗ e054 [attention, expected relevant] Hey, sorry, do you have the time? → irrelevant @triage
+    ✗ e055 [attention, expected relevant] You there, in the green hoodie, you forgot your notebook. → irrelevant @triage
+    ✗ e056 [attention, expected relevant] Can I borrow your charger for a minute? → irrelevant @triage
+    ✗ e062 [urgent_short, expected relevant] Stay away from the window. → irrelevant @triage
+    ✗ o008 [implicit, expected relevant] We're dropping the mobile version from this release. → irrelevant @model
+    ✗ o010 [implicit, expected relevant] I need you to cover the phones from two to four. → irrelevant @triage
+    ✗ o011 [implicit, expected relevant] When you get a chance, take a look at the budget sheet. → irrelevant @triage
+    ✗ o013 [causal, expected relevant] The server migration failed overnight, so the freeze is extended to Wednesday. → irrelevant @model
+    ✗ o015 [causal, expected relevant] Priya is out today, so I'm giving her tickets to you. → irrelevant @fallback
+    ✗ o019 [third_person, expected irrelevant] Their deadline got pulled in, not ours. → relevant @model (headline_negation)
+    ✗ o031 [past, expected irrelevant] On my last project the deadline moved six times. → relevant @model
+    ✗ o033 [sarcasm_quote, expected irrelevant] Oh sure, the deadline will definitely be extended, like that ever happens. → relevant @model
+    ✗ o034 [sarcasm_quote, expected irrelevant] He does this impression of the boss saying, drop everything, I need it yesterday. → relevant @model
+    ✗ o036 [asr_error, expected relevant] can ewe book the room for too o'clock → irrelevant @model
+    ✗ m003 [implicit, expected relevant] Soccer practice ends half an hour early this afternoon. → irrelevant @model
+    ✗ m004 [implicit, expected relevant] The school is closing at noon because of the storm. → irrelevant @model
+    ✗ m006 [implicit, expected relevant] Maya's staying for choir until five tonight. → irrelevant @triage
+    ✗ m019 [negation, expected relevant] There's no late bus on Wednesdays anymore. → irrelevant @triage
+    ✗ m028 [asr_error, expected relevant] some one is at the door with a pack age → irrelevant @fallback
+    ✗ m043 [urgent_short, expected relevant] The baby's got hold of the scissors. → irrelevant @fallback
+    ✗ m045 [multi, expected relevant] They want someone to come for Leo right now. → uncertain @model (about_someone_else)
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-opt/results/semantic_optimization/ablation/w6_triage_dev2.json

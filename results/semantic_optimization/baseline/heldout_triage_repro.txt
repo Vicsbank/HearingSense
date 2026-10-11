@@ -1,0 +1,32 @@
+Set heldout: 119 synthetic utterances — relevant 58, irrelevant 43, ambiguous 14, repeat 4
+Held-out set: report only. Do not change prompts or thresholds after looking at it.
+
+  wall time 316.3 s; this process 14 → 25 MB resident (the model itself runs in a system process and is not included)
+Foundation Models reasoning + verifier (production pipeline, first pass on) — heldout set
+  precision            90.9 % (50/55; 95 % CI 80.4–96.1)
+  recall               86.2 % (50/58; 95 % CI 75.1–92.8)
+  F1                   0.885
+  false alerts         11.6 % (5/43; 95 % CI 5.1–24.5) of irrelevant utterances
+  false alerts / hour  27.9 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      0.0 % (0/4; 95 % CI 0.0–49.0)
+  important missed     0.0 % (0/7; 95 % CI 0.0–35.4)
+  goal named correctly 96.0 % (48/50; 95 % CI 86.5–98.9)
+  ambiguous items      8 alerted, 0 kept as uncertain, 6 nothing (of 14)
+  time per utterance   median 3.42 s, p95 3.99 s; model median 3.42 s; full judgements 79, stopped by the first pass 40, gated 0, fallbacks 0
+  verifier corrections about_someone_else 2, headline_negation 9, headline_not_in_utterance 3, not_asserted 3, reason_detail 3
+  by category          asr_error 7/7, causal 5/7, hypothetical 7/7, implicit 24/28, negation 5/7, obvious 11/13, repeated 4/4, sarcasm_quote 4/4, third_person 7/10, unrelated 18/18
+    ✗ h004 [obvious, expected relevant] Announcement for our class, picture day is this Thursday. → irrelevant
+    ✗ h022 [causal, expected relevant] Because the bus broke down, the field trip is cancelled. → irrelevant
+    ✗ h041 [third_person, expected irrelevant] My dad's work schedule changed, so he's home on Fridays now. → relevant
+    ✗ h042 [third_person, expected irrelevant] Their school had to evacuate last year because of a gas leak. → relevant
+    ✗ h047 [negation, expected irrelevant] She did not move the deadline, it's still due Friday. → relevant (headline_negation)
+    ✗ t010 [third_person, expected irrelevant] The Boston flight has been cancelled, please see an agent. → relevant
+    ✗ t018 [negation, expected irrelevant] They're not changing the Denver gate, it stays at B12. → relevant (headline_negation)
+    ✗ w004 [obvious, expected relevant] Order forty-two is ready at the counter. → irrelevant
+    ✗ w005 [implicit, expected relevant] The oat latte for Maya is up. → irrelevant
+    ✗ w007 [implicit, expected relevant] Hey, do you work here? → irrelevant
+    ✗ w010 [causal, expected relevant] Jenna called in sick, so we need someone to stay until nine. → uncertain (about_someone_else)
+    ✗ w015 [implicit, expected relevant] I'd like a refund, this isn't what I ordered. → irrelevant
+    ✗ w016 [implicit, expected relevant] Table six has been waiting twenty minutes for their food. → irrelevant
+
+Wrote ../../results/semantic_optimization/baseline/heldout_triage_repro.json

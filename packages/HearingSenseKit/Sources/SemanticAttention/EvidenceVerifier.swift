@@ -8,14 +8,34 @@ public struct EvidenceVerifier: Hashable, Sendable {
     public var minimumEvidenceCoverage: Double
     public var minimumHeadlineCoverage: Double
     public var maximumHeadlineWords: Int
+    /// The longest headline made of the utterance's own words (Window 6.1).
+    public var maximumExtractiveWords: Int
 
-    public init(minimumEvidenceCoverage: Double = 0.6, minimumHeadlineCoverage: Double = 0.6, maximumHeadlineWords: Int = 8) {
+    public init(minimumEvidenceCoverage: Double = 0.6, minimumHeadlineCoverage: Double = 0.6, maximumHeadlineWords: Int = 8,
+                maximumExtractiveWords: Int = 12)
+    {
         self.minimumEvidenceCoverage = minimumEvidenceCoverage
         self.minimumHeadlineCoverage = minimumHeadlineCoverage
         self.maximumHeadlineWords = maximumHeadlineWords
+        self.maximumExtractiveWords = maximumExtractiveWords
     }
 
     public static let standard = EvidenceVerifier()
+
+    /// Why a decision was made, in fixed words plus the user's own goal: no model text.
+    static func reason(for decision: SemanticAttentionDecision, goal: AttentionGoal) -> String {
+        let what = switch decision.statementKind {
+        case .question: "Someone may be speaking to you or asking for something"
+        case .hypothetical: "Said as a possibility, not as settled"
+        case .reported: "Said as a story, a quotation or about the past"
+        case .noChange: "Said that nothing changes"
+        case .unclear: "Hard to tell what was meant"
+        case .statement:
+            decision.subject == .someoneElse ? "Seems to be about someone else"
+                : decision.urgency == .high ? "Possible warning or something to act on now" : "Something may be different or needed"
+        }
+        return what + " — your goal: " + goal.text
+    }
 
     /// Phrases that mark a statement as imagined, whatever the model said.
     static let hypotheticalMarkers = ["what if", "i wish", "imagine if", "wouldn't it be", "hypothetically",
@@ -83,6 +103,27 @@ public struct EvidenceVerifier: Hashable, Sendable {
             }
         }
 
+        // The second look says it is not a statement about here and now.
+        if decision.verdict == .relevant, let confirmation = judgement.confirmation, confirmation != .hereAndNow {
+            switch confirmation {
+            case .nothingChanges:
+                decision.verdict = .irrelevant
+                decision.statementKind = .noChange
+            case .someoneElse:
+                decision.verdict = .uncertain
+                decision.subject = .someoneElse
+            case .past, .story:
+                decision.verdict = .uncertain
+                decision.statementKind = .reported
+            case .wish:
+                decision.verdict = .uncertain
+                decision.statementKind = .hypothetical
+            case .hereAndNow:
+                break
+            }
+            corrections.append("second_look")
+        }
+
         // About someone else: worth keeping in the list at most.
         if decision.verdict == .relevant, decision.subject == .someoneElse {
             decision.verdict = .uncertain
@@ -119,6 +160,18 @@ public struct EvidenceVerifier: Hashable, Sendable {
                 decision.headline = ""
                 corrections.append("headline_detail")
             }
+        }
+
+        // No text from the model (Window 6.1): the headline is the utterance's own words and the
+        // reason names the goal, so nothing that is shown can say more than was said.
+        if judgement.headline.isEmpty {
+            decision.headline = SemanticText.extractiveHeadline(from: source, maximumWords: maximumExtractiveWords)
+            if decision.headline.isEmpty { corrections.append("headline_not_shortened") }
+        }
+        if judgement.consequence.isEmpty, let goalID = decision.matchedGoalID,
+           let goal = goals.first(where: { $0.id == goalID })
+        {
+            decision.reason = Self.reason(for: decision, goal: goal)
         }
 
         switch decision.verdict {

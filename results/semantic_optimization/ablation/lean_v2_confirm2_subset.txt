@@ -1,0 +1,64 @@
+Set dev2: 110 synthetic utterances — relevant 79, irrelevant 16, ambiguous 11, repeat 4
+
+  wall time 378.4 s; this process 14 → 26 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, style lean, first pass off — dev2 set
+  precision            92.4 % (61/66; 95 % CI 83.5–96.7)
+  recall               77.2 % (61/79; 95 % CI 66.8–85.1)
+  F1                   0.841
+  false alerts         31.2 % (5/16; 95 % CI 14.2–55.6) of irrelevant utterances
+  false alerts / hour  75.0 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      0.0 % (0/4; 95 % CI 0.0–49.0)
+  important missed     0.0 % (0/16; 95 % CI 0.0–19.4)
+  goal named correctly 100.0 % (61/61; 95 % CI 94.1–100.0)
+  ambiguous items      10 alerted, 0 kept as uncertain, 1 nothing (of 11)
+  time per utterance   median 3.78 s, p95 4.50 s; model median 3.78 s; full judgements 110, stopped by the first pass 0, gated 0, fallbacks 0
+  verifier corrections headline_not_shortened 3, hypothetical_marker 1, second_look 29
+  by category          asr_error 7/8, attention 2/3, causal 3/7, hypothetical 3/3, implicit 19/28, multi 6/7, negation 6/8, obvious 5/5, past 1/1, repeated 4/4, sarcasm_quote 3/5, third_person 4/6, unrelated 0/1, urgent_short 13/13
+  confusion            TP 61  FP 5  FN 18  TN 15  (ambiguous, not scored: 10 alerted, 0 uncertain, 1 silent)
+  precision            92.4 % (61/66; 95 % CI 83.5–96.7)
+  recall               77.2 % (61/79; 95 % CI 66.8–85.1)
+  F1                   0.841
+  false-positive rate  25.0 % (5/20; 95 % CI 11.2–46.9)
+  false-negative rate  22.8 % (18/79; 95 % CI 14.9–33.2)
+  balanced accuracy    76.1 %
+  important-event recall                100.0 % (16/16; 95 % CI 80.6–100.0)
+  short urgent instruction recall       100.0 % (11/11; 95 % CI 74.1–100.0)
+  implicit relevance recall             62.9 % (22/35; 95 % CI 46.3–76.8)
+  explicit relevance recall             87.5 % (7/8; 95 % CI 52.9–97.8)
+  negation accuracy                     75.0 % (6/8; 95 % CI 40.9–92.9)
+  hypothetical accuracy                 100.0 % (3/3; 95 % CI 43.8–100.0)
+  personal relevance accuracy           66.7 % (4/6; 95 % CI 30.0–90.3)
+  past and quotation accuracy           66.7 % (4/6; 95 % CI 30.0–90.3)
+  recognition-error accuracy            87.5 % (7/8; 95 % CI 52.9–97.8)
+  context (several sentences) accuracy  85.7 % (6/7; 95 % CI 48.7–97.4)
+  unrelated talk accuracy               0.0 % (0/1; 95 % CI 0.0–79.3)
+  repetition accuracy                   100.0 % (4/4; 95 % CI 51.0–100.0)
+  by profile           home TP 13 FP 1 FN 7 TN 5; office TP 19 FP 2 FN 6 TN 5; student2 TP 29 FP 2 FN 5 TN 5
+  decided at           model 110
+  seconds per item     p50 3.78  p95 4.50  p99 4.61   model only: p50 3.78  p95 4.50  p99 4.61
+  output tokens        35.0 per model decision (110 model decisions)
+    ✗ e014 [implicit, expected relevant] I'll be checking notebooks at random this week. → irrelevant @model kind=noChange subject=listenerOrGroup goal=- (second_look)
+    ✗ e016 [implicit, expected relevant] Art is in the computer lab for the rest of the month. → uncertain @model kind=reported subject=listenerOrGroup goal=schedule (second_look)
+    ✗ e018 [causal, expected relevant] The projector died during the presentations, so the last three groups go again on Monday. → irrelevant @model kind=statement subject=listenerOrGroup goal=- (second_look,headline_not_shortened)
+    ✗ e022 [third_person, expected irrelevant] The eighth graders have a different timetable from Monday. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ e024 [third_person, expected relevant] Mr. Lindqvist broke his arm, so we're having our quiz with the substitute. → irrelevant @model kind=statement subject=listenerOrGroup goal=- (second_look)
+    ✗ e052 [unrelated, expected irrelevant] That hill is too steep, the road grade must be ten percent. → relevant @model kind=statement subject=listenerOrGroup goal=danger
+    ✗ e056 [attention, expected relevant] Can I borrow your charger for a minute? → irrelevant @model kind=question subject=listenerOrGroup goal=- (second_look)
+    ✗ o004 [implicit, expected relevant] We're pushing the launch to the second quarter. → irrelevant @model kind=statement subject=listenerOrGroup goal=- (second_look)
+    ✗ o007 [implicit, expected relevant] The review got bumped to the big conference room. → irrelevant @model kind=statement subject=listenerOrGroup goal=- (second_look)
+    ✗ o008 [implicit, expected relevant] We're dropping the mobile version from this release. → irrelevant @model kind=noChange subject=listenerOrGroup goal=- (second_look)
+    ✗ o011 [implicit, expected relevant] When you get a chance, take a look at the budget sheet. → irrelevant @model kind=question subject=listenerOrGroup goal=- (second_look)
+    ✗ o015 [causal, expected relevant] Priya is out today, so I'm giving her tickets to you. → irrelevant @model kind=question subject=listenerOrGroup goal=- (second_look)
+    ✗ o033 [sarcasm_quote, expected irrelevant] Oh sure, the deadline will definitely be extended, like that ever happens. → relevant @model kind=statement subject=listenerOrGroup goal=project
+    ✗ o034 [sarcasm_quote, expected irrelevant] He does this impression of the boss saying, drop everything, I need it yesterday. → relevant @model kind=question subject=listenerOrGroup goal=tasks (headline_not_shortened)
+    ✗ o036 [asr_error, expected relevant] can ewe book the room for too o'clock → irrelevant @model kind=noChange subject=listenerOrGroup goal=- (second_look)
+    ✗ m003 [implicit, expected relevant] Soccer practice ends half an hour early this afternoon. → uncertain @model kind=reported subject=listenerOrGroup goal=kids (second_look)
+    ✗ m008 [implicit, expected relevant] The courier left a card, he's coming back at three. → irrelevant @model kind=statement subject=listenerOrGroup goal=- (second_look)
+    ✗ m009 [implicit, expected relevant] A man with a clipboard is knocking out front. → irrelevant @model kind=statement subject=listenerOrGroup goal=- (second_look)
+    ✗ m011 [causal, expected relevant] The field is flooded, so the after-school club is cancelled. → irrelevant @model kind=statement subject=listenerOrGroup goal=- (second_look)
+    ✗ m012 [causal, expected relevant] Her teacher is sick, so the class trip comes back at two instead of four. → uncertain @model kind=reported subject=listenerOrGroup goal=kids (second_look,headline_not_shortened)
+    ✗ m019 [negation, expected relevant] There's no late bus on Wednesdays anymore. → irrelevant @model kind=noChange subject=listenerOrGroup goal=- (second_look)
+    ✗ m020 [negation, expected relevant] The driver couldn't find the house and didn't leave the package. → irrelevant @model kind=noChange subject=listenerOrGroup goal=- (second_look)
+    ✗ m047 [multi, expected irrelevant] Around seven I think. → relevant @model kind=statement subject=listenerOrGroup goal=kids
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-opt/results/semantic_optimization/ablation/lean_v2_confirm2_subset.json

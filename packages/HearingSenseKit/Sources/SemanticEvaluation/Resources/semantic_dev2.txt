@@ -1,0 +1,179 @@
+# Hearing Sense — semantic attention, DEVELOPMENT set 2 (Window 6.1).
+# Synthetic, written for this project; no real conversation. Prompts, rules and thresholds may be tuned on
+# this file (and on semantic_dev.txt). Its profiles, goals and sentences do not occur in semantic_sealed.txt.
+# Fields: id | profile | category | expected | acceptable goals | flags | utterance | why
+# expected: relevant (an alert is wanted), irrelevant (no alert; "uncertain" in the app's list is fine),
+# ambiguous (either is defensible; reported separately, not scored), repeat (said before: no second alert).
+# flags: important (a miss is costly), urgent (a short instruction to act now), repeat_of=<id>,
+# context=<earlier utterance, no commas>
+e001|student2|obvious|relevant|grades||Report grades close on Friday, anything missing becomes a zero.|names grades
+e002|student2|implicit|relevant|grades,schedule||The test has been moved to Friday.|exam timing
+e003|student2|implicit|relevant|grades||Students may resubmit their projects.|a resubmission can change the mark
+e004|student2|implicit|relevant|grades||The grading rubric has changed.|how work is marked
+e005|student2|implicit|relevant|grades||The final assignment is now worth twice as much.|weighting
+e006|student2|implicit|relevant|grades||Late work will no longer receive credit.|a rule that can cost marks
+e007|student2|implicit|relevant|grades||The teacher will replace the lowest quiz score.|marks recalculated
+e008|student2|third_person|irrelevant|||My friend failed his chemistry exam.|someone else
+e009|student2|hypothetical|ambiguous|grades||There may be an exam next month.|a possibility, not confirmed
+e010|student2|past|irrelevant|||The teacher discussed last year's grading system.|the past, nothing changes now
+e011|student2|negation|irrelevant|||The deadline has not changed.|nothing changes
+e012|student2|sarcasm_quote|irrelevant|||Someone joked that the exam was canceled.|reported joke
+e013|student2|implicit|relevant|grades||You need a seventy on the retake to pass the unit.|a pass condition
+e014|student2|implicit|relevant|grades||I'll be checking notebooks at random this week.|unannounced assessment
+e015|student2|implicit|relevant|grades||Group members will now be marked individually.|how work is marked
+e016|student2|implicit|relevant|schedule||Art is in the computer lab for the rest of the month.|room change
+e017|student2|implicit|relevant|schedule||Fourth period is cut short for the assembly.|timetable
+e018|student2|causal|relevant|grades||The projector died during the presentations, so the last three groups go again on Monday.|consequence: presenting again
+e019|student2|causal|relevant|schedule||The heating is out in the east wing, so math moves to the cafeteria.|consequence: room change
+e020|student2|causal|relevant|grades||Nobody read the instructions, so I'm marking this one out of ten instead of twenty.|consequence for marks
+e021|student2|third_person|irrelevant|||My cousin's school cancelled their finals because of the flood.|another school
+e022|student2|third_person|irrelevant|||The eighth graders have a different timetable from Monday.|another group
+e023|student2|third_person|irrelevant|||Her brother got suspended for skipping class.|someone else
+e024|student2|third_person|relevant|grades,schedule||Mr. Lindqvist broke his arm, so we're having our quiz with the substitute.|a named person, but the listener's quiz is affected
+e025|student2|negation|irrelevant|||There's no change to tomorrow's rooms, go where you always go.|nothing changes
+e026|student2|negation|irrelevant|||No, I didn't move the essay date, it was always the ninth.|nothing changes
+e027|student2|negation|relevant|grades||Calculators are not allowed on this section anymore.|a negation that is the change
+e028|student2|negation|relevant|grades||I won't be accepting emailed essays, paper only.|a rule for submission
+e029|student2|negation|relevant|danger|important|Nobody goes near the chemistry lab, there's been a spill.|an instruction to stay away
+e030|student2|hypothetical|irrelevant|||I bet she'd cancel the test if we all begged.|a guess
+e031|student2|hypothetical|irrelevant|||Picture a school with no homework at all.|imagined
+e032|student2|hypothetical|irrelevant|||What if the bell just never rang?|imagined
+e033|student2|hypothetical|relevant|grades||Any essay under five hundred words gets an automatic fail.|a stated rule
+e034|student2|past|irrelevant|||Two years ago they let everyone drop a test.|the past
+e035|student2|past|irrelevant|||I remember when this room used to be the library.|the past
+e036|student2|sarcasm_quote|irrelevant|||Right, because she's totally going to give us all an A.|sarcasm
+e037|student2|sarcasm_quote|irrelevant|||In the book the headmaster announces that exams are abolished.|fiction
+e038|student2|asr_error|relevant|grades||students may re sub mit there projects by thursday|recognition errors
+e039|student2|asr_error|relevant|schedule||jim class is in the or the tory um today|recognition errors, room change
+e040|student2|asr_error|relevant|danger|important|stay a way from the stair well some thing is leaking|recognition errors, a hazard
+e041|student2|asr_error|irrelevant|||my ant is come in to visit this weak end|recognition errors, unrelated
+e042|student2|incomplete|ambiguous|grades||The final assignment is now|cut off
+e043|student2|incomplete|ambiguous|schedule||Tomorrow we're all meeting in|cut off
+e044|student2|repeated|repeat|grades,schedule|repeat_of=e002|As I said, the test has been moved to Friday.|said before
+e045|student2|repeated|repeat|grades|repeat_of=e006|One more time, late work will no longer receive credit.|said before
+e046|student2|unrelated|irrelevant|||My bike has a flat tyre again.|everyday talk
+e047|student2|unrelated|irrelevant|||That new burger place is always packed.|everyday talk
+e048|student2|unrelated|irrelevant|||I stayed up way too late watching videos.|everyday talk
+e049|student2|unrelated|irrelevant|||Do you know a good dentist around here?|everyday talk
+e050|student2|unrelated|irrelevant|||The moon looked huge last night.|everyday talk
+e051|student2|unrelated|irrelevant|||She got a puppy for her birthday.|everyday talk
+e052|student2|unrelated|irrelevant|||That hill is too steep, the road grade must be ten percent.|a goal word used for something else
+e053|student2|unrelated|irrelevant|||He has real class, he always holds the door.|a goal word used for something else
+e054|student2|attention|relevant|attention||Hey, sorry, do you have the time?|someone addresses the listener
+e055|student2|attention|relevant|attention||You there, in the green hoodie, you forgot your notebook.|someone addresses the listener
+e056|student2|attention|relevant|attention||Can I borrow your charger for a minute?|someone asks the listener
+e057|student2|attention|ambiguous|attention||Who left their water bottle here?|addressed to the room
+e058|student2|urgent_short|relevant|danger|important,urgent|Watch out!|a short warning
+e059|student2|urgent_short|relevant|danger|important,urgent|Don't go any farther.|a short instruction without an alarm word
+e060|student2|urgent_short|relevant|danger|important,urgent|That railing is about to fall.|a hazard described
+e061|student2|urgent_short|relevant|danger|important,urgent|There's something coming toward you.|a hazard described
+e062|student2|urgent_short|relevant|danger|important,urgent|Stay away from the window.|a short instruction
+e063|student2|urgent_short|relevant|danger|important,urgent|Duck!|one word
+e064|student2|urgent_short|relevant|danger|important|The ceiling tile above you is coming loose.|a hazard described, no alarm word
+e065|student2|urgent_short|irrelevant|||Run that by me again, I wasn't listening.|an alarm word used casually
+e066|student2|urgent_short|irrelevant|||That game last night was fire.|an alarm word used as slang
+e067|student2|multi|relevant|grades|context=About Thursday's vocabulary quiz.|It's going to count double.|weighting, understood from the sentence before
+e068|student2|multi|relevant|schedule|context=Where is biology today?|They moved us upstairs to two fourteen.|room change, understood from the question before
+e069|student2|multi|irrelevant||context=Are you coming to the game?|I can't, I have to babysit.|everyday talk with context
+e070|student2|multi|irrelevant||context=The deadline was going to move.|But in the end they kept it where it was.|nothing changes, with context
+o001|office|obvious|relevant|project||The project deadline is now the end of the month.|names the deadline
+o002|office|obvious|relevant|project||Tomorrow's project meeting is cancelled.|names the meeting
+o003|office|implicit|relevant|project||The client wants the demo a week sooner.|a deadline moves
+o004|office|implicit|relevant|project||We're pushing the launch to the second quarter.|a deadline moves
+o005|office|implicit|relevant|project||The stand-up is at nine thirty from now on.|a meeting time changes
+o006|office|implicit|relevant|project||Legal needs two more weeks to review, so nothing ships before then.|a deadline consequence
+o007|office|implicit|relevant|project||The review got bumped to the big conference room.|a meeting place changes
+o008|office|implicit|relevant|project||We're dropping the mobile version from this release.|scope of the project
+o009|office|implicit|relevant|tasks||Could you send me the slides before lunch?|a request to the listener
+o010|office|implicit|relevant|tasks||I need you to cover the phones from two to four.|a request to the listener
+o011|office|implicit|relevant|tasks||When you get a chance, take a look at the budget sheet.|a request to the listener
+o012|office|implicit|relevant|tasks||Please sign the timesheet and leave it on my desk.|a request to the listener
+o013|office|causal|relevant|project||The server migration failed overnight, so the freeze is extended to Wednesday.|consequence for the schedule
+o014|office|causal|relevant|project||Half the team is at the conference, so the planning session moves to next week.|consequence: meeting moved
+o015|office|causal|relevant|tasks||Priya is out today, so I'm giving her tickets to you.|consequence: work for the listener
+o016|office|third_person|irrelevant|||The marketing team lost their whole budget.|another team
+o017|office|third_person|irrelevant|||My wife's company moved all their meetings online.|another company
+o018|office|third_person|irrelevant|||I asked my landlord to fix the tap three times.|someone's own affairs
+o019|office|third_person|irrelevant|||Their deadline got pulled in, not ours.|explicitly another group
+o020|office|third_person|ambiguous|tasks||Somebody needs to water the plants in reception.|a request to nobody in particular
+o021|office|negation|irrelevant|||The meeting is not moving, it's still at ten.|nothing changes
+o022|office|negation|irrelevant|||Nothing's changed on the timeline since last week.|nothing changes
+o023|office|negation|irrelevant|||You don't have to do anything, I already handled it.|no request
+o024|office|negation|relevant|project||There's no meeting on Thursday after all.|a cancelled meeting
+o025|office|negation|relevant|tasks||Don't send that report yet, wait for my edits.|an instruction to the listener
+o026|office|negation|relevant|danger|important|Do not use the back stairs, a step has collapsed.|an instruction to stay away
+o027|office|hypothetical|irrelevant|||If only we had another month for this.|a wish
+o028|office|hypothetical|irrelevant|||I wonder what would happen if we just skipped the review.|imagined
+o029|office|hypothetical|ambiguous|project||We may have to move the deadline if testing slips.|a real possibility, not confirmed
+o030|office|hypothetical|ambiguous|project||The teacher announced a possible extension.|a possibility announced
+o031|office|past|irrelevant|||On my last project the deadline moved six times.|the past
+o032|office|past|irrelevant|||We used to have these meetings on Mondays, years ago.|the past
+o033|office|sarcasm_quote|irrelevant|||Oh sure, the deadline will definitely be extended, like that ever happens.|sarcasm
+o034|office|sarcasm_quote|irrelevant|||He does this impression of the boss saying, drop everything, I need it yesterday.|an impression
+o035|office|asr_error|relevant|project||the dead line is now the end of nex week|recognition errors
+o036|office|asr_error|relevant|tasks||can ewe book the room for too o'clock|recognition errors, a request
+o037|office|asr_error|irrelevant|||i herd it might snow on fry day|recognition errors, unrelated
+o038|office|incomplete|ambiguous|project||So the new deadline for|cut off
+o039|office|incomplete|ambiguous|tasks||Could you please|cut off
+o040|office|repeated|repeat|project|repeat_of=o002|Just a reminder, tomorrow's project meeting is cancelled.|said before
+o041|office|unrelated|irrelevant|||I'm trying that new ramen place tonight.|everyday talk
+o042|office|unrelated|irrelevant|||My train was freezing this morning.|everyday talk
+o043|office|unrelated|irrelevant|||Did you see the finale? No spoilers.|everyday talk
+o044|office|unrelated|irrelevant|||These new chairs are surprisingly comfortable.|everyday talk
+o045|office|unrelated|irrelevant|||I think the printer is haunted.|everyday talk
+o046|office|unrelated|irrelevant|||She's projecting her voice really well in that play.|a goal word used for something else
+o047|office|unrelated|irrelevant|||I can never meet a deadline in fantasy football.|a goal word used for something else
+o048|office|urgent_short|relevant|danger|important,urgent|Careful, hot coffee behind you.|a short warning
+o049|office|urgent_short|relevant|danger|important,urgent|Get away from that cabinet, it's tipping.|a short instruction
+o050|office|urgent_short|relevant|danger|important|I smell gas in the kitchen, everybody out.|an instruction to leave
+o051|office|urgent_short|irrelevant|||This spreadsheet is going to be the death of me.|a figure of speech
+o052|office|multi|relevant|project|context=About the Friday review.|It's happening Wednesday instead.|a meeting moves, understood from the sentence before
+o053|office|multi|relevant|tasks|context=The client call is at three.|I need you on it.|a request, understood from the sentence before
+o054|office|multi|irrelevant||context=How's the new apartment?|Still full of boxes.|everyday talk with context
+m001|home|obvious|relevant|kids||School pickup is at the side gate today, not the front.|names pickup
+m002|home|obvious|relevant|door||There's a delivery at the front door for you.|names a delivery
+m003|home|implicit|relevant|kids||Soccer practice ends half an hour early this afternoon.|pickup time changes
+m004|home|implicit|relevant|kids||The school is closing at noon because of the storm.|pickup time changes
+m005|home|implicit|relevant|kids||The bus isn't running, parents have to collect from the gym.|pickup place changes
+m006|home|implicit|relevant|kids||Maya's staying for choir until five tonight.|pickup time changes
+m007|home|implicit|relevant|door||Someone just rang the bell twice.|someone at the door
+m008|home|implicit|relevant|door||The courier left a card, he's coming back at three.|a delivery
+m009|home|implicit|relevant|door||A man with a clipboard is knocking out front.|someone at the door
+m010|home|implicit|relevant|door||Your parcel's on the porch.|a delivery arrived
+m011|home|causal|relevant|kids||The field is flooded, so the after-school club is cancelled.|consequence: earlier pickup
+m012|home|causal|relevant|kids||Her teacher is sick, so the class trip comes back at two instead of four.|consequence: pickup time
+m013|home|third_person|irrelevant|||My sister picks her twins up from a different school.|someone else
+m014|home|third_person|irrelevant|||The neighbours got four packages delivered yesterday.|someone else, the past
+m015|home|third_person|irrelevant|||His kids take the train to school on their own.|someone else
+m016|home|third_person|irrelevant|||Someone was at my mother's door selling solar panels.|another door, a report
+m017|home|negation|irrelevant|||Pickup is the same as always, nothing new.|nothing changes
+m018|home|negation|irrelevant|||No, that wasn't the doorbell, it was the TV.|nobody at the door
+m019|home|negation|relevant|kids||There's no late bus on Wednesdays anymore.|a negation that is the change
+m020|home|negation|relevant|door||The driver couldn't find the house and didn't leave the package.|a delivery that failed
+m021|home|hypothetical|irrelevant|||I wish the school would start an hour later.|a wish
+m022|home|hypothetical|irrelevant|||Imagine if deliveries came by drone.|imagined
+m023|home|hypothetical|ambiguous|kids||They might let the kids out early if the heat gets worse.|a real possibility, not confirmed
+m024|home|past|irrelevant|||When I was little we walked home by ourselves.|the past
+m025|home|sarcasm_quote|irrelevant|||He always says, the package will arrive when it arrives.|a quoted saying
+m026|home|sarcasm_quote|irrelevant|||In the cartoon the mailman gets chased down the street every single day.|fiction
+m027|home|asr_error|relevant|kids||pick up is at the side gait two day|recognition errors
+m028|home|asr_error|relevant|door||some one is at the door with a pack age|recognition errors
+m029|home|asr_error|irrelevant|||we should by more bred and eggs|recognition errors, unrelated
+m030|home|incomplete|ambiguous|kids||Today the kids need to be|cut off
+m031|home|incomplete|ambiguous|door||I think there's someone at|cut off
+m032|home|repeated|repeat|kids|repeat_of=m004|Again, the school is closing at noon because of the storm.|said before
+m033|home|unrelated|irrelevant|||The tomatoes are finally turning red.|everyday talk
+m034|home|unrelated|irrelevant|||I can't get this stain out of the carpet.|everyday talk
+m035|home|unrelated|irrelevant|||Do we have any more batteries?|everyday talk
+m036|home|unrelated|irrelevant|||That documentary about whales was beautiful.|everyday talk
+m037|home|unrelated|irrelevant|||The car needs an oil change soon.|everyday talk
+m038|home|unrelated|irrelevant|||She delivered a great speech at the wedding.|a goal word used for something else
+m039|home|unrelated|irrelevant|||I picked up a cold somewhere last week.|a goal word used for something else
+m040|home|urgent_short|relevant|danger|important,urgent|The pan's on fire!|a hazard
+m041|home|urgent_short|relevant|danger|important,urgent|Don't step there, broken glass.|a short warning
+m042|home|urgent_short|relevant|danger|important,urgent|Move, it's falling!|a short warning
+m043|home|urgent_short|relevant|danger|important|The baby's got hold of the scissors.|a hazard described, no alarm word
+m044|home|urgent_short|irrelevant|||Careful with spoilers, I'm only on episode two.|a warning word used casually
+m045|home|multi|relevant|kids|context=The school just called.|They want someone to come for Leo right now.|a pickup, understood from the sentence before
+m046|home|multi|relevant|door|context=Did you hear that?|I think it's the delivery guy.|someone at the door, with context
+m047|home|multi|irrelevant||context=What time is dinner?|Around seven I think.|everyday talk with context

@@ -1,0 +1,47 @@
+Set dev2: 110 synthetic utterances — relevant 79, irrelevant 16, ambiguous 11, repeat 4
+
+  wall time 359.2 s; this process 14 → 25 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, style lean, first pass off — dev2 set
+  precision            92.9 % (79/85; 95 % CI 85.4–96.7)
+  recall               100.0 % (79/79; 95 % CI 95.4–100.0)
+  F1                   0.963
+  false alerts         37.5 % (6/16; 95 % CI 18.5–61.4) of irrelevant utterances
+  false alerts / hour  90.0 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      0.0 % (0/4; 95 % CI 0.0–49.0)
+  important missed     0.0 % (0/16; 95 % CI 0.0–19.4)
+  goal named correctly 92.4 % (73/79; 95 % CI 84.4–96.5)
+  ambiguous items      11 alerted, 0 kept as uncertain, 0 nothing (of 11)
+  time per utterance   median 3.52 s, p95 4.24 s; model median 3.52 s; full judgements 110, stopped by the first pass 0, gated 0, fallbacks 0
+  verifier corrections headline_not_shortened 3, hypothetical_marker 1, second_look 9
+  by category          asr_error 7/8, attention 3/3, causal 7/7, hypothetical 3/3, implicit 28/28, multi 6/7, negation 8/8, obvious 5/5, past 1/1, repeated 4/4, sarcasm_quote 3/5, third_person 5/6, unrelated 0/1, urgent_short 13/13
+  confusion            TP 79  FP 6  FN 0  TN 14  (ambiguous, not scored: 11 alerted, 0 uncertain, 0 silent)
+  precision            92.9 % (79/85; 95 % CI 85.4–96.7)
+  recall               100.0 % (79/79; 95 % CI 95.4–100.0)
+  F1                   0.963
+  false-positive rate  30.0 % (6/20; 95 % CI 14.5–51.9)
+  false-negative rate  0.0 % (0/79; 95 % CI 0.0–4.6)
+  balanced accuracy    85.0 %
+  important-event recall                100.0 % (16/16; 95 % CI 80.6–100.0)
+  short urgent instruction recall       100.0 % (11/11; 95 % CI 74.1–100.0)
+  implicit relevance recall             100.0 % (35/35; 95 % CI 90.1–100.0)
+  explicit relevance recall             100.0 % (8/8; 95 % CI 67.6–100.0)
+  negation accuracy                     100.0 % (8/8; 95 % CI 67.6–100.0)
+  hypothetical accuracy                 100.0 % (3/3; 95 % CI 43.8–100.0)
+  personal relevance accuracy           83.3 % (5/6; 95 % CI 43.6–97.0)
+  past and quotation accuracy           66.7 % (4/6; 95 % CI 30.0–90.3)
+  recognition-error accuracy            87.5 % (7/8; 95 % CI 52.9–97.8)
+  context (several sentences) accuracy  85.7 % (6/7; 95 % CI 48.7–97.4)
+  unrelated talk accuracy               0.0 % (0/1; 95 % CI 0.0–79.3)
+  repetition accuracy                   100.0 % (4/4; 95 % CI 51.0–100.0)
+  by profile           home TP 20 FP 1 FN 0 TN 5; office TP 25 FP 3 FN 0 TN 4; student2 TP 34 FP 2 FN 0 TN 5
+  decided at           model 110
+  seconds per item     p50 3.52  p95 4.24  p99 4.33   model only: p50 3.52  p95 4.23  p99 4.33
+  output tokens        35.0 per model decision (110 model decisions)
+    ✗ e022 [third_person, expected irrelevant] The eighth graders have a different timetable from Monday. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ e052 [unrelated, expected irrelevant] That hill is too steep, the road grade must be ten percent. → relevant @model kind=statement subject=listenerOrGroup goal=danger
+    ✗ o033 [sarcasm_quote, expected irrelevant] Oh sure, the deadline will definitely be extended, like that ever happens. → relevant @model kind=statement subject=listenerOrGroup goal=project
+    ✗ o034 [sarcasm_quote, expected irrelevant] He does this impression of the boss saying, drop everything, I need it yesterday. → relevant @model kind=question subject=listenerOrGroup goal=tasks (headline_not_shortened)
+    ✗ o037 [asr_error, expected irrelevant] i herd it might snow on fry day → relevant @model kind=statement subject=listenerOrGroup goal=project
+    ✗ m047 [multi, expected irrelevant] Around seven I think. → relevant @model kind=statement subject=listenerOrGroup goal=kids
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-opt/results/semantic_optimization/ablation/lean_v2_confirm_subset.json

@@ -1,0 +1,51 @@
+Set dev2: 171 synthetic utterances — relevant 82, irrelevant 73, ambiguous 12, repeat 4
+
+  wall time 350.1 s; this process 14 → 25 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, style lean, first pass off — dev2 set
+  precision            98.0 % (50/51; 95 % CI 89.7–99.7)
+  recall               61.0 % (50/82; 95 % CI 50.2–70.8)
+  F1                   0.752
+  false alerts         0.0 % (0/73; 95 % CI 0.0–5.0) of irrelevant utterances
+  false alerts / hour  0.0 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      25.0 % (1/4; 95 % CI 4.6–69.9)
+  important missed     41.2 % (7/17; 95 % CI 21.6–64.0)
+  goal named correctly 98.0 % (49/50; 95 % CI 89.5–99.6)
+  ambiguous items      5 alerted, 5 kept as uncertain, 2 nothing (of 12)
+  time per utterance   median 2.04 s, p95 2.12 s; model median 2.04 s; full judgements 171, stopped by the first pass 0, gated 0, fallbacks 0
+  verifier corrections about_someone_else 41, no_goal 10, not_asserted 3
+  by category          asr_error 7/10, attention 1/3, causal 3/8, hypothetical 8/8, implicit 18/29, multi 8/10, negation 15/16, obvious 5/5, past 6/6, repeated 3/4, sarcasm_quote 7/7, third_person 12/13, unrelated 22/22, urgent_short 11/18
+    ✗ e014 [implicit, expected relevant] I'll be checking notebooks at random this week. → irrelevant @model
+    ✗ e015 [implicit, expected relevant] Group members will now be marked individually. → uncertain @model (about_someone_else)
+    ✗ e016 [implicit, expected relevant] Art is in the computer lab for the rest of the month. → irrelevant @model
+    ✗ e018 [causal, expected relevant] The projector died during the presentations, so the last three groups go again on Monday. → uncertain @model (about_someone_else)
+    ✗ e020 [causal, expected relevant] Nobody read the instructions, so I'm marking this one out of ten instead of twenty. → irrelevant @model
+    ✗ e024 [third_person, expected relevant] Mr. Lindqvist broke his arm, so we're having our quiz with the substitute. → uncertain @model (about_someone_else)
+    ✗ e039 [asr_error, expected relevant] jim class is in the or the tory um today → uncertain @model (about_someone_else)
+    ✗ e045 [repeated, expected repeat] One more time, late work will no longer receive credit. → relevant @model
+    ✗ e054 [attention, expected relevant] Hey, sorry, do you have the time? → uncertain @model (about_someone_else)
+    ✗ e055 [attention, expected relevant] You there, in the green hoodie, you forgot your notebook. → irrelevant @model (no_goal)
+    ✗ e058 [urgent_short, expected relevant] Watch out! → irrelevant @model (no_goal)
+    ✗ e059 [urgent_short, expected relevant] Don't go any farther. → irrelevant @model (no_goal)
+    ✗ e062 [urgent_short, expected relevant] Stay away from the window. → irrelevant @model (no_goal)
+    ✗ e063 [urgent_short, expected relevant] Duck! → irrelevant @model (no_goal)
+    ✗ e064 [urgent_short, expected relevant] The ceiling tile above you is coming loose. → irrelevant @model (no_goal)
+    ✗ o007 [implicit, expected relevant] The review got bumped to the big conference room. → uncertain @model (about_someone_else)
+    ✗ o011 [implicit, expected relevant] When you get a chance, take a look at the budget sheet. → irrelevant @model
+    ✗ o014 [causal, expected relevant] Half the team is at the conference, so the planning session moves to next week. → uncertain @model (about_someone_else)
+    ✗ o015 [causal, expected relevant] Priya is out today, so I'm giving her tickets to you. → irrelevant @model
+    ✗ o036 [asr_error, expected relevant] can ewe book the room for too o'clock → uncertain @model (about_someone_else)
+    ✗ o050 [urgent_short, expected relevant] I smell gas in the kitchen, everybody out. → irrelevant @model (no_goal)
+    ✗ m005 [implicit, expected relevant] The bus isn't running, parents have to collect from the gym. → uncertain @model (about_someone_else)
+    ✗ m006 [implicit, expected relevant] Maya's staying for choir until five tonight. → uncertain @model (about_someone_else)
+    ✗ m007 [implicit, expected relevant] Someone just rang the bell twice. → uncertain @model (about_someone_else)
+    ✗ m008 [implicit, expected relevant] The courier left a card, he's coming back at three. → uncertain @model (about_someone_else)
+    ✗ m009 [implicit, expected relevant] A man with a clipboard is knocking out front. → uncertain @model (about_someone_else)
+    ✗ m010 [implicit, expected relevant] Your parcel's on the porch. → uncertain @model (about_someone_else)
+    ✗ m012 [causal, expected relevant] Her teacher is sick, so the class trip comes back at two instead of four. → uncertain @model (about_someone_else)
+    ✗ m020 [negation, expected relevant] The driver couldn't find the house and didn't leave the package. → uncertain @model (about_someone_else)
+    ✗ m028 [asr_error, expected relevant] some one is at the door with a pack age → uncertain @model (about_someone_else)
+    ✗ m043 [urgent_short, expected relevant] The baby's got hold of the scissors. → uncertain @model (about_someone_else)
+    ✗ m045 [multi, expected relevant] They want someone to come for Leo right now. → uncertain @model (about_someone_else)
+    ✗ m046 [multi, expected relevant] I think it's the delivery guy. → uncertain @model (about_someone_else)
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-opt/results/semantic_optimization/ablation/lean_dev2.json

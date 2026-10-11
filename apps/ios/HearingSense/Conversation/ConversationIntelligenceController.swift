@@ -103,6 +103,12 @@ final class ConversationIntelligenceController {
     /// that an update can be checked against them. Cleared with the temporary context.
     @ObservationIgnored private var recapTranscript = ""
     @ObservationIgnored private var contextLines: [String] = []
+    @ObservationIgnored private let inferenceScheduler: ModelInferenceScheduler
+    /// Window 6.1: a partial transcript that has stopped changing is evaluated ahead of its final
+    /// form. Its answer is used only if the final text has the same words; it is never shown.
+    @ObservationIgnored private var partialDetector = StablePartialDetector()
+    @ObservationIgnored private var partialID = UUID()
+    @ObservationIgnored private var partialTask: Task<Void, Never>?
     @ObservationIgnored private var statusEpisode = 0
     @ObservationIgnored private var statusRevision = 0
     @ObservationIgnored private var log: (DiagnosticEventLog.Kind, String) -> Void = { _, _ in }
@@ -110,7 +116,7 @@ final class ConversationIntelligenceController {
     /// - Parameter inMemory: no files are read or written (UI checks, previews).
     init(defaults: UserDefaults = .standard, inMemory: Bool = ConversationIntelligenceController.isDemoRequested,
          summarizer: any ConversationSummarizing = FoundationModelRecapSummarizer(),
-         reasoner: any SemanticRelevanceReasoning = FoundationModelRelevanceReasoner())
+         reasoner: any SemanticRelevanceReasoning = FoundationModelRelevanceReasoner.optimized)
     {
         self.defaults = defaults
         goalStore = AttentionGoalStore(inMemory: inMemory)
@@ -124,8 +130,11 @@ final class ConversationIntelligenceController {
         let policy = ConversationBufferPolicy(lookBack: seconds)
         buffer = RollingConversationBuffer(policy: policy)
         recapEngine = ConversationRecapEngine(summarizer: summarizer, bufferPolicy: policy)
+        // One scheduler for everything that uses the language model here (Window 6.1): the
+        // recap takes its turn ahead of goal matching instead of pausing it.
         let engine = SemanticAttentionEngine(reasoner: reasoner, scorer: SentenceEmbeddingScorer())
         semanticEngine = engine
+        inferenceScheduler = engine.scheduler
         var opened: SwiftDataConversationHistory?
         var records: [ConversationRecord] = []
         var problem: String?
@@ -187,6 +196,8 @@ final class ConversationIntelligenceController {
         isSessionActive = false
         run(machine.process(.listeningStopped(at: .now)))
         clearTemporaryText()
+        partialTask?.cancel()
+        partialDetector.finish()
         Task { [semanticEngine] in await semanticEngine.reset() }
         log(.recognition, "Conversation intelligence: \(recapsMade) recap(s), \(updatesMade) update(s), "
             + "\(semanticStatistics.accepted) goal match(es) this launch")
@@ -206,6 +217,8 @@ final class ConversationIntelligenceController {
         machine.setContextAllowed(keepsRecentSpeech && isTranscriptionOn)
         clearTemporaryText()
         matches.removeAll()
+        partialTask?.cancel()
+        partialDetector.finish()
         Task { [semanticEngine] in await semanticEngine.reset() }
         if isSessionActive, keepsRecentSpeech, isTranscriptionOn { buffer.begin(at: .now) }
     }
@@ -222,8 +235,14 @@ final class ConversationIntelligenceController {
             tentativeCaption = buffer.tentative
         }
         let last = lastUtteranceIndex[result.id] ?? -1
+        let matchesGoals = isSemanticAttentionEnabled && goals.contains(where: \.isEnabled)
+        if matchesGoals, let partial = result.volatileText { offerPartial(partial, now: now) }
         for utterance in result.recentUtterances where utterance.index > last && !utterance.isPossiblyMusic {
             lastUtteranceIndex[result.id] = utterance.index
+            // The utterance is final: whatever was offered of it early has done its work.
+            partialTask?.cancel()
+            partialDetector.finish()
+            partialID = UUID()
             if keeps {
                 buffer.append(BufferedUtterance(text: utterance.text, start: utterance.startDate, end: utterance.endDate,
                                                 isLowQuality: utterance.quality == .poor), now: now)
@@ -247,6 +266,21 @@ final class ConversationIntelligenceController {
             buffer.prune(now: now)
             captions = buffer.utterances
             scheduleDeadline()
+        }
+    }
+
+    /// Hands a partial transcript to the detector and, when it has been stable for long enough,
+    /// to the semantic engine for an early evaluation.
+    private func offerPartial(_ text: String, now: Date) {
+        guard !text.isEmpty else { return }
+        partialDetector.revise(text, utterance: partialID, at: now)
+        partialTask?.cancel()
+        guard let check = partialDetector.nextCheck else { return }
+        let context = contextLines
+        partialTask = Task { [semanticEngine] in
+            try? await Task.sleep(for: .seconds(max(0, check.timeIntervalSinceNow)))
+            guard !Task.isCancelled, let stable = self.partialDetector.offer(at: .now) else { return }
+            await semanticEngine.submitProvisional(SemanticUtterance(text: stable, context: context, date: .now))
         }
     }
 
@@ -394,11 +428,14 @@ final class ConversationIntelligenceController {
                 recapTranscript = recapEngine.transcript(of: excerpt)
                 run(machine.process(.excerptReady(at: .now)))
                 workTask?.cancel()
-                workTask = Task { [recapEngine, semanticEngine] in
-                    // What the user asked for comes first: goal matching waits for the model.
-                    await semanticEngine.setPaused(true)
-                    let recap = await recapEngine.recap(excerpt)
-                    await semanticEngine.setPaused(false)
+                workTask = Task { [recapEngine, inferenceScheduler] in
+                    // What the user asked for comes first: it takes the next turn at the model,
+                    // ahead of goal matching, which keeps its waiting sentences meanwhile.
+                    let scheduled = try? await inferenceScheduler.run(.userRequest) { await recapEngine.recap(excerpt) }
+                    guard !Task.isCancelled else { return }
+                    // Only a cancelled or refused turn leaves no recap; the recap is then written directly.
+                    let recap: ConversationRecap
+                    if let scheduled { recap = scheduled } else { recap = await recapEngine.recap(excerpt) }
                     guard !Task.isCancelled else { return }
                     self.recapsMade += 1
                     self.lastRecapSeconds = recap.modelSeconds
@@ -410,7 +447,6 @@ final class ConversationIntelligenceController {
             case .cancelWork:
                 workTask?.cancel()
                 workTask = nil
-                Task { [semanticEngine] in await semanticEngine.setPaused(false) }
             case .save(let recap, let isContinuing):
                 self.recap = recap
                 save(recap, status: isContinuing ? .continuing : .completed)
@@ -421,10 +457,12 @@ final class ConversationIntelligenceController {
                 }
                 let new = buffer.utterances(after: since)
                 let earlier = recapTranscript
-                workTask = Task { [recapEngine, semanticEngine] in
-                    await semanticEngine.setPaused(true)
-                    let updated = await recapEngine.update(recap, earlierTranscript: earlier, new: new)
-                    await semanticEngine.setPaused(false)
+                workTask = Task { [recapEngine, inferenceScheduler] in
+                    let scheduled = try? await inferenceScheduler.run(.userRequest) {
+                        await recapEngine.update(recap, earlierTranscript: earlier, new: new)
+                    }
+                    guard !Task.isCancelled else { return }
+                    let updated = scheduled ?? nil
                     guard !Task.isCancelled else { return }
                     if updated != nil {
                         self.updatesMade += 1
@@ -570,12 +608,16 @@ final class ConversationIntelligenceController {
         return seconds % 60 == 0 ? "\(seconds / 60) minute\(seconds == 60 ? "" : "s")" : "\(seconds) seconds"
     }
 
+    private static func median(_ values: [TimeInterval]) -> TimeInterval? {
+        values.isEmpty ? nil : values.sorted()[values.count / 2]
+    }
+
     /// Counts, states and timings. No goal wording, no utterance, no summary.
     func reportText() -> String {
         let statistics = semanticStatistics
         let calls = statistics.modelCalls + statistics.triageCalls
         return [
-            "Conversation intelligence (Window 6)",
+            "Conversation intelligence (Window 6, semantic engine of Window 6.1)",
             "Semantic attention: \(isSemanticAttentionEnabled ? "on" : "off") · goals \(goals.count(where: \.isEnabled)) of \(goals.count) enabled"
                 + " · language model \(isLanguageModelAvailable ? "available" : "not available")",
             "Utterances submitted \(statistics.submitted), gated \(statistics.gated), stopped by the first pass \(statistics.triaged), "
@@ -584,6 +626,11 @@ final class ConversationIntelligenceController {
                 + "corrected by the verifier \(statistics.corrected), dropped \(statistics.dropped), "
                 + "model failures \(statistics.modelFailures) (timeouts \(statistics.timeouts)), longest queue \(statistics.maximumQueueLength)",
             "Model time per call: \(calls > 0 ? Self.seconds(statistics.totalModelTime / Double(calls)) : "–") over \(calls) call(s)",
+            "Second looks \(statistics.confirmCalls) (alerts taken back \(statistics.confirmDemoted)) · early evaluations of partial "
+                + "transcripts \(statistics.speculativeCalls) (used \(statistics.speculativeHits), abandoned \(statistics.speculativeCancelled))"
+                + " · decisions later than the deadline \(statistics.deadlineMisses)",
+            "Waiting for a turn, median: \(Self.median(statistics.queueWaits).map(Self.seconds) ?? "–") · utterance to decision, "
+                + "median: \(Self.median(statistics.latencies).map(Self.seconds) ?? "–")",
             "Recent speech for recaps: \(keepsRecentSpeech ? "on" : "off") · look-back \(Int(lookBack)) s · "
                 + "buffered \(captions.count) utterance(s), \(bufferedWordCount) words, expired \(buffer.expiredUtterances)",
             "Recap phase: \(phase.rawValue) · recaps \(recapsMade) · updates \(updatesMade) · last recap model time "

@@ -1,0 +1,11 @@
+Window 6 engine, style window6 — one sentence every 1.5 s, 37 sentences in 59.0 s
+  decided 37, dropped 11 (relevant among them: e001 e005 e014), without any decision 0
+  end to end           p50 5.93  p95 9.57  p99 9.60  max 9.60  (n 26)
+  waiting for a turn   p50 4.44  p95 5.95  p99 7.03  max 7.03  (n 26)
+  model                p50 2.37  p95 2.94  p99 2.99  max 2.99  (n 26)
+    one request        p50 2.37  p95 2.94  p99 2.99  max 2.99  (n 26)
+    with a second look p50 –  p95 –  p99 –  max –  (n 0)
+  longest queue 4; model requests 39 single + 0 group (39.7 per minute); settled by a group request 0, judged again after one 0; later than the deadline 20
+  throughput 26.4 sentences per minute; output tokens 1057
+  under load: TP 3 FP 1 FN 3 TN 26; missed e001 e005 e014; false alerts e010
+Wrote ../../results/semantic_optimization/stream/throughput_window6_1.5.json

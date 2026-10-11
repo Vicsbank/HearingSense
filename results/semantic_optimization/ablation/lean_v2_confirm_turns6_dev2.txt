@@ -1,0 +1,49 @@
+Set dev2: 171 synthetic utterances — relevant 82, irrelevant 73, ambiguous 12, repeat 4
+
+  wall time 421.5 s; this process 14 → 26 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, style lean, first pass off, second look on — dev2 set
+  precision            94.0 % (79/84; 95 % CI 86.8–97.4)
+  recall               96.3 % (79/82; 95 % CI 89.8–98.7)
+  F1                   0.952
+  false alerts         6.8 % (5/73; 95 % CI 3.0–15.1) of irrelevant utterances
+  false alerts / hour  16.4 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      0.0 % (0/4; 95 % CI 0.0–49.0)
+  important missed     5.9 % (1/17; 95 % CI 1.0–27.0)
+  goal named correctly 97.5 % (77/79; 95 % CI 91.2–99.3)
+  ambiguous items      11 alerted, 0 kept as uncertain, 1 nothing (of 12)
+  time per utterance   median 2.13 s, p95 4.75 s; model median 2.13 s; full judgements 171, stopped by the first pass 0, gated 0, fallbacks 0
+  verifier corrections headline_not_shortened 4, no_goal 4, not_asserted 1, second_look 7
+  by category          asr_error 10/10, attention 3/3, causal 8/8, hypothetical 8/8, implicit 28/29, multi 10/10, negation 14/16, obvious 5/5, past 6/6, repeated 4/4, sarcasm_quote 6/7, third_person 12/13, unrelated 21/22, urgent_short 16/18
+  confusion            TP 79  FP 5  FN 3  TN 72  (ambiguous, not scored: 11 alerted, 0 uncertain, 1 silent)
+  precision            94.0 % (79/84; 95 % CI 86.8–97.4)
+  recall               96.3 % (79/82; 95 % CI 89.8–98.7)
+  F1                   0.952
+  false-positive rate  6.5 % (5/77; 95 % CI 2.8–14.3)
+  false-negative rate  3.7 % (3/82; 95 % CI 1.3–10.2)
+  balanced accuracy    94.9 %
+  important-event recall                94.1 % (16/17; 95 % CI 73.0–99.0)
+  short urgent instruction recall       100.0 % (11/11; 95 % CI 74.1–100.0)
+  implicit relevance recall             97.3 % (36/37; 95 % CI 86.2–99.5)
+  explicit relevance recall             100.0 % (8/8; 95 % CI 67.6–100.0)
+  negation accuracy                     87.5 % (14/16; 95 % CI 64.0–96.5)
+  hypothetical accuracy                 100.0 % (8/8; 95 % CI 67.6–100.0)
+  personal relevance accuracy           92.3 % (12/13; 95 % CI 66.7–98.6)
+  past and quotation accuracy           92.3 % (12/13; 95 % CI 66.7–98.6)
+  recognition-error accuracy            100.0 % (10/10; 95 % CI 72.2–100.0)
+  context (several sentences) accuracy  100.0 % (10/10; 95 % CI 72.2–100.0)
+  unrelated talk accuracy               95.5 % (21/22; 95 % CI 78.2–99.2)
+  repetition accuracy                   100.0 % (4/4; 95 % CI 51.0–100.0)
+  by profile           home TP 19 FP 0 FN 3 TN 22; office TP 25 FP 2 FN 0 TN 22; student2 TP 35 FP 3 FN 0 TN 28
+  decided at           model 171
+  seconds per item     p50 2.13  p95 4.75  p99 5.20   model only: p50 2.13  p95 4.75  p99 5.20
+  output tokens        32.9 per model decision (171 model decisions)
+    ✗ e022 [third_person, expected irrelevant] The eighth graders have a different timetable from Monday. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ e052 [unrelated, expected irrelevant] That hill is too steep, the road grade must be ten percent. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ e065 [urgent_short, expected irrelevant] Run that by me again, I wasn't listening. → relevant @model kind=question subject=listenerOrGroup goal=attention
+    ✗ o023 [negation, expected irrelevant] You don't have to do anything, I already handled it. → relevant @model kind=question subject=listenerOrGroup goal=tasks
+    ✗ o034 [sarcasm_quote, expected irrelevant] He does this impression of the boss saying, drop everything, I need it yesterday. → relevant @model kind=question subject=listenerOrGroup goal=tasks (headline_not_shortened)
+    ✗ m006 [implicit, expected relevant] Maya's staying for choir until five tonight. → irrelevant @model kind=statement subject=someoneElse goal=-
+    ✗ m020 [negation, expected relevant] The driver couldn't find the house and didn't leave the package. → irrelevant @model kind=statement subject=someoneElse goal=-
+    ✗ m043 [urgent_short, expected relevant] The baby's got hold of the scissors. → irrelevant @model kind=statement subject=someoneElse goal=-
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-opt/results/semantic_optimization/ablation/lean_v2_confirm_turns6_dev2.json

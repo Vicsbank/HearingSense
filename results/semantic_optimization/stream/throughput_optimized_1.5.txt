@@ -1,0 +1,11 @@
+Window 6.1 engine, style lean — one sentence every 1.5 s, 37 sentences in 70.2 s
+  decided 37, dropped 0 (relevant among them: none), without any decision 0
+  end to end           p50 5.26  p95 18.81  p99 19.08  max 19.08  (n 37)
+  waiting for a turn   p50 3.35  p95 15.40  p99 17.27  max 17.27  (n 37)
+  model                p50 1.86  p95 3.66  p99 3.90  max 3.90  (n 37)
+    one request        p50 1.23  p95 2.31  p99 2.79  max 2.79  (n 24)
+    with a second look p50 2.01  p95 3.90  p99 3.90  max 3.90  (n 13)
+  longest queue 8; model requests 37 single + 0 group (31.6 per minute); settled by a group request 0, judged again after one 0; later than the deadline 25
+  throughput 31.6 sentences per minute; output tokens 1137
+  under load: TP 6 FP 5 FN 0 TN 22; missed ; false alerts e022 e049 e052 e053 e065
+Wrote ../../results/semantic_optimization/stream/throughput_optimized_1.5.json
