@@ -201,3 +201,233 @@ sentence ─ gate ─ cache ─ first answer (kind, goal, verdict; Window 6.2, u
   compared with Window 6.2 on the same sentences in every table.
 - Scheduler, queue, serving order, expiry, the two-minute conversation buffer, live captions, the
   recap and the acoustic warning paths are untouched.
+
+## 5. Results on unseen data: precision, recall, F1, implicit relevance
+
+**Sealed set 3**: 315 sentences, 5 listeners (film set, car ferry, food bank, hostel, festival camp),
+20 goals, written by an agent that read nothing of the repository; three listeners say who they are
+in an about line, one inside the goals, one nowhere. Committed before any engine change (`98413b7`);
+the configuration was frozen and committed (`1e269b8`) before the only run. Accounting: 315 in the
+file, 0 excluded (none of its sentences occurs in a set used for tuning), 315 evaluated; 8 are
+labelled ambiguous and not scored (reported below); 307 scored (152 relevant, 145 irrelevant, 10
+repetitions). 2 sentences per run got no answer from the model after one retry and count as silent
+(one of them a relevant sentence: a miss in every run). No timeouts.
+
+| | Window 6.2 | Window 6.3 as frozen | Window 6.3 as shipped (recount, see below) | aim |
+|---|---|---|---|---|
+| true alerts / false alerts / misses | 148 / 67 / 4 | 140 / 41 / 12 | 147 / 45 / 5 | |
+| **precision** | 68.8 % | **77.3 %** | 76.6 % | ≥ 95 %: **not met** |
+| **recall** | 97.4 % | **92.1 %** | 96.7 % | ≥ 95 %: **not met as frozen** |
+| F1 | 0.807 | 0.841 | 0.855 | |
+| false-positive rate (of 155 that should stay silent) | 43.2 % | 26.5 % | 29.0 % | |
+| **implicit relevance** (implicit and causal) | 43/45 | **41/45** (91.1 %) | 43/45 | ≥ 95 %: not met as frozen |
+| important events | 29/30 | 28/30 | 29/30 | |
+| short urgent instructions | 10/10 | 10/10 | 10/10 | |
+| a sentence said to another person | 0/20 silent | 16/20 | 16/20 | |
+| a sentence to or about another group | 1/20 silent | 5/20 | 1/20 | |
+| said to others, concerns all | 15/15 | 11/15 | 15/15 | |
+| announcement to all or to the listener's own group | 26/27 | 26/27 | 26/27 | |
+| cut-off sentences | 0/5 silent | 4/5 | 4/5 | |
+| context (leaning sentences) | 12/20 | 14/20 | 14/20 | |
+| repetitions not alerted again | 4/10 | 4/10 | 4/10 | |
+| ambiguous (8, not scored): alerted / listed / nothing | 7 / 0 / 1 | 6 / 1 / 1 | 6 / 1 / 1 | |
+| listed as a possible match: relevant / irrelevant sentences | 0 / 12 | 8 / 38 | – | |
+
+For comparison on the same sentences, without a language model: keyword match 95 / 88 / 57
+(precision 51.9 %, recall 62.5 %); sentence-embedding retrieval 146 / 141 / 6 (50.9 %, 96.1 %).
+
+What the frozen configuration did, sentence by sentence against Window 6.2 (37 of 315 decisions differ):
+
+| mechanism | false alerts removed | correct alerts lost |
+|---|---|---|
+| a person called by name, not the listener (`said_to_someone_else`) | 8 | 0 |
+| a person called by name, listener's name unknown (`audience_unknown`) | 8 | 1 |
+| cut-off sentence | 4 | 0 |
+| second look reading a leaning sentence with the one before | 3 | 0 |
+| **another group, by rule (`another_group`)** | **4** | **7** |
+| (one new false alert from the changed context) | −1 | |
+
+**The rule for another group did more harm than good on unseen data.** Its seven lost alerts: three
+sentences that begin with another group but go on to say what follows for all ("Deck 5 drivers,
+there's a fuel spill on your ramp, so all car decks stay closed until it's cleaned"), and four where
+the listener's label and the sentence share a common head without being siblings: "The laundry room
+closes at eight" for a listener whose label was read as "luggage room" out of a goal, "The outside
+decks are being closed off" for a listener parked on deck 3. On my own development set the same rule
+removed eight false alerts and lost nothing — I had written its "other groups" as siblings of the
+listener's group, the independent author mostly did not (15 of 20 are groups of another kind: "Stunt
+team", "Freight drivers", "Bar staff").
+
+**What was done about it, after the sealed run.** The project's first rule is that recall is not
+traded for precision, and the sealed set says this rule does exactly that. It was therefore taken
+out of the decision: `Configuration.holdsBackOtherGroups` is `false` in the app; the frozen
+configuration stays available as `Configuration.window6_3Frozen` and every number in this report
+that says "as frozen" was measured with it. The column "as shipped" is a **recount of the two sealed
+runs** (`tools/w63_recount.py`: the eleven sentences the rule held back take the decision Window 6.2
+made for them; all other decisions are the frozen run's). It is exact, because without the rule such
+a sentence goes on to the same second look as in Window 6.2 — but it is a recount on a set that has
+been run and read, **not an independent measurement**, and the setting was chosen after seeing the
+result. Nothing else was changed after the sealed run.
+
+**Read plainly:** on unseen sentences, false alerts fell by a third to two fifths (67 → 41 as frozen,
+45 as shipped) and one alert in four is still false. The 95 % precision aim is far away. Recall
+stays above 95 % only in the shipped setting, and that claim rests on a recount.
+
+Development sets (tuned on; not independent). Each sentence by itself, a session per sentence:
+
+{{DEV_TABLE}}
+
+The ten-point gap between development and sealed precision is the same as in Windows 6.1 and 6.2.
+
+## 6. Unseen goals and group announcements
+
+All 20 goals and all five situations of the sealed set are new. By listener (as frozen; Window 6.2 in
+brackets):
+
+| listener | says who they are | precision | recall |
+|---|---|---|---|
+| film set | about line (name, group C) | 78.4 % (68.2 %) | 93.5 % (96.8 %) |
+| car ferry | about line (name, driver, deck 3) | 80.0 % (71.4 %) | 90.3 % (96.8 %) |
+| food bank | about line (name, sorting team, table 4) | 76.3 % (71.4 %) | 93.5 % (96.8 %) |
+| hostel | inside the goals | 79.4 % (70.5 %) | 87.1 % (100 %) |
+| festival camp | nowhere | 73.0 % (62.8 %) | 96.4 % (96.4 %) |
+
+- **Announcements to everyone or to the listener's own group: 26 of 27** in both generations (the one
+  miss is a sentence the model returned no answer for).
+- **Nothing was invented about the listener.** In the camp profile, which gives no name, 10 sentences
+  that call a person by name were neither alerted nor ruled out: they are listed as "said to someone
+  by name". The three sentences written to be undecidable there (a named person or sub-group, touching
+  a goal) were listed once and alerted twice (the two that name a group).
+- **What reading the listener's own words got wrong on unseen text:** the name in "asks for Mika
+  (that's me)" was not read (no rule for that form), so the one sentence that calls Mika was listed
+  instead of alerted; "sorting team" in "I'm volunteering on the sorting team at table 4" was lost
+  because the tagger took "sorting" for a verb; and a label was copied out of a goal that names what
+  the listener wants to hear about ("the luggage room") rather than what is theirs.
+
+## 7. Throughput and latency
+
+**The capacity of the engine is that of Window 6.2. No real gain in throughput was found, and none
+is claimed.** What was measured (Mac, §3 and the benchmark document §8):
+
+- A request has a floor of about 0.5 s whatever it reads or writes. Above it, reading costs about
+  0.8–1.6 ms per token the system does not hold (800 tokens of instructions and goals: 0.7 s),
+  writing about 30 ms per token (27 tokens: 0.8 s), and text the system does hold is not free either
+  (a continued session gets 0.05 s slower with every turn).
+- Session per sentence: 1.94 s unprepared, 1.26 s prepared ahead. Continued session with the goals
+  said again: 1.12, 1.14, 1.27 … 1.53 s for turns 2 to 8; continuing for four turns is the cheapest
+  (1.36 s per request on average), which is what Window 6.2 chose.
+- Every cheaper first request either loses correct alerts (short instructions: 4 to 6 of 95) or lets
+  through half as many false candidates again (a one-number answer), each of which then needs the
+  full answer and the second look. The best cascade by these numbers would be 10–25 % faster than the
+  kind-first path of Window 6.2 when few sentences are candidates and no faster on a dense mix: not
+  worth a second answer form.
+- A cheap score to decide which waiting sentence to serve first (sentence embedding against the
+  goals) ranks relevant sentences above irrelevant ones no better than chance (AUC 0.46–0.61).
+
+What Window 6.3 changes in the cost of a sentence: one narrow request more (0.65 s) for a sentence
+that calls a person by name and would alert; no second look for a cut-off sentence or a marked
+reminder; no context to read for a sentence that stands by itself (the app used to send three
+sentences of context with every request).
+
+{{STREAMS}}
+
+## 8. Model-session context stability
+
+Three things can make the same sentence come out differently; all three were measured on the sealed
+set (decisions that differ, of 315):
+
+| what differs | Window 6.2 | Window 6.3 as frozen |
+|---|---|---|
+| **what was said before**: each sentence with the three before it, as the app hands them in, against each sentence by itself | **22** | **3** |
+| … and unrelated talk that alerts because of it | 5 of 30 (1 of 30 alone) | 1 of 30 (1 of 30 alone) |
+| **load**: the engine as it works while sentences wait (session continued for four, kind asked first) against a session per sentence | 4 of 264 (sealed set 2, Window 6.2 report) | 11 |
+
+- The first row is the finding: the app of Window 6.2 gave every request the three sentences before
+  it, and one decision in fourteen depended on them. Its benchmarks did not, so they did not show it.
+  Window 6.3 gives the sentence before only to a sentence that leans on it; 3 decisions of 315 change,
+  all among leaning sentences that now lean on whatever happened to come before them in the file.
+  On development set 4 the same comparison gave 20 of 225 against 1 of 225.
+- Load is worse than in Window 6.2's own measurement: 11 of 315, and recall under load falls to
+  88.2 % (134 / 40 / 18). Six correct alerts are silent when a continued session answers. The engine
+  judges such sentences again in a session of their own as soon as nothing waits (Window 6.2), which
+  this one-sentence-at-a-time evaluation does not exercise; in the stream benchmarks it does.
+- A session per sentence with nothing carried over remains the rule in normal use (Window 6.2).
+
+## 9. Backlog and overload
+
+Unchanged from Window 6.2 and re-measured (§7): newest sentence first while behind and speech keeps
+arriving, oldest first in a pause, a sentence given up after 30 s with a decision that says so, the
+count shown in the app, live captions and the acoustic paths independent of all of it. A sentence
+that was not evaluated is never reported as irrelevant.
+
+## 10. Resources
+
+{{RESOURCES}}
+
+## 11. Remaining limitations
+
+1. **One alert in four is false on unseen sentences.** The largest group by far (15 of 41 as frozen):
+   sentences to or about a group the listener is not in, of a kind they never mentioned ("Stunt
+   team, safety briefing in two minutes"). Rules cannot know that an extra is not on the stunt team,
+   and the model, asked directly, says everyone is the listener.
+2. **The rule for another group is off** because it lost more than it gained on unseen data (§5).
+   The cue is still computed. The design that the evidence points to — rules find the cue, the model
+   is asked "theirs or everyone's", as for a person — is not built, because there is no unseen set
+   left to measure it on.
+3. **A name not at the start, middle or end of a sentence between commas is not found** ("Could
+   Daniel Reyes please come to the information desk"), and one form of giving one's own name is not
+   read ("Mika (that's me)").
+4. **Repetitions in other words are still alerted again** (6 of 10 on the sealed set): a marked
+   reminder is recognised only when it shares its numbers and enough words with the first statement
+   ("half ten" against "ten thirty" does not).
+5. **Sentences about a third person** ("He's downstairs asking for her right now", after a sentence
+   about someone else) still alert (6 of 10 such leaning sentences).
+6. **Figures of speech, sarcasm** (6 false alerts) are untouched.
+7. **Goal naming is poor when a session answers for one sentence:** the right goal for 67 % of the
+   correct alerts on the sealed set (as in Window 6.2). The user sees the wrong goal named.
+8. **Under load recall drops** (88 % while sentences wait), and the capacity is about 35 sentences a
+   minute on the Mac, as before.
+9. **The name tagger of the system is not available in the iOS Simulator** (found by the simulator
+   tests): there, and wherever it has no data, a name is told by its form (a rule added after the
+   freeze that changes nothing where the tagger works, and that agrees with the tagger on all four
+   development sets but for one sentence). Which path an iPhone takes is not known.
+10. **Nothing was measured on an iPhone, with a microphone, with real speech or in another
+    language.** All sentences are synthetic; both evaluation authors are language models of one family.
+11. The instructions to the model still say "a person who cannot hear". That wording is internal,
+    measured (the earphone wording lost three correct alerts) and shown to nobody; the app's own
+    texts do not describe the user that way.
+
+## 12. Regression
+
+{{REGRESSION}}
+
+## 13. Git
+
+Branch `feature/window6-3-personal-relevance`, worktree `.claude/worktrees/window6-3`, based on
+`197d0d0`. Not merged, not pushed, not rebased; the Window 5 checkout (which has uncommitted work of
+its own) and the Window 6, 6.1 and 6.2 worktrees were not touched.
+
+| commit | what |
+|---|---|
+| `98413b7` | development set 4, sealed set 3 (unread), the JSON-described probe: before any engine change |
+| `1e269b8` | the engine, **configuration frozen** before the sealed evaluation |
+| `56358da` | names told by their form where there is no name tagger (after the freeze; no change on the Mac) |
+| `778489c` | after the sealed evaluation: the rule for another group no longer decides by itself |
+| {{FINAL_COMMIT}} | sealed results, streams, regression, reports, handoff |
+
+## Recommendations
+
+1. **Ship Window 6.3 as it stands on this branch** (rule for another group off). Against Window 6.2
+   on unseen sentences: a third fewer false alerts, recall within one sentence in 150 by recount, and
+   decisions that no longer depend on what was said before. Low risk: every new part can be switched
+   off, and a sentence it holds back is listed, not lost.
+2. **Next for precision: sentences for a group the listener is not in.** Turn the group cue into a
+   narrow question to the model (as for names) instead of a rule; take labels only from the about
+   line; and ask the user for the one thing rules cannot know — "which groups are you *not* in" is
+   awkward, but "what are you here" (an extra, a foot passenger, a volunteer) is one more word in the
+   about line. Needs a new held-out set first.
+3. **Before more prompt work, measure on the iPhone:** which name path runs, how long a request
+   takes, and what real transcripts look like (cut-off sentences, missing commas — the name rule
+   needs the commas). Requires your authorisation for the device and the microphone.
+4. **Throughput will not come from this model on this path.** If more than about 35 sentences a
+   minute have to be judged, the options are a different model (needs your approval to evaluate), or
+   accepting that under load the newest sentences are judged and older ones are given up, as now.
