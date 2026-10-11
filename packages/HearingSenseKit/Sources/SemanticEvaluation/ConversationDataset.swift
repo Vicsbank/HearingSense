@@ -89,7 +89,7 @@ public struct ConversationDataset: Sendable {
             .split { !($0.isLetter || $0.isNumber || $0 == "'" || $0 == ":") }
             .map { word -> String in
                 var stem = String(word)
-                for suffix in ["ing", "ed", "es", "s"] where stem.count > suffix.count + 2 && stem.hasSuffix(suffix) {
+                for suffix in ["ing", "ed", "s"] where stem.count > suffix.count + 2 && stem.hasSuffix(suffix) {
                     stem.removeLast(suffix.count)
                     break
                 }

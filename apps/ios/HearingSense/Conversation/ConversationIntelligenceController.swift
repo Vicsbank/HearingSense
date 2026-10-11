@@ -37,6 +37,16 @@ final class ConversationIntelligenceController {
     private static let contextKey = "conversation.keepsRecentSpeech"
     private static let lookBackKey = "conversation.lookBackSeconds"
 
+    /// `--hs-conversation-demo` (Debug builds): a scripted conversation instead of the microphone,
+    /// with nothing read from or written to the device's storage. See `runDemo`.
+    static var isDemoRequested: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains("--hs-conversation-demo")
+        #else
+        false
+        #endif
+    }
+
     /// For App Intents, which have no reference to the app's object graph.
     private(set) static weak var shared: ConversationIntelligenceController?
 
@@ -98,7 +108,7 @@ final class ConversationIntelligenceController {
     @ObservationIgnored private var log: (DiagnosticEventLog.Kind, String) -> Void = { _, _ in }
 
     /// - Parameter inMemory: no files are read or written (UI checks, previews).
-    init(defaults: UserDefaults = .standard, inMemory: Bool = false,
+    init(defaults: UserDefaults = .standard, inMemory: Bool = ConversationIntelligenceController.isDemoRequested,
          summarizer: any ConversationSummarizing = FoundationModelRecapSummarizer(),
          reasoner: any SemanticRelevanceReasoning = FoundationModelRelevanceReasoner())
     {
@@ -384,8 +394,11 @@ final class ConversationIntelligenceController {
                 recapTranscript = recapEngine.transcript(of: excerpt)
                 run(machine.process(.excerptReady(at: .now)))
                 workTask?.cancel()
-                workTask = Task { [recapEngine] in
+                workTask = Task { [recapEngine, semanticEngine] in
+                    // What the user asked for comes first: goal matching waits for the model.
+                    await semanticEngine.setPaused(true)
                     let recap = await recapEngine.recap(excerpt)
+                    await semanticEngine.setPaused(false)
                     guard !Task.isCancelled else { return }
                     self.recapsMade += 1
                     self.lastRecapSeconds = recap.modelSeconds
@@ -397,6 +410,7 @@ final class ConversationIntelligenceController {
             case .cancelWork:
                 workTask?.cancel()
                 workTask = nil
+                Task { [semanticEngine] in await semanticEngine.setPaused(false) }
             case .save(let recap, let isContinuing):
                 self.recap = recap
                 save(recap, status: isContinuing ? .continuing : .completed)
@@ -407,8 +421,10 @@ final class ConversationIntelligenceController {
                 }
                 let new = buffer.utterances(after: since)
                 let earlier = recapTranscript
-                workTask = Task { [recapEngine] in
+                workTask = Task { [recapEngine, semanticEngine] in
+                    await semanticEngine.setPaused(true)
                     let updated = await recapEngine.update(recap, earlierTranscript: earlier, new: new)
+                    await semanticEngine.setPaused(false)
                     guard !Task.isCancelled else { return }
                     if updated != nil {
                         self.updatesMade += 1
@@ -575,3 +591,83 @@ final class ConversationIntelligenceController {
         ].joined(separator: "\n")
     }
 }
+
+#if DEBUG
+// MARK: - Demo without a microphone
+
+extension ConversationIntelligenceController {
+    private static let demoGoals = ["Tell me anything that could affect my grades.",
+                                    "Let me know if somebody mentions a change to my schedule.",
+                                    "Warn me about clear emergency instructions nearby."]
+
+    /// Synthetic sentences, written for this project. Not a real conversation.
+    private static let demoFirstPart = [
+        "So for the chemistry project, are we still meeting on Thursday?",
+        "No, Thursday doesn't work, the library closes at five that day.",
+        "What about Saturday morning then, around ten?",
+        "Saturday at ten works, but not at the library, it's closed on weekends.",
+        "We could use the study room in the science building, room 204.",
+        "By the way, the exam has been postponed until Friday.",
+        "I have the data on my laptop, but the graphs are not finished.",
+        "Then please finish the graphs by Friday night so we can write the report on Saturday.",
+    ]
+    private static let demoLaterPart = [
+        "One more thing, the report is due next Wednesday, not Monday.",
+        "And the teacher said it has to be at least six pages.",
+        "Fine, then let's split it, three pages each.",
+    ]
+
+    /// Plays a scripted conversation through the same path as transcribed speech: the buffer,
+    /// the semantic engine and the recap engine run for real (with the on-device language
+    /// model where it exists); only the microphone and the recognizer are replaced. Both
+    /// opt-ins are switched on for this launch only and nothing is stored.
+    func runDemo(onGoalMatch: @escaping (SemanticAttentionSignal) -> Void) {
+        guard Self.isDemoRequested, !isSessionActive else { return }
+        log(.lifecycle, "Conversation demo (synthetic sentences, microphone off, nothing stored)")
+        isSemanticAttentionEnabled = true
+        keepsRecentSpeech = true
+        if goals.isEmpty { goals = Self.demoGoals.map { AttentionGoal(text: $0) } }
+        transcriptionProvider = { true }
+        onSignal = onGoalMatch
+        let goals = goals
+        Task { [semanticEngine] in
+            await semanticEngine.setGoals(goals)
+            await semanticEngine.setEnabled(true)
+        }
+        sessionWillStart(isTranscriptionOn: true)
+        Task {
+            let id = SpeechEventID()
+            var index = 0
+            @MainActor func say(_ text: String) async {
+                let now = Date.now
+                var result = SpeechSemanticResult(
+                    id: id, state: .transcribing, audioTime: AudioTimeRange(start: 0, end: Double(index + 1) * 4),
+                    startDate: now, updatedDate: now,
+                    transcript: SpeechTranscript(text: text, language: "en-US", isFinal: true, quality: .unknown,
+                                                 audioTime: AudioTimeRange(start: Double(index) * 4, end: Double(index + 1) * 4)),
+                    utteranceCount: index + 1, transcriptionAvailability: .available, modelAvailability: .available)
+                result.recentUtterances = [SpeechUtterance(index: index, text: text, startDate: now.addingTimeInterval(-3),
+                                                           endDate: now, quality: .good)]
+                index += 1
+                receive(result)
+                try? await Task.sleep(for: .seconds(1.6))
+            }
+            try? await Task.sleep(for: .seconds(1))
+            for line in Self.demoFirstPart { await say(line) }
+            actionInvoked()
+            // Wait for the recap, then keep following.
+            for _ in 0 ..< 60 where phase != .summaryAvailable { try? await Task.sleep(for: .seconds(0.5)) }
+            try? await Task.sleep(for: .seconds(2))
+            continueUnderstanding()
+            for line in Self.demoLaterPart { await say(line) }
+            var tentative = SpeechSemanticResult(
+                id: id, state: .transcribing, audioTime: AudioTimeRange(start: 0, end: 60), startDate: .now, updatedDate: .now,
+                transcript: SpeechTranscript(text: "and I will bring", language: "en-US", isFinal: false, quality: .unknown,
+                                             audioTime: AudioTimeRange(start: 56, end: 60)),
+                utteranceCount: index, transcriptionAvailability: .available, modelAvailability: .available)
+            tentative.volatileText = "and I will bring the"
+            receive(tentative)
+        }
+    }
+}
+#endif

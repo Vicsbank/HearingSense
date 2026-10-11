@@ -90,6 +90,7 @@ public actor SemanticAttentionEngine {
     private var cache: [String: CacheEntry] = [:]
     private var accepted: [Accepted] = []
     private var generation = 0
+    private var isPaused = false
     public private(set) var statistics = Statistics()
 
     private let continuation: AsyncStream<SemanticAttentionDecision>.Continuation
@@ -124,6 +125,15 @@ public actor SemanticAttentionEngine {
 
     public var isActive: Bool { isEnabled && !goals.isEmpty }
 
+    /// Holds back new evaluations while something the user asked for needs the language model
+    /// (a recap). The evaluation under way finishes; utterances keep queueing, bounded as
+    /// always, and those that waited too long are dropped when evaluation resumes.
+    public func setPaused(_ isPaused: Bool) {
+        guard isPaused != self.isPaused else { return }
+        self.isPaused = isPaused
+        if !isPaused, !queue.isEmpty { startWorkerIfNeeded() }
+    }
+
     public func prewarm() async {
         guard isActive else { return }
         await reasoner.prewarm()
@@ -133,6 +143,7 @@ public actor SemanticAttentionEngine {
     /// accepted statements. Called when the session ends or the user clears speech data.
     public func reset() {
         generation += 1
+        isPaused = false
         worker?.cancel()
         worker = nil
         queue.removeAll()
@@ -168,7 +179,7 @@ public actor SemanticAttentionEngine {
     }
 
     private func startWorkerIfNeeded() {
-        guard worker == nil else { return }
+        guard worker == nil, !isPaused else { return }
         let generation = generation
         worker = Task { [weak self] in
             await self?.drain(generation: generation)
@@ -176,7 +187,7 @@ public actor SemanticAttentionEngine {
     }
 
     private func drain(generation: Int) async {
-        while generation == self.generation, !Task.isCancelled, !queue.isEmpty {
+        while generation == self.generation, !Task.isCancelled, !isPaused, !queue.isEmpty {
             let (utterance, submitted) = queue.removeFirst()
             if Date().timeIntervalSince(submitted) > configuration.maximumWait {
                 statistics.dropped += 1

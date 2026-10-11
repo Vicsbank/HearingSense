@@ -423,3 +423,21 @@ below are the expectations written in Window 1; device behaviour is still unmeas
 | D50 | (W5) Speech summaries enter the activity content only with "Show speech summaries" on, never the Lock Screen view, never an alert's title or body | The content leaves the app's memory; Window 4's rule for `privateDetail` |
 | D51 | (W5) The first summary of a presented speech episode asks for one expansion although the engine suggests none | The summary is only readable expanded; switch: `IslandPolicy.alertsOnFirstSummary` |
 | D52 | (W5) Views live in the package (`IslandViews`) and are used by the extension and by the in-app mirror | iOS does not show an app's own activity while the app is on screen |
+
+## Window 6 addendum (2026-10-10)
+
+Window 6 adds two package modules beside the existing ones and changes no existing contract.
+Design and data flow: `docs/WINDOW6_SEMANTIC_INTELLIGENCE_REPORT.md` §2.
+
+- `SemanticAttention` (HearingSenseDomain, FoundationModels, NaturalLanguage): the user's goals
+  and the staged engine that matches finalized utterances against them. Output:
+  `SemanticAttentionDecision`. The language model sits behind `SemanticRelevanceReasoning`.
+- `ConversationUnderstanding` (Foundation, FoundationModels): the rolling buffer of recent
+  speech, the recap engine and its checks, the Action Button state machine, the record type.
+- Contracts extended, not changed: `AttentionInput.semantic(SemanticAttentionSignal)` (the only
+  way a goal match is presented); `SpeechSemanticResult.recentUtterances` and `volatileText`;
+  symbol names with the prefix `hs.` (drawn by `IslandViews.SoundSymbolImage`).
+- Decisions: the attention engine stays deterministic and model-free (the model's verdict
+  arrives as an input with its time); no semantic alert without the model (no keyword
+  fallback); a saved recap never contains the transcript; recap states reach the Live Activity
+  as generic episodes without interruption; storage is local, excluded from backups.

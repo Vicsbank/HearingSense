@@ -77,6 +77,6 @@ struct GeneratedRecap {
     var title: String
     @Guide(description: "The recap: 4 to 8 full sentences with every decision, request, time, number and name that was said")
     var summary: String
-    @Guide(description: "The most important facts as short separate statements, each with its number, time or name", .maximumCount(6))
+    @Guide(description: "The most important facts, each as one complete short sentence that can be understood on its own, such as 'The meeting is on Saturday at ten in room 204'", .maximumCount(6))
     var keyPoints: [String]
 }

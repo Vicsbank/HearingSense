@@ -229,6 +229,26 @@ enum Fixture {
         #expect((order.firstIndex(of: "Fire, get out of the building!") ?? 9) <= 1)
     }
 
+    @Test func whilePausedNothingIsEvaluatedAndTheQueueStaysBounded() async {
+        var configuration = SemanticAttentionEngine.Configuration.standard
+        configuration.queueCapacity = 2
+        configuration.usesTriage = false
+        let reasoner = ScriptedReasoner()
+        let engine = await Fixture.engine(reasoner, configuration: configuration)
+        await engine.setPaused(true)
+        for index in 1 ... 5 { await engine.submit(Fixture.utterance("Statement number \(index) about the weather.")) }
+        try? await Task.sleep(for: .milliseconds(150))
+        #expect(await reasoner.judged.isEmpty)
+        #expect(await engine.statistics.dropped == 3)
+        await engine.setPaused(false)
+        var evaluated = 0
+        for await decision in engine.decisions where decision.stage == .model {
+            evaluated += 1
+            if evaluated == 2 { break }
+        }
+        #expect(await reasoner.judged.count == 2)
+    }
+
     @Test func resetForgetsWaitingUtterancesAndWhatWasAccepted() async {
         let reasoner = ScriptedReasoner([Fixture.exam: Fixture.relevant()])
         let engine = await Fixture.engine(reasoner)
@@ -319,6 +339,18 @@ enum Fixture {
         #expect(verify(Fixture.relevant(headline: "the exam has been postponed until this coming Friday for everyone")).headline.isEmpty)
         // The verdict stands: only the text that would be shown is withheld.
         #expect(verify(Fixture.relevant(headline: "exam postponed until Monday")).isAccepted)
+    }
+
+    @Test func aReasonMayNotNameADayOrNumberThatWasNotSaid() {
+        var judgement = Fixture.relevant(headline: "report is due next Wednesday")
+        judgement.consequence = "Report due date changed to Friday instead of Monday"
+        let decision = verify(judgement, "One more thing, the report is due next Wednesday, not Monday.")
+        #expect(decision.reason.isEmpty)
+        #expect(decision.corrections.contains("reason_detail"))
+        #expect(decision.verdict == .relevant)
+        judgement.consequence = "The report is due on Wednesday, not Monday"
+        #expect(verify(judgement, "One more thing, the report is due next Wednesday, not Monday.").reason
+            == "The report is due on Wednesday, not Monday")
     }
 
     @Test func aGoalThatDoesNotExistIsNoMatch() {

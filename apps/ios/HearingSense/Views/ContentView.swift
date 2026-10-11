@@ -4,6 +4,19 @@ import SwiftUI
 struct ContentView: View {
     @Environment(ListeningController.self) private var controller
     @Environment(\.scenePhase) private var scenePhase
+    #if DEBUG
+    /// `--hs-screen conversation|history|summary|goals|privacy|icons`
+    enum DebugScreen: String, Hashable, Identifiable {
+        case conversation, history, summary, goals, privacy, icons
+        var id: String { rawValue }
+    }
+
+    @State private var debugScreen: DebugScreen? = {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: "--hs-screen"), index + 1 < arguments.count else { return nil }
+        return DebugScreen(rawValue: arguments[index + 1])
+    }()
+    #endif
 
     var body: some View {
         NavigationStack {
@@ -31,10 +44,33 @@ struct ContentView: View {
             .background(Color(.systemGroupedBackground))
             .navigationTitle("Hearing Sense")
             .navigationBarTitleDisplayMode(.inline)
+            #if DEBUG
+            .navigationDestination(item: $debugScreen) { screen in
+                switch screen {
+                case .conversation: ConversationLiveView()
+                case .history: ConversationHistoryView()
+                case .summary: NewestConversationRecordView()
+                case .goals: AttentionGoalsView()
+                case .privacy: ConversationPrivacyView()
+                case .icons: SoundIconGalleryView()
+                }
+            }
+            #endif
         }
         .onChange(of: scenePhase) { _, phase in
             controller.scenePhaseChanged(phase)
         }
+        #if DEBUG
+        .task {
+            // Checks without a microphone: `--hs-conversation-demo` plays a scripted conversation,
+            // `--hs-screen <name>` opens one of the Window 6 screens directly.
+            if ConversationIntelligenceController.isDemoRequested {
+                controller.conversation.runDemo { [attention = controller.attention] in
+                    attention.receive($0, isSynthetic: true)
+                }
+            }
+        }
+        #endif
     }
 }
 

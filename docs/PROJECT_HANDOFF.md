@@ -1,6 +1,24 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-10, end of **Window 5** (Dynamic Island and Live Activity).
+Last updated: 2026-10-10, end of **Window 6** (semantic intelligence, accessible conversation,
+icon redesign) on its own branch; the Window 5 paragraph below describes the Window 5 branch.
+
+**Window 6 status: code complete on `feature/window6-semantic-intelligence`, branched from the
+committed Window 5 state `eddc450` in a separate worktree (`.claude/worktrees/window6`) because
+another session was still working on Window 5 in the main checkout. Not merged, not pushed.
+Verified on the Mac (395 package tests; evaluation tools) and in the iOS Simulator (package
+tests, Debug and Release builds, the Window 6 screens, a scripted conversation through the real
+language model). Nothing ran on the iPhone (the student's instruction for this window). All
+speech text was synthetic.** It adds: a revised icon for every classifier label with nine
+glyphs drawn by the app; attention goals in the user's words matched by model reasoning
+(`SemanticAttentionEngine`); a two-minute recap behind an Action Button shortcut with continued
+understanding and live captions; saved summaries. Held-out synthetic evaluation of goal
+matching: precision 91 %, recall 86 %, 0 of 7 important events missed (keyword baseline: recall
+40 %). Read `docs/WINDOW6_SEMANTIC_INTELLIGENCE_REPORT.md`, then
+`docs/testing/WINDOW6_EVALUATION_RESULTS.md`, `docs/research/SEMANTIC_MODEL_COMPARISON.md` and
+`docs/research/ACOUSTIC_ICON_COVERAGE.md`. **The Window 5 session's uncommitted work is not in
+this branch**; the files both changed are listed in the report §10. Next: the student decides
+how to bring the two branches together, then the device steps in the report §11.
 
 **Window 5 status: code complete on `feature/window5-dynamic-island` (branched from the Window 4
 branch; committed as `dc1f6cf`, with the changes of the device session on top — see `git status`;
@@ -266,6 +284,35 @@ wake a locked screen) are summarized in §1 of the report.
    `door_movement`, strong sounds ignore the same-kind cooldown, 20 s protection for high-priority
    episodes, 3.5 s minimum display. 58 tests in `IslandPresentationTests`, 314 in the package.
 
+## 4f. Completed in Window 6
+
+Full report: `docs/WINDOW6_SEMANTIC_INTELLIGENCE_REPORT.md`; numbers and methods:
+`docs/testing/WINDOW6_EVALUATION_RESULTS.md`.
+
+1. Icons: `IslandPresentation/CustomSoundGlyph` (9 names with the prefix `hs.`),
+   `IslandViews/SoundSymbolImage` (draws an SF Symbol or a glyph), revised `SoundSymbolCatalog`
+   (table `docs/research/sound_symbol_mapping_v2.tsv`), label-specific VoiceOver names,
+   `Views/SoundIconGalleryView` (Debug), `hs-attention-eval island-icon-sheets <dir>`.
+2. `SemanticAttention`: `AttentionGoal`, `SemanticAttentionEngine` (actor; gate, cache, first
+   pass, judgement, verifier, novelty, bounded queue, pause), `FoundationModelRelevanceReasoner`,
+   `EvidenceVerifier`, `KeywordGoalScorer` and `SentenceEmbeddingScorer` (baselines).
+3. `Attention`: new input `.semantic(SemanticAttentionSignal)`; a goal match is an episode of
+   its own ("Matches Your Goal", kind `goal_match`); reasons `goal_match`, `repeated_statement`.
+4. `ConversationUnderstanding`: `RollingConversationBuffer`, `ConversationRecapEngine` +
+   `RecapValidator`, `FoundationModelRecapSummarizer`, `ConversationSessionMachine`,
+   `ConversationRecord`, `ConversationHistoryStoring`.
+5. `HearingSenseDomain`: `SpeechSemanticResult.recentUtterances` / `volatileText` (each
+   finalized utterance on its own; cleared with the transcript). `SemanticSummary`:
+   `SummaryPolicy.writesHeadlines` (off in the app: no automatic 2–3 word headline).
+6. App: `Conversation/` (`ConversationIntelligenceController`, `ConversationHistoryStore` with
+   SwiftData, `ConversationIntents`), `Views/ConversationViews`; wiring in `ListeningController`;
+   two package products linked (ids `4A5E…0070`–`0073`).
+7. `SemanticEvaluation` + `hs-semantic-eval`: development and held-out utterances, synthetic
+   conversations with facts, metrics. Results: `results/semantic_eval_window6/`,
+   `results/conversation_eval_window6/`.
+8. Tests: `SemanticAttentionTests` (41), `ConversationUnderstandingTests` (34), 3 in
+   `IslandPresentationTests/Window6PresentationTests`, 3 new in `SoundSymbolCatalogTests`.
+
 ## 5. Repository structure (current)
 
 ```
@@ -503,10 +550,33 @@ Details and methods: `docs/testing/WINDOW5_TEST_RESULTS.md`. All input is script
 | Final rules (four fixes after R1) | Mac tests and replay of the recorded events (simulation) | 314 package tests pass; on the D6 / R1 recordings 247–359 icon changes per hour, 58 of 73 / 90 of 104 / 23 of 37 confirmed sounds become the icon; **not run on the device** |
 | Battery (D7), speech text with real speech (D8), 8-hour limit | Physical iPhone | **Not run** (postponed by the student) |
 
+## 7f. Verification results (Window 6)
+
+Details: `docs/testing/WINDOW6_EVALUATION_RESULTS.md`. Synthetic text; Mac and Simulator only.
+
+| Check | Environment | Result |
+|---|---|---|
+| `swift test` | Mac | **395 passed** (81 new) |
+| `xcodebuild test -scheme HearingSenseKit-Package` | iOS 27 Simulator, iPhone 18 Pro Max | **TEST SUCCEEDED** |
+| App Debug (Simulator) / Release unsigned (generic device) | — | **Succeeded** |
+| Goal matching, held-out set (119 utterances, 3 profiles) | Mac, real language model | pipeline precision 90.9 %, recall 86.2 %, false alerts 11.6 % of irrelevant, important missed 0/7, repeats alerted 0/4; keyword 62.2 % / 39.7 %; sentence embedding 56.2 % / 93.1 % with 88.4 % false alerts |
+| Goal matching, time per utterance | Mac | first pass 0.61 s; full judgement 2.73 s; to a verdict 3.57 s (median) |
+| Recaps, 5 held-out conversations | Mac, real language model | facts 26/26, negations 4/4, 6.8 s median; manual read: 2 of 56 statements unsupported |
+| Icons | Mac renderings, Simulator gallery | 303/303 mapped; reviewed at island sizes |
+| Scripted conversation: goal matches, recap, continue, captions, history | Simulator, microphone off, real language model | Works; island states not visible in screenshots |
+| App Intent / Action Button, background, locked phone | — | **Not run** |
+| Anything on the physical iPhone | — | **Not run in Window 6** |
+
 ## 8. Known issues
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
+| **(W6) Nothing of Window 6 ran on the iPhone** | Model speed and availability in the background and when locked, the Action Button shortcut, battery and heat are unknown | Device steps in `docs/WINDOW6_SEMANTIC_INTELLIGENCE_REPORT.md` §11 |
+| **(W6) Two branches to bring together** | Window 6 was built from `eddc450` while Window 5 work continued uncommitted in the main checkout | Commit Window 5 first, then rebase or merge Window 6; overlapping files are listed in the report §10 |
+| (W6) A full goal judgement takes 2.7 s on the Mac | In fast conversation the bounded queue drops the oldest utterances | Measure on the iPhone; options in `docs/research/SEMANTIC_MODEL_COMPARISON.md` §4 |
+| (W6) Goals unlike the prompt's examples are matched worse | Shop-worker profile: 8 of 14 found | Per-goal examples; write a new held-out set before tuning (the current one has been seen) |
+| (W6) Recaps can misstate | An announcement worded as an agreement; one reversed statement in a development scene | Lexical checks cannot catch it; key points and the temporary transcript are shown beside the summary |
+| (W6) Topic change without a pause is not a boundary | Two topics in one recap | Pause-based segmentation only |
 | **(W5) The four fixes made after retest R1 have not run on the iPhone** | `door_slam` as a door sound, strong sounds ignoring the same-kind cooldown (15 s), 20 s protection of high-priority episodes, 3.5 s minimum display: tested on the Mac and replayed on recorded events only | R2–R3 in `docs/testing/WINDOW5_TEST_RESULTS.md` §9 (microphone authorization needed); the final build is installed |
 | (W5) Faster icons cost updates | Measured 256/h (first rules, D6) and 282/h (revised, R1) in a lively room; the final rules replay to about 250–360 icon changes per hour | Bounded by 12 changes per minute; `AmbientIconPolicy.firstVersion` keeps the calmer rules for comparison; battery unmeasured (D7 postponed) |
 | (W5) "Nearby Speech" rule lives in the presentation layer | The island shows speech without a summary as an icon only (student's decision), but the attention engine still creates the episode: the app's Attention card can show a "Nearby Speech" the island does not | Move the rule into `SpeechAssessment` (about a dozen Window 4 tests use textless speech as their vehicle and need rework) |
@@ -653,6 +723,26 @@ the student's Personal Team, select the iPhone as destination, Run. Device scree
 (take them only while Hearing Sense is in the foreground). In the app, **Audio route diagnostics →
 Share** exports the route snapshot and event log as text.
 
+Window 6 commands (Mac; synthetic text; the language model is used forward-only):
+
+```bash
+cd packages/HearingSenseKit
+swift test --filter SemanticAttentionTests
+swift test --filter ConversationUnderstandingTests
+swift run hs-semantic-eval judge "The exam has been postponed until Friday."   # one utterance
+tools/run_semantic_eval.sh dev            # ~4 min; also: dev no-triage | heldout | heldout no-triage
+swift run hs-semantic-eval recap --split dev --texts
+swift run hs-attention-eval island-icon-sheets <dir>
+# Simulator, microphone off (use a simulator no other session is using):
+tools/build_ios_sim.sh <derived data dir>
+tools/window6_sim_screens.sh <UDID> <dir>/Build/Products/Debug-iphonesimulator/HearingSense.app <out dir>
+#   launch arguments: --hs-conversation-demo (scripted conversation, nothing stored)
+#                     --hs-screen conversation|summary|history|goals|privacy|icons
+#                     -speech.automaticHeadlines YES (Window 3's headline per stretch of speech)
+```
+
+Do not tune prompts or rules on `semantic_heldout.txt`.
+
 ## 11. Files to read first (in order)
 
 1. `docs/PROJECT_HANDOFF.md` (this file)
@@ -687,7 +777,19 @@ Share** exports the route snapshot and event log as text.
    DetectionPolicy, SoundTaxonomy}.swift`, `apps/ios/HearingSense/Listening/ListeningController.swift`,
    `apps/ios/HearingSense/Recognition/RecognitionController.swift`
 
+9c. `docs/WINDOW6_SEMANTIC_INTELLIGENCE_REPORT.md`, `docs/testing/WINDOW6_EVALUATION_RESULTS.md`,
+   `docs/research/SEMANTIC_MODEL_COMPARISON.md`, `docs/research/ACOUSTIC_ICON_COVERAGE.md`. Code (W6):
+   `Sources/SemanticAttention/{SemanticAttentionEngine, EvidenceVerifier, FoundationModelRelevanceReasoner}.swift`,
+   `Sources/ConversationUnderstanding/{RollingConversationBuffer, ConversationRecapEngine, ConversationSession}.swift`,
+   `apps/ios/HearingSense/Conversation/ConversationIntelligenceController.swift`, `Views/ConversationViews.swift`.
+
 ## 12. Recommended next steps
+
+000. (After Window 6) Bring the branches together (Window 5's uncommitted work first), then the
+   device steps of the Window 6 report §11, one at a time, each with the student's authorization.
+   Decisions for the student: whether the cough and sneeze glyphs read well on the real island;
+   whether goal matches may expand the island; whether an open-source model is worth a test
+   after iPhone timings exist.
 
 00. (After Window 5) D1–D6 and the retest R1 are done (2026-10-10/11). Next: with the final build
    (installed) run R2–R3 of `docs/testing/WINDOW5_TEST_RESULTS.md` §9 (microphone authorization;

@@ -1,3 +1,5 @@
+// macOS only (NSImage, PNG export); the tool is built for iOS as well when the package's tests run there.
+#if canImport(AppKit)
 import AppKit
 import Foundation
 import HearingSenseDomain
@@ -145,3 +147,4 @@ private struct AllLabelsSheet: View {
         .background(Color.black)
     }
 }
+#endif

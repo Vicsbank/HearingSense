@@ -94,6 +94,15 @@ public struct EvidenceVerifier: Hashable, Sendable {
         }
         decision.isPersonalRelevanceUncertain = decision.subject != .listenerOrGroup || utterance.isLowQuality
 
+        // The reason is the model's own sentence and is shown in the app: it may not name a
+        // number, day or time that was not said ("moved to Friday" for an utterance about Wednesday).
+        if !decision.reason.isEmpty,
+           !SemanticText.quantities(in: decision.reason).isSubset(of: SemanticText.quantities(in: source))
+        {
+            decision.reason = ""
+            corrections.append("reason_detail")
+        }
+
         // The headline is shown to the user: it may not add words or lose a negation or a number.
         if !decision.headline.isEmpty {
             let words = decision.headline.split(whereSeparator: \.isWhitespace)

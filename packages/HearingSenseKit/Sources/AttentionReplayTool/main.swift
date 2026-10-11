@@ -357,12 +357,16 @@ case "island-icon-sheets":
         print("Usage: hs-attention-eval island-icon-sheets <output directory>")
         exit(2)
     }
+    #if canImport(AppKit)
     do {
         for file in try IconSheets.write(to: URL(fileURLWithPath: arguments[1], isDirectory: true)) { print(file.path) }
     } catch {
         print("Could not write the icon sheets: \(error)")
         exit(1)
     }
+    #else
+    print("Icon sheets are rendered on macOS only.")
+    #endif
 
 case "island-device-trace":
     // Real events, recorded on a device as metadata (time, label, peak, windows; no audio). The

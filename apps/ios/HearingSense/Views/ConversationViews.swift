@@ -307,7 +307,7 @@ struct ConversationLiveView: View {
         }
         .controlSize(.large)
         .padding()
-        .background(.bar)
+        .background(highContrast ? AnyShapeStyle(Color(white: 0.1)) : AnyShapeStyle(.bar))
     }
 
     private var textSettings: some View {
@@ -484,6 +484,21 @@ struct ConversationRecordView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+#if DEBUG
+/// The newest saved summary, for `--hs-screen summary`.
+struct NewestConversationRecordView: View {
+    @Environment(ListeningController.self) private var controller
+
+    var body: some View {
+        if let id = controller.conversation.history.first?.id {
+            ConversationRecordView(id: id)
+        } else {
+            ContentUnavailableView("No saved summaries yet", systemImage: "text.bubble")
+        }
+    }
+}
+#endif
 
 // MARK: - Attention goals
 

@@ -139,7 +139,11 @@ public struct RecapValidator: Hashable, Sendable {
             }
         }
         var title = draft.title.trimmingCharacters(in: .whitespacesAndNewlines)
-        if title.isEmpty || problem(in: title) != nil || title.split(separator: " ").count > 10 {
+        // A title names the topic in words of its own ("Medication instructions"), so only its
+        // numbers, days and times are checked.
+        if title.isEmpty || !RecapText.quantities(in: title).isSubset(of: sourceQuantities)
+            || title.split(separator: " ").count > 10
+        {
             if !title.isEmpty { corrections.append("title_replaced") }
             title = ""
         }

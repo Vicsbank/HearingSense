@@ -114,8 +114,9 @@ final class AttentionController {
     }
 
     /// Window 6: a statement the semantic engine accepted for one of the user's goals.
-    func receive(_ signal: SemanticAttentionSignal) {
-        guard isSessionActive else { return }
+    /// - Parameter isSynthetic: from a debug demo, which runs without a listening session.
+    func receive(_ signal: SemanticAttentionSignal, isSynthetic: Bool = false) {
+        guard isSessionActive || isSynthetic else { return }
         process(.semantic(signal))
     }
 
