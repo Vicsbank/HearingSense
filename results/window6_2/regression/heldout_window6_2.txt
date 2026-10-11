@@ -1,0 +1,54 @@
+Set heldout: 119 synthetic utterances — relevant 58, irrelevant 43, ambiguous 14, repeat 4
+Held-out set: report only. Do not change prompts or thresholds after looking at it.
+
+  wall time 339.3 s; this process 14 → 24 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, Window 6.2, a session per sentence — heldout set
+  precision            86.7 % (52/60; 95 % CI 75.8–93.1)
+  recall               89.7 % (52/58; 95 % CI 79.2–95.2)
+  F1                   0.881
+  false alerts         18.6 % (8/43; 95 % CI 9.7–32.6) of irrelevant utterances
+  false alerts / hour  44.7 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      0.0 % (0/4; 95 % CI 0.0–49.0)
+  important missed     0.0 % (0/7; 95 % CI 0.0–35.4)
+  goal named correctly 90.4 % (47/52; 95 % CI 79.4–95.8)
+  ambiguous items      11 alerted, 0 kept as uncertain, 3 nothing (of 14)
+  time per utterance   median 2.59 s, p95 5.49 s; model median 2.59 s; full judgements 117, stopped by the first pass 0, gated 0, fallbacks 2
+  verifier corrections headline_not_shortened 2, hypothetical_marker 1, nothing_changes 3, said_before 6, second_look 3, urgency_unconfirmed 4
+  by category          asr_error 5/7, causal 6/7, hypothetical 5/7, implicit 25/28, negation 6/7, obvious 13/13, repeated 4/4, sarcasm_quote 4/4, third_person 7/10, unrelated 16/18
+  confusion            TP 52  FP 8  FN 6  TN 39  (ambiguous, not scored: 11 alerted, 0 uncertain, 3 silent)
+  precision            86.7 % (52/60; 95 % CI 75.8–93.1)
+  recall               89.7 % (52/58; 95 % CI 79.2–95.2)
+  F1                   0.881
+  false-positive rate  17.0 % (8/47; 95 % CI 8.9–30.1)
+  false-negative rate  10.3 % (6/58; 95 % CI 4.8–20.8)
+  balanced accuracy    86.3 %
+  important-event recall                100.0 % (7/7; 95 % CI 64.6–100.0)
+  implicit relevance recall             88.6 % (31/35; 95 % CI 74.0–95.5)
+  explicit relevance recall             100.0 % (13/13; 95 % CI 77.2–100.0)
+  negation accuracy                     85.7 % (6/7; 95 % CI 48.7–97.4)
+  hypothetical accuracy                 71.4 % (5/7; 95 % CI 35.9–91.8)
+  personal relevance accuracy           70.0 % (7/10; 95 % CI 39.7–89.2)
+  past and quotation accuracy           100.0 % (4/4; 95 % CI 51.0–100.0)
+  recognition-error accuracy            71.4 % (5/7; 95 % CI 35.9–91.8)
+  unrelated talk accuracy               88.9 % (16/18; 95 % CI 67.2–96.9)
+  repetition accuracy                   100.0 % (4/4; 95 % CI 51.0–100.0)
+  by profile           student TP 30 FP 3 FN 2 TN 27; traveler TP 11 FP 5 FN 1 TN 4; worker TP 11 FP 0 FN 3 TN 8
+  decided at           fallback 2, model 117
+  seconds per item     p50 2.59  p95 5.49  p99 8.39   model only: p50 2.59  p95 5.49  p99 8.39
+  output tokens        27.0 per model decision (119 model decisions)
+    ✗ h018 [implicit, expected relevant] Group presentations start Monday, and the order was drawn at random. → irrelevant @fallback kind=unclear subject=unclear goal=-
+    ✗ h025 [causal, expected relevant] Since the test was too hard, she's adding five points to everyone's score. → irrelevant @fallback kind=unclear subject=unclear goal=-
+    ✗ h032 [unrelated, expected irrelevant] I need new headphones, these keep cutting out. → relevant @model kind=statement subject=listenerOrGroup goal=grades
+    ✗ h041 [third_person, expected irrelevant] My dad's work schedule changed, so he's home on Fridays now. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ h052 [hypothetical, expected irrelevant] Suppose the power goes out, would they send us home? → relevant @model kind=statement subject=listenerOrGroup goal=emergency
+    ✗ t009 [third_person, expected irrelevant] Flight to Dallas is now boarding at gate A3. → relevant @model kind=statement subject=listenerOrGroup goal=flight
+    ✗ t010 [third_person, expected irrelevant] The Boston flight has been cancelled, please see an agent. → relevant @model kind=statement subject=listenerOrGroup goal=flight
+    ✗ t013 [hypothetical, expected irrelevant] If the Denver flight gets cancelled I'm renting a car. → relevant @model kind=statement subject=listenerOrGroup goal=flight
+    ✗ t015 [asr_error, expected relevant] the denver departure has been de laid by forty minutes → relevant @model kind=statement subject=listenerOrGroup goal=flight (said_before,urgency_unconfirmed)
+    ✗ t018 [negation, expected irrelevant] They're not changing the Denver gate, it stays at B12. → relevant @model kind=statement subject=listenerOrGroup goal=flight
+    ✗ t020 [unrelated, expected irrelevant] Is this the line for security or for check-in? → relevant @model kind=statement subject=listenerOrGroup goal=flight
+    ✗ w005 [implicit, expected relevant] The oat latte for Maya is up. → irrelevant @model kind=noChange subject=listenerOrGroup goal=-
+    ✗ w016 [implicit, expected relevant] Table six has been waiting twenty minutes for their food. → irrelevant @model kind=noChange subject=listenerOrGroup goal=-
+    ✗ w019 [asr_error, expected relevant] order forty too is ready at the counter → relevant @model kind=statement subject=listenerOrGroup goal=order (said_before)
+
+Wrote results/window6_2/regression/heldout_window6_2.json

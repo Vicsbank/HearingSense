@@ -1,0 +1,105 @@
+Excluded 1 item(s) whose sentence also occurs in a set used for tuning: wd034
+Set sealed2: 264 synthetic utterances — relevant 115, irrelevant 120, ambiguous 21, repeat 8
+SEALED set: run once with the frozen configuration. Never tune on it.
+
+  wall time 567.3 s; this process 15 → 26 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, Window 6 — sealed2 set
+  precision            80.7 % (71/88; 95 % CI 71.2–87.6)
+  recall               61.7 % (71/115; 95 % CI 52.6–70.1)
+  F1                   0.700
+  false alerts         10.8 % (13/120; 95 % CI 6.4–17.7) of irrelevant utterances
+  false alerts / hour  26.0 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      50.0 % (4/8; 95 % CI 21.5–78.5)
+  important missed     10.5 % (2/19; 95 % CI 2.9–31.4)
+  goal named correctly 91.5 % (65/71; 95 % CI 82.8–96.1)
+  ambiguous items      7 alerted, 5 kept as uncertain, 9 nothing (of 21)
+  time per utterance   median 3.06 s, p95 3.76 s; model median 2.24 s; full judgements 133, stopped by the first pass 131, gated 0, fallbacks 0
+  verifier corrections about_someone_else 17, headline_negation 12, headline_not_in_utterance 18, no_goal 5, not_asserted 7, reason_detail 5
+  by category          asr_error 12/12, attention 2/14, causal 12/14, hypothetical 10/10, idiom 10/10, implicit 15/36, multi 10/16, negation 15/21, obvious 11/14, past 9/10, repeated 4/8, sarcasm_quote 9/10, third_person 17/21, unrelated 35/35, urgent_short 11/12
+  confusion            TP 71  FP 17  FN 44  TN 111  (ambiguous, not scored: 7 alerted, 5 uncertain, 9 silent)
+  precision            80.7 % (71/88; 95 % CI 71.2–87.6)
+  recall               61.7 % (71/115; 95 % CI 52.6–70.1)
+  F1                   0.700
+  false-positive rate  13.3 % (17/128; 95 % CI 8.5–20.2)
+  false-negative rate  38.3 % (44/115; 95 % CI 29.9–47.4)
+  balanced accuracy    74.2 %
+  important-event recall                89.5 % (17/19; 95 % CI 68.6–97.1)
+  short urgent instruction recall       91.7 % (11/12; 95 % CI 64.6–98.5)
+  implicit relevance recall             54.0 % (27/50; 95 % CI 40.4–67.0)
+  explicit relevance recall             46.4 % (13/28; 95 % CI 29.5–64.2)
+  negation accuracy                     71.4 % (15/21; 95 % CI 50.0–86.2)
+  hypothetical accuracy                 100.0 % (10/10; 95 % CI 72.2–100.0)
+  personal relevance accuracy           81.0 % (17/21; 95 % CI 60.0–92.3)
+  past and quotation accuracy           90.0 % (18/20; 95 % CI 69.9–97.2)
+  idiom accuracy                        100.0 % (10/10; 95 % CI 72.2–100.0)
+  recognition-error accuracy            100.0 % (12/12; 95 % CI 75.7–100.0)
+  context (several sentences) accuracy  62.5 % (10/16; 95 % CI 38.6–81.5)
+  unrelated talk accuracy               100.0 % (35/35; 95 % CI 90.1–100.0)
+  repetition accuracy                   50.0 % (4/8; 95 % CI 21.5–78.5)
+  by profile           camp TP 17 FP 4 FN 6 TN 22; care TP 9 FP 5 FN 14 TN 21; choir TP 11 FP 3 FN 12 TN 22; site TP 19 FP 1 FN 4 TN 25; wedding TP 15 FP 4 FN 8 TN 21
+  decided at           model 133, triage 131
+  seconds per item     p50 3.06  p95 3.76  p99 3.86   model only: p50 2.24  p95 2.95  p99 3.06
+  output tokens        75.3 per model decision (264 model decisions)
+    ✗ si017 [implicit, expected relevant] Get the formwork oiled and the vibrator out, the wagon is ten minutes away. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ si019 [repeated, expected repeat] Again, the crane lift is put off until tomorrow because of the wind. → relevant @model kind=statement subject=listenerOrGroup goal=crane
+    ✗ si029 [implicit, expected relevant] Slingers, get the chains on those pallets, the operator is already up in the cab. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ si034 [implicit, expected relevant] Hard hats and vests on properly, everyone, the man with the clipboard is at the gate. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ si041 [multi, expected relevant] So that goes ahead at three after all. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cm002 [obvious, expected relevant] Otters, your canoeing is moved to four o'clock this afternoon. → uncertain @model kind=statement subject=someoneElse goal=activity (about_someone_else)
+    ✗ cm011 [repeated, expected repeat] Again, Otters, your canoeing is at four o'clock now. → relevant @model kind=statement subject=listenerOrGroup goal=activity
+    ✗ cm019 [implicit, expected relevant] Anyone in the Otters should be at the flagpole with boots on at half past eight. → uncertain @model kind=statement subject=someoneElse goal=activity (about_someone_else)
+    ✗ cm022 [urgent_short, expected relevant] Don't touch that, it's hot! → irrelevant @model kind=statement subject=listenerOrGroup goal=-
+    ✗ cm027 [multi, expected irrelevant] Then the guy shouts get out of the water. → relevant @model kind=statement subject=listenerOrGroup goal=danger
+    ✗ cm031 [third_person, expected irrelevant] My sister's camp in Wales got evacuated because of a flood. → relevant @model kind=statement subject=listenerOrGroup goal=activity
+    ✗ cm035 [negation, expected relevant] You Otters are not doing the night walk any more. → uncertain @model kind=statement subject=someoneElse goal=activity (about_someone_else,reason_detail,headline_negation)
+    ✗ cm037 [implicit, expected relevant] Grab a plate and line up by the fire pit, the burgers are coming off the grill. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cm043 [third_person, expected irrelevant] The staff have their own meeting in the office at ten tonight. → relevant @model kind=statement subject=listenerOrGroup goal=activity
+    ✗ cm046 [causal, expected relevant] The lake is too choppy, so the Otters' sailing is cancelled and you meet in the craft tent. → uncertain @model kind=statement subject=someoneElse goal=activity (about_someone_else)
+    ✗ ch006 [obvious, expected relevant] Altos, I want you to sing that phrase much softer. → uncertain @model kind=statement subject=someoneElse goal=altos (about_someone_else)
+    ✗ ch011 [repeated, expected repeat] Again, the Gloria from bar forty two. → relevant @model kind=statement subject=listenerOrGroup goal=start
+    ✗ ch014 [attention, expected relevant] Marion, could you share your copy with Joan tonight? → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ ch017 [implicit, expected relevant] Altos, you were flat on that last entry, listen to the piano. → uncertain @model kind=statement subject=someoneElse goal=altos (about_someone_else)
+    ✗ ch022 [implicit, expected relevant] Put the Gloria away and get out the folk song with the green cover. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ ch025 [negation, expected relevant] There is no rehearsal next Thursday, the hall is closed for painting. → irrelevant @model kind=statement subject=listenerOrGroup goal=-
+    ✗ ch027 [attention, expected relevant] Marion, are you all right to stand for the whole second half? → irrelevant @model kind=question subject=listenerOrGroup goal=- (no_goal)
+    ✗ ch029 [causal, expected relevant] We've lost two sopranos to flu, so altos, you take the upper line in the last chorus. → uncertain @model kind=statement subject=someoneElse goal=start (about_someone_else)
+    ✗ ch031 [negation, expected irrelevant] Rehearsals next month stay on Thursdays, same time, same place. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ ch032 [implicit, expected relevant] Let's pick it up from letter D, in the blue book this time. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ ch036 [implicit, expected relevant] We'll need everyone here an extra hour on Saturday to run the whole programme. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ ch041 [attention, expected relevant] Excuse me, Marion, is that your coat on the chair? → irrelevant @model kind=question subject=listenerOrGroup goal=-
+    ✗ ch044 [multi, expected irrelevant] It got moved to Friday at two. → relevant @model kind=statement subject=listenerOrGroup goal=schedule
+    ✗ ch052 [implicit, expected relevant] The caretaker wants us out of the hall by nine from now on. → irrelevant @model kind=statement subject=listenerOrGroup goal=- (no_goal)
+    ✗ ch053 [attention, expected relevant] Marion, can you stay ten minutes after to go over your solo line? → irrelevant @model kind=statement subject=listenerOrGroup goal=- (no_goal)
+    ✗ cr001 [attention, expected relevant] Good morning Walter, did you sleep well? → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cr006 [implicit, expected relevant] Bingo cards are on the tables in the garden room, we begin in five minutes. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cr009 [obvious, expected relevant] Walter, your son is here to see you, he's waiting in the lounge. → uncertain @model kind=statement subject=someoneElse goal=visitor (about_someone_else)
+    ✗ cr013 [attention, expected relevant] Walter, would you like tea or coffee? → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cr015 [repeated, expected repeat] As I said, Walter, your son is in the lounge waiting for you. → relevant @model kind=statement subject=listenerOrGroup goal=visitor
+    ✗ cr017 [implicit, expected relevant] Kitchen is running behind, nothing will come out before one. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cr020 [sarcasm_quote, expected irrelevant] On the wireless the man said your visitor has arrived, and it turned out to be the murderer. → relevant @model kind=statement subject=listenerOrGroup goal=visitor
+    ✗ cr021 [implicit, expected relevant] There's a lady at reception asking for Walter. → irrelevant @model kind=statement subject=someoneElse goal=- (no_goal)
+    ✗ cr025 [multi, expected irrelevant] It's been moved to Thursday at eleven. → relevant @model kind=statement subject=listenerOrGroup goal=activity
+    ✗ cr029 [attention, expected relevant] Walter, can you lift your feet so I can get the hoover under? → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cr031 [third_person, expected irrelevant] The staff lunch is at two today because of the training. → relevant @model kind=statement subject=listenerOrGroup goal=meal
+    ✗ cr032 [multi, expected relevant] He says he'll be here at three with the little ones. → uncertain @model kind=statement subject=someoneElse goal=visitor (about_someone_else,headline_not_in_utterance)
+    ✗ cr036 [past, expected irrelevant] When my mother was in here, they served dinner at five on the dot. → relevant @model kind=statement subject=listenerOrGroup goal=meal (headline_not_in_utterance)
+    ✗ cr039 [implicit, expected relevant] Walter, pick up the phone in the hallway, it's your Susan ringing from Canada. → uncertain @model kind=statement subject=someoneElse goal=visitor (about_someone_else)
+    ✗ cr041 [attention, expected relevant] Are you warm enough there, Walter? → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cr044 [negation, expected relevant] Walter, your daughter rang, she can't come today after all. → uncertain @model kind=statement subject=someoneElse goal=visitor (about_someone_else,headline_negation)
+    ✗ cr046 [implicit, expected relevant] The singer has arrived and is setting up in the lounge, come through when you're ready. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cr051 [implicit, expected relevant] The trolley is coming round with soup and sandwiches. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ cr052 [attention, expected relevant] Walter love, shall I close the window for you? → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ wd008 [implicit, expected relevant] Has anyone seen Dev, the bride's mother is asking for him. → uncertain @model kind=statement subject=someoneElse goal=photos (about_someone_else,headline_not_in_utterance)
+    ✗ wd009 [third_person, expected irrelevant] Maya, the florist is looking for you by the entrance. → relevant @model kind=statement subject=listenerOrGroup goal=photos
+    ✗ wd013 [attention, expected relevant] Dev, can you hold the rings while I fix my tie? → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ wd023 [negation, expected irrelevant] No, dinner isn't late, it's half past six like the card says. → relevant @model kind=statement subject=listenerOrGroup goal=dinner (headline_negation)
+    ✗ wd024 [implicit, expected relevant] The kitchen needs twenty more minutes, so stay out on the lawn for now. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ wd030 [multi, expected irrelevant] They moved the photos to the beach at the last minute. → relevant @model kind=statement subject=listenerOrGroup goal=photos
+    ✗ wd031 [implicit, expected relevant] Whoever owns the white hatchback, I think it's Dev's, it's blocking the caterers. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ wd038 [attention, expected relevant] Excuse me, are you Dev, the bride's brother? → irrelevant @model kind=question subject=someoneElse goal=- (no_goal)
+    ✗ wd039 [negation, expected irrelevant] Dev's speech is still third, same as the running order. → relevant @model kind=statement subject=listenerOrGroup goal=speech
+    ✗ wd042 [implicit, expected relevant] Can all the cousins and siblings line up under the arch, big smiles. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ wd049 [implicit, expected relevant] Somebody get Dev a microphone, he's on in two minutes. → irrelevant @triage kind=unclear subject=unclear goal=-
+    ✗ wd053 [attention, expected relevant] Dev, your auntie wants to know where you put the car keys. → irrelevant @triage kind=unclear subject=unclear goal=-
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-2/results/window6_2/sealed/sealed2_window6.json

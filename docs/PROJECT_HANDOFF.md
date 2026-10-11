@@ -1,7 +1,24 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-11, end of **Window 6.1** (semantic engine: accuracy and latency) on its
-own branch; the Window 6 and Window 5 paragraphs below describe their branches.
+Last updated: 2026-10-11, end of **Window 6.2** (semantic engine: precision and backpressure) on
+its own branch; the Window 6.1, 6 and 5 paragraphs below describe their branches.
+
+**Window 6.2 status: code complete on `feature/window6-2-precision-backpressure`, branched from
+Window 6.1 `a979cf9` in a fourth worktree (`.claude/worktrees/window6-2`). Not merged, not
+pushed, not rebased; the Window 5 checkout and the Window 6 and 6.1 worktrees were not touched.
+Mac (real language model, synthetic text) and iOS Simulator only: no microphone, no iPhone, no
+training, no download, same Apple model.** On a new sealed set by another author (264 sentences,
+unseen goals, run once after the freeze): precision 76.5 % (Window 6.1) → **83.8 %**, false
+alerts 35 → 22, recall 99.1 % → 99.1 %, implicit relevance 50/50 → 49/50, important events
+19/19, urgent 12/12. **The 95 % precision target was not met**; 12 of the 22 false alerts are
+sentences said to another person or group in the same place. Decisions no longer depend on the
+order of the conversation in normal use (a session per sentence). Streams on the Mac: median
+end-to-end 8.0 s → 3.0 s at a sentence every 1.5 s, 12.0 s → 5.3 s at one a second (p95 there
+21 s → 31 s, by design); the model's capacity, about 35 sentences a minute, is unchanged;
+overload is reported. Read `docs/research/PRECISION_AND_BACKPRESSURE_REPORT.md`, then
+`docs/testing/WINDOW6_2_BENCHMARK.md`. Open for the student: whether to ship this engine in
+place of Window 6.1's (recommended), the addressee problem as the next piece of work, and how to
+bring the four branches together.
 
 **Window 6.1 status: code complete on `feature/window6-semantic-optimization`, branched from
 Window 6 `ead23f3` in a third worktree (`.claude/worktrees/window6-opt`). Not merged, not pushed,
@@ -351,6 +368,40 @@ Report: `docs/research/SEMANTIC_OPTIMIZATION_REPORT.md`; numbers:
    reports the new counters. Nothing else in the app changed.
 4. Tests: 31 new (`ModelInferenceSchedulerTests`, `SemanticOptimizationTests`); 426 in the package.
 
+## 4h. Completed in Window 6.2
+
+Report: `docs/research/PRECISION_AND_BACKPRESSURE_REPORT.md`; numbers:
+`docs/testing/WINDOW6_2_BENCHMARK.md`; raw output and the working notes in order:
+`results/window6_2/` (`RESEARCH_LOG.md`).
+
+1. `SemanticAttention`: `FoundationModelRelevanceReasoner` styles `window6`, `lean` (Window 6.1,
+   `.window6_1`) and `staged` (`.current`, used by the app): a session per sentence, prepared by
+   the engine when its line is empty; the answer's form in the instructions, not in the request;
+   `Reuse` (while sentences wait the session continues for up to four, goals said again) and
+   `asksKindFirstWhenBusy`; second look for warnings too, told which accepted statements a
+   sentence may repeat (`SemanticRepetition.candidates`, answer `saidBefore`). The styles
+   `compact` and `reasoned` and the group request (`judgeTogether`) were removed.
+   `SemanticAttentionEngine`: one scheduler turn per utterance (first answer and second look),
+   `ServingOrder.newestWhenBehind` (newest first while behind and speech keeps arriving, oldest
+   first in a pause), `expired` after `maximumWait` (30 s) as a stage of its own, idle
+   preparation, the second judgement of sentences a continued session called silent
+   (`rechecksContinuedAnswers`), presets `Configuration.window6` and `.window6_1` for
+   comparisons, new counters. `EvidenceVerifier`: urgent only with the second look's agreement.
+2. `SemanticEvaluation`: `semantic_dev3.txt` (223), `semantic_sealed2.txt` (265, another author,
+   spent; one item excluded by rule), profiles defined in the data files (`@profile`),
+   `SemanticProbe` (raw model answers, checks, costs, lead times, stream timeline),
+   `SemanticStreamBenchmark` with arrival patterns. `hs-semantic-eval`: `run --config
+   window6|window6_1|window6_2 [--reuse N --steps|--no-steps --seed S]`, `throughput --pattern
+   3.0|1.5|1.0|bursty|dense [--mix sparse]`, `probe`, `probe-check`, `probe-cost`, `probe-lead`,
+   `probe-stream`, `probe-text`. `tools/run_window6_2_streams.sh`,
+   `tools/run_window6_2_sealed.sh` (refuses a second run), `tools/semantic_queue_sim.py`,
+   `tools/semantic_model_process_summary.py`.
+3. App: `ConversationIntelligenceController` uses `.current`, reports the new counters and
+   exposes `uncheckedSentences`; `ConversationViews` shows one line under the matches when
+   sentences were not checked. Nothing else in the app changed.
+4. Tests: 439 in the package (17 new: `SemanticBackpressureTests`, `SemanticPromptTests`, six in
+   `SemanticOptimizationTests`; four of Window 6.1 removed with the group request).
+
 ## 5. Repository structure (current)
 
 ```
@@ -588,6 +639,25 @@ Details and methods: `docs/testing/WINDOW5_TEST_RESULTS.md`. All input is script
 | Final rules (four fixes after R1) | Mac tests and replay of the recorded events (simulation) | 314 package tests pass; on the D6 / R1 recordings 247–359 icon changes per hour, 58 of 73 / 90 of 104 / 23 of 37 confirmed sounds become the icon; **not run on the device** |
 | Battery (D7), speech text with real speech (D8), 8-hour limit | Physical iPhone | **Not run** (postponed by the student) |
 
+## 7h. Verification results (Window 6.2)
+
+Details: `docs/testing/WINDOW6_2_BENCHMARK.md`. Synthetic text; Mac and Simulator only.
+
+| Check | Environment | Result |
+|---|---|---|
+| `swift test` | Mac | **439 passed** |
+| `xcodebuild test -scheme HearingSenseKit-Package` | iOS 27 Simulator, iPhone 18 Pro Max | **TEST SUCCEEDED** (444) |
+| App Debug (Simulator) / Release unsigned (generic device) | — | **Succeeded** |
+| Scripted conversation in the app | iOS 27 Simulator, microphone off | Matches shown (`docs/device-tests/window6-2-simulator/goals.png`) |
+| Sealed set 2 (264), Window 6 / 6.1 / **6.2** | Mac, real language model, once each after the freeze `80f80b6` | 71/17/44/111 (80.7 %, 61.7 %) / 114/35/1/93 (76.5 %, 99.1 %) / **114/22/1/106 (83.8 %, 99.1 %)** as TP/FP/FN/TN (precision, recall) |
+| Sealed set 2, Window 6.2 while sentences wait | Mac | 113/22/2/106; 4 of 264 decisions differ from normal operation |
+| Development sets 3 and 2 together, Window 6.1 → 6.2 | Mac | precision 87.4 % → 93.4 %, recall 98.3 % → 96.0 % |
+| Order of the sentences | Mac | A session per sentence: 0 of 214 raw answers differ; Window 6.1's kept session: 25 of 214 flip |
+| One sentence every 3 s / 1.5 s / 1 s, end to end p50 (p95) | Mac | 6.1: 1.43 (2.53) / 8.03 (11.86) / 11.99 (21.16) s; 6.2: 1.31 (2.11) / 3.00 (6.77) / 5.31 (31.25) s |
+| Not evaluated at a sentence a second (of 35) | Mac | 6.1: 4 (1 relevant); 6.2: 2 (0 relevant), reported as expired |
+| Window 6.1's sealed set and Window 6's held-out set (both read; not independent) | Mac | 6.2: 100/8/5/88 (92.6 %, 95.2 %) and 52/8/6/39 (86.7 %, 89.7 %) |
+| Anything on the physical iPhone; real speech; real partial transcripts | — | **Not run** |
+
 ## 7g. Verification results (Window 6.1)
 
 Details: `docs/testing/SEMANTIC_OPTIMIZATION_BENCHMARK.md`. Synthetic text; Mac and Simulator only.
@@ -627,6 +697,11 @@ Details: `docs/testing/WINDOW6_EVALUATION_RESULTS.md`. Synthetic text; Mac and S
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
+| **(W6.2) Precision 83.8 % on sealed set 2; target 95 %** | About one alert in six is false. 12 of 22 false alerts: a sentence said to another person or group in the same place ("Basses, stay behind" for an alto; "Arthur, your daughter is on the phone") | Its own piece of work: the listener's names and groups from the goals, compared with the addressee before the model is asked; write a set for it first. Do not tune on `semantic_sealed2.txt` |
+| (W6.2) A sentence that needs the one before it alerts too easily | 6 of 8 such irrelevant sentences on sealed set 2 | Not addressed |
+| (W6.2) The model's capacity is unchanged, about 35 sentences a minute (Mac) | Faster speech for longer than half a minute: decisions up to 30 s late, then given up and counted (`expired`); a second judgement can come a minute late | Measure on the iPhone first |
+| (W6.2) While sentences wait, 3–4 of 223 decisions depend on what was said before | Only under load; missed alerts are repaired in the next pause, false ones are not | `Reuse.never` removes it at the price of more expired sentences (measured, benchmark §7) |
+| (W6.2) Four branches to bring together | Window 5 (uncommitted work in the main checkout), 6, 6.1, 6.2 (each on top of the one before; 6.2 changes two app files) | The student's decision; 6 → 6.1 → 6.2 fast-forward |
 | **(W6.1) Precision 86.6 % on the sealed set, below Window 6's 90.6 %** | Twice as many false alerts (16 of 96 negatives); 7 are plain unrelated sentences | Suspected, not verified: a session kept for six utterances carries a pattern on. Write a new unseen set and compare `sessionTurns` 6 and 1 (the sealed set is spent) |
 | (W6.1) A verdict of `urgent` skips the second look | Seen in the Simulator demo: an ordinary sentence presented as a possible warning | Count `urgent` only with kind `warning`; not changed after the sealed run, measure on a new set |
 | (W6.1) The same configuration varies from run to run | 5 and 8 false alerts on the development set | A kept session makes a judgement depend on the sentences before it; `sessionTurns: 1` removes that at 1.2 s more per judgement when there is no pause |
@@ -807,6 +882,15 @@ tools/window6_sim_screens.sh <UDID> <dir>/Build/Products/Debug-iphonesimulator/H
 Do not tune prompts or rules on `semantic_heldout.txt` or `semantic_sealed.txt` (both have been
 read). Window 6.1 commands are in `docs/testing/SEMANTIC_OPTIMIZATION_BENCHMARK.md` §10.
 
+Window 6.2 facts worth knowing before touching the semantic engine (Mac): reading costs about
+1 ms per token the system does not hold, writing about 30 ms per token; a session prepared 0.7 s
+ahead has read its instructions, one prepared and asked in the same instant is slower than an
+unprepared one; the first answer is better *without* its form in the request, the second look
+needs it; a kept session answers differently depending on what came before unless the goals are
+said again; told that a first reading found a sentence relevant, the model agrees; worked
+examples in the instructions trade recall for precision; the parts of a streamed answer arrive
+together at the end. Commands: `docs/testing/WINDOW6_2_BENCHMARK.md` §3.
+
 Window 6.1 facts worth knowing before touching the semantic engine: the time of a judgement is
 its output tokens (about 40 ms each); the system keeps what **one** session has read, so any
 other session (second look, recap, a prepared spare) makes the next judgement read everything
@@ -861,7 +945,15 @@ relevant from irrelevant sentences; judging several sentences in one request los
 
 ## 12. Recommended next steps
 
-0000. (After Window 6.1) Student decides: (a) ship the Window 6.1 engine as frozen or test
+00000. (After Window 6.2) Student decides: (a) ship the Window 6.2 engine in place of Window
+   6.1's (recommended: fewer false alerts at the same recall, decisions independent of order,
+   overload visible); (b) whether the next window attacks the addressee problem (known issues,
+   first row); (c) how to bring Window 5, 6, 6.1 and 6.2 together. Then the device steps of
+   `docs/research/SEMANTIC_OPTIMIZATION_REPORT.md` §8, each with authorization. Do not tune on
+   `semantic_sealed2.txt`, `semantic_sealed.txt` or `semantic_heldout.txt`; a new question needs
+   a new unseen set.
+
+0000. (After Window 6.1; superseded by the step above) Student decides: (a) ship the Window 6.1 engine as frozen or test
    `sessionTurns: 1` on a new unseen set first; (b) how to bring Window 5, 6 and 6.1 together.
    Then the device steps of `docs/research/SEMANTIC_OPTIMIZATION_REPORT.md` §8, one at a time,
    each with authorization. Do not tune on `semantic_sealed.txt` or run it to compare variants.

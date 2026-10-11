@@ -103,3 +103,10 @@ Kind-only request: not prepared 1.5 s; prepared ≥0.7 s ahead 0.87 s.
   fields; the second look's do not. The form is sent with the second look.
 - "Which goal?" asked again on its own for every alert (not told the first answer): removes 1 false alert per
   set, takes back 2 correct ones per set. Rejected: the model repeats its own mistakes.
+
+## After the freeze (`80f80b6`)
+- Sealed set 2 (264 used of 265), once each: Window 6 71/17/44/111; Window 6.1 114/35/1/93; Window 6.2 114/22/1/106;
+  Window 6.2 while sentences wait 113/22/2/106 (4 of 264 decisions differ); keyword 81/58/34/70; embedding 105/102/10/26.
+- 12 of Window 6.2's 22 false alerts: said to another person or group in the same place. Window 6 got 17 of those 21 right.
+- Regression on sets that have been read: Window 6.1's sealed set 100/8/5/88; Window 6's held-out set 52/8/6/39.
+- Streams, final configuration: see docs/testing/WINDOW6_2_BENCHMARK.md §7.
