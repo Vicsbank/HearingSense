@@ -63,7 +63,7 @@ case "judge":
 
 case "run":
     guard let split = SemanticDataset.Split(rawValue: option("--set") ?? "dev") else {
-        print("--set dev|heldout|dev2|sealed")
+        print("--set dev|heldout|dev2|sealed|dev3|sealed2")
         exit(2)
     }
     let methods = (option("--methods") ?? "keyword,embedding,model").split(separator: ",").map(String.init)
@@ -72,7 +72,7 @@ case "run":
     do {
         dataset = try SemanticDataset.load(split)
         // --ids <file>: only these items (development subsets; separated by spaces or lines).
-        if let path = option("--ids"), split != .sealed {
+        if let path = option("--ids"), !split.isSealed {
             let wanted = Set(try String(contentsOfFile: path, encoding: .utf8).split(whereSeparator: \.isWhitespace).map(String.init))
             dataset.items = dataset.items.filter { wanted.contains($0.id) }
         }
@@ -85,7 +85,7 @@ case "run":
     print("Set \(split.rawValue): \(dataset.items.count) synthetic utterances — "
         + SemanticDataset.Expected.allCases.map { "\($0.rawValue) \(counts[$0] ?? 0)" }.joined(separator: ", "))
     if split == .heldout { print("Held-out set: report only. Do not change prompts or thresholds after looking at it.") }
-    if split == .sealed { print("SEALED set: run once with the frozen configuration. Never tune on it.") }
+    if split.isSealed { print("SEALED set: run once with the frozen configuration. Never tune on it.") }
     print("")
 
     var results: [SemanticMetrics] = []
@@ -468,7 +468,84 @@ case "latency":
         }
     }
 
+case "probe":
+    // Research (Window 6.2): the model asked directly, one variable at a time.
+    //   hs-semantic-eval probe --set dev3 --variant lean [--turns 6] [--seed 1] [--repeat-schema] [--repeat-goals]
+    //                          [--json <file>]
+    guard let split = SemanticDataset.Split(rawValue: option("--set") ?? "dev3"), !split.isSealed,
+          let dataset = try? SemanticDataset.load(split), let variant = ProbeCatalog.variants[option("--variant") ?? "lean"]
+    else {
+        print("probe --set dev|dev2|dev3 --variant " + ProbeCatalog.variants.keys.sorted().joined(separator: "|"))
+        exit(2)
+    }
+    var options = SemanticProbe.Options()
+    options.sessionTurns = Int(option("--turns") ?? "") ?? 1
+    options.seed = option("--seed").flatMap { UInt64($0) }
+    options.repeatsSchema = arguments.contains("--repeat-schema")
+    options.repeatsGoals = arguments.contains("--repeat-goals")
+    print("Probe \(variant.name) on \(split.rawValue): \(dataset.items.count) items, session of \(options.sessionTurns), "
+        + "order \(options.seed.map { "shuffled \($0)" } ?? "as written")")
+    let answers = await SemanticProbe.run(dataset, variant: variant, options: options) { done, total in
+        if done % 20 == 0 || done == total { FileHandle.standardError.write(Data("  \(done)/\(total)\n".utf8)) }
+    }
+    let run = ProbeRun(set: split.rawValue, variant: variant.name, turns: options.sessionTurns, seed: options.seed,
+                       answers: answers, score: SemanticProbe.score(answers, dataset: dataset))
+    printProbe(run, dataset: dataset)
+    if let path = option("--json") {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        try? encoder.encode(run).write(to: URL(fileURLWithPath: path))
+    }
+
+case "probe-cost":
+    // Where the time goes: hs-semantic-eval probe-cost --variant lean [--profile tenant]
+    guard let variant = ProbeCatalog.variants[option("--variant") ?? "lean"], let dataset = try? SemanticDataset.load(.dev3) else {
+        print("probe-cost --variant " + ProbeCatalog.variants.keys.sorted().joined(separator: "|"))
+        exit(2)
+    }
+    let profile = option("--profile") ?? "tenant"
+    let sentences = dataset.items.filter { $0.profile == profile && $0.context.isEmpty }.map(\.text)
+    print("Costs of \(variant.name), goals of \(profile)")
+    let costs = await SemanticProbe.costs(variant: variant, goals: SemanticDataset.goals(for: profile).map(\.goal),
+                                          sentences: sentences,
+                                          checkInstructions: FoundationModelRelevanceReasoner.confirmInstructions) { print("  " + $0) }
+    if let path = option("--json") {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        try? encoder.encode(costs).write(to: URL(fileURLWithPath: path))
+    }
+
+case "probe-check":
+    // A second request on every positive answer of an earlier probe run.
+    //   hs-semantic-eval probe-check --from <probe json> --check confirm [--json <file>]
+    guard let path = option("--from"), let data = FileManager.default.contents(atPath: path),
+          var run = try? JSONDecoder().decode(ProbeRun.self, from: data),
+          let split = SemanticDataset.Split(rawValue: run.set), !split.isSealed,
+          let dataset = try? SemanticDataset.load(split), let check = ProbeCatalog.checks[option("--check") ?? "confirm"]
+    else {
+        print("probe-check --from <probe json> --check " + ProbeCatalog.checks.keys.sorted().joined(separator: "|"))
+        exit(2)
+    }
+    print("Check \(check.name) on the positive answers of \(run.variant) (\(run.set))")
+    run.answers = await SemanticProbe.check(run.answers, dataset: dataset, check: check) { done, total in
+        if done % 20 == 0 || done == total { FileHandle.standardError.write(Data("  \(done)/\(total)\n".utf8)) }
+    }
+    run.check = check.name
+    run.checkedScore = SemanticProbe.score(run.answers, dataset: dataset, keeps: check.keeps)
+    print("  before: " + run.score.line)
+    printProbe(run, dataset: dataset, keeps: check.keeps)
+    let checkSeconds = run.answers.compactMap(\.checkSeconds)
+    if !checkSeconds.isEmpty {
+        print("  check: \(checkSeconds.count) requests, mean "
+            + "\((checkSeconds.reduce(0, +) / Double(checkSeconds.count)).formatted(.number.precision(.fractionLength(2)))) s")
+    }
+    if let path = option("--json") {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        try? encoder.encode(run).write(to: URL(fileURLWithPath: path))
+    }
+
 default:
-    print("Commands: run, recap, availability, judge, timing, triage, latency")
+    print("Commands: run, recap, availability, judge, timing, triage, latency, probe, probe-check")
     exit(2)
 }

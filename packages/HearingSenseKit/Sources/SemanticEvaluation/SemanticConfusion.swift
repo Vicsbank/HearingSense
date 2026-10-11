@@ -65,6 +65,7 @@ public struct SemanticConfusion: Sendable, Codable {
         ("hypothetical accuracy", ["hypothetical"], nil),
         ("personal relevance accuracy", ["third_person"], nil),
         ("past and quotation accuracy", ["past", "sarcasm_quote"], nil),
+        ("idiom accuracy", ["idiom"], nil),
         ("recognition-error accuracy", ["asr_error"], nil),
         ("context (several sentences) accuracy", ["multi"], nil),
         ("unrelated talk accuracy", ["unrelated"], nil),

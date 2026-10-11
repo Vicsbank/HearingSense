@@ -10,7 +10,11 @@ public struct SemanticDataset: Sendable {
     public enum Split: String, Sendable, CaseIterable {
         /// Window 6: the first development set and the held-out set that has since been read
         /// (a historical benchmark). Window 6.1: a second development set and a sealed set.
-        case dev, heldout, dev2, sealed
+        /// Window 6.2: a third development set and a second sealed set by another author.
+        case dev, heldout, dev2, sealed, dev3, sealed2
+
+        /// Report only: run once with a frozen configuration, never as a subset.
+        public var isSealed: Bool { self == .sealed || self == .sealed2 }
 
         var resource: String {
             switch self {
@@ -18,6 +22,8 @@ public struct SemanticDataset: Sendable {
             case .heldout: "semantic_heldout"
             case .dev2: "semantic_dev2"
             case .sealed: "semantic_sealed"
+            case .dev3: "semantic_dev3"
+            case .sealed2: "semantic_sealed2"
             }
         }
     }
@@ -111,9 +117,27 @@ public struct SemanticDataset: Sendable {
         ],
     ]
 
+    /// Profiles that a dataset file defines itself (`@profile | name | key | goal text`), so a
+    /// set written by another author needs no change here.
+    static let fileProfiles: [String: [(key: String, text: String)]] = {
+        var found: [String: [(key: String, text: String)]] = [:]
+        for split in Split.allCases {
+            guard let url = Bundle.module.url(forResource: split.resource, withExtension: "txt"),
+                  let text = try? String(contentsOf: url, encoding: .utf8) else { continue }
+            for line in text.split(whereSeparator: \.isNewline) where line.hasPrefix("@profile") {
+                let fields = line.split(separator: "|", omittingEmptySubsequences: false).map {
+                    $0.trimmingCharacters(in: .whitespaces)
+                }
+                guard fields.count == 4 else { continue }
+                found[fields[1], default: []].append((fields[2], fields[3]))
+            }
+        }
+        return found
+    }()
+
     /// Stable goal identifiers, so a run is reproducible.
     public static func goals(for profile: String) -> [(key: String, goal: AttentionGoal)] {
-        (profiles[profile] ?? []).enumerated().map { index, entry in
+        (profiles[profile] ?? fileProfiles[profile] ?? []).enumerated().map { index, entry in
             let seed = abs(profile.unicodeScalars.reduce(7) { ($0 &* 31 &+ Int($1.value)) % 1_000_000 })
             let id = UUID(uuidString: String(format: "00000000-0000-4000-9000-%06d%06d", seed, index)) ?? UUID()
             return (entry.key, AttentionGoal(id: id, text: entry.text, createdAt: Date(timeIntervalSince1970: 0)))
@@ -129,7 +153,7 @@ public struct SemanticDataset: Sendable {
 
     static func parse(_ text: String, split: Split) throws -> SemanticDataset {
         var items: [Item] = []
-        for line in text.split(whereSeparator: \.isNewline) where !line.hasPrefix("#") {
+        for line in text.split(whereSeparator: \.isNewline) where !line.hasPrefix("#") && !line.hasPrefix("@") {
             let fields = line.split(separator: "|", omittingEmptySubsequences: false).map {
                 $0.trimmingCharacters(in: .whitespaces)
             }

@@ -1,0 +1,235 @@
+# Hearing Sense — semantic attention, DEVELOPMENT set 3 (Window 6.2).
+# Synthetic, written for this project; no real conversation. Prompts, rules and thresholds may be tuned on this
+# file. Its profiles, goals and sentences do not occur in semantic_sealed2.txt (which has another author).
+# Categories are interleaved within a profile, as in a real stretch of conversation.
+# Profile lines: @profile | <profile> | <goal key> | <goal text>
+# Item lines: id | profile | category | expected | acceptable goals | flags | utterance | why
+@profile | tenant | rent | Tell me about anything that changes my rent or my lease.
+@profile | tenant | building | Let me know when the water, power or elevator in my building will be off or fixed.
+@profile | tenant | door | Tell me if someone is at my door or wants to talk to me.
+@profile | tenant | danger | Warn me if there is a danger in the building and I need to act.
+te001|tenant|obvious|relevant|rent||Starting in March your rent goes up by sixty dollars a month.|names the rent
+te002|tenant|unrelated|irrelevant|||I finally tried that noodle place on Fifth, it was amazing.|small talk
+te003|tenant|implicit|relevant|building||The plumbers need to shut the main valve tomorrow between nine and noon.|water will be off
+te004|tenant|third_person|irrelevant|||My brother's landlord raised his rent twice last year.|someone else's rent
+te005|tenant|attention|relevant|door||Hello, are you the one in apartment four B?|spoken to
+te006|tenant|negation|irrelevant|||The lease terms are staying exactly the same this year.|nothing changes
+te007|tenant|implicit|relevant|rent||From now on there's a forty dollar fee if you pay after the fifth.|a new cost tied to the rent
+te008|tenant|unrelated|irrelevant|||It's supposed to snow again on Thursday.|weather
+te009|tenant|urgent_short|relevant|danger|important,urgent|Smoke in the stairwell, go back!|danger, act now
+te010|tenant|past|irrelevant|||Years ago this whole block used to lose power every summer.|the past
+te011|tenant|causal|relevant|building||A pipe burst on the third floor, so they're cutting the water to the whole building tonight.|cause and water off
+te012|tenant|idiom|irrelevant|||I'm so tired I could sleep through a fire alarm.|figure of speech
+te013|tenant|implicit|relevant|door||There's a courier downstairs asking for you.|someone wants the listener
+te014|tenant|hypothetical|irrelevant|||Imagine if they put a pool on the roof, that would be something.|imagination
+te015|tenant|obvious|relevant|building||The elevator will be out of service all day Wednesday for inspection.|names the elevator
+te016|tenant|unrelated|irrelevant|||This pizza has way too much cheese on it.|small talk
+te017|tenant|negation|relevant|rent||We will no longer accept rent in cash at the office.|the not is the news
+te018|tenant|third_person|irrelevant|||The building across the street has had no hot water for a week.|another building
+te019|tenant|sarcasm_quote|irrelevant|||Oh sure, and next they'll tell us the rent is going down, right.|sarcasm
+te020|tenant|implicit|relevant|building||They've got the lift running again as of this morning.|elevator fixed
+te021|tenant|multi|relevant|building|context=Is the power coming back today?|Not before six, they're still waiting on a part.|power, with the question before
+te022|tenant|unrelated|irrelevant|||My cat knocked a plant off the shelf at three in the morning.|small talk with a time
+te023|tenant|asr_error|relevant|rent||Your least is up for renewal at the end of next month.|lease, misrecognized
+te024|tenant|hypothetical|ambiguous|rent||There's talk that the rent might go up next year.|a rumour
+te025|tenant|causal|relevant|danger,building|important|There's a gas smell on our floor, so everybody has to wait outside until the fire department clears it.|danger and an instruction
+te026|tenant|third_person|irrelevant|||Her new roommate keeps leaving the door unlocked.|someone else's door
+te027|tenant|attention|relevant|door||Excuse me, could I talk to you for a second about the noise?|asks to talk
+te028|tenant|past|irrelevant|||The old owner used to come by and collect the rent in person.|the past
+te029|tenant|unrelated|irrelevant|||I have to take the car in for new tires on Friday.|small talk with a day
+te030|tenant|implicit|relevant|rent||The new owners want everyone to sign a twelve month agreement instead of going month to month.|lease terms change
+te031|tenant|urgent_short|relevant|danger|important,urgent|Don't touch that wire!|danger, act now
+te032|tenant|idiom|irrelevant|||My phone bill went through the roof this month.|figure of speech
+te033|tenant|negation|irrelevant|||The elevator is working fine, same as always.|nothing changes
+te034|tenant|implicit|relevant|door||Somebody keeps ringing your buzzer.|someone at the door
+te035|tenant|hypothetical|irrelevant|||I wish somebody would just buy this building and fix everything.|a wish
+te036|tenant|unrelated|irrelevant|||That game last night went to double overtime.|small talk
+te037|tenant|repeated|repeat|building|repeat_of=te015|Again, no elevator on Wednesday, it's being inspected all day.|said before
+te038|tenant|asr_error|irrelevant|||I red that whole book in to days.|small talk, misrecognized
+te039|tenant|implicit|relevant|building||Fill a few buckets tonight, the taps will be dry until tomorrow afternoon.|water off
+te040|tenant|sarcasm_quote|irrelevant|||In that show the landlord evicts everybody in the first episode.|television
+te041|tenant|obvious|relevant|rent||Your lease renewal has to be signed by the fifteenth or it converts to a higher rate.|names the lease
+te042|tenant|third_person|irrelevant|||My parents' power was out for two days after the storm.|someone else's power, the past
+te043|tenant|multi|irrelevant||context=Did the landlord say anything about the increase?|He hasn't said a word, I was asking about your weekend.|nothing new, with context
+te044|tenant|attention|relevant|door||Hey, you dropped your keys back there.|spoken to
+te045|tenant|unrelated|irrelevant|||The bakery on the corner closes at two on Sundays.|small talk with a time
+te046|tenant|negation|relevant|building||The back elevator can't be used until further notice.|the not is the news
+te047|tenant|incomplete|ambiguous|rent||About the deposit, I was going to say that the|cut off
+te048|tenant|unrelated|irrelevant|||I think I'm getting a cold, my throat is scratchy.|small talk
+te049|tenant|causal|relevant|building||The transformer on the street blew, so the power company says we're dark until at least midnight.|cause and power off
+te050|tenant|third_person|irrelevant|||The tenants in the other tower got a letter about new parking fees.|another group
+te051|tenant|ambiguous|ambiguous|door||Is anybody home in there?|unclear who is addressed
+te052|tenant|idiom|irrelevant|||Get out, no way she said that.|figure of speech with an alarm word
+te053|tenant|obvious|relevant|danger|important|The alarm panel says fire on level two, please use the stairs and leave now.|danger, names it
+te054|tenant|ambiguous|ambiguous|building||They may or may not shut the water off Monday, nobody knows.|unsettled
+@profile | athlete | practice | Tell me if the time or place of practice or a game changes.
+@profile | athlete | lineup | Let me know about anything that decides whether I play or what position I play.
+@profile | athlete | coach | Tell me when the coach or a teammate is talking to me.
+@profile | athlete | danger | Warn me if I'm about to get hurt or need to get out of the way.
+at001|athlete|obvious|relevant|practice||Practice is moved to six thirty tomorrow morning.|names practice
+at002|athlete|unrelated|irrelevant|||My sister just got a puppy, it chews everything.|small talk
+at003|athlete|implicit|relevant|lineup||Coach wants everyone who missed Tuesday to sit out the first half.|who plays
+at004|athlete|third_person|irrelevant|||The junior squad has their game moved to Sunday.|another group
+at005|athlete|attention|relevant|coach||Hey, you, come over here a second.|spoken to
+at006|athlete|past|irrelevant|||Last season we used to train on the grass field behind the school.|the past
+at007|athlete|causal|relevant|practice||The gym floor is being refinished, so we're training outside all week.|cause and place
+at008|athlete|unrelated|irrelevant|||I can't believe how expensive sneakers have gotten.|small talk
+at009|athlete|urgent_short|relevant|danger|important,urgent|Heads up, ball!|act now
+at010|athlete|negation|irrelevant|||Saturday's game is still at ten, nothing has changed.|nothing changes
+at011|athlete|implicit|relevant|lineup||Whoever runs the slowest mile today starts on the bench Friday.|who plays
+at012|athlete|idiom|irrelevant|||She absolutely killed it in that interview yesterday.|figure of speech
+at013|athlete|implicit|relevant|practice||The bus for the away game leaves at seven sharp, not seven thirty.|time for the game
+at014|athlete|hypothetical|irrelevant|||What if we had a stadium with a retractable roof, imagine that.|imagination
+at015|athlete|attention|relevant|coach,lineup||Can you hear me, I need you to swap sides with Dana.|spoken to
+at016|athlete|third_person|irrelevant|||My cousin's coach benched him for the whole tournament.|someone else
+at017|athlete|unrelated|irrelevant|||There's a new burger place opening by the mall next week.|small talk
+at018|athlete|obvious|relevant|lineup||I'm changing the starting lineup, the list goes up after warm-ups.|names the lineup
+at019|athlete|sarcasm_quote|irrelevant|||Yeah right, like the referee is ever going to apologize for that call.|sarcasm
+at020|athlete|negation|relevant|practice||There is no practice on Thursday, the field is closed.|the no is the news
+at021|athlete|unrelated|irrelevant|||I slept maybe four hours, my neighbors were so loud.|small talk
+at022|athlete|multi|relevant|practice|context=Are we still meeting at the main field?|No, go to the one by the river instead.|place, with the question before
+at023|athlete|past|irrelevant|||When I played in college we practiced twice a day.|the past
+at024|athlete|urgent_short|relevant|danger|important,urgent|Watch your left!|act now
+at025|athlete|hypothetical|ambiguous|practice||We might add an extra session before the finals.|a possibility
+at026|athlete|third_person|irrelevant|||The other team's keeper twisted her ankle last week.|someone else, the past
+at027|athlete|implicit|relevant|lineup||Anyone without a signed medical form can't suit up on Saturday.|a condition for playing
+at028|athlete|idiom|irrelevant|||That math test was a real knockout punch.|figure of speech
+at029|athlete|asr_error|relevant|practice||Practise is at the high school jim on Wednesday, not hear.|place, misrecognized
+at030|athlete|unrelated|irrelevant|||My phone battery dies by noon every single day.|small talk with a time
+at031|athlete|causal|relevant|lineup||Two defenders are out sick, so I'm moving a couple of you to the back line tonight.|cause and positions
+at032|athlete|hypothetical|irrelevant|||I wish practice was in the afternoon, I'd actually be awake.|a wish
+at033|athlete|attention|relevant|coach||Listen up, I'm talking to you, tie your laces.|spoken to
+at034|athlete|negation|irrelevant|||The roster is the same as last week.|nothing changes
+at035|athlete|implicit|relevant|practice||They double booked the field, we get it an hour later than usual today.|time changes
+at036|athlete|unrelated|irrelevant|||The cafeteria ran out of the good bread again.|small talk
+at037|athlete|repeated|repeat|practice|repeat_of=at001|Reminder, tomorrow's practice is at six thirty in the morning.|said before
+at038|athlete|sarcasm_quote|irrelevant|||In the movie the coach screams run and the whole team just freezes.|film
+at039|athlete|implicit|relevant|danger|important|The goal frame isn't anchored, stay away from it until we fix it.|could get hurt
+at040|athlete|third_person|irrelevant|||Her brother got moved up to the varsity team.|someone else
+at041|athlete|obvious|relevant|practice||Sunday's game has been moved to the north field at two.|names the game
+at042|athlete|unrelated|irrelevant|||I'm thinking of cutting my hair really short.|small talk
+at043|athlete|asr_error|irrelevant|||I eight way too much pasta last knight.|small talk, misrecognized
+at044|athlete|multi|irrelevant||context=Did they change the kickoff time?|I never heard, I was only wondering what to wear to the party.|nothing new, with context
+at045|athlete|implicit|relevant|lineup||I'm trying you at midfield today to see how it goes.|position
+at046|athlete|incomplete|ambiguous|lineup||So for the lineup on Friday, what I'm thinking is|cut off
+at047|athlete|negation|relevant|lineup||Players who skip the warm-up will not be put on the field.|the not is the rule
+at048|athlete|unrelated|irrelevant|||It took me forty minutes to find parking.|small talk with a number
+at049|athlete|causal|relevant|practice,danger||Lightning in the area, so we're done for today, everybody inside.|cause and practice ends
+at050|athlete|third_person|irrelevant|||My roommate's volleyball team won their league.|someone else
+at051|athlete|ambiguous|ambiguous|coach||Somebody needs to move those cones.|unclear who is addressed
+at052|athlete|idiom|irrelevant|||I told my sister to break a leg at her recital.|figure of speech
+at053|athlete|attention|relevant|coach||Coach is calling you, he wants you at the bench.|the coach wants the listener
+at054|athlete|hypothetical|ambiguous|practice||If it keeps raining they could call off the match.|a possibility
+@profile | attendee | sessions | Tell me if a talk I might go to moves to another room or time.
+@profile | attendee | mytalk | Let me know about anything that affects my own presentation.
+@profile | attendee | attention | Notify me when somebody is speaking to me.
+co001|attendee|obvious|relevant|sessions||The keynote has moved from the main hall to ballroom B.|a talk moves
+co002|attendee|unrelated|irrelevant|||The coffee here is surprisingly good.|small talk
+co003|attendee|implicit|relevant|mytalk||Speakers in the afternoon block only get fifteen minutes now instead of twenty.|length of talks
+co004|attendee|third_person|irrelevant|||My colleague's flight got cancelled so she's missing the whole thing.|someone else
+co005|attendee|attention|relevant|attention||Sorry, is this seat taken?|spoken to
+co006|attendee|negation|irrelevant|||The schedule in the app is correct, nothing has moved.|nothing changes
+co007|attendee|causal|relevant|sessions||The projector in room three is broken, so that workshop is now in room seven.|cause and room
+co008|attendee|unrelated|irrelevant|||I walked eleven thousand steps yesterday just in this building.|small talk with a number
+co009|attendee|implicit|relevant|mytalk||All presenters need to upload their slides at the front desk before noon.|a requirement for presenters
+co010|attendee|past|irrelevant|||Last year this conference was in a much smaller hotel.|the past
+co011|attendee|attention|relevant|attention,mytalk||Excuse me, you're the one presenting on batteries, right?|spoken to
+co012|attendee|idiom|irrelevant|||That last speaker really knocked it out of the park.|figure of speech
+co013|attendee|implicit|relevant|sessions||The two o'clock panel is starting half an hour late.|time changes
+co014|attendee|hypothetical|irrelevant|||Imagine if they held this thing on a beach somewhere.|imagination
+co015|attendee|unrelated|irrelevant|||My hotel room looks straight onto a parking garage.|small talk
+co016|attendee|negation|relevant|mytalk||There won't be a clicker on stage, you have to advance the slides from the laptop.|the not is the news
+co017|attendee|third_person|irrelevant|||The team from Berlin had to redo their whole poster last night.|another group, the past
+co018|attendee|sarcasm_quote|irrelevant|||He goes, any questions, and of course nobody says a word.|a story with a quotation
+co019|attendee|obvious|relevant|mytalk,sessions||Your presentation has been moved up to the first slot after lunch.|names the presentation
+co020|attendee|unrelated|irrelevant|||They ran out of the vegetarian sandwiches again.|small talk
+co021|attendee|multi|relevant|sessions|context=Is the robotics session still in the west wing?|No, they put it upstairs in the glass room.|room, with the question before
+co022|attendee|past|irrelevant|||I gave a talk here once and the microphone died halfway through.|an old story
+co023|attendee|asr_error|relevant|sessions||The data privacy talk is know in the east haul at three.|room and time, misrecognized
+co024|attendee|hypothetical|ambiguous|sessions||They may shuffle a few of tomorrow's sessions around.|a possibility
+co025|attendee|implicit|relevant|mytalk||The session chair says the laptop on stage only takes PDF files.|a requirement for slides
+co026|attendee|third_person|irrelevant|||Her talk was moved to Friday, which she hates.|someone else's talk
+co027|attendee|unrelated|irrelevant|||I need to find a pharmacy before it closes at eight.|small talk with a time
+co028|attendee|attention|relevant|attention||Hi there, could you tell me how to get to the registration desk?|spoken to
+co029|attendee|hypothetical|irrelevant|||I wish these badges had bigger print.|a wish
+co030|attendee|causal|relevant|mytalk,sessions||The morning ran long, so every afternoon speaker loses five minutes.|cause and length of talks
+co031|attendee|idiom|irrelevant|||This jet lag is killing me today.|figure of speech
+co032|attendee|implicit|relevant|sessions||They've swapped the order, the security talk comes before the cloud one now.|order of talks
+co033|attendee|negation|irrelevant|||The poster hall hours are the same as printed.|nothing changes
+co034|attendee|unrelated|irrelevant|||It's been raining since I landed.|weather
+co035|attendee|repeated|repeat|sessions|repeat_of=co001|Once more, the keynote is in ballroom B, not the main hall.|said before
+co036|attendee|sarcasm_quote|irrelevant|||Oh great, another panel about synergy, exactly what the world needed.|sarcasm
+co037|attendee|implicit|relevant|mytalk||The room for the lightning talks has no HDMI, bring an adapter if you're presenting.|equipment for presenters
+co038|attendee|third_person|irrelevant|||The sponsors get a separate lunch on the top floor.|another group
+co039|attendee|attention|relevant|attention||Hey, I think you left your badge at the booth.|spoken to
+co040|attendee|unrelated|irrelevant|||My kids keep sending me pictures of the dog.|small talk
+co041|attendee|asr_error|irrelevant|||I mist my train this mourning buy a minute.|small talk, misrecognized
+co042|attendee|obvious|relevant|sessions||The afternoon workshop on design has been cancelled.|a talk is off
+co043|attendee|multi|irrelevant||context=Did they change the room for the panel?|No clue, I was only reading the lunch menu.|nothing new, with context
+co044|attendee|incomplete|ambiguous|mytalk||For the speakers in the next block, we need you to|cut off
+co045|attendee|negation|relevant|sessions||The closing session will not be in the main hall after all, check the board.|the not is the news
+co046|attendee|unrelated|irrelevant|||This carpet pattern is making me dizzy.|small talk
+co047|attendee|past|irrelevant|||Yesterday's keynote was moved twice before it finally started.|the past
+co048|attendee|causal|relevant|sessions||The fire marshal capped the room at fifty, so the tutorial is splitting into two sessions, one at ten and one at one.|cause and time
+co049|attendee|third_person|irrelevant|||My boss is presenting at a different conference in Lisbon this week.|someone else, elsewhere
+co050|attendee|ambiguous|ambiguous|mytalk||Somebody said the speakers' dinner could be moved.|a rumour, loosely related
+co051|attendee|implicit|relevant|mytalk||We're recording every talk in this track, so sign the release form before you go up.|a requirement for presenters
+co052|attendee|idiom|irrelevant|||I'm drowning in emails right now.|figure of speech
+@profile | cook | orders | Tell me about orders or changes to orders for my station, the grill.
+@profile | cook | hazard | Warn me about anything hot, sharp or dangerous near me.
+@profile | cook | shift | Tell me about anything that changes when I work or when my break is.
+@profile | cook | chef | Let me know when the chef calls me or tells me to do something.
+ck001|cook|obvious|relevant|orders||Grill, two ribeyes medium rare and one well done.|an order for the grill
+ck002|cook|unrelated|irrelevant|||My landlord still hasn't fixed the washing machine.|small talk
+ck003|cook|urgent_short|relevant|hazard|important,urgent|Behind you, hot pan!|act now
+ck004|cook|third_person|irrelevant|||Pastry needs more butter from the walk-in.|another station
+ck005|cook|implicit|relevant|orders||Table twelve wants that steak cooked more, it's coming back.|an order returns to the grill
+ck006|cook|past|irrelevant|||At my old job we did three hundred covers on a Saturday.|the past
+ck007|cook|attention|relevant|chef||You on the grill, come see me when that ticket is out.|told to do something
+ck008|cook|unrelated|irrelevant|||I'm getting my car inspected on Tuesday.|small talk with a day
+ck009|cook|causal|relevant|shift,chef||Marco called in sick, so I need you to stay until close tonight.|cause and hours
+ck010|cook|negation|irrelevant|||Breaks are at the usual times today.|nothing changes
+ck011|cook|implicit|relevant|hazard|important|The fryer oil is spitting, keep your arms back.|could get burned
+ck012|cook|idiom|irrelevant|||That new dessert is fire, people love it.|figure of speech with an alarm word
+ck013|cook|implicit|relevant|orders||Hold the burgers for table four, they're still on appetizers.|timing of an order
+ck014|cook|hypothetical|irrelevant|||Imagine if we had a kitchen twice this size.|imagination
+ck015|cook|unrelated|irrelevant|||It was so foggy I could barely see the road this morning.|weather
+ck016|cook|obvious|relevant|shift||Your break is pushed back to three thirty.|names the break
+ck017|cook|third_person|irrelevant|||The dishwasher's cousin is getting married in June.|someone else
+ck018|cook|sarcasm_quote|irrelevant|||Sure, the customer is always right, even when he orders soup with a fork.|sarcasm
+ck019|cook|negation|relevant|orders||No more lamb chops tonight, we're out.|the no is the news
+ck020|cook|unrelated|irrelevant|||My daughter lost her first tooth yesterday.|small talk
+ck021|cook|urgent_short|relevant|hazard|important,urgent|Knife, coming through!|act now
+ck022|cook|past|irrelevant|||The old chef used to make us scrub the hoods every night.|the past
+ck023|cook|multi|relevant|orders|context=How do they want the salmon on fifteen?|Skin off and no butter, it's an allergy.|an order, with the question before
+ck024|cook|hypothetical|ambiguous|orders||We might run a steak special this weekend.|a possibility
+ck025|cook|implicit|relevant|shift||Schedule's up, check it, a few of you got moved to mornings.|hours may change
+ck026|cook|third_person|irrelevant|||The servers have a meeting about the new uniforms.|another group
+ck027|cook|asr_error|relevant|orders||Grill, fire too chicken breasts for table ate.|an order, misrecognized
+ck028|cook|unrelated|irrelevant|||That song has been stuck in my head all week.|small talk
+ck029|cook|attention|relevant|chef||Chef wants you at the pass right now.|the chef calls
+ck030|cook|hypothetical|irrelevant|||I wish we closed on Mondays like the place next door.|a wish
+ck031|cook|causal|relevant|hazard||Somebody spilled oil by the walk-in, so watch your step back there.|cause and hazard
+ck032|cook|idiom|irrelevant|||I got burned on that used car deal, never again.|figure of speech
+ck033|cook|implicit|relevant|orders||Add a side of grilled peppers to the order for nine.|an order changes
+ck034|cook|negation|irrelevant|||The menu is the same tonight, no specials.|nothing changes
+ck035|cook|unrelated|irrelevant|||I bought the wrong size shoes online again.|small talk
+ck036|cook|repeated|repeat|orders|repeat_of=ck001|Again for the grill, two ribeyes medium rare, one well done.|said before
+ck037|cook|sarcasm_quote|irrelevant|||On that cooking show the guy yells fire and it's just his toast.|television
+ck038|cook|implicit|relevant|shift||Everyone's staying an extra hour Friday, there's a private party.|hours change
+ck039|cook|third_person|irrelevant|||The bar across the street had a grease fire last month.|another place, the past
+ck040|cook|attention|relevant|chef||Hey, are you listening, I asked for those plates.|spoken to, asked for something
+ck041|cook|unrelated|irrelevant|||The bus was twenty minutes late this morning.|small talk with a number
+ck042|cook|asr_error|irrelevant|||I think their going to the lake this weak end.|small talk, misrecognized
+ck043|cook|obvious|relevant|orders||Change on table six, make that steak medium instead of rare.|an order changes
+ck044|cook|multi|irrelevant||context=Did chef change the schedule?|Couldn't tell you, I haven't even had coffee yet.|nothing new, with context
+ck045|cook|incomplete|ambiguous|orders||For the grill station tonight we're going to need|cut off
+ck046|cook|negation|relevant|hazard||Don't use the left burner, the gas line isn't safe.|the not is the warning
+ck047|cook|unrelated|irrelevant|||My brother thinks he can beat me at chess.|small talk
+ck048|cook|causal|relevant|orders||The party of ten just doubled their steak order, so drop ten more now.|cause and order
+ck049|cook|third_person|irrelevant|||Salad station is out of croutons again.|another station
+ck050|cook|ambiguous|ambiguous|chef||Somebody grab the door, please.|unclear who is addressed
+ck051|cook|implicit|relevant|hazard|important|That handle's been in the oven, don't grab it bare handed.|could get burned
+ck052|cook|past|irrelevant|||Last night the grill orders didn't stop until eleven.|the past
+ck053|cook|idiom|irrelevant|||He's skating on thin ice with the manager.|figure of speech
+ck054|cook|hypothetical|ambiguous|shift||If it's slow tonight they could send a few of us home early.|a possibility

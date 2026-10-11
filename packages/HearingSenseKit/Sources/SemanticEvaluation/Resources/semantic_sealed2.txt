@@ -1,0 +1,288 @@
+# Hearing Sense — semantic attention, SEALED evaluation set 2 (Window 6.2), independently authored.
+# Synthetic; no real conversation. REPORT ONLY: run once with the frozen configuration. Never tune on this file.
+# Profile lines: @profile | <profile> | <goal key> | <goal text>
+# Item lines: id | profile | category | expected | acceptable goals | flags | utterance | why
+@profile | site | danger | Warn me straight away if something near me is dangerous or I have to get out of the way
+@profile | site | crane | Tell me when the crane is about to lift something or a lift gets put off
+@profile | site | concrete | Let me know when the concrete truck is coming or if the pour is late or cancelled
+@profile | site | inspection | I want to know when the safety inspector turns up or the inspection changes
+si001 | site | unrelated | irrelevant |  |  | Traffic on the bypass was solid from six this morning. | small talk about the drive in
+si002 | site | negation | irrelevant |  |  | The pour is still at ten, nothing has changed. | states that nothing changes
+si003 | site | implicit | relevant | concrete |  | The mixer driver just rang, he's stuck behind a crash on the ring road for at least an hour. | concrete delivery will be late
+si004 | site | third_person | irrelevant |  |  | Dave's brother drives a crane down at the docks. | someone else's job elsewhere
+si005 | site | obvious | relevant | crane |  | Crane's lifting the steel beams in five minutes, keep the yard clear. | lift announced directly
+si006 | site | urgent_short | relevant | danger | important,urgent | Get off the scaffold now! | immediate order to move
+si007 | site | unrelated | irrelevant |  |  | It's meant to hit thirty degrees on Saturday. | weather chat
+si008 | site | hypothetical | ambiguous | concrete |  | There might be a second truck later, depends on the plant. | only a possibility
+si009 | site | obvious | relevant | inspection |  | Listen up, the safety inspector is coming at eleven today instead of two. | inspection time changed
+si010 | site | idiom | irrelevant |  |  | That quiz last night was a car crash, we came dead last. | figure of speech about a pub quiz
+si011 | site | past | irrelevant |  |  | Back in ninety eight we mixed all the concrete by hand on that job. | old story
+si012 | site | causal | relevant | crane |  | Wind is gusting over forty, so this afternoon's crane lift is put off until tomorrow. | wind causes lift to be postponed
+si013 | site | implicit | relevant | danger | important | That trench wall is starting to crumble right where you lot are standing. | collapse risk where the group stands
+si014 | site | urgent_short | relevant | danger | important,urgent | Everybody out of the trench! | immediate order to move
+si015 | site | unrelated | irrelevant |  |  | My dog chewed through the sofa cushions again last night. | pet talk
+si016 | site | sarcasm_quote | irrelevant |  |  | In that film the foreman yells everybody out and then the whole tower comes down. | describing a film scene
+si017 | site | implicit | relevant | concrete |  | Get the formwork oiled and the vibrator out, the wagon is ten minutes away. | concrete delivery about to arrive
+si018 | site | multi | irrelevant |  | context=My lad is doing a school project about building sites | He wants to know how high the crane lifts. | a child's homework question
+si019 | site | repeated | repeat | crane | repeat_of=si012 | Again, the crane lift is put off until tomorrow because of the wind. | same news as before
+si020 | site | third_person | irrelevant |  |  | The lads on the Mill Road job get their concrete delivered at night. | another site
+si021 | site | incomplete | ambiguous | danger |  | Careful with the, uh, the thing over by the | cut off and unclear what the hazard is
+si022 | site | obvious | relevant | concrete |  | The concrete truck just pulled in at the main gate. | truck arrival stated directly
+si023 | site | unrelated | irrelevant |  |  | I had the chicken curry from that van, not bad for four quid. | lunch chat
+si024 | site | urgent_short | relevant | danger | important,urgent | Stop, truck reversing behind you! | immediate warning
+si025 | site | hypothetical | irrelevant |  |  | Imagine if the crane dropped a pallet right on the boss's new car. | imagined joke scenario
+si026 | site | causal | relevant | concrete |  | The pump has blown a hose, so we can't pour until the fitter gets here. | breakdown delays the pour
+si027 | site | negation | irrelevant |  |  | There's no danger, that bang was just the compressor starting up. | says nothing is wrong
+si028 | site | repeated | repeat | concrete | repeat_of=si022 | As I said, the concrete truck is at the main gate. | same news as before
+si029 | site | implicit | relevant | crane |  | Slingers, get the chains on those pallets, the operator is already up in the cab. | a lift is about to start
+si030 | site | asr_error | irrelevant |  |  | My nan baked a great big crane berry pie on Sunday. | cranberry misheard and food talk
+si031 | site | unrelated | irrelevant |  |  | Did you see the darts final, it went right down to the last leg. | sport on television
+si032 | site | negation | relevant | inspection |  | The inspector won't be looking at the upper floors today, ground level only. | scope of inspection changed
+si033 | site | ambiguous | ambiguous | inspection |  | Someone said the inspector could show up again any day next week. | hearsay and vague timing
+si034 | site | implicit | relevant | inspection |  | Hard hats and vests on properly, everyone, the man with the clipboard is at the gate. | inspector has arrived
+si035 | site | third_person | irrelevant |  |  | My cousin's site in Leeds had the inspector round twice last week. | another site in the past
+si036 | site | urgent_short | relevant | danger | important,urgent | Mind your heads, load coming over! | immediate warning
+si037 | site | idiom | irrelevant |  |  | Get out of here, you never won two hundred quid on a scratch card. | expression of disbelief
+si038 | site | implicit | relevant | danger | important | There's a strong smell of gas coming from the pipe they just hit. | gas leak nearby
+si039 | site | unrelated | irrelevant |  |  | My missus wants to paint the kitchen green, of all colours. | home decorating chat
+si040 | site | past | irrelevant |  |  | The old inspector used to turn up without any warning at all. | how things used to be
+si041 | site | multi | relevant | crane | context=The crane driver says the wind has dropped enough | So that goes ahead at three after all. | with context the lift is back on
+si042 | site | sarcasm_quote | irrelevant |  |  | Oh yeah, I love carrying blocks in the rain, best job in the world. | sarcastic grumble
+si043 | site | asr_error | relevant | concrete |  | Second con crete truck is ten minutes out, get the chute ready. | concrete split by the recognizer and truck arriving
+si044 | site | ambiguous | ambiguous | danger |  | Watch it, mate. | could be a warning or banter
+si045 | site | urgent_short | relevant | danger | important,urgent | Stand back, it's swinging! | immediate warning
+si046 | site | multi | irrelevant |  | context=We watched that disaster series last night | The whole bridge just collapsed in the first episode. | television plot
+si047 | site | causal | relevant | inspection |  | He found the edge protection missing, so the inspector is coming back on Thursday to check again. | finding causes a second inspection
+si048 | site | third_person | irrelevant |  |  | My neighbour had to get out of her house when the chip pan caught fire. | someone else's past incident
+si049 | site | negation | relevant | danger |  | The gate side is no longer safe to walk through, they've opened up the manhole. | route became unsafe
+si050 | site | unrelated | irrelevant |  |  | I'm knackered, the baby was up at three again. | tiredness chat
+si051 | site | implicit | relevant | danger |  | They're about to start cutting overhead, sparks will be dropping on this side. | need to move away from falling sparks
+si052 | site | hypothetical | irrelevant |  |  | I wish the concrete would just pour itself and we could all go home. | a wish
+si053 | site | urgent_short | relevant | danger | important,urgent | Move, move, it's falling! | immediate order to move
+@profile | camp | danger | Warn me right away if there is any danger or we all have to move somewhere
+@profile | camp | food | Tell me when food is ready or a meal time changes
+@profile | camp | activity | Let me know if the plan for my group, the Otters, changes or where and when we have to meet
+cm001 | camp | unrelated | irrelevant |  |  | My sleeping bag smells like wet dog. | camp small talk
+cm002 | camp | obvious | relevant | activity |  | Otters, your canoeing is moved to four o'clock this afternoon. | group plan changed
+cm003 | camp | third_person | irrelevant |  |  | The Herons are meeting at the boathouse at nine for kayaking. | a different group
+cm004 | camp | urgent_short | relevant | danger | important,urgent | Get away from the fire! | immediate warning
+cm005 | camp | unrelated | irrelevant |  |  | I got eleven mosquito bites on one leg, I counted. | small talk with a number
+cm006 | camp | negation | irrelevant |  |  | Otters still have orienteering at ten, same as it says on the sheet. | nothing changes
+cm007 | camp | implicit | relevant | food |  | Kitchen says they need another forty minutes tonight, so nobody queue up yet. | the meal will be later
+cm008 | camp | ambiguous | ambiguous | danger |  | I think I heard thunder, or maybe it was just a truck. | speaker is unsure
+cm009 | camp | causal | relevant | activity |  | The climbing instructor has gone home sick, so Otters are doing archery with me instead. | illness causes a change of activity
+cm010 | camp | idiom | irrelevant |  |  | Leo is on fire at table tennis today, nobody can beat him. | on fire used as a figure of speech
+cm011 | camp | repeated | repeat | activity | repeat_of=cm002 | Again, Otters, your canoeing is at four o'clock now. | same news as before
+cm012 | camp | past | irrelevant |  |  | Last year we had to run to the hall in the middle of the night because of a storm. | old story
+cm013 | camp | implicit | relevant | danger |  | That branch above your tents is cracked and hanging by a thread. | something may fall on the tents
+cm014 | camp | urgent_short | relevant | danger | important,urgent | Everyone out of the water! | immediate order to move
+cm015 | camp | unrelated | irrelevant |  |  | Did anyone bring a phone charger, mine is at two percent. | everyday request
+cm016 | camp | sarcasm_quote | irrelevant |  |  | And then in the movie the counselor screams everybody run and nobody moves. | describing a film scene
+cm017 | camp | causal | relevant | food |  | We're leaving early for the hike tomorrow, so breakfast is at six thirty, not eight. | early start changes the meal time
+cm018 | camp | third_person | irrelevant |  |  | Falcons, your dinner slot is second sitting tonight. | addressed to another group
+cm019 | camp | implicit | relevant | activity |  | Anyone in the Otters should be at the flagpole with boots on at half past eight. | meeting place and time for the group
+cm020 | camp | hypothetical | ambiguous | activity |  | There might be a swim after lunch if the water warms up. | only a possibility
+cm021 | camp | hypothetical | irrelevant |  |  | What if a bear walked into camp right now, what would you even do. | imagined scenario
+cm022 | camp | urgent_short | relevant | danger | important,urgent | Don't touch that, it's hot! | immediate warning
+cm023 | camp | unrelated | irrelevant |  |  | My mum is picking me up on the twenty third. | personal chat with a date
+cm024 | camp | negation | irrelevant |  |  | Relax, that's not smoke, it's just mist coming off the lake. | says nothing is wrong
+cm025 | camp | obvious | relevant | food |  | Dinner's ready, come and get it while it's hot. | food is ready
+cm026 | camp | repeated | repeat | food | repeat_of=cm017 | Remember, breakfast is at six thirty tomorrow, not eight. | same news as before
+cm027 | camp | multi | irrelevant |  | context=We were telling scary stories in the tent | Then the guy shouts get out of the water. | part of a story
+cm028 | camp | asr_error | relevant | activity |  | Otters, meat at the boat house at nine, not the jetty. | meet misheard and meeting place changed
+cm029 | camp | implicit | relevant | danger |  | There's a wasp nest right under that bench you're all sitting on. | hazard right where the group sits
+cm030 | camp | unrelated | irrelevant |  |  | Jonah snores so loud I could hear him from the other tent. | camp gossip
+cm031 | camp | third_person | irrelevant |  |  | My sister's camp in Wales got evacuated because of a flood. | another camp in the past
+cm032 | camp | urgent_short | relevant | danger | important,urgent | Run to the hall, quick! | immediate order to move
+cm033 | camp | incomplete | ambiguous | activity |  | Otters, before dinner you all need to | cut off before the instruction
+cm034 | camp | asr_error | irrelevant |  |  | My brother says the son set over the lake is the best bit. | sunset misheard and small talk
+cm035 | camp | negation | relevant | activity |  | You Otters are not doing the night walk any more. | cancellation is the news
+cm036 | camp | idiom | irrelevant |  |  | I'm so hungry I could eat a horse. | figure of speech and no meal news
+cm037 | camp | implicit | relevant | food |  | Grab a plate and line up by the fire pit, the burgers are coming off the grill. | food is ready now
+cm038 | camp | unrelated | irrelevant |  |  | This is my third summer here and it's the hottest one yet. | small talk
+cm039 | camp | past | irrelevant |  |  | When I was a camper here the food was always cold by the time we sat down. | how it used to be
+cm040 | camp | obvious | relevant | danger | important | There's a fire in the kitchen tent, everybody has to move to the car park now. | danger and evacuation stated directly
+cm041 | camp | hypothetical | irrelevant |  |  | I wish they'd serve pizza every night instead of stew. | a wish
+cm042 | camp | multi | relevant | food | context=Lunch was supposed to be at twelve | They've pushed it back an hour. | with context lunch is an hour later
+cm043 | camp | third_person | irrelevant |  |  | The staff have their own meeting in the office at ten tonight. | concerns staff only
+cm044 | camp | urgent_short | relevant | danger | important,urgent | Duck, branch coming down! | immediate warning
+cm045 | camp | ambiguous | ambiguous | danger |  | Somebody should probably check that fire. | vague and may not be a hazard
+cm046 | camp | causal | relevant | activity |  | The lake is too choppy, so the Otters' sailing is cancelled and you meet in the craft tent. | weather cancels the activity and moves the meeting place
+cm047 | camp | sarcasm_quote | irrelevant |  |  | Oh brilliant, rain again, my favourite. | sarcastic remark about weather
+cm048 | camp | implicit | relevant | activity |  | Minibus for the Otters' cave trip leaves from the car park, not the front gate. | where the group has to meet
+cm049 | camp | negation | irrelevant |  |  | Dinner hasn't changed, it's six o'clock like every night. | nothing changes
+cm050 | camp | asr_error | relevant | danger | important | Lightening is very close, everyone has to leaf the field and go inside. | lightning and leave misheard and everyone must move
+cm051 | camp | unrelated | irrelevant |  |  | I can't find my other sock anywhere. | small talk
+cm052 | camp | implicit | relevant | danger |  | The rope on the big swing is fraying, I can see it coming apart. | equipment about to fail
+cm053 | camp | urgent_short | relevant | danger | important,urgent | Stop, snake on the path! | immediate warning
+@profile | choir | start | Tell me which piece we are singing next and which bar or page we start from
+@profile | choir | schedule | Let me know if a rehearsal or the concert changes time or place
+@profile | choir | called | I want to know when someone is talking to me or says my name, Marion
+@profile | choir | altos | Alert me when the conductor wants the altos to do something differently, I sing alto
+ch001 | choir | unrelated | irrelevant |  |  | They say it's going to snow on Friday night. | weather chat
+ch002 | choir | attention | relevant | called |  | Hey Marion, we saved you a seat over here. | addressed by name
+ch003 | choir | unrelated | irrelevant |  |  | Joan, did you ever find your umbrella? | question to someone else about an umbrella
+ch004 | choir | obvious | relevant | start |  | Next we're singing the Gloria, starting from bar forty two. | next piece and bar stated
+ch005 | choir | third_person | irrelevant |  |  | Sopranos, a little brighter on the top note, please. | instruction to another section
+ch006 | choir | obvious | relevant | altos |  | Altos, I want you to sing that phrase much softer. | direct instruction to the altos
+ch007 | choir | idiom | irrelevant |  |  | Well, that committee meeting was the same old song and dance. | figure of speech
+ch008 | choir | incomplete | ambiguous | start |  | Let's go from, um, where was it | cut off before the place is given
+ch009 | choir | implicit | relevant | start |  | Turn to page nineteen, top line, we go from the key change. | where to start
+ch010 | choir | past | irrelevant |  |  | We used to rehearse in the old library before it closed down. | how things used to be
+ch011 | choir | repeated | repeat | start | repeat_of=ch004 | Again, the Gloria from bar forty two. | same instruction as before
+ch012 | choir | unrelated | irrelevant |  |  | Peter brought lemon cake again, it's over by the urn. | refreshments chat
+ch013 | choir | causal | relevant | schedule |  | The church hall is double booked on the twelfth, so that rehearsal is in the school gym. | booking clash moves the rehearsal
+ch014 | choir | attention | relevant | called |  | Marion, could you share your copy with Joan tonight? | request addressed by name
+ch015 | choir | negation | irrelevant |  |  | The alto line was fine there, no need to change anything. | nothing to do differently
+ch016 | choir | third_person | irrelevant |  |  | My daughter's choir had their concert moved to a Monday, can you believe it. | another choir
+ch017 | choir | implicit | relevant | altos |  | Altos, you were flat on that last entry, listen to the piano. | correction for the altos
+ch018 | choir | ambiguous | ambiguous | altos |  | Lower voices, a bit more there. | unclear whether altos are meant
+ch019 | choir | hypothetical | irrelevant |  |  | Imagine if we got to sing in the Albert Hall one day. | daydream
+ch020 | choir | obvious | relevant | schedule |  | Next Tuesday's rehearsal starts at six instead of seven. | rehearsal time changed
+ch021 | choir | unrelated | irrelevant |  |  | The car park machine swallowed my two pound coin. | small talk
+ch022 | choir | implicit | relevant | start |  | Put the Gloria away and get out the folk song with the green cover. | next piece
+ch023 | choir | sarcasm_quote | irrelevant |  |  | In that film the conductor throws a chair and shouts from the top, again. | describing a film scene
+ch024 | choir | third_person | irrelevant |  |  | Basses, stay behind for five minutes, I want to fix your entry. | instruction to another section
+ch025 | choir | negation | relevant | schedule |  | There is no rehearsal next Thursday, the hall is closed for painting. | cancellation is the news
+ch026 | choir | hypothetical | ambiguous | schedule |  | We might add an extra rehearsal in the last week, I'll let you know. | only a possibility
+ch027 | choir | attention | relevant | called |  | Marion, are you all right to stand for the whole second half? | question addressed by name
+ch028 | choir | asr_error | irrelevant |  |  | I bought a new pear of reading glasses at the chemist. | pair misheard and shopping chat
+ch029 | choir | causal | relevant | altos |  | We've lost two sopranos to flu, so altos, you take the upper line in the last chorus. | illness causes a change for the altos
+ch030 | choir | unrelated | irrelevant |  |  | Helen, how's your new kitten settling in? | question to someone else about a pet
+ch031 | choir | negation | irrelevant |  |  | Rehearsals next month stay on Thursdays, same time, same place. | nothing changes
+ch032 | choir | implicit | relevant | start |  | Let's pick it up from letter D, in the blue book this time. | where to start
+ch033 | choir | multi | relevant | schedule | context=Is the dress rehearsal still on the Friday | No, it's the Wednesday now. | with context the dress rehearsal day changed
+ch034 | choir | past | irrelevant |  |  | Twenty years ago this choir sang the whole Messiah from memory. | old story
+ch035 | choir | ambiguous | ambiguous | called |  | Could you move along a bit, please? | unclear who is addressed
+ch036 | choir | implicit | relevant | schedule |  | We'll need everyone here an extra hour on Saturday to run the whole programme. | rehearsal runs longer
+ch037 | choir | idiom | irrelevant |  |  | She really changed her tune once she saw the bill. | figure of speech
+ch038 | choir | third_person | irrelevant |  |  | The bell ringers have changed their practice to Monday nights. | another group
+ch039 | choir | asr_error | relevant | altos,start |  | Altos, come in on the third beet of bar sixteen. | beat misheard and entry instruction for altos
+ch040 | choir | unrelated | irrelevant |  |  | I watched that baking show till midnight and now I'm useless. | television chat
+ch041 | choir | attention | relevant | called |  | Excuse me, Marion, is that your coat on the chair? | question addressed by name
+ch042 | choir | hypothetical | irrelevant |  |  | I wish the concert was in summer so we wouldn't all have colds. | a wish
+ch043 | choir | causal | relevant | schedule | important | The organist can only do Sunday afternoon, so the concert is moved from Saturday to Sunday at three. | concert day and time changed
+ch044 | choir | multi | irrelevant |  | context=My grandson has a school play this week | It got moved to Friday at two. | someone else's event
+ch045 | choir | implicit | relevant | start,altos |  | From the top of the second verse, basses and altos only. | where to start and altos sing
+ch046 | choir | ambiguous | ambiguous | called |  | Somebody's phone is ringing over there. | unclear whose phone
+ch047 | choir | sarcasm_quote | irrelevant |  |  | Oh sure, let's just add six more pieces, we've got loads of time. | sarcastic remark
+ch048 | choir | negation | relevant | schedule |  | The concert will no longer be in the cathedral, it's at Saint Luke's. | concert place changed
+ch049 | choir | third_person | irrelevant |  |  | The children's choir rehearse in here on Wednesdays at four. | another group
+ch050 | choir | multi | relevant | start | context=The next piece is the one in the red folder | We start it at the second repeat. | with context gives the starting place
+ch051 | choir | unrelated | irrelevant |  |  | Parking on Church Street is free after six, apparently. | parking chat
+ch052 | choir | implicit | relevant | schedule |  | The caretaker wants us out of the hall by nine from now on. | rehearsals must end earlier
+ch053 | choir | attention | relevant | called |  | Marion, can you stay ten minutes after to go over your solo line? | request addressed by name
+@profile | care | visitor | Let me know when somebody has come to see me or my family telephones
+@profile | care | activity | Tell me when an activity or the minibus outing is starting or has been changed
+@profile | care | meal | I want to know when meals are being served and if the menu or the time changes
+@profile | care | spoken | Alert me whenever a carer or anybody is speaking to me, my name is Walter
+cr001 | care | attention | relevant | spoken |  | Good morning Walter, did you sleep well? | question addressed by name
+cr002 | care | unrelated | irrelevant |  |  | It was minus two when I drove in at six this morning. | weather chat
+cr003 | care | obvious | relevant | meal |  | Breakfast is being served now in the dining room. | meal being served
+cr004 | care | third_person | irrelevant |  |  | Mrs Green in room twelve has her sister visiting from Scotland. | another resident's visitor
+cr005 | care | unrelated | irrelevant |  |  | Doris, your cardigan is buttoned up wrong, love. | said to another resident
+cr006 | care | implicit | relevant | activity |  | Bingo cards are on the tables in the garden room, we begin in five minutes. | an activity is starting
+cr007 | care | ambiguous | ambiguous | spoken,activity |  | Are you coming, dear? | unclear who is addressed
+cr008 | care | negation | irrelevant |  |  | No, the menu is the same as it says on the board. | nothing changes
+cr009 | care | obvious | relevant | visitor,spoken |  | Walter, your son is here to see you, he's waiting in the lounge. | visitor announced
+cr010 | care | idiom | irrelevant |  |  | That quiz question was a piece of cake. | figure of speech
+cr011 | care | causal | relevant | activity |  | The exercise teacher is off sick, so this morning's class is a quiz in the lounge instead. | illness changes the activity
+cr012 | care | past | irrelevant |  |  | We used to have a minibus trip to the coast every single month. | how things used to be
+cr013 | care | attention | relevant | spoken |  | Walter, would you like tea or coffee? | question addressed by name
+cr014 | care | unrelated | irrelevant |  |  | The gardener has planted tulips all along the front path. | garden chat
+cr015 | care | repeated | repeat | visitor,spoken | repeat_of=cr009 | As I said, Walter, your son is in the lounge waiting for you. | same news as before
+cr016 | care | hypothetical | irrelevant |  |  | Wouldn't it be lovely if they took us all to Paris for the outing. | daydream
+cr017 | care | implicit | relevant | meal |  | Kitchen is running behind, nothing will come out before one. | the meal will be late
+cr018 | care | negation | relevant | activity |  | The outing to the seaside is not happening on Friday any more. | cancellation is the news
+cr019 | care | third_person | irrelevant |  |  | Arthur, your daughter is on the phone for you. | call for another resident
+cr020 | care | sarcasm_quote | irrelevant |  |  | On the wireless the man said your visitor has arrived, and it turned out to be the murderer. | retelling a radio play
+cr021 | care | implicit | relevant | visitor |  | There's a lady at reception asking for Walter. | someone has come for him
+cr022 | care | hypothetical | ambiguous | visitor |  | There may be a visitor for somebody on this corridor later. | only a possibility and unclear for whom
+cr023 | care | unrelated | irrelevant |  |  | Did you see the final of the dancing last night, Jean? | television question to someone else
+cr024 | care | asr_error | relevant | activity |  | The mini bus outing has been moved to choose day morning. | Tuesday misheard and outing rescheduled
+cr025 | care | multi | irrelevant |  | context=Doris was asking about her hair appointment | It's been moved to Thursday at eleven. | another resident's appointment
+cr026 | care | repeated | repeat | activity | repeat_of=cr018 | Again, there's no seaside outing this Friday. | same news as before
+cr027 | care | implicit | relevant | meal |  | They've run out of the roast, it's cottage pie for everyone now. | menu changed
+cr028 | care | asr_error | irrelevant |  |  | The whether man says rain all weak. | weather and week misheard and small talk
+cr029 | care | attention | relevant | spoken |  | Walter, can you lift your feet so I can get the hoover under? | request addressed by name
+cr030 | care | negation | irrelevant |  |  | Bingo is at three as usual, nothing different this week. | nothing changes
+cr031 | care | third_person | irrelevant |  |  | The staff lunch is at two today because of the training. | concerns staff only
+cr032 | care | multi | relevant | visitor | context=Your grandson rang the office this morning | He says he'll be here at three with the little ones. | with context family is coming to visit
+cr033 | care | incomplete | ambiguous | activity |  | The outing on Thursday is going to be | cut off before the news
+cr034 | care | implicit | relevant | activity |  | The driver wants everyone for the garden centre at the front door by ten. | outing is about to leave
+cr035 | care | unrelated | irrelevant |  |  | I've been on my feet since six and it's only Tuesday. | carer's small talk
+cr036 | care | past | irrelevant |  |  | When my mother was in here, they served dinner at five on the dot. | how it used to be
+cr037 | care | causal | relevant | meal |  | The oven has broken down, so supper will be cold plates at half past five instead of six. | breakdown changes menu and time
+cr038 | care | idiom | irrelevant |  |  | Well, he really made a meal of fixing that tap. | figure of speech
+cr039 | care | implicit | relevant | visitor,spoken | important | Walter, pick up the phone in the hallway, it's your Susan ringing from Canada. | family is on the telephone
+cr040 | care | unrelated | irrelevant |  |  | Someone has left a blue umbrella in the hallway. | lost property remark
+cr041 | care | attention | relevant | spoken |  | Are you warm enough there, Walter? | question addressed by name
+cr042 | care | hypothetical | irrelevant |  |  | I wish my grandchildren lived close enough to drop in. | another person's wish
+cr043 | care | ambiguous | ambiguous | meal |  | I think they said something about lunch being different. | vague hearsay
+cr044 | care | negation | relevant | visitor,spoken |  | Walter, your daughter rang, she can't come today after all. | cancelled visit is the news
+cr045 | care | sarcasm_quote | irrelevant |  |  | Oh lovely, another jigsaw with three pieces missing, just what I wanted. | sarcastic remark
+cr046 | care | implicit | relevant | activity |  | The singer has arrived and is setting up in the lounge, come through when you're ready. | entertainment is starting
+cr047 | care | multi | irrelevant |  | context=I was reading my detective novel last night | A stranger turns up at the door asking for the old man. | plot of a book
+cr048 | care | third_person | irrelevant |  |  | The day centre across the road is taking their people to the zoo. | another place
+cr049 | care | asr_error | relevant | meal |  | Lunch is on the tables now, it's stake pie today. | steak misheard and meal is served
+cr050 | care | unrelated | irrelevant |  |  | My grandson passed his driving test on the fourth go. | someone's family news
+cr051 | care | implicit | relevant | meal |  | The trolley is coming round with soup and sandwiches. | food is being served
+cr052 | care | attention | relevant | spoken |  | Walter love, shall I close the window for you? | question addressed by name
+cr053 | care | multi | relevant | activity | context=The film afternoon was meant to start at two | It won't begin before four now. | with context the activity is delayed
+@profile | wedding | photos | Tell me when the group photos are happening or if they get moved
+@profile | wedding | speech | Let me know when the speeches are about to start or my slot changes
+@profile | wedding | dinner | I want to know when dinner is served or if anything changes for table six where I am sitting
+@profile | wedding | needed | Alert me if someone is looking for me or wants a word with me, people call me Dev
+wd001 | wedding | unrelated | irrelevant |  |  | The drive up took us three hours with the roadworks. | travel chat
+wd002 | wedding | attention | relevant | needed |  | Dev, have you got a minute, I need to ask you something. | someone wants a word
+wd003 | wedding | negation | irrelevant |  |  | The photos are still at four on the lawn, nothing's changed. | nothing changes
+wd004 | wedding | unrelated | irrelevant |  |  | Priya, that colour looks gorgeous on you. | compliment to someone else
+wd005 | wedding | negation | relevant | photos |  | There won't be any group photos before the ceremony after all. | cancellation is the news
+wd006 | wedding | incomplete | ambiguous | photos |  | Could the family please | cut off before the request
+wd007 | wedding | past | irrelevant |  |  | At our wedding the photographer kept us standing in the cold for two hours. | old story
+wd008 | wedding | implicit | relevant | needed |  | Has anyone seen Dev, the bride's mother is asking for him. | someone is looking for him
+wd009 | wedding | third_person | irrelevant |  |  | Maya, the florist is looking for you by the entrance. | someone else is wanted
+wd010 | wedding | obvious | relevant | photos |  | Listen everyone, the group photos are now at half past three, not four. | photo time moved
+wd011 | wedding | idiom | irrelevant |  |  | That dress is picture perfect, honestly. | figure of speech
+wd012 | wedding | unrelated | irrelevant |  |  | These shoes are a size too small and I've got six more hours in them. | small talk
+wd013 | wedding | attention | relevant | needed |  | Dev, can you hold the rings while I fix my tie? | request addressed by name
+wd014 | wedding | hypothetical | ambiguous | speech |  | They might do the speeches before the main course, nobody's sure. | only a possibility
+wd015 | wedding | hypothetical | irrelevant |  |  | Imagine if the cake fell over right in the middle of the speeches. | imagined scenario
+wd016 | wedding | implicit | relevant | photos |  | The photographer wants both families by the fountain before the light goes. | group photos about to happen
+wd017 | wedding | third_person | irrelevant |  |  | My cousin's wedding had the speeches before the meal and it dragged on forever. | another wedding
+wd018 | wedding | causal | relevant | photos |  | It's started to rain, so the group photos are moved inside to the staircase. | rain moves the photos
+wd019 | wedding | unrelated | irrelevant |  |  | Apparently the hotel pool closes at nine. | hotel chat
+wd020 | wedding | sarcasm_quote | irrelevant |  |  | In that comedy the best man gets the names wrong and the dinner ends in a food fight. | describing a film
+wd021 | wedding | multi | relevant | photos | context=The photographer has finished with the bride and groom | Now she wants everybody else in front of the camera. | with context the group photos start now
+wd022 | wedding | ambiguous | ambiguous | photos |  | I heard the photographer is running a bit behind, maybe. | hearsay and unsure
+wd023 | wedding | negation | irrelevant |  |  | No, dinner isn't late, it's half past six like the card says. | nothing changes
+wd024 | wedding | implicit | relevant | dinner |  | The kitchen needs twenty more minutes, so stay out on the lawn for now. | dinner will be later
+wd025 | wedding | repeated | repeat | photos | repeat_of=wd018 | Again, because of the rain the group photos are inside on the staircase. | same news as before
+wd026 | wedding | unrelated | irrelevant |  |  | Uncle Raj has fallen asleep in the corner already. | family gossip
+wd027 | wedding | causal | relevant | dinner |  | Two guests didn't turn up, so table six is being merged with table four. | no-shows change his table
+wd028 | wedding | third_person | irrelevant |  |  | Table two, your vegetarian meals are coming out first. | a different table
+wd029 | wedding | obvious | relevant | dinner |  | Ladies and gentlemen, dinner is served, please take your seats. | dinner announced
+wd030 | wedding | multi | irrelevant |  | context=My sister got married in Spain last summer | They moved the photos to the beach at the last minute. | another wedding in the past
+wd031 | wedding | implicit | relevant | needed |  | Whoever owns the white hatchback, I think it's Dev's, it's blocking the caterers. | he is needed to move his car
+wd032 | wedding | past | irrelevant |  |  | Thirty years ago nobody bothered with a seating plan at all. | how things used to be
+wd033 | wedding | implicit | relevant | dinner |  | Table six, the waiters will bring yours last because of the allergy plates. | change of service for his table
+wd034 | wedding | ambiguous | ambiguous | needed |  | Is anyone sitting here? | unclear who is addressed
+wd035 | wedding | asr_error | relevant | dinner |  | Table sicks, your main course is being brought out now. | six misheard and food arriving at his table
+wd036 | wedding | unrelated | irrelevant |  |  | My phone died right after the ceremony, of course. | small talk
+wd037 | wedding | hypothetical | irrelevant |  |  | I wish they'd skip the photos and go straight to the food. | a wish
+wd038 | wedding | attention | relevant | needed |  | Excuse me, are you Dev, the bride's brother? | someone asks for him directly
+wd039 | wedding | negation | irrelevant |  |  | Dev's speech is still third, same as the running order. | nothing changes
+wd040 | wedding | causal | relevant | speech,needed |  | The best man has lost his notes, so Dev is speaking first. | his slot changes
+wd041 | wedding | idiom | irrelevant |  |  | He was speechless when he saw her walk in. | figure of speech
+wd042 | wedding | implicit | relevant | photos |  | Can all the cousins and siblings line up under the arch, big smiles. | a group photo is being taken
+wd043 | wedding | third_person | irrelevant |  |  | The wedding in the other function room starts their dinner at seven. | another party
+wd044 | wedding | ambiguous | ambiguous | needed |  | Somebody over there is waving at you, I think. | unsure and unclear who is addressed
+wd045 | wedding | negation | relevant | speech |  | The speeches will no longer be between the courses, they're all at the end. | speech timing changed
+wd046 | wedding | sarcasm_quote | irrelevant |  |  | Oh sure, a ten minute speech, that'll definitely be only ten minutes. | sarcastic remark
+wd047 | wedding | obvious | relevant | speech |  | Speeches will start in five minutes, could the speakers come to the top table. | speeches about to start
+wd048 | wedding | multi | irrelevant |  | context=The DJ asked what song to open with | I told him to start in ten minutes with something slow. | about the music
+wd049 | wedding | implicit | relevant | speech,needed |  | Somebody get Dev a microphone, he's on in two minutes. | his turn to speak is next
+wd050 | wedding | unrelated | irrelevant |  |  | It's so warm for October, I didn't even need the shawl. | weather chat
+wd051 | wedding | multi | relevant | dinner | context=Table six was supposed to be by the window | It's been put next to the dance floor instead. | with context his table has moved
+wd052 | wedding | asr_error | relevant | speech,needed | important | Dev, we're are you, they're waiting for your speech. | where misheard and he is wanted for his speech now
+wd053 | wedding | attention | relevant | needed |  | Dev, your auntie wants to know where you put the car keys. | someone wants him
