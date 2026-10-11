@@ -43,6 +43,20 @@ actor ScriptedReasoner: SemanticRelevanceReasoning {
     }
 
     func setFails(_ fails: Bool) { self.fails = fails }
+    func setJudgement(_ text: String, _ judgement: RelevanceJudgement) { judgements[text] = judgement }
+
+    /// Window 6.3: what a sentence that calls a person by name is about, and which were asked.
+    var concerns: [String: NamedConcern] = [:]
+    var failsConcern = false
+    private(set) var concernAsked: [String] = []
+    func setConcerns(_ concerns: [String: NamedConcern]) { self.concerns = concerns }
+    func setFailsConcern(_ fails: Bool) { failsConcern = fails }
+
+    func concern(of utterance: SemanticUtterance) async throws -> NamedConcern? {
+        concernAsked.append(utterance.text)
+        if failsConcern { throw SemanticReasonerError.modelFailure("scripted") }
+        return concerns[utterance.text] ?? .theirs
+    }
 
     nonisolated func availability() async -> SemanticReasonerAvailability { .available }
     nonisolated func prewarm() async {}
@@ -84,11 +98,12 @@ enum Fixture {
         SemanticUtterance(text: text, date: origin.addingTimeInterval(seconds), isLowQuality: lowQuality)
     }
 
-    static func engine(_ reasoner: ScriptedReasoner, goals: [AttentionGoal] = [grades, emergency],
+    static func engine(_ reasoner: ScriptedReasoner, goals: [AttentionGoal] = [grades, emergency], about: String = "",
                        configuration: SemanticAttentionEngine.Configuration = .standard) async -> SemanticAttentionEngine
     {
         let engine = SemanticAttentionEngine(reasoner: reasoner, configuration: configuration)
-        await engine.setGoals(goals)
+        await engine.setGoals(goals, about: about)
+        await engine.listenerIsDescribed()
         return engine
     }
 }

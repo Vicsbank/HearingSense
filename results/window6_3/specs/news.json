@@ -1,0 +1,17 @@
+{
+ "name": "news",
+ "instructions": "A sentence was said near a person. Decide what it does.\n\nnews: it tells that something is new, different, cancelled, moved, required, forbidden, ready, waiting or about to happen; or it asks someone something, asks them to do something, or warns them.\nnoNews: it says that things are as they were, that nothing has changed, that something is not happening after all, or it takes back a rumour (\"still at nine\", \"same place as before\", \"no, it is not closing\").\n\nA \"no longer\", \"not allowed\" or \"cancelled\" that changes what people must do is news.",
+ "prompt": "?Said just before: {context}\nSentence: {sentence}",
+ "fields": [
+  {
+   "name": "does",
+   "values": [
+    "news",
+    "noNews"
+   ]
+  }
+ ],
+ "limit": 16,
+ "schemaInPrompt": true,
+ "prefix": null
+}

@@ -12,6 +12,7 @@
 
 import ConversationUnderstanding
 import Foundation
+import FoundationModels
 import SemanticAttention
 import SemanticEvaluation
 
@@ -63,7 +64,7 @@ case "judge":
 
 case "run":
     guard let split = SemanticDataset.Split(rawValue: option("--set") ?? "dev") else {
-        print("--set dev|heldout|dev2|sealed|dev3|sealed2")
+        print("--set dev|heldout|dev2|sealed|dev3|sealed2|dev4|sealed3")
         exit(2)
     }
     let methods = (option("--methods") ?? "keyword,embedding,model").split(separator: ",").map(String.init)
@@ -77,7 +78,7 @@ case "run":
             dataset.items = dataset.items.filter { wanted.contains($0.id) }
         }
         development = try SemanticDataset.load(.dev)
-        if split == .sealed2 {
+        if split == .sealed2 || split == .sealed3 {
             let (independent, excluded) = try dataset.independent()
             dataset = independent
             print("Excluded \(excluded.count) item(s) whose sentence also occurs in a set used for tuning: "
@@ -116,7 +117,7 @@ case "run":
         case "model":
             // --config window6 | window6_1 | window6_2 (default): reasoner and engine together.
             guard let setup = EngineSetup.named(option("--config"), arguments: arguments, option: option) else {
-                print("--config window6|window6_1|window6_2")
+                print("--config window6|window6_1|window6_2|window6_3")
                 exit(2)
             }
             let reasoner = setup.reasoner
@@ -127,11 +128,13 @@ case "run":
             let configuration: SemanticAttentionEngine.Configuration? = setup.configuration
             let usesTriage = setup.configuration.usesTriage
             name = "Foundation Models, \(setup.name)" + (option("--seed").map { ", order shuffled with seed \($0)" } ?? "")
+                + (option("--conversation").map { ", each sentence with the \($0) said before it" } ?? "")
             let before = residentMegabytes()
             let started = Date()
             outcomes = await SemanticEvaluator.runEngine(dataset, reasoner: reasoner, usesTriage: usesTriage,
                                                          configuration: configuration,
-                                                         seed: option("--seed").flatMap { UInt64($0) }) { done, total in
+                                                         seed: option("--seed").flatMap { UInt64($0) },
+                                                         conversationContext: Int(option("--conversation") ?? "") ?? 0) { done, total in
                 if done % 10 == 0 || done == total { FileHandle.standardError.write(Data("  \(done)/\(total)\n".utf8)) }
             }
             print("  wall time \(Date().timeIntervalSince(started).formatted(.number.precision(.fractionLength(1)))) s; "
@@ -601,7 +604,81 @@ case "probe2":
         exit(1)
     }
 
+case "identity":
+    // Window 6.3: what is read from each profile's own text (one model request for the groups,
+    // one for the goal about being spoken to; the names by rule).
+    //   hs-semantic-eval identity [--set dev4]
+    let reasoner = FoundationModelRelevanceReasoner.current
+    let splits = option("--set").flatMap { SemanticDataset.Split(rawValue: $0) }.map { [$0] }
+        ?? SemanticDataset.Split.allCases.filter { !$0.isSealed }
+    var seen: Set<String> = []
+    if let goalTexts = option("--goals") {
+        // An ad-hoc profile: --goals "first goal|second goal" [--about "..."]
+        let goals = goalTexts.split(separator: "|").map { AttentionGoal(text: String($0)) }
+        let profile = (try? await reasoner.describeListener(about: option("--about") ?? "", goals: goals)) ?? .unknown
+        print("names \(profile.identity.names) groups \(profile.identity.groups) spoken-to goal \(profile.spokenToGoal)")
+        if arguments.contains("--raw") {
+            let own = goals.map(\.text).filter { $0.contains(" I ") || $0.contains("I'm") }
+            let session = LanguageModelSession(model: SystemLanguageModel.default, instructions: FoundationModelRelevanceReasoner.groupsInstructions)
+            do {
+                let raw = try await session.respond(to: own.map { "- " + $0 }.joined(separator: "\n"), generating: GeneratedGroupsProbe.self)
+                print("raw: \(raw.content.groups)")
+            } catch { print("raw failed: \(error)") }
+        }
+        exit(0)
+    }
+    for split in splits {
+        guard let dataset = try? SemanticDataset.load(split) else { continue }
+        for item in dataset.items where seen.insert(item.profile).inserted {
+            let goals = SemanticDataset.goals(for: item.profile)
+            let started = Date()
+            let profile = (try? await reasoner.describeListener(about: SemanticDataset.about(for: item.profile), goals: goals.map(\.goal)))
+                ?? .unknown
+            let key = goals.indices.contains(profile.spokenToGoal - 1) ? goals[profile.spokenToGoal - 1].key : "-"
+            print("\(split.rawValue) \(item.profile): names \(profile.identity.names) groups \(profile.identity.groups) "
+                + "spoken-to goal \(key) (\(Date().timeIntervalSince(started).formatted(.number.precision(.fractionLength(1)))) s)")
+        }
+    }
+
+case "audience":
+    // Window 6.3: the audience cue of every sentence (rules only), by category.
+    //   hs-semantic-eval audience --set dev4 [--list] [--identity <json: profile -> {names, groups}>]
+    guard let split = SemanticDataset.Split(rawValue: option("--set") ?? "dev4"), !split.isSealed,
+          let dataset = try? SemanticDataset.load(split)
+    else { exit(2) }
+    var identities: [String: ListenerIdentity] = [:]
+    if let path = option("--identity"), let data = FileManager.default.contents(atPath: path) {
+        identities = (try? JSONDecoder().decode([String: ListenerIdentity].self, from: data)) ?? [:]
+    }
+    var table: [String: [String: Int]] = [:]
+    let describer = FoundationModelRelevanceReasoner.current
+    for item in dataset.items where identities[item.profile] == nil {
+        identities[item.profile] = (try? await describer.describeListener(
+            about: SemanticDataset.about(for: item.profile), goals: SemanticDataset.goals(for: item.profile).map(\.goal)))?.identity
+        print("\(item.profile): \(identities[item.profile]?.names ?? []) \(identities[item.profile]?.groups ?? [])")
+    }
+    for item in dataset.items {
+        let identity = identities[item.profile] ?? .unknown
+        let cue = AudienceAnalyzer.cue(in: item.text, identity: identity)
+        table[item.category + " " + item.expected.rawValue, default: [:]][cue.kind.rawValue, default: 0] += 1
+        if arguments.contains("--list"), cue.kind != .none {
+            print("\(item.id) \(item.expected.rawValue.prefix(3)) \(item.category) \(cue.kind.rawValue) [\(cue.phrase)] \(item.text.prefix(70))")
+        }
+        if arguments.contains("--cut"), item.expected != .irrelevant || item.category != "incomplete" {
+            // nothing: the cut-off rule is listed below
+        }
+    }
+    for key in table.keys.sorted() {
+        print("  \(key): " + (table[key] ?? [:]).sorted { $0.key < $1.key }.map { "\($0.key) \($0.value)" }.joined(separator: ", "))
+    }
+
 default:
     print("Commands: run, recap, availability, judge, timing, triage, latency, probe, probe-check")
     exit(2)
+}
+
+@Generable
+struct GeneratedGroupsProbe {
+    @Guide(description: "Phrases copied exactly from the text; empty when there are none", .maximumCount(4))
+    var groups: [String]
 }

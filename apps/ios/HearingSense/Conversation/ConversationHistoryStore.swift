@@ -169,4 +169,22 @@ struct AttentionGoalStore {
         guard let url, let data = try? JSONEncoder().encode(goals) else { return }
         try? data.write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
     }
+
+    /// The optional "about me" line (Window 6.3): typed by the user, kept beside the goals on
+    /// this iPhone, never uploaded.
+    private var aboutURL: URL? { url?.deletingLastPathComponent().appendingPathComponent("about.txt") }
+
+    func loadAbout() -> String {
+        guard let aboutURL, let data = try? Data(contentsOf: aboutURL) else { return "" }
+        return String(decoding: data, as: UTF8.self)
+    }
+
+    func saveAbout(_ about: String) {
+        guard let aboutURL else { return }
+        if about.isEmpty {
+            try? FileManager.default.removeItem(at: aboutURL)
+        } else {
+            try? Data(about.utf8).write(to: aboutURL, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+        }
+    }
 }

@@ -156,6 +156,9 @@ public struct SemanticAttentionDecision: Identifiable, Hashable, Sendable {
     /// Answered by a session that had answered for an earlier sentence (only while sentences
     /// were waiting): such an answer can depend on what was said before.
     public var usedContinuedSession = false
+    /// What the sentence itself says about whom it is for, compared with what the listener wrote
+    /// about themselves (Window 6.3). Metadata: the kind only, never the words.
+    public var audience = AudienceCue.Kind.none
 
     public init(id: UUID = UUID(), utteranceID: UUID, date: Date, matchedGoalID: UUID? = nil, verdict: SemanticVerdict,
                 reason: String = "", evidence: String = "", headline: String = "", urgency: SemanticUrgency = .normal,
@@ -215,6 +218,14 @@ public struct RelevanceJudgement: Hashable, Sendable {
     public var timing: ReasonerTiming?
     /// The second look at a relevant sentence, when one was taken.
     public var confirmation: StatementConfirmation?
+    /// Window 6.3. Set by the engine when the sentence names someone it is for, and that is not
+    /// the listener (another group; another person, about their own business) or cannot be
+    /// placed (a person by name while the listener's name is unknown).
+    public var audience: AudienceCue.Kind?
+    /// Window 6.3. The sentence stops before it has said anything (`SemanticText.isCutOff`).
+    public var isCutOff = false
+    /// Window 6.3. The sentence calls the listener by their name, and a goal asks for that.
+    public var isCalledByName = false
 
     public init(goalIndex: Int, verdict: SemanticVerdict, consequence: String = "", evidence: String = "",
                 headline: String = "", urgency: SemanticUrgency = .normal, statementKind: StatementKind = .statement,
@@ -288,6 +299,43 @@ public protocol SemanticRelevanceReasoning: Sendable {
     /// and that this one may repeat (`SemanticRepetition.candidates`; empty when there are
     /// none). The default ignores them.
     func confirm(_ utterance: SemanticUtterance, goal: AttentionGoal, earlier: [String]) async throws -> StatementConfirmation?
+    /// Window 6.3. Reads what the listener wrote once, when it changes: who they say they are
+    /// and which goal is about being spoken to. The default reads what rules can read.
+    func describeListener(about: String, goals: [AttentionGoal]) async throws -> ListenerProfile
+    /// Window 6.3. For a sentence that calls a person by name: is it that person's own business,
+    /// or news for everybody who is there? Nil when the reasoner has no such check (the default).
+    func concern(of utterance: SemanticUtterance) async throws -> NamedConcern?
+}
+
+/// What the listener's own text says about them (Window 6.3). Derived once per change of the
+/// goals or of the "about me" line, never from speech.
+public struct ListenerProfile: Hashable, Sendable, Codable {
+    public var identity: ListenerIdentity
+    /// 1-based index of the goal about being spoken to, called or looked for; 0 when there is none.
+    public var spokenToGoal: Int
+
+    public init(identity: ListenerIdentity = .unknown, spokenToGoal: Int = 0) {
+        self.identity = identity
+        self.spokenToGoal = spokenToGoal
+    }
+
+    public static let unknown = ListenerProfile()
+
+    /// What can be read without a model: the names, the labels of the "about me" line, and
+    /// which goal is about being spoken to.
+    public static func byRule(about: String, goals: [AttentionGoal]) -> ListenerProfile {
+        let names = ListenerIdentity.names(in: ([about] + goals.map(\.text)).joined(separator: ". "))
+        return ListenerProfile(identity: ListenerIdentity(names: names, groups: ListenerIdentity.groups(inAbout: about, names: names)),
+                               spokenToGoal: ListenerIdentity.spokenToGoal(in: goals.map(\.text)))
+    }
+}
+
+/// Whom a sentence that calls a person by name concerns.
+public enum NamedConcern: String, Hashable, Sendable, Codable, CaseIterable {
+    /// That person only: their things, their turn, a question or a request to them.
+    case theirs
+    /// Everybody who is there: a shared room, machine or vehicle, a time or a rule for all, a danger.
+    case everyones
 }
 
 /// What a sentence that was judged relevant turns out to be on a second look.
@@ -308,6 +356,10 @@ extension SemanticRelevanceReasoning {
         return answer == .saidBefore ? .hereAndNow : answer
     }
     public func prewarm(goals: [AttentionGoal]) async { await prewarm() }
+    public func describeListener(about: String, goals: [AttentionGoal]) async throws -> ListenerProfile {
+        .byRule(about: about, goals: goals)
+    }
+    public func concern(of utterance: SemanticUtterance) async throws -> NamedConcern? { nil }
     public func forget() async {}
     public func couldMatter(_ utterance: SemanticUtterance, goals: [AttentionGoal]) async throws -> Bool { true }
 }

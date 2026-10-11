@@ -505,7 +505,9 @@ struct NewestConversationRecordView: View {
 struct AttentionGoalsView: View {
     @Environment(ListeningController.self) private var controller
     @State private var draft = ""
+    @State private var about = ""
     @FocusState private var isAdding: Bool
+    @FocusState private var isEditingAbout: Bool
 
     static let examples = ["Tell me anything that could affect my grades.",
                            "Let me know if somebody mentions a change to my schedule.",
@@ -546,6 +548,30 @@ struct AttentionGoalsView: View {
                 Text("Write them the way you would say them. No keywords are needed: “anything that could affect my grades” also covers a moved exam or a new deadline.")
             }
 
+            Section {
+                TextField("For example: I'm Alex, in group B on the red bus", text: $about, axis: .vertical)
+                    .focused($isEditingAbout)
+                    .submitLabel(.done)
+                    .onSubmit { conversation.setAboutMe(about) }
+                    .onChange(of: isEditingAbout) { _, isEditing in
+                        if !isEditing { conversation.setAboutMe(about) }
+                    }
+                    .accessibilityLabel("About me, optional")
+                if !conversation.listenerSummary.isEmpty {
+                    Text(conversation.listenerSummary)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .accessibilityLabel("Understood. " + conversation.listenerSummary)
+                }
+            } header: {
+                Text("About me (optional)")
+            } footer: {
+                Text("Your name and what is yours where you are: your group, class, team, table, room. "
+                    + "It is only used to tell whether a sentence that names someone means you: "
+                    + "“Group A, you leave at four” stays quiet when you are in group B. "
+                    + "It stays on this iPhone. Leave it empty and nothing is assumed about you.")
+            }
+
             if conversation.goals.isEmpty {
                 Section("Examples") {
                     ForEach(Self.examples, id: \.self) { example in
@@ -579,6 +605,8 @@ struct AttentionGoalsView: View {
         }
         .navigationTitle("Attention goals")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear { about = conversation.aboutMe }
+        .onDisappear { conversation.setAboutMe(about) }
     }
 
     private func add() {

@@ -58,6 +58,9 @@ public struct FoundationModelRelevanceReasoner: SemanticRelevanceReasoning {
     /// The kind is the same either way (223 of 223 development sentences); a sentence that
     /// stops at the kind costs half the writing, one that goes on costs a little more.
     public let asksKindFirstWhenBusy: Bool
+    /// `staged`, Window 6.3: the second look reads a sentence that leans on the one before it
+    /// ("It got moved …", "No, three …") together with that sentence.
+    public let readsLeaningSentencesWithContext: Bool
     private let kept: KeptReasonerSession
     private let sessions: StagedReasonerSessions
 
@@ -65,8 +68,11 @@ public struct FoundationModelRelevanceReasoner: SemanticRelevanceReasoning {
     ///   - sessionTurns: `lean` only. How many utterances one session answers before it is
     ///     replaced. A kept session holds the last few utterances, in memory only.
     ///   - reuse: `staged` only.
-    public init(style: Style = .window6, sessionTurns: Int = 1, reuse: Reuse = .never, asksKindFirstWhenBusy: Bool = false) {
+    public init(style: Style = .window6, sessionTurns: Int = 1, reuse: Reuse = .never, asksKindFirstWhenBusy: Bool = false,
+                readsLeaningSentencesWithContext: Bool = false)
+    {
         self.style = style
+        self.readsLeaningSentencesWithContext = style == .staged && readsLeaningSentencesWithContext
         self.reuse = style == .staged ? reuse : .never
         self.asksKindFirstWhenBusy = style == .staged && asksKindFirstWhenBusy
         kept = KeptReasonerSession(instructions: Self.instructions(for: style), maximumTurns: style == .lean ? sessionTurns : 1)
@@ -79,9 +85,15 @@ public struct FoundationModelRelevanceReasoner: SemanticRelevanceReasoning {
         FoundationModelRelevanceReasoner(style: .lean, sessionTurns: window6_1SessionTurns)
     }
 
-    /// The configuration chosen in Window 6.2. Used by the app.
-    public static var current: FoundationModelRelevanceReasoner {
+    /// The configuration of Window 6.2, for comparisons.
+    public static var window6_2: FoundationModelRelevanceReasoner {
         FoundationModelRelevanceReasoner(style: .staged, reuse: currentReuse, asksKindFirstWhenBusy: currentAsksKindFirstWhenBusy)
+    }
+
+    /// The configuration chosen in Window 6.3. Used by the app.
+    public static var current: FoundationModelRelevanceReasoner {
+        FoundationModelRelevanceReasoner(style: .staged, reuse: currentReuse, asksKindFirstWhenBusy: currentAsksKindFirstWhenBusy,
+                                         readsLeaningSentencesWithContext: true)
     }
 
     /// Measured on the development sets (see the report): with a session reused for up to four
@@ -251,6 +263,31 @@ public struct FoundationModelRelevanceReasoner: SemanticRelevanceReasoning {
     One more possibility, when the request lists what was already said a moment ago:
     saidBefore: the sentence gives the same news as one of those, said again or in other words (a reminder, a \
     repetition). It is not saidBefore when a time, day, place, number or anything else is different or new.
+    """
+
+    // MARK: Window 6.3
+
+    /// Asked once when the goals or the "about me" line change. The answer is only kept where
+    /// every word of it stands in the listener's own text (`ListenerIdentity.verified`).
+    public static let groupsInstructions = """
+    Below is what a person wrote for an app: things they want to be told about, and perhaps a line about \
+    themselves. Somewhere they may say which particular group, team, class, course, room, table, seat, vehicle, \
+    shift, station or voice is their own, as opposed to the other ones of the same kind. Copy each such phrase \
+    from their text, a few words each, without "my" and "the". Copy only words that are in their text. If they \
+    name nothing of that sort, give an empty list.
+    """
+
+    /// For a sentence that calls a person by name. Short on purpose: the model answers a narrow
+    /// question about what was said far better than it compares a name with the listener's
+    /// (measured: 16 of 17 development sentences right; the comparison, none).
+    public static let concernInstructions = """
+    A sentence was said to one person, who is called by name in it. Other people were near and heard it. Decide \
+    what it is about.
+
+    theirs: it concerns that person only: their own things, their turn, their visitor, their booking, their task, \
+    a question or a request to them, a remark about them.
+    everyones: it tells that person something that holds for everybody who is there: a shared room, floor, \
+    building, machine or vehicle, a time or a rule for all, a danger.
     """
 
     /// A much shorter request: could this utterance matter at all? Generous on purpose; a yes
@@ -424,10 +461,17 @@ public struct FoundationModelRelevanceReasoner: SemanticRelevanceReasoning {
             instructions += Self.repetitionInstructions
             prompt += "Already said a moment ago: " + earlier.map(Self.quoted).joined(separator: " ") + "\n"
         }
-        if !utterance.context.isEmpty {
-            prompt += "Said just before, for context only: " + utterance.context.map(Self.quoted).joined(separator: " ") + "\n"
+        if readsLeaningSentencesWithContext, let before = utterance.context.last, SemanticText.leansOnContext(utterance.text) {
+            // "It got moved to Friday" says nothing by itself: what it is depends on the sentence
+            // before it, so the two are read as one. (Told "for context only", the model set the
+            // earlier sentence aside: 6 of 16 such development sentences wrong, 2 when read as one.)
+            prompt += "Sentence: " + Self.quoted(before + " " + utterance.text)
+        } else {
+            if !utterance.context.isEmpty {
+                prompt += "Said just before, for context only: " + utterance.context.map(Self.quoted).joined(separator: " ") + "\n"
+            }
+            prompt += "Sentence: " + Self.quoted(utterance.text)
         }
-        prompt += "Sentence: " + Self.quoted(utterance.text)
         // The system holds one session's text at a time: after this request nothing of the
         // judging session is left. Window 6.1 made its kept session ready again; since Window 6.2
         // the judging session is simply not used again.
@@ -441,6 +485,43 @@ public struct FoundationModelRelevanceReasoner: SemanticRelevanceReasoning {
             let answer = try await respond(session, prompt, GeneratedConfirmation.self, limit: 16, timing: &timing,
                                            includesSchema: true).about.value
             return answer == .saidBefore && earlier.isEmpty ? .hereAndNow : answer
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            throw SemanticReasonerError.modelFailure(String(describing: type(of: error)))
+        }
+    }
+
+    /// The names, the labels of the "about me" line and the goal about being spoken to are
+    /// read by rule. The model is only asked to copy labels out of goals that say something about
+    /// the listener ("…, I sing alto"), and its copies are checked against those goals.
+    public func describeListener(about: String, goals: [AttentionGoal]) async throws -> ListenerProfile {
+        var profile = ListenerProfile.byRule(about: about, goals: goals)
+        let own = goals.map(\.text).filter(ListenerIdentity.speaksOfSelf)
+        guard style == .staged, !own.isEmpty, await availability().isUsable else { return profile }
+        await sessions.discardCurrent()
+        // One goal at a time: a request the system refuses (it reads "danger" in a goal as unsafe
+        // now and then) or that fails leaves the others, and what the rules read, standing.
+        for goal in own {
+            try Task.checkCancellation()
+            let session = LanguageModelSession(model: SystemLanguageModel.default, instructions: Self.groupsInstructions)
+            guard let copied = try? await session.respond(
+                to: Self.quoted(goal), generating: GeneratedGroups.self,
+                options: GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 48)).content.groups else { continue }
+            profile.identity = profile.identity.adding(copied: copied, from: [goal])
+        }
+        return profile
+    }
+
+    public func concern(of utterance: SemanticUtterance) async throws -> NamedConcern? {
+        guard style == .staged else { return nil }
+        guard await availability().isUsable else { throw SemanticReasonerError.unavailable }
+        await sessions.discardCurrent()
+        let session = LanguageModelSession(model: SystemLanguageModel.default, instructions: Self.concernInstructions)
+        do {
+            let answer = try await session.respond(to: "Sentence: " + Self.quoted(utterance.text), generating: GeneratedConcern.self,
+                                                   options: GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 16))
+            return answer.content.about == .everyones ? .everyones : .theirs
         } catch is CancellationError {
             throw CancellationError()
         } catch {
@@ -768,6 +849,22 @@ enum GeneratedUrgency: String {
         case .high: .high
         }
     }
+}
+
+@Generable(description: "The groups a person says they belong to")
+struct GeneratedGroups {
+    @Guide(description: "Phrases copied exactly from the text; empty when there are none", .maximumCount(4))
+    var groups: [String]
+}
+
+@Generable
+struct GeneratedConcern {
+    var about: GeneratedConcernValue
+}
+
+@Generable
+enum GeneratedConcernValue: String {
+    case theirs, everyones
 }
 
 @Generable

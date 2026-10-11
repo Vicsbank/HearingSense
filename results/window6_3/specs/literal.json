@@ -1,0 +1,17 @@
+{
+ "name": "literal",
+ "instructions": "A sentence was said near a person. Decide how it is meant.\n\nplain: the speaker means it as it stands, about something real, now or coming.\nfigure: a figure of speech, an exaggeration, a joke, sarcasm (meaning the opposite), a saying, or words quoted or retold from a film, a book, a show, a game or somebody else's story.",
+ "prompt": "Sentence: {passage}",
+ "fields": [
+  {
+   "name": "meant",
+   "values": [
+    "plain",
+    "figure"
+   ]
+  }
+ ],
+ "limit": 16,
+ "schemaInPrompt": true,
+ "prefix": null
+}

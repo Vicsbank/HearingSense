@@ -144,7 +144,8 @@ public enum SemanticStreamBenchmark {
         let goals = SemanticDataset.goals(for: profile)
         let engine = SemanticAttentionEngine(reasoner: reasoner, scorer: SentenceEmbeddingScorer(),
                                              configuration: configuration, scheduler: scheduler)
-        await engine.setGoals(goals.map(\.goal))
+        await engine.setGoals(goals.map(\.goal), about: SemanticDataset.about(for: profile))
+        await engine.listenerIsDescribed()
         await engine.prewarm()
         try? await Task.sleep(for: .seconds(1))
         let collector = Collector()
@@ -282,7 +283,8 @@ public enum SemanticStreamBenchmark {
         guard let profile = items.first?.profile else { fatalError("no items") }
         let goals = SemanticDataset.goals(for: profile)
         let engine = SemanticAttentionEngine(reasoner: reasoner, configuration: configuration)
-        await engine.setGoals(goals.map(\.goal))
+        await engine.setGoals(goals.map(\.goal), about: SemanticDataset.about(for: profile))
+        await engine.listenerIsDescribed()
         await engine.prewarm()
         try? await Task.sleep(for: .seconds(1))
         let collector = Collector()
@@ -400,7 +402,8 @@ public enum SemanticStreamBenchmark {
         guard let profile = items.first?.profile else { fatalError("no items") }
         let goals = SemanticDataset.goals(for: profile)
         let engine = SemanticAttentionEngine(reasoner: reasoner, configuration: configuration, scheduler: scheduler)
-        await engine.setGoals(goals.map(\.goal))
+        await engine.setGoals(goals.map(\.goal), about: SemanticDataset.about(for: profile))
+        await engine.listenerIsDescribed()
         await engine.prewarm()
         try? await Task.sleep(for: .seconds(1))
         let collector = Collector()

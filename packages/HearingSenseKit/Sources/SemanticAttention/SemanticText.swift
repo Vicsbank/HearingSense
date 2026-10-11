@@ -85,7 +85,14 @@ enum SemanticText {
     }
 
     static let repetitionMarkers = ["one more time", "once more", "once again", "again", "just a reminder", "a reminder",
-                                    "reminder", "as i said", "like i said", "remember", "i repeat", "to repeat"]
+                                    "as a reminder", "reminder", "as i said", "like i said", "as i mentioned", "as mentioned",
+                                    "remember", "don't forget", "do not forget", "i repeat", "to repeat", "in case you missed it"]
+
+    /// The speaker says that this is not news ("Reminder, …", "Don't forget, …", "Again, …").
+    static func hasRepetitionMarker(_ text: String) -> Bool {
+        let lowered = text.lowercased().replacingOccurrences(of: "\u{2019}", with: "'")
+        return repetitionMarkers.contains { lowered.hasPrefix($0) }
+    }
 
     /// The utterance's own words as a headline: all of it when it is short, otherwise its
     /// beginning, but only if nothing that must not be lost (a "not", a number, a day, a time)

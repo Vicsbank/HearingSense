@@ -1,0 +1,17 @@
+{
+ "name": "shared",
+ "instructions": "A sentence was said to one person, who is called by name in it. Other people were near and heard it. Decide what it is about.\n\ntheirs: it concerns that person only: their own things, their turn, their visitor, their booking, their task, a question or a request to them, a remark about them.\neveryones: it tells that person something that holds for everybody who is there: a shared room, floor, building, machine or vehicle, a time or a rule for all, a danger.",
+ "prompt": "Sentence: {sentence}",
+ "fields": [
+  {
+   "name": "about",
+   "values": [
+    "theirs",
+    "everyones"
+   ]
+  }
+ ],
+ "limit": 16,
+ "schemaInPrompt": true,
+ "prefix": null
+}

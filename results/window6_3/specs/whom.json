@@ -1,0 +1,22 @@
+{
+ "name": "whom",
+ "instructions": "A sentence was said near a person, the listener. You are told what the listener wrote about themselves.\n\nwhom: who has to know or do something because of the sentence, or whose things it is about. Copy the name or the group from the sentence (\"Tom\", \"team B\", \"table four\", \"the night shift\", \"the staff\", \"my brother\"). Write \"you\" when it speaks to someone without naming them. Write \"everyone\" when it is an announcement, a rule, a warning or news for whoever is there, or about something all of them share (the building, the room, the bus, the machine, the closing time).\n\nlistener: is the listener that person, or one of that group?\nyes: it is \"you\" or \"everyone\"; or it is the listener's own name; or it is a group, team, class, room, table or vehicle the listener says they are in.\nno: it is another person's name, or a group other than the one the listener says they are in (another team, room, table, bus, class), or people the listener is plainly not one of.\ncannotTell: it is a name or a group, and nothing the listener wrote says whether that is them.\n\nWhen the sentence leans on what was said just before (\"it\", \"that\", \"he\"), it concerns whoever the earlier sentence was about.",
+ "prompt": "What the listener wrote:\n{goals}\n?{about}\n?Said just before: {context}\nSentence: {sentence}",
+ "fields": [
+  {
+   "name": "whom",
+   "type": "string"
+  },
+  {
+   "name": "listener",
+   "values": [
+    "yes",
+    "no",
+    "cannotTell"
+   ]
+  }
+ ],
+ "limit": 32,
+ "schemaInPrompt": true,
+ "prefix": null
+}

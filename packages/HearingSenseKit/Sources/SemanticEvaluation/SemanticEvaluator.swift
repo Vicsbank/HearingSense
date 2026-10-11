@@ -21,15 +21,18 @@ public struct SemanticItemOutcome: Sendable, Codable {
     /// What kind of statement the model saw, and whom it concerns (engine only).
     public var kind: String?
     public var subject: String?
+    /// The audience cue of the sentence, when there is one (Window 6.3; engine only).
+    public var audience: String?
 
     public init(id: String, alerted: Bool, verdict: String?, matchedGoal: String?, stage: String?, corrections: [String],
                 isNovel: Bool, score: Double?, seconds: Double, modelSeconds: Double, outputTokens: Int? = nil,
-                queueSeconds: Double? = nil, kind: String? = nil, subject: String? = nil)
+                queueSeconds: Double? = nil, kind: String? = nil, subject: String? = nil, audience: String? = nil)
     {
         self.outputTokens = outputTokens
         self.queueSeconds = queueSeconds
         self.kind = kind
         self.subject = subject
+        self.audience = audience
         self.id = id
         self.alerted = alerted
         self.verdict = verdict
@@ -147,6 +150,7 @@ public enum SemanticEvaluator {
     public static func runEngine(_ dataset: SemanticDataset, reasoner: any SemanticRelevanceReasoning,
                                  usesTriage: Bool = true, verifier: EvidenceVerifier = .standard,
                                  configuration base: SemanticAttentionEngine.Configuration? = nil, seed: UInt64? = nil,
+                                 conversationContext: Int = 0,
                                  progress: (@Sendable (Int, Int) -> Void)? = nil) async -> [SemanticItemOutcome]
     {
         // With a seed the items of each profile are shuffled first (Window 6.2: a decision must
@@ -155,6 +159,7 @@ public enum SemanticEvaluator {
         dataset.items = SemanticProbe.ordered(dataset, seed: seed)
         var outcomes: [SemanticItemOutcome] = []
         var engines: [String: SemanticAttentionEngine] = [:]
+        var said: [String: [String]] = [:]
         let origin = Date(timeIntervalSince1970: 1_780_000_000)
         // A repetition is said one minute after the statement it repeats (the file lists the
         // repetitions at the end); the items are then evaluated in the order of their times.
@@ -180,11 +185,20 @@ public enum SemanticEvaluator {
                 if base == nil { configuration.usesTriage = usesTriage }
                 engine = SemanticAttentionEngine(reasoner: reasoner, scorer: SentenceEmbeddingScorer(), verifier: verifier,
                                                  configuration: configuration)
-                await engine.setGoals(goals.map(\.goal))
+                await engine.setGoals(goals.map(\.goal), about: SemanticDataset.about(for: item.profile))
+                await engine.listenerIsDescribed()
                 engines[item.profile] = engine
             }
             let date = dates[item.id] ?? origin
-            let utterance = SemanticUtterance(text: item.text, context: item.context, date: date)
+            // As in the app (Window 6.3): every sentence comes with the sentences said before it,
+            // here the ones before it in the file, whatever they were about. A sentence written
+            // with a context of its own has that one directly before it.
+            var context = item.context
+            if conversationContext > 0 {
+                context = Array((said[item.profile] ?? []).suffix(conversationContext)) + item.context
+                said[item.profile, default: []].append(item.text)
+            }
+            let utterance = SemanticUtterance(text: item.text, context: context, date: date)
             let started = Date()
             let decision = await engine.evaluate(utterance)
             let key = decision.matchedGoalID.flatMap { id in goals.first { $0.goal.id == id }?.key }
@@ -193,7 +207,7 @@ public enum SemanticEvaluator {
                 stage: decision.stage.rawValue, corrections: decision.corrections, isNovel: decision.isNovel, score: nil,
                 seconds: Date().timeIntervalSince(started), modelSeconds: decision.modelTime,
                 outputTokens: decision.outputTokens, kind: decision.statementKind.rawValue,
-                subject: decision.subject.rawValue))
+                subject: decision.subject.rawValue, audience: decision.audience == .none ? nil : decision.audience.rawValue))
             progress?(index + 1, dataset.items.count)
         }
         return outcomes

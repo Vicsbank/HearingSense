@@ -132,6 +132,7 @@ public enum SemanticSpecProbe {
                 "about": SemanticDataset.about(for: item.profile),
                 "context": item.context.map(quoted).joined(separator: " "),
                 "sentence": quoted(item.text),
+                "passage": quoted((item.context + [item.text]).joined(separator: " ")),
                 "earlier": SemanticRepetition.candidates(for: item.text, among: asked[item.profile] ?? []).map(quoted)
                     .joined(separator: " "),
             ]

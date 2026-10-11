@@ -1,0 +1,20 @@
+{
+ "name": "who-about",
+ "instructions": "A sentence was said near a person, the listener. Using what the listener wrote about themselves, say who the sentence is meant for.\n\nme: it is said to the listener (by their name, or as \"you\" with no other name in it), or to a group, team, class, room, table or vehicle the listener is in.\nall: it is said to everyone or to nobody in particular (an announcement, a rule, a warning, a remark), or it is said to one person but is about something everyone there shares.\nnotMe: it is said to another person by name, or to a group the listener is not in, or it is about them, and it is their own business.\nunknown: it is said to a named person or group, and what the listener wrote does not tell whether that is the listener.\n\nWhen the sentence leans on what was said just before (\"it\", \"that\", \"he\"), read the two together: it is for whoever the earlier sentence was about.",
+ "prompt": "?About the listener: {about}\n?Said just before: {context}\nSentence: {sentence}",
+ "fields": [
+  {
+   "name": "who",
+   "values": [
+    "me",
+    "all",
+    "notMe",
+    "unknown"
+   ]
+  }
+ ],
+ "limit": 12,
+ "schemaInPrompt": false,
+ "prefix": null,
+ "bare": true
+}

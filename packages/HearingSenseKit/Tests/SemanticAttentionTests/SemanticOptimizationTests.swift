@@ -157,7 +157,8 @@ import Testing
 
     @Test func aRepetitionInOtherWordsNeedsSharedWordsAndTheSecondLook() async {
         let first = "The elevator will be out of service all day Wednesday for inspection."
-        let again = "Again, no elevator on Wednesday, it's being inspected all day."
+        // No "again" or "reminder" in front (Window 6.3: with one, the speaker's word is enough).
+        let again = "So no elevator on Wednesday, it's being inspected all day."
         let reasoner = ScriptedReasoner([first: Fixture.relevant(headline: ""), again: Fixture.relevant(headline: "")])
         await reasoner.setConfirmations([again: .saidBefore])
         let engine = await Fixture.engine(reasoner)

@@ -48,6 +48,11 @@ public actor SemanticAttentionEngine {
         /// Word overlap (Jaccard, by stem) from which two statements count as the same.
         public var noveltySimilarity = 0.6
         public var maximumContextUtterances = 3
+        /// Window 6.3. Give the model the sentence before only when the sentence cannot be
+        /// understood without it ("It got moved to Friday", "No, three"); then that one sentence.
+        /// A sentence that stands by itself is judged by itself: what happened to be said before
+        /// it does not change its answer. (Measured: see the Window 6.3 report, "context".)
+        public var givesContextOnlyToLeaningSentences = true
         /// Ask the model a one-word question first and run the full judgement only on a yes.
         /// Off since Window 6.1: the full judgement became fast enough that the extra request
         /// costs more than it saves (measured; see the optimization report).
@@ -80,16 +85,41 @@ public actor SemanticAttentionEngine {
         public var behindAfter: TimeInterval = 3
         /// No sentence for this long is a pause in the speech.
         public var pauseInterval: TimeInterval = 1.5
+        /// Window 6.3. Compare what a sentence says about whom it is for with what the listener
+        /// wrote about themselves (`AudienceAnalyzer`): a sentence for another group, or for
+        /// another person about that person's own business, is not alerted.
+        public var usesAudienceCues = true
+        /// Window 6.3. A sentence that calls the listener by name alerts under the goal about
+        /// being spoken to, whatever the model made of it.
+        public var alertsWhenCalledByName = true
+        /// Window 6.3. A sentence that stops before it has said anything is not alerted.
+        public var holdsBackCutOffSentences = true
+        /// Window 6.3. Two things a speaker says in so many words are taken at their word: that
+        /// nothing is different ("the same as before", "as usual"), and that this is a reminder
+        /// of something the listener was already alerted to ("Don't forget, …").
+        public var takesSpeakersAtTheirWord = true
 
         public init() {}
 
         public static let standard = Configuration()
 
+        /// How the engine behaved in Window 6.2, for comparisons: nothing is known about the
+        /// listener, and nothing is done about cut-off sentences.
+        public static var window6_2: Configuration {
+            var configuration = Configuration()
+            configuration.usesAudienceCues = false
+            configuration.alertsWhenCalledByName = false
+            configuration.holdsBackCutOffSentences = false
+            configuration.takesSpeakersAtTheirWord = false
+            configuration.givesContextOnlyToLeaningSentences = false
+            return configuration
+        }
+
         /// How the engine behaved in Window 6, for comparisons: a first pass before every
         /// judgement, four waiting utterances with the oldest discarded, nothing judged
         /// together, no second look.
         public static var window6: Configuration {
-            var configuration = Configuration()
+            var configuration = Configuration.window6_2
             configuration.queueCapacity = 4
             configuration.maximumWait = 12
             configuration.usesTriage = true
@@ -104,7 +134,7 @@ public actor SemanticAttentionEngine {
         /// How the engine behaved in Window 6.1, for comparisons: twelve waiting sentences
         /// served oldest first, given up after twenty seconds.
         public static var window6_1: Configuration {
-            var configuration = Configuration()
+            var configuration = Configuration.window6_2
             configuration.queueCapacity = 12
             configuration.maximumWait = 20
             configuration.confirmsWarnings = false
@@ -174,6 +204,15 @@ public actor SemanticAttentionEngine {
         /// Decisions made later than `deadline` after submission.
         public var deadlineMisses = 0
         public var outputTokens = 0
+        /// Window 6.3: sentences that named another group; requests about a sentence that called
+        /// a person by name, and how many of them said it was that person's own business;
+        /// alerts because the listener's name was called; sentences held back as cut off.
+        public var otherGroupSentences = 0
+        public var concernCalls = 0
+        public var concernDemoted = 0
+        public var calledByName = 0
+        public var cutOff = 0
+        public var markedReminders = 0
         /// Seconds from submission to the start of evaluation, and to the decision (newest last).
         public var queueWaits: [TimeInterval] = []
         public var latencies: [TimeInterval] = []
@@ -211,6 +250,10 @@ public actor SemanticAttentionEngine {
     public nonisolated let scheduler: ModelInferenceScheduler
 
     private var goals: [AttentionGoal] = []
+    /// What the listener wrote about themselves, and what was read from it and from the goals.
+    private var about = ""
+    public private(set) var listener = ListenerProfile.unknown
+    private var listenerTask: Task<Void, Never>?
     private var isEnabled = true
     private var queue: [Entry] = []
     /// The stable partial transcript waiting to be evaluated ahead of its final form.
@@ -244,6 +287,7 @@ public actor SemanticAttentionEngine {
         self.gate = gate
         var verifier = verifier
         verifier.requiresSecondLookForUrgency = configuration.confirmsRelevant && configuration.confirmsWarnings
+        verifier.checksNoChangeMarkers = configuration.takesSpeakersAtTheirWord
         self.verifier = verifier
         self.configuration = configuration
         self.scheduler = scheduler
@@ -252,11 +296,39 @@ public actor SemanticAttentionEngine {
 
     // MARK: - Control
 
-    public func setGoals(_ goals: [AttentionGoal]) {
+    /// - Parameter about: the listener's optional line about themselves ("I'm Nora, on the red
+    ///   bus with group B"). Typed by them, kept on the device, used only to tell whether a
+    ///   sentence that names someone means them.
+    public func setGoals(_ goals: [AttentionGoal], about: String = "") {
         let active = goals.filter { $0.isEnabled && !$0.text.isEmpty }
-        guard active != self.goals else { return }
+        let about = about.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard active != self.goals || about != self.about else { return }
         self.goals = active
+        self.about = about
         cache.removeAll()
+        // What rules can read is there at once; what the model copies out of the goals follows.
+        listener = configuration.usesAudienceCues ? .byRule(about: about, goals: active) : .unknown
+        listenerTask?.cancel()
+        listenerTask = nil
+        // The model is only needed for a goal that says something about the listener in passing.
+        guard configuration.usesAudienceCues, active.contains(where: { ListenerIdentity.speaksOfSelf($0.text) }) else { return }
+        listenerTask = Task { [weak self, reasoner, scheduler, timeout = configuration.timeout] in
+            let profile = try? await scheduler.run(.background, timeout: timeout * 2) {
+                try await reasoner.describeListener(about: about, goals: active)
+            }
+            guard let profile, !Task.isCancelled else { return }
+            await self?.setListener(profile, about: about, goals: active)
+        }
+    }
+
+    private func setListener(_ profile: ListenerProfile, about: String, goals: [AttentionGoal]) {
+        guard about == self.about, goals == self.goals else { return }
+        listener = profile
+    }
+
+    /// Waits until what the listener wrote has been read (the evaluation tool and the tests).
+    public func listenerIsDescribed() async {
+        await listenerTask?.value
     }
 
     public func setEnabled(_ isEnabled: Bool) {
@@ -370,7 +442,11 @@ public actor SemanticAttentionEngine {
     private func prepared(_ utterance: SemanticUtterance) -> SemanticUtterance {
         var utterance = utterance
         utterance.text = gate.clipped(utterance.text)
-        utterance.context = Array(utterance.context.suffix(configuration.maximumContextUtterances))
+        if configuration.givesContextOnlyToLeaningSentences {
+            utterance.context = SemanticText.leansOnContext(utterance.text) ? Array(utterance.context.suffix(1)) : []
+        } else {
+            utterance.context = Array(utterance.context.suffix(configuration.maximumContextUtterances))
+        }
         return utterance
     }
 
@@ -574,9 +650,62 @@ public actor SemanticAttentionEngine {
             if judgement.timing?.continuedSession == true { statistics.continuedSessions += 1 }
             store(judgement, key: key, goals: selected, date: utterance.date, isSpeculative: false)
         }
-        let checked = await confirmed(judgement, utterance: utterance, goals: selected, key: key)
+        let placed = await placed(judgement, utterance: utterance, goals: selected, key: key)
+        let checked = await confirmed(placed, utterance: utterance, goals: selected, key: key)
         if stage == .model { modelTime = checked.timing?.total ?? modelTime }
         return .judged(checked, stage, modelTime)
+    }
+
+    /// Window 6.3: whom the sentence is for, as far as its own words and the listener's own text
+    /// can tell. Rules find the cue; the model is asked one narrow question, and only when the
+    /// sentence calls a person by name who is not, or may not be, the listener.
+    private func placed(_ judgement: RelevanceJudgement, utterance: SemanticUtterance, goals: [AttentionGoal],
+                        key: String) async -> RelevanceJudgement
+    {
+        guard judgement.audience == nil, !judgement.isCutOff, !judgement.isCalledByName else { return judgement }
+        var judgement = judgement
+        let wouldAlert = verifier.verify(judgement, utterance: utterance, goals: goals).verdict == .relevant
+        let cue = configuration.usesAudienceCues ? AudienceAnalyzer.cue(in: utterance.text, identity: listener.identity) : .none
+        // A sentence that looks like a warning is never held back by any of this.
+        let looksUrgent = gate.isLikelyUrgent(utterance.text)
+        if !wouldAlert {
+            // The listener's own name, and a goal that asks to be told when someone speaks to them.
+            guard cue.kind == .listenerNamed, configuration.alertsWhenCalledByName,
+                  self.goals.indices.contains(listener.spokenToGoal - 1),
+                  let index = goals.firstIndex(where: { $0.id == self.goals[listener.spokenToGoal - 1].id })
+            else { return judgement }
+            let timing = judgement.timing
+            judgement = RelevanceJudgement(goalIndex: index + 1, verdict: .relevant, statementKind: .question)
+            judgement.timing = timing
+            judgement.isCalledByName = true
+            statistics.calledByName += 1
+        } else if configuration.holdsBackCutOffSentences, !looksUrgent, SemanticText.isCutOff(utterance.text) {
+            judgement.isCutOff = true
+            statistics.cutOff += 1
+        } else if !looksUrgent {
+            switch cue.kind {
+            case .otherGroup:
+                judgement.audience = .otherGroup
+                statistics.otherGroupSentences += 1
+            case .otherPerson, .unknownPerson:
+                let started = Date()
+                // No answer: it was said to someone else, and nothing says it is for everyone.
+                let concern = try? await reasoner.concern(of: utterance)
+                statistics.concernCalls += 1
+                statistics.totalModelTime += Date().timeIntervalSince(started)
+                judgement.timing?.total += Date().timeIntervalSince(started)
+                if concern != .everyones {
+                    judgement.audience = cue.kind
+                    statistics.concernDemoted += 1
+                }
+            case .none, .listenerNamed, .listenerGroup:
+                break
+            }
+        } else {
+            return judgement
+        }
+        if cache[key] != nil { cache[key]?.judgement = judgement }
+        return judgement
     }
 
     /// The second look, where one is due. Its answer is kept with the judgement, so a cached
@@ -584,7 +713,7 @@ public actor SemanticAttentionEngine {
     private func confirmed(_ judgement: RelevanceJudgement, utterance: SemanticUtterance, goals: [AttentionGoal],
                            key: String) async -> RelevanceJudgement
     {
-        guard configuration.confirmsRelevant, judgement.confirmation == nil,
+        guard configuration.confirmsRelevant, judgement.confirmation == nil, !judgement.isCalledByName,
               configuration.confirmsWarnings || judgement.urgency != .high,
               verifier.verify(judgement, utterance: utterance, goals: goals).verdict == .relevant,
               goals.indices.contains(judgement.goalIndex - 1)
@@ -596,6 +725,14 @@ public actor SemanticAttentionEngine {
             ? SemanticRepetition.candidates(for: utterance.text, among: accepted.filter {
                 utterance.date.timeIntervalSince($0.date) <= configuration.noveltyWindow
             }.map(\.text)) : []
+        if configuration.takesSpeakersAtTheirWord, !earlier.isEmpty, SemanticText.hasRepetitionMarker(utterance.text) {
+            // "Reminder, …" of something that shares its words with an alert of a moment ago:
+            // the speaker says it is not news, and no model is needed to agree.
+            judgement.confirmation = .saidBefore
+            statistics.markedReminders += 1
+            if cache[key] != nil { cache[key]?.judgement = judgement }
+            return judgement
+        }
         // A failed second look leaves the first judgement as it is (and a warning not urgent).
         guard var answer = try? await reasoner.confirm(utterance, goal: goal, earlier: earlier) else { return judgement }
         // Nothing was listed that it could repeat.
@@ -616,6 +753,8 @@ public actor SemanticAttentionEngine {
         if decision.corrections.contains("second_look") { statistics.confirmDemoted += 1 }
         decision.hadSecondLook = judgement.confirmation != nil && stage == .model
         decision.usedContinuedSession = judgement.timing?.continuedSession == true && stage == .model
+        decision.audience = configuration.usesAudienceCues
+            ? AudienceAnalyzer.cue(in: utterance.text, identity: listener.identity).kind : .none
         decision.modelTime = modelTime
         decision.outputTokens = stage == .model ? judgement.timing?.outputTokens ?? 0 : 0
         if !decision.corrections.isEmpty { statistics.corrected += 1 }

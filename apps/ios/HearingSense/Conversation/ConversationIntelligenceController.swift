@@ -55,6 +55,11 @@ final class ConversationIntelligenceController {
     private(set) var keepsRecentSpeech: Bool
     private(set) var lookBack: TimeInterval
     private(set) var goals: [AttentionGoal]
+    /// The user's optional line about themselves (Window 6.3), and what was read from it and
+    /// from the goals: the names and group labels a sentence can be compared with.
+    private(set) var aboutMe: String
+    private(set) var listener = ListenerProfile.unknown
+    static let maximumAboutLength = 160
 
     // Semantic attention
     private(set) var matches: [GoalMatch] = []
@@ -131,6 +136,8 @@ final class ConversationIntelligenceController {
         lookBack = seconds
         let loadedGoals = goalStore.load()
         goals = loadedGoals
+        let loadedAbout = goalStore.loadAbout()
+        aboutMe = loadedAbout
         let policy = ConversationBufferPolicy(lookBack: seconds)
         buffer = RollingConversationBuffer(policy: policy)
         recapEngine = ConversationRecapEngine(summarizer: summarizer, bufferPolicy: policy)
@@ -162,8 +169,10 @@ final class ConversationIntelligenceController {
             }
         }
         Task {
-            await engine.setGoals(loadedGoals)
+            await engine.setGoals(loadedGoals, about: loadedAbout)
             await engine.setEnabled(isEnabled)
+            await engine.listenerIsDescribed()
+            self.listener = await engine.listener
         }
         Task { [weak self] in
             let isUsable = await reasoner.availability().isUsable
@@ -380,9 +389,30 @@ final class ConversationIntelligenceController {
         goalsChanged()
     }
 
+    /// The "about me" line: at most a sentence or two, the user's own words, kept on this iPhone.
+    func setAboutMe(_ text: String) {
+        let normalized = String(text.trimmingCharacters(in: .whitespacesAndNewlines).prefix(Self.maximumAboutLength))
+        guard normalized != aboutMe else { return }
+        aboutMe = normalized
+        goalStore.saveAbout(normalized)
+        goalsChanged()
+    }
+
+    /// What the app understood of the user's own words, for them to check. Empty when nothing.
+    var listenerSummary: String {
+        var parts: [String] = []
+        if !listener.identity.names.isEmpty { parts.append("Name: " + listener.identity.names.joined(separator: ", ")) }
+        if !listener.identity.groups.isEmpty { parts.append("Yours: " + listener.identity.groups.joined(separator: ", ")) }
+        return parts.joined(separator: " · ")
+    }
+
     private func goalsChanged() {
         goalStore.save(goals)
-        Task { [semanticEngine, goals] in await semanticEngine.setGoals(goals) }
+        Task { [semanticEngine, goals, aboutMe] in
+            await semanticEngine.setGoals(goals, about: aboutMe)
+            await semanticEngine.listenerIsDescribed()
+            self.listener = await semanticEngine.listener
+        }
         // The number only: a goal's wording is the user's and does not belong in a log.
         log(.recognition, "Attention goals changed: \(goals.count(where: \.isEnabled)) of \(goals.count) enabled")
     }
@@ -685,9 +715,11 @@ extension ConversationIntelligenceController {
         transcriptionProvider = { true }
         onSignal = onGoalMatch
         let goals = goals
-        Task { [semanticEngine] in
-            await semanticEngine.setGoals(goals)
+        Task { [semanticEngine, aboutMe] in
+            await semanticEngine.setGoals(goals, about: aboutMe)
             await semanticEngine.setEnabled(true)
+            await semanticEngine.listenerIsDescribed()
+            self.listener = await semanticEngine.listener
         }
         sessionWillStart(isTranscriptionOn: true)
         Task {

@@ -14,6 +14,9 @@ public struct EvidenceVerifier: Hashable, Sendable {
     /// only if the second look, which does not know the first answer, calls it a real statement
     /// about here and now. Set by the engine from its configuration.
     public var requiresSecondLookForUrgency = false
+    /// Window 6.3: a statement that says in so many words that nothing is different is no news.
+    /// Set by the engine from its configuration.
+    public var checksNoChangeMarkers = false
 
     public init(minimumEvidenceCoverage: Double = 0.6, minimumHeadlineCoverage: Double = 0.6, maximumHeadlineWords: Int = 8,
                 maximumExtractiveWords: Int = 12)
@@ -28,6 +31,9 @@ public struct EvidenceVerifier: Hashable, Sendable {
 
     /// Why a decision was made, in fixed words plus the user's own goal: no model text.
     static func reason(for decision: SemanticAttentionDecision, goal: AttentionGoal) -> String {
+        if decision.corrections.contains("audience_unknown") { return "Said to someone by name — your goal: " + goal.text }
+        if decision.corrections.contains("cut_off") { return "The sentence was cut off — your goal: " + goal.text }
+        if decision.corrections.contains("called_by_name") { return "Someone said your name — your goal: " + goal.text }
         let what = switch decision.statementKind {
         case .question: "Someone may be speaking to you or asking for something"
         case .hypothetical: "Said as a possibility, not as settled"
@@ -35,7 +41,7 @@ public struct EvidenceVerifier: Hashable, Sendable {
         case .noChange: "Said that nothing changes"
         case .unclear: "Hard to tell what was meant"
         case .statement:
-            decision.subject == .someoneElse ? "Seems to be about someone else"
+            decision.subject == .someoneElse ? "Seems to be for someone else"
                 : decision.urgency == .high ? "Possible warning or something to act on now" : "Something may be different or needed"
         }
         return what + " — your goal: " + goal.text
@@ -44,6 +50,26 @@ public struct EvidenceVerifier: Hashable, Sendable {
     /// Phrases that mark a statement as imagined, whatever the model said.
     static let hypotheticalMarkers = ["what if", "i wish", "imagine if", "wouldn't it be", "hypothetically",
                                       "i dreamed", "i dreamt", "let's pretend", "suppose they"]
+
+    /// Ways of saying that nothing is different, whatever the model said (Window 6.3). Common
+    /// expressions only; a sentence that negates one ("not the same as") is left to the model.
+    static let noChangeMarkers = ["the same as", "same as before", "same as usual", "same as always", "same as last", "as usual",
+                                  "as always", "as before", "as planned", "as scheduled", "on schedule", "hasn't changed",
+                                  "haven't changed", "has not changed", "have not changed", "no change", "no changes",
+                                  "nothing has changed", "nothing's changed", "nothing changes", "nothing is different",
+                                  "nothing's different", "unchanged", "stays the same", "stay the same", "remains the same",
+                                  "just a rumor", "just a rumour", "only a rumor", "only a rumour"]
+
+    /// Whether the statement says in so many words that nothing is different.
+    static func saysNothingChanges(_ text: String) -> Bool {
+        let lowered = " " + SemanticText.words(in: text).joined(separator: " ") + " "
+        return noChangeMarkers.contains { marker in
+            guard let range = lowered.range(of: " " + marker + " ") else { return false }
+            // "not the same as", "isn't as usual": the opposite.
+            let before = lowered[..<range.lowerBound].split(separator: " ").suffix(2)
+            return !before.contains { $0 == "not" || $0 == "no" || $0 == "never" || $0.hasSuffix("n't") }
+        }
+    }
 
     public func verify(_ judgement: RelevanceJudgement, utterance: SemanticUtterance, goals: [AttentionGoal],
                        stage: SemanticStage = .model) -> SemanticAttentionDecision
@@ -106,6 +132,13 @@ public struct EvidenceVerifier: Hashable, Sendable {
                 corrections.append("hypothetical_marker")
             }
         }
+        if decision.verdict == .relevant, checksNoChangeMarkers, decision.urgency != .high || requiresSecondLookForUrgency,
+           Self.saysNothingChanges(source)
+        {
+            decision.verdict = .irrelevant
+            decision.statementKind = .noChange
+            corrections.append("no_change_marker")
+        }
 
         // The second look says it is not a statement about here and now.
         if decision.verdict == .relevant, let confirmation = judgement.confirmation, confirmation != .hereAndNow {
@@ -135,6 +168,36 @@ public struct EvidenceVerifier: Hashable, Sendable {
             if decision.verdict == .relevant { corrections.append("urgency_unconfirmed") }
         }
 
+        // Window 6.3. The sentence stops before it has said what happens: nothing to act on yet.
+        if decision.verdict == .relevant, judgement.isCutOff {
+            decision.verdict = .uncertain
+            decision.statementKind = .unclear
+            corrections.append("cut_off")
+        }
+        // Window 6.3. The sentence itself names whom it is for, and what the listener wrote about
+        // themselves says that is someone else, or does not say.
+        var audienceUnknown = false
+        if decision.verdict == .relevant, let audience = judgement.audience {
+            switch audience {
+            case .otherGroup:
+                decision.verdict = .uncertain
+                decision.subject = .someoneElse
+                corrections.append("another_group")
+            case .otherPerson:
+                decision.verdict = .uncertain
+                decision.subject = .someoneElse
+                corrections.append("said_to_someone_else")
+            case .unknownPerson:
+                decision.verdict = .uncertain
+                decision.subject = .unclear
+                audienceUnknown = true
+                corrections.append("audience_unknown")
+            case .none, .listenerNamed, .listenerGroup:
+                break
+            }
+        }
+        if judgement.isCalledByName, decision.verdict == .relevant { corrections.append("called_by_name") }
+
         // About someone else: worth keeping in the list at most.
         if decision.verdict == .relevant, decision.subject == .someoneElse {
             decision.verdict = .uncertain
@@ -144,7 +207,7 @@ public struct EvidenceVerifier: Hashable, Sendable {
             decision.verdict = .uncertain
             corrections.append("low_recognition_quality")
         }
-        decision.isPersonalRelevanceUncertain = decision.subject != .listenerOrGroup || utterance.isLowQuality
+        decision.isPersonalRelevanceUncertain = decision.subject != .listenerOrGroup || utterance.isLowQuality || audienceUnknown
 
         // The reason is the model's own sentence and is shown in the app: it may not name a
         // number, day or time that was not said ("moved to Friday" for an utterance about Wednesday).
@@ -179,6 +242,7 @@ public struct EvidenceVerifier: Hashable, Sendable {
             decision.headline = SemanticText.extractiveHeadline(from: source, maximumWords: maximumExtractiveWords)
             if decision.headline.isEmpty { corrections.append("headline_not_shortened") }
         }
+        decision.corrections = corrections
         if judgement.consequence.isEmpty, let goalID = decision.matchedGoalID,
            let goal = goals.first(where: { $0.id == goalID })
         {
