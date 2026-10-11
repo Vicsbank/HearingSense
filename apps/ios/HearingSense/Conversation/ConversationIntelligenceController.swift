@@ -683,7 +683,10 @@ final class ConversationIntelligenceController {
 extension ConversationIntelligenceController {
     private static let demoGoals = ["Tell me anything that could affect my grades.",
                                     "Let me know if somebody mentions a change to my schedule.",
+                                    "Notify me if someone is talking to me.",
                                     "Warn me about clear emergency instructions nearby."]
+    /// Window 6.3: who the listener of the demo says they are.
+    private static let demoAbout = "I'm Alex, in study group B."
 
     /// Synthetic sentences, written for this project. Not a real conversation.
     private static let demoFirstPart = [
@@ -700,6 +703,9 @@ extension ConversationIntelligenceController {
         "One more thing, the report is due next Wednesday, not Monday.",
         "And the teacher said it has to be at least six pages.",
         "Fine, then let's split it, three pages each.",
+        // Window 6.3: one sentence for another group, one that calls the listener by name.
+        "Group A, your presentation moves to nine tomorrow.",
+        "Alex, can you bring the charger tomorrow?",
     ]
 
     /// Plays a scripted conversation through the same path as transcribed speech: the buffer,
@@ -712,6 +718,7 @@ extension ConversationIntelligenceController {
         isSemanticAttentionEnabled = true
         keepsRecentSpeech = true
         if goals.isEmpty { goals = Self.demoGoals.map { AttentionGoal(text: $0) } }
+        if aboutMe.isEmpty { aboutMe = Self.demoAbout }
         transcriptionProvider = { true }
         onSignal = onGoalMatch
         let goals = goals

@@ -693,6 +693,30 @@ case "prior":
             + "(\(relevant.count) relevant, \(irrelevant.count) irrelevant), \(perSentence.formatted(.number.precision(.fractionLength(1)))) ms per sentence")
     }
 
+case "decide":
+    // Window 6.3: the whole engine as the app uses it, on sentences given on the command line.
+    //   hs-semantic-eval decide --goals "first goal|second goal" [--about "..."] "<sentence>" ["<sentence>" ...]
+    guard let goalTexts = option("--goals") else {
+        print("decide --goals \"a|b\" [--about \"...\"] \"<sentence>\" ...")
+        exit(2)
+    }
+    let goals = goalTexts.split(separator: "|").map { AttentionGoal(text: String($0)) }
+    let engine = SemanticAttentionEngine(reasoner: FoundationModelRelevanceReasoner.current, scorer: SentenceEmbeddingScorer())
+    await engine.setGoals(goals, about: option("--about") ?? "")
+    await engine.listenerIsDescribed()
+    let listener = await engine.listener
+    print("listener: names \(listener.identity.names) groups \(listener.identity.groups) spoken-to goal \(listener.spokenToGoal)")
+    var previous: [String] = []
+    let skipped: Set<String> = [goalTexts, option("--about") ?? ""]
+    for (index, sentence) in arguments.dropFirst().enumerated() where !sentence.hasPrefix("--") && !skipped.contains(sentence) {
+        let decision = await engine.evaluate(SemanticUtterance(text: sentence, context: previous,
+                                                               date: Date().addingTimeInterval(Double(index) * 20)))
+        previous.append(sentence)
+        let goal = decision.matchedGoalID.flatMap { id in goals.firstIndex { $0.id == id } }.map { "goal \($0 + 1)" } ?? "-"
+        print("\(decision.isAccepted ? "ALERT " : decision.presentation == .listOnly ? "listed" : "silent") \(goal) "
+            + "[\(decision.redactedSummary)] \(sentence)")
+    }
+
 default:
     print("Commands: run, recap, availability, judge, timing, triage, latency, probe, probe-check")
     exit(2)
