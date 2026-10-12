@@ -1,7 +1,18 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-11, **Window 7 finalized** after the student's decisions. The
+Last updated: 2026-10-11, **Window 8 preflight** (physical device validation). The
 paragraphs below it describe the earlier windows as they were written at the time.
+
+**Window 8 status: branch `feature/window8-device-validation`, worktree
+`.claude/worktrees/window8`, based on `68cb1a8` (Window 7 final decisions). So far a read-only
+audit and a test plan; no code change, and nothing was done on the iPhone (no device query, no
+install, no microphone, no phone automation).** Read `docs/testing/WINDOW8_PREFLIGHT.md`
+(findings F1–F8 and the permissions P0–P8), then `docs/testing/WINDOW8_DEVICE_TEST_PLAN.md`
+(groups A–K). The most important finding: a start through the Action Button launches the app
+without launch arguments, so the automatic microphone time limit and the diagnostics export
+are not armed (F1); a Debug-only persisted test mode is proposed (scope P0) and should exist
+before any Action Button test with the real microphone. Next: the student authorizes scopes,
+one at a time; results go to `docs/testing/WINDOW8_DEVICE_RESULTS.md`.
 
 **Final decisions of 2026-10-11 (implemented in the commit "Window 7 final decisions" on this
 branch, the one after `9788704`).** Window 7 is accepted as the baseline of Window 8 (physical
