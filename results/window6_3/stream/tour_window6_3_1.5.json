@@ -1,0 +1,738 @@
+{
+  "confusion" : {
+    "ambiguousAlerted" : 0,
+    "ambiguousSilent" : 1,
+    "ambiguousUncertain" : 0,
+    "byCategory" : {
+      "asr_error" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "hypothetical" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "idiom" : {
+        "hits" : 1,
+        "total" : 2
+      },
+      "incomplete" : {
+        "hits" : 0,
+        "total" : 1
+      },
+      "my_group" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "negation" : {
+        "hits" : 1,
+        "total" : 3
+      },
+      "obvious" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "other_addressee" : {
+        "hits" : 3,
+        "total" : 3
+      },
+      "other_affects" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "other_group" : {
+        "hits" : 3,
+        "total" : 4
+      },
+      "past" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "sarcasm_quote" : {
+        "hits" : 1,
+        "total" : 2
+      },
+      "third_person" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "unrelated" : {
+        "hits" : 7,
+        "total" : 7
+      },
+      "urgent_short" : {
+        "hits" : 1,
+        "total" : 1
+      }
+    },
+    "byProfile" : {
+      "tour" : {
+        "fn" : 1,
+        "fp" : 5,
+        "tn" : 22,
+        "tp" : 5
+      }
+    },
+    "falseNegativeIDs" : [
+      "to028"
+    ],
+    "falseNegatives" : 1,
+    "falsePositiveIDs" : [
+      "to041",
+      "to045",
+      "to047",
+      "to050",
+      "to051"
+    ],
+    "falsePositives" : 5,
+    "groups" : {
+      "announcement to all or own group" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "another group addressed" : {
+        "hits" : 3,
+        "total" : 4
+      },
+      "another person addressed" : {
+        "hits" : 3,
+        "total" : 3
+      },
+      "cut-off sentence accuracy" : {
+        "hits" : 0,
+        "total" : 1
+      },
+      "explicit relevance recall" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "hypothetical accuracy" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "idiom accuracy" : {
+        "hits" : 1,
+        "total" : 2
+      },
+      "important-event recall" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "negation accuracy" : {
+        "hits" : 1,
+        "total" : 3
+      },
+      "past and quotation accuracy" : {
+        "hits" : 3,
+        "total" : 4
+      },
+      "personal relevance accuracy" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "recognition-error accuracy" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "said to others, concerns all" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "short urgent instruction recall" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "unrelated talk accuracy" : {
+        "hits" : 7,
+        "total" : 7
+      }
+    },
+    "modelDecisions" : 33,
+    "modelSecondsP50" : 1.7551300525665283,
+    "modelSecondsP95" : 3.541275143623352,
+    "modelSecondsP99" : 3.550110936164856,
+    "outputTokensPerModelDecision" : 23.393939393939394,
+    "secondsP50" : 4.745023012161255,
+    "secondsP95" : 30.6442049741745,
+    "secondsP99" : 31.189906001091003,
+    "stages" : {
+      "expired" : 1,
+      "model" : 33
+    },
+    "trueNegatives" : 22,
+    "truePositives" : 5
+  },
+  "continuedSessions" : 12,
+  "deadlineMisses" : 22,
+  "decided" : 34,
+  "dropped" : 1,
+  "droppedRelevant" : [
+
+  ],
+  "endToEnd" : {
+    "count" : 33,
+    "max" : 30.6442049741745,
+    "p50" : 4.664818048477173,
+    "p95" : 29.36169695854187,
+    "p99" : 30.6442049741745
+  },
+  "endToEndRelevant" : {
+    "count" : 6,
+    "max" : 25.479952931404114,
+    "p50" : 4.745023012161255,
+    "p95" : 25.479952931404114,
+    "p99" : 25.479952931404114
+  },
+  "expired" : 1,
+  "extraModelCalls" : 0,
+  "interval" : 1.5,
+  "maximumQueueLength" : 10,
+  "meanQueueLength" : 3.4206349206349205,
+  "model" : {
+    "count" : 33,
+    "max" : 3.550110936164856,
+    "p50" : 1.7551300525665283,
+    "p95" : 3.541275143623352,
+    "p99" : 3.550110936164856
+  },
+  "modelCalls" : 38,
+  "modelCallsPerMinute" : 31.72941157769171,
+  "modelFailures" : 0,
+  "modelOneRequest" : {
+    "count" : 23,
+    "max" : 3.1645960807800293,
+    "p50" : 1.6139400005340576,
+    "p95" : 3.0958060026168823,
+    "p99" : 3.1645960807800293
+  },
+  "modelWithSecondLook" : {
+    "count" : 10,
+    "max" : 3.550110936164856,
+    "p50" : 3.4039950370788574,
+    "p95" : 3.550110936164856,
+    "p99" : 3.550110936164856
+  },
+  "name" : "Window 6.3, session reused up to 4 while sentences wait, kind first when no session is prepared",
+  "notEvaluated" : [
+    "to016"
+  ],
+  "notEvaluatedRelevant" : [
+
+  ],
+  "outcomes" : [
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to002",
+      "isNovel" : true,
+      "modelSeconds" : 1.239358901977539,
+      "outputTokens" : 23,
+      "queueSeconds" : 0.00028705596923828125,
+      "seconds" : 1.2429200410842896,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "urgency_unconfirmed",
+        "another_group"
+      ],
+      "id" : "to003",
+      "isNovel" : true,
+      "matchedGoal" : "departure",
+      "modelSeconds" : 1.5081210136413574,
+      "outputTokens" : 29,
+      "queueSeconds" : 0.0002409219741821289,
+      "seconds" : 1.5123709440231323,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to006",
+      "isNovel" : true,
+      "modelSeconds" : 1.6635979413986206,
+      "outputTokens" : 15,
+      "queueSeconds" : 0.005697011947631836,
+      "seconds" : 1.6726219654083252,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "to001",
+      "isNovel" : true,
+      "matchedGoal" : "departure",
+      "modelSeconds" : 2.6362990140914917,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.19569194316864014,
+      "seconds" : 2.836202025413513,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "said_to_someone_else"
+      ],
+      "id" : "to008",
+      "isNovel" : true,
+      "matchedGoal" : "visits",
+      "modelSeconds" : 3.0958060026168823,
+      "outputTokens" : 30,
+      "queueSeconds" : 1.363569974899292,
+      "seconds" : 4.462762951850891,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to010",
+      "isNovel" : true,
+      "modelSeconds" : 1.4947130680084229,
+      "outputTokens" : 15,
+      "queueSeconds" : 2.932315945625305,
+      "seconds" : 4.429340958595276,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "no_change_marker"
+      ],
+      "id" : "to011",
+      "isNovel" : true,
+      "modelSeconds" : 1.7299519777297974,
+      "outputTokens" : 30,
+      "queueSeconds" : 2.9319570064544678,
+      "seconds" : 4.664818048477173,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to013",
+      "isNovel" : true,
+      "modelSeconds" : 1.6201989650726318,
+      "outputTokens" : 15,
+      "queueSeconds" : 3.1638810634613037,
+      "seconds" : 8.184436082839966,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "another_group"
+      ],
+      "id" : "to014",
+      "isNovel" : true,
+      "matchedGoal" : "departure",
+      "modelSeconds" : 2.630226969718933,
+      "outputTokens" : 30,
+      "queueSeconds" : 24.45683002471924,
+      "seconds" : 30.6442049741745,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "to009",
+      "isNovel" : true,
+      "matchedGoal" : "danger",
+      "modelSeconds" : 3.3942610025405884,
+      "outputTokens" : 30,
+      "queueSeconds" : 5.996227264404297e-05,
+      "seconds" : 3.587744951248169,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to016",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 31.189906001091003,
+      "seconds" : 31.189906001091003,
+      "stage" : "expired",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to017",
+      "isNovel" : true,
+      "modelSeconds" : 0.9488649368286133,
+      "outputTokens" : 15,
+      "queueSeconds" : 3.869480013847351,
+      "seconds" : 4.821120023727417,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to019",
+      "isNovel" : true,
+      "modelSeconds" : 0.7965400218963623,
+      "outputTokens" : 15,
+      "queueSeconds" : 0.7130529880523682,
+      "seconds" : 1.5121870040893555,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to021",
+      "isNovel" : true,
+      "modelSeconds" : 0.8546919822692871,
+      "outputTokens" : 15,
+      "queueSeconds" : 0.009274005889892578,
+      "seconds" : 0.8668279647827148,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "said_to_someone_else"
+      ],
+      "id" : "to024",
+      "isNovel" : true,
+      "matchedGoal" : "departure",
+      "modelSeconds" : 3.1645960807800293,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.3145250082015991,
+      "seconds" : 3.482496976852417,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+        "urgency_unconfirmed",
+        "headline_not_shortened"
+      ],
+      "id" : "to020",
+      "isNovel" : true,
+      "matchedGoal" : "danger",
+      "modelSeconds" : 2.495129942893982,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.00025200843811035156,
+      "seconds" : 4.745023012161255,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to026",
+      "isNovel" : true,
+      "modelSeconds" : 1.6817259788513184,
+      "outputTokens" : 15,
+      "queueSeconds" : 0.4828200340270996,
+      "seconds" : 4.931689977645874,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to031",
+      "isNovel" : true,
+      "modelSeconds" : 1.7551300525665283,
+      "outputTokens" : 15,
+      "queueSeconds" : 27.60359501838684,
+      "seconds" : 29.36169695854187,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "another_group",
+        "headline_not_shortened"
+      ],
+      "id" : "to032",
+      "isNovel" : true,
+      "matchedGoal" : "departure",
+      "modelSeconds" : 2.2565900087356567,
+      "outputTokens" : 30,
+      "queueSeconds" : 2.773932933807373,
+      "seconds" : 5.033779978752136,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to034",
+      "isNovel" : true,
+      "modelSeconds" : 0.8332459926605225,
+      "outputTokens" : 15,
+      "queueSeconds" : 0.4386249780654907,
+      "seconds" : 1.2744640111923218,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to036",
+      "isNovel" : true,
+      "modelSeconds" : 1.6139400005340576,
+      "outputTokens" : 15,
+      "queueSeconds" : 7.808208465576172e-05,
+      "seconds" : 3.6515140533447266,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "second_look"
+      ],
+      "id" : "to028",
+      "isNovel" : true,
+      "matchedGoal" : "visits",
+      "modelSeconds" : 2.8094799518585205,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.49281394481658936,
+      "seconds" : 4.922315001487732,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to037",
+      "isNovel" : true,
+      "modelSeconds" : 0.8001619577407837,
+      "outputTokens" : 15,
+      "queueSeconds" : 21.873389959335327,
+      "seconds" : 22.676532983779907,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "said_to_someone_else"
+      ],
+      "id" : "to040",
+      "isNovel" : true,
+      "matchedGoal" : "visits",
+      "modelSeconds" : 2.6004689931869507,
+      "outputTokens" : 30,
+      "queueSeconds" : 21.178012013435364,
+      "seconds" : 23.781971096992493,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "to041",
+      "isNovel" : true,
+      "matchedGoal" : "departure",
+      "modelSeconds" : 3.550110936164856,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.0005260705947875977,
+      "seconds" : 4.010878086090088,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to043",
+      "isNovel" : true,
+      "modelSeconds" : 1.563204050064087,
+      "outputTokens" : 15,
+      "queueSeconds" : 20.771409034729004,
+      "seconds" : 22.337674021720886,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "to045",
+      "isNovel" : true,
+      "matchedGoal" : "danger",
+      "modelSeconds" : 2.720111131668091,
+      "outputTokens" : 30,
+      "queueSeconds" : 20.841418981552124,
+      "seconds" : 23.565380930900574,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "to039",
+      "isNovel" : true,
+      "matchedGoal" : "departure",
+      "modelSeconds" : 3.4039950370788574,
+      "outputTokens" : 30,
+      "queueSeconds" : 22.07231295108795,
+      "seconds" : 25.479952931404114,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "to047",
+      "isNovel" : true,
+      "matchedGoal" : "departure",
+      "modelSeconds" : 3.541275143623352,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.6293410062789917,
+      "seconds" : 4.174855947494507,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to048",
+      "isNovel" : true,
+      "modelSeconds" : 1.5367870330810547,
+      "outputTokens" : 15,
+      "queueSeconds" : 22.462499022483826,
+      "seconds" : 24.001677989959717,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "to050",
+      "isNovel" : true,
+      "matchedGoal" : "danger",
+      "modelSeconds" : 3.476513981819153,
+      "outputTokens" : 30,
+      "queueSeconds" : 1.176003098487854,
+      "seconds" : 4.6557101011276245,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "to051",
+      "isNovel" : true,
+      "matchedGoal" : "departure",
+      "modelSeconds" : 2.6882660388946533,
+      "outputTokens" : 30,
+      "queueSeconds" : 20.974672079086304,
+      "seconds" : 23.66614806652069,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "to055",
+      "isNovel" : true,
+      "modelSeconds" : 1.600216031074524,
+      "outputTokens" : 15,
+      "queueSeconds" : 22.182234048843384,
+      "seconds" : 23.7849839925766,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "to052",
+      "isNovel" : true,
+      "matchedGoal" : "visits",
+      "modelSeconds" : 3.4371068477630615,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.1756230592727661,
+      "seconds" : 3.6165469884872437,
+      "stage" : "model",
+      "verdict" : "relevant"
+    }
+  ],
+  "outputTokens" : 862,
+  "pattern" : "",
+  "queueWait" : {
+    "count" : 33,
+    "max" : 27.60359501838684,
+    "p50" : 1.176003098487854,
+    "p95" : 24.45683002471924,
+    "p99" : 27.60359501838684
+  },
+  "recheckAlerts" : 0,
+  "rechecks" : 5,
+  "recoverySeconds" : 22.35611402988434,
+  "secondLooks" : 10,
+  "seconds" : 71.85762000083923,
+  "sentences" : 34,
+  "sentencesPerMinute" : 27.554489001679645,
+  "servedNewestFirst" : 11,
+  "unaccounted" : 0
+}

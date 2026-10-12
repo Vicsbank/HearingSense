@@ -1,0 +1,723 @@
+{
+  "confusion" : {
+    "ambiguousAlerted" : 4,
+    "ambiguousSilent" : 0,
+    "ambiguousUncertain" : 0,
+    "byCategory" : {
+      "asr_error" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "attention" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "causal" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "hypothetical" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "idiom" : {
+        "hits" : 1,
+        "total" : 3
+      },
+      "implicit" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "negation" : {
+        "hits" : 2,
+        "total" : 3
+      },
+      "obvious" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "past" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "sarcasm_quote" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "third_person" : {
+        "hits" : 4,
+        "total" : 5
+      },
+      "unrelated" : {
+        "hits" : 7,
+        "total" : 8
+      },
+      "urgent_short" : {
+        "hits" : 1,
+        "total" : 1
+      }
+    },
+    "byProfile" : {
+      "tenant" : {
+        "fn" : 1,
+        "fp" : 4,
+        "tn" : 21,
+        "tp" : 5
+      }
+    },
+    "falseNegativeIDs" : [
+      "te017"
+    ],
+    "falseNegatives" : 1,
+    "falsePositiveIDs" : [
+      "te012",
+      "te018",
+      "te029",
+      "te052"
+    ],
+    "falsePositives" : 4,
+    "groups" : {
+      "explicit relevance recall" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "hypothetical accuracy" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "idiom accuracy" : {
+        "hits" : 1,
+        "total" : 3
+      },
+      "implicit relevance recall" : {
+        "hits" : 2,
+        "total" : 2
+      },
+      "important-event recall" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "negation accuracy" : {
+        "hits" : 2,
+        "total" : 3
+      },
+      "past and quotation accuracy" : {
+        "hits" : 4,
+        "total" : 4
+      },
+      "personal relevance accuracy" : {
+        "hits" : 4,
+        "total" : 5
+      },
+      "recognition-error accuracy" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "short urgent instruction recall" : {
+        "hits" : 1,
+        "total" : 1
+      },
+      "unrelated talk accuracy" : {
+        "hits" : 7,
+        "total" : 8
+      }
+    },
+    "modelDecisions" : 33,
+    "modelSecondsP50" : 1.7999380826950073,
+    "modelSecondsP95" : 3.614323854446411,
+    "modelSecondsP99" : 3.6247140169143677,
+    "outputTokensPerModelDecision" : 22.454545454545453,
+    "secondsP50" : 17.164875984191895,
+    "secondsP95" : 33.13355994224548,
+    "secondsP99" : 34.244641065597534,
+    "stages" : {
+      "expired" : 2,
+      "model" : 33
+    },
+    "trueNegatives" : 21,
+    "truePositives" : 5
+  },
+  "continuedSessions" : 15,
+  "deadlineMisses" : 27,
+  "decided" : 35,
+  "dropped" : 2,
+  "droppedRelevant" : [
+    "te017"
+  ],
+  "endToEnd" : {
+    "count" : 33,
+    "max" : 30.652094960212708,
+    "p50" : 16.643795013427734,
+    "p95" : 29.552266001701355,
+    "p99" : 30.652094960212708
+  },
+  "endToEndRelevant" : {
+    "count" : 5,
+    "max" : 28.195969939231873,
+    "p50" : 24.435387015342712,
+    "p95" : 28.195969939231873,
+    "p99" : 28.195969939231873
+  },
+  "expired" : 2,
+  "extraModelCalls" : 0,
+  "interval" : 0,
+  "maximumQueueLength" : 15,
+  "meanQueueLength" : 4.954520547945205,
+  "model" : {
+    "count" : 33,
+    "max" : 3.6247140169143677,
+    "p50" : 1.7999380826950073,
+    "p95" : 3.614323854446411,
+    "p99" : 3.6247140169143677
+  },
+  "modelCalls" : 42,
+  "modelCallsPerMinute" : 30.145295678860432,
+  "modelFailures" : 0,
+  "modelOneRequest" : {
+    "count" : 18,
+    "max" : 1.862663984298706,
+    "p50" : 1.2150479555130005,
+    "p95" : 1.862663984298706,
+    "p99" : 1.862663984298706
+  },
+  "modelWithSecondLook" : {
+    "count" : 15,
+    "max" : 3.6247140169143677,
+    "p50" : 3.562436103820801,
+    "p95" : 3.6247140169143677,
+    "p99" : 3.6247140169143677
+  },
+  "name" : "Window 6.2, context given to every sentence, session reused up to 4 while sentences wait, kind first when no session is prepared",
+  "notEvaluated" : [
+    "te026",
+    "te017"
+  ],
+  "notEvaluatedRelevant" : [
+    "te017"
+  ],
+  "outcomes" : [
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te002",
+      "isNovel" : true,
+      "modelSeconds" : 1.2704529762268066,
+      "outputTokens" : 23,
+      "queueSeconds" : 0.0001760721206665039,
+      "seconds" : 1.2713210582733154,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "no_goal"
+      ],
+      "id" : "te004",
+      "isNovel" : true,
+      "modelSeconds" : 1.862663984298706,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.7485830783843994,
+      "seconds" : 2.611764073371887,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te006",
+      "isNovel" : true,
+      "modelSeconds" : 0.977668046951294,
+      "outputTokens" : 15,
+      "queueSeconds" : 1.3957910537719727,
+      "seconds" : 2.374119997024536,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+        "alert_on_second_judgement"
+      ],
+      "id" : "te001",
+      "isNovel" : true,
+      "matchedGoal" : "rent",
+      "modelSeconds" : 3.558372974395752,
+      "outputTokens" : 30,
+      "queueSeconds" : 17.28095805644989,
+      "seconds" : 24.435387015342712,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te008",
+      "isNovel" : true,
+      "modelSeconds" : 1.6485480070114136,
+      "outputTokens" : 15,
+      "queueSeconds" : 2.5736409425735474,
+      "seconds" : 7.804065942764282,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te010",
+      "isNovel" : true,
+      "modelSeconds" : 0.9389920234680176,
+      "outputTokens" : 15,
+      "queueSeconds" : 7.042569994926453,
+      "seconds" : 7.982159972190857,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te012",
+      "isNovel" : true,
+      "matchedGoal" : "rent",
+      "modelSeconds" : 3.5804470777511597,
+      "outputTokens" : 30,
+      "queueSeconds" : 6.496906280517578e-05,
+      "seconds" : 4.806318044662476,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te014",
+      "isNovel" : true,
+      "modelSeconds" : 0.9936310052871704,
+      "outputTokens" : 15,
+      "queueSeconds" : 6.555751085281372,
+      "seconds" : 7.549970984458923,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te016",
+      "isNovel" : true,
+      "modelSeconds" : 1.0794999599456787,
+      "outputTokens" : 15,
+      "queueSeconds" : 6.946934938430786,
+      "seconds" : 8.026968002319336,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te009",
+      "isNovel" : true,
+      "matchedGoal" : "danger",
+      "modelSeconds" : 3.5945160388946533,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.00011992454528808594,
+      "seconds" : 4.542044997215271,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te018",
+      "isNovel" : true,
+      "matchedGoal" : "building",
+      "modelSeconds" : 3.5775710344314575,
+      "outputTokens" : 30,
+      "queueSeconds" : 6.9129780530929565,
+      "seconds" : 10.491582989692688,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "second_look"
+      ],
+      "id" : "te019",
+      "isNovel" : true,
+      "matchedGoal" : "danger",
+      "modelSeconds" : 3.614323854446411,
+      "outputTokens" : 30,
+      "queueSeconds" : 13.028468012809753,
+      "seconds" : 16.643795013427734,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te022",
+      "isNovel" : true,
+      "modelSeconds" : 1.6881330013275146,
+      "outputTokens" : 13,
+      "queueSeconds" : 15.476131081581116,
+      "seconds" : 17.164875984191895,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te024",
+      "isNovel" : true,
+      "matchedGoal" : "rent",
+      "modelSeconds" : 3.5861889123916626,
+      "outputTokens" : 30,
+      "queueSeconds" : 23.18132495880127,
+      "seconds" : 26.768419981002808,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te026",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 34.244641065597534,
+      "seconds" : 34.244641065597534,
+      "stage" : "expired",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te017",
+      "isNovel" : true,
+      "modelSeconds" : 0,
+      "outputTokens" : 0,
+      "queueSeconds" : 33.13355994224548,
+      "seconds" : 33.13355994224548,
+      "stage" : "expired",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te028",
+      "isNovel" : true,
+      "modelSeconds" : 1.658958911895752,
+      "outputTokens" : 15,
+      "queueSeconds" : 28.992501974105835,
+      "seconds" : 30.652094960212708,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te029",
+      "isNovel" : true,
+      "matchedGoal" : "rent",
+      "modelSeconds" : 3.502732992172241,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.5230960845947266,
+      "seconds" : 4.026715993881226,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te032",
+      "isNovel" : true,
+      "modelSeconds" : 0.9447840452194214,
+      "outputTokens" : 15,
+      "queueSeconds" : 28.60700297355652,
+      "seconds" : 29.552266001701355,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te033",
+      "isNovel" : true,
+      "modelSeconds" : 1.0633550882339478,
+      "outputTokens" : 15,
+      "queueSeconds" : 28.26375901699066,
+      "seconds" : 29.32764494419098,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te035",
+      "isNovel" : true,
+      "modelSeconds" : 1.2150479555130005,
+      "outputTokens" : 15,
+      "queueSeconds" : 24.036934971809387,
+      "seconds" : 25.252554059028625,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te027",
+      "isNovel" : true,
+      "matchedGoal" : "door",
+      "modelSeconds" : 3.2266480922698975,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.713284969329834,
+      "seconds" : 3.940912961959839,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te036",
+      "isNovel" : true,
+      "modelSeconds" : 1.7432140111923218,
+      "outputTokens" : 15,
+      "queueSeconds" : 23.15037500858307,
+      "seconds" : 24.8941490650177,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te038",
+      "isNovel" : true,
+      "modelSeconds" : 0.9600969552993774,
+      "outputTokens" : 15,
+      "queueSeconds" : 24.35686695575714,
+      "seconds" : 25.317571997642517,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te040",
+      "isNovel" : true,
+      "modelSeconds" : 1.0584310293197632,
+      "outputTokens" : 15,
+      "queueSeconds" : 24.511491060256958,
+      "seconds" : 25.570483088493347,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+        "second_look"
+      ],
+      "id" : "te042",
+      "isNovel" : true,
+      "matchedGoal" : "building",
+      "modelSeconds" : 3.562436103820801,
+      "outputTokens" : 30,
+      "queueSeconds" : 0.5797559022903442,
+      "seconds" : 4.142960906028748,
+      "stage" : "model",
+      "verdict" : "uncertain"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te045",
+      "isNovel" : true,
+      "modelSeconds" : 1.1395480632781982,
+      "outputTokens" : 15,
+      "queueSeconds" : 23.896515011787415,
+      "seconds" : 25.03676199913025,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+        "headline_not_shortened"
+      ],
+      "id" : "te039",
+      "isNovel" : true,
+      "matchedGoal" : "building",
+      "modelSeconds" : 3.6247140169143677,
+      "outputTokens" : 30,
+      "queueSeconds" : 21.125805974006653,
+      "seconds" : 24.7515230178833,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te047",
+      "isNovel" : true,
+      "matchedGoal" : "rent",
+      "modelSeconds" : 3.579609990119934,
+      "outputTokens" : 30,
+      "queueSeconds" : 24.0585960149765,
+      "seconds" : 27.63912606239319,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te048",
+      "isNovel" : true,
+      "modelSeconds" : 1.7999380826950073,
+      "outputTokens" : 15,
+      "queueSeconds" : 26.996381998062134,
+      "seconds" : 28.796926021575928,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : false,
+      "corrections" : [
+
+      ],
+      "id" : "te050",
+      "isNovel" : true,
+      "modelSeconds" : 1.6948329210281372,
+      "outputTokens" : 15,
+      "queueSeconds" : 0.5299049615859985,
+      "seconds" : 2.2253880500793457,
+      "stage" : "model",
+      "verdict" : "irrelevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te051",
+      "isNovel" : true,
+      "matchedGoal" : "door",
+      "modelSeconds" : 3.521899104118347,
+      "outputTokens" : 30,
+      "queueSeconds" : 1.0227000713348389,
+      "seconds" : 7.7836010456085205,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te052",
+      "isNovel" : true,
+      "matchedGoal" : "danger",
+      "modelSeconds" : 3.2374110221862793,
+      "outputTokens" : 30,
+      "queueSeconds" : 9.608268737792969e-05,
+      "seconds" : 3.455356001853943,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+        "headline_not_shortened"
+      ],
+      "id" : "te049",
+      "isNovel" : true,
+      "matchedGoal" : "building",
+      "modelSeconds" : 2.962904930114746,
+      "outputTokens" : 30,
+      "queueSeconds" : 25.231956005096436,
+      "seconds" : 28.195969939231873,
+      "stage" : "model",
+      "verdict" : "relevant"
+    },
+    {
+      "alerted" : true,
+      "corrections" : [
+
+      ],
+      "id" : "te054",
+      "isNovel" : true,
+      "matchedGoal" : "building",
+      "modelSeconds" : 3.4557141065597534,
+      "outputTokens" : 30,
+      "queueSeconds" : 23.396655082702637,
+      "seconds" : 26.853211998939514,
+      "stage" : "model",
+      "verdict" : "relevant"
+    }
+  ],
+  "outputTokens" : 934,
+  "pattern" : "bursty",
+  "queueWait" : {
+    "count" : 33,
+    "max" : 28.992501974105835,
+    "p50" : 13.028468012809753,
+    "p95" : 28.60700297355652,
+    "p99" : 28.992501974105835
+  },
+  "recheckAlerts" : 1,
+  "rechecks" : 9,
+  "recoverySeconds" : 26.862419962882996,
+  "secondLooks" : 18,
+  "seconds" : 83.59513294696808,
+  "sentences" : 35,
+  "sentencesPerMinute" : 23.68558946196177,
+  "servedNewestFirst" : 5,
+  "unaccounted" : 0
+}

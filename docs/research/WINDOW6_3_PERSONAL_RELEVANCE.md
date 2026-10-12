@@ -14,7 +14,48 @@ around them matters to them. It is not primarily an aid for people who cannot he
 this window is therefore not "what was said" and not "who was addressed" but:
 **does this sentence bring something new that applies to this listener?**
 
-{{SUMMARY}}
+## Summary
+
+**Neither target was met.** On a new sealed set by an independent author (315 sentences, five unseen
+situations, 20 unseen goals), run once after the configuration was frozen:
+
+| | Window 6.2 | Window 6.3 as frozen | aim |
+|---|---|---|---|
+| precision | 68.8 % | **77.3 %** | ≥ 95 % |
+| recall | 97.4 % | **92.1 %** | ≥ 95 % |
+| false alerts (of 155 sentences that should stay silent) | 67 | **41** | |
+| implicit relevance | 43/45 | 41/45 | ≥ 95 % |
+| important events / short urgent instructions | 29/30, 10/10 | 28/30, 10/10 | |
+
+- **What worked on unseen sentences:** a sentence said to another person by name stays silent (0 of
+  20 in Window 6.2, 16 of 20 now) at the cost of one correct alert; cut-off sentences (0 of 5 → 4 of
+  5); and decisions no longer depend on what happened to be said before (22 of 315 decisions changed
+  with the context the app supplies in Window 6.2, 3 of 315 now).
+- **What failed:** one rule — "this sentence begins with another group than the listener's" — removed
+  4 false alerts and lost 7 correct ones. It had removed 8 and lost none on my own development set.
+  It was switched off after the sealed run, because recall comes first in this project; a recount of
+  the same runs for that setting gives 147 true alerts, 45 false, 5 missed (precision 76.6 %, recall
+  96.7 %). That figure is a recount on a spent set, not an independent measurement.
+- **What is left:** one alert in four is false. The largest group by far is sentences for a group the
+  listener is not in and never mentioned ("Stunt team, safety briefing in two minutes" for an
+  extra): 15 of the 41.
+- **Why it is built this way:** the language model cannot compare a name or a group with the
+  listener's own — asked in five ways it said every sentence was for the listener — but it answers a
+  narrow question well ("this was said to one person by name: their own business, or everyone's?").
+  So rules do the comparing, against what the listener wrote about themselves in an optional line,
+  and the model is asked only the narrow question.
+- **Throughput was not improved, and that is a measured result:** a request has a floor of about
+  half a second; every cheaper request either lost correct alerts or saved 10–25 % at best. In stream
+  runs that hand sentences in as the app does, Window 6.3 decides 2–8 more sentences a minute than
+  Window 6.2 because it makes fewer requests, not faster ones.
+- A finding outside the plan: the app gave every sentence the three before it, and no benchmark of
+  Windows 6 to 6.2 had done so. One decision in fourteen depended on them.
+- Tested on the Mac and in the iOS Simulator only (473 and 478 tests pass; the app builds for both).
+  In the Simulator the system's name tagger has no data, so names are told by their form there;
+  which path an iPhone takes is not known.
+
+Decisions for you: whether to ship this branch (recommended, §Recommendations 1), what to do about
+groups (2), and when to go to the iPhone (3).
 
 ## 1. Root causes of the false alerts
 
@@ -65,7 +106,7 @@ The five things the brief asks to keep apart, and where each is decided now:
 | B | Does it plausibly apply to the listener? | rules compare the sentence with the listener's own words; one narrow question to the model |
 | C | Is it new or something to act on? | the model's kind and the second look; the speaker's own word ("as usual", "reminder") |
 | D | Is there enough evidence? | the verifier: a cut-off sentence, a failed check, poor recognition → listed, not alerted |
-| E | Is the audience the listener, someone else, or unknown? | `AudienceAnalyzer`: one of six cues, with "unknown" as an answer of its own |
+| E | Is the audience the listener, someone else, or unknown? | `AudienceAnalyzer`: one of six cues, with "unknown" as an answer of its own. A cue is a supporting signal: only a person called by name, together with the model's answer to the narrow question, holds a sentence back |
 
 ### 2.1 Who the listener says they are (`ListenerIdentity`, `ListenerProfile`)
 
@@ -94,7 +135,7 @@ Rules, a few milliseconds per sentence, on the sentence's own words:
 |---|---|---|
 | `listenerNamed` | "Nora, is this seat free?" | alerts under the goal about being spoken to, whatever the model said; no second look |
 | `listenerGroup` | "Group B, have your wristbands out" · "the red one" | nothing held back |
-| `otherGroup` | "Blue bus, you're leaving at four" · "The school group over there has to …" | listed, not alerted; no further request |
+| `otherGroup` | "Blue bus, you're leaving at four" · "The school group over there has to …" | as frozen: listed, not alerted, no further request. **Since the sealed run: reported with the decision, nothing held back** (§5) |
 | `otherPerson` | "Paolo, your group is waiting for you" | the model is asked one narrow question (below) |
 | `unknownPerson` | "Mia, your mom's outside" when the listener's name is not known | the same question; never taken for the listener, never ruled out: listed as "said to someone by name" |
 | none | "The library is closing an hour early" | as before |
@@ -187,7 +228,7 @@ sentence ─ gate ─ cache ─ first answer (kind, goal, verdict; Window 6.2, u
                                                                                       │ a goal asks for that → alert
             would alert ───────────────────────────────────────────────────────────────┤
               │ cut off, not a warning ───────────────────────────────→ listed         │
-              │ another group (rule) ─────────────────────────────────→ listed         │
+              │ another group (rule) ── as frozen only; off since the sealed run ─→ listed │
               │ another person, or a person by name while the listener's is unknown    │
               │      └ narrow question: theirs → listed · everyones → on               │
               │ a reminder of an alert of a moment ago (rule) ───────→ not again       │
@@ -195,8 +236,8 @@ sentence ─ gate ─ cache ─ first answer (kind, goal, verdict; Window 6.2, u
 ```
 
 - One more request only for a sentence that calls a person by name and would otherwise alert (8 of 225
-  development sentences); three kinds of sentence need one request fewer than in Window 6.2 (another
-  group, cut off, marked reminder: no second look).
+  development sentences); a cut-off sentence and a marked reminder need one request fewer than in
+  Window 6.2 (no second look).
 - Everything new can be switched off (`SemanticAttentionEngine.Configuration.window6_2`), and is
   compared with Window 6.2 on the same sentences in every table.
 - Scheduler, queue, serving order, expiry, the two-minute conversation buffer, live captions, the
@@ -274,7 +315,28 @@ stays above 95 % only in the shipped setting, and that claim rests on a recount.
 
 Development sets (tuned on; not independent). Each sentence by itself, a session per sentence:
 
-{{DEV_TABLE}}
+| | Window 6.2, set 4 | **Window 6.3 as frozen, set 4** | 6.3 as shipped, set 4 (recount) | 6.3, set 3 | 6.3, set 2 |
+|---|---|---|---|---|---|
+| true alerts / false alerts / misses | 89 / 38 / 6 | **90 / 14 / 5** | 90 / 22 / 5 | 91 / 7 / 3 | 78 / 4 / 4 |
+| precision | 70.1 % | **86.5 %** | 80.4 % | 92.9 % | 95.1 % |
+| recall | 93.7 % | **94.7 %** | 94.7 % | 96.8 % | 95.1 % |
+| F1 | 0.802 | 0.905 | 0.870 | 0.948 | 0.951 |
+| implicit relevance | 29/30 | 29/30 | 29/30 | 42/43 | 33/37 |
+| important events / short urgent instructions | 25/26, 10/10 | 25/26, 10/10 | – | 11/11, 6/6 | 17/17, 11/11 |
+| a sentence said to another person stays silent | 1/9 | 9/9 | 9/9 | – | – |
+| a sentence to or about another group stays silent | 4/15 | 12/15 | 4/15 | – | – |
+| said to others, concerns all | 8/8 | 7/8 | 7/8 | – | – |
+| announcement to all or own group | 13/14 | 13/14 | 13/14 | – | – |
+| negation | 9/12 | 11/12 | – | 18/18 | 16/16 |
+| context (leaning sentences) | 10/16 | 13/16 | – | 8/8 | 9/10 |
+| repetitions not alerted again | 6/8 | 7/8 | – | 6/8 | 4/4 |
+| cut-off sentences stay silent | 1/4 | 3/4 | – | – | – |
+| unrelated talk stays silent | 28/28 | 28/28 | – | 31/32 | 21/22 |
+
+Sets 3 and 2 have no sentence with a group cue and no about line, so "as frozen" and "as shipped" are
+the same engine there. Window 6.2 on them (its own report): 91 / 7 / 3 and 78 / 5 / 4. On set 4, which I
+wrote, the rule for another group removed 8 false alerts and lost nothing; on the sealed set it did the
+opposite (above).
 
 The ten-point gap between development and sealed precision is the same as in Windows 6.1 and 6.2.
 
@@ -328,7 +390,28 @@ that calls a person by name and would alert; no second look for a cut-off senten
 reminder; no context to read for a sentence that stands by itself (the app used to send three
 sentences of context with every request).
 
-{{STREAMS}}
+**In the app-faithful stream runs of this window Window 6.3 decided more sentences per minute than
+Window 6.2 — by fewer requests, not faster ones.** Every sentence is now handed to the benchmark with
+the three before it, as the app does; Window 6.2 then judges unrelated talk together with its context
+and takes many more second looks. One run each, Mac, 35 sentences (16 % relevant):
+
+| a sentence every | decided per minute, 6.2 → 6.3 | end to end p50 / p95 / p99 s, Window 6.2 | Window 6.3 | not evaluated (relevant), 6.2 → 6.3 |
+|---|---|---|---|---|
+| 3 s | 19.8 → 19.8 (all of them) | 2.20 / 4.16 / 4.27 | 1.33 / 3.64 / 4.19 | 0 → 0 |
+| 1.5 s | 25.5 → 28.0 | 4.21 / 26.81 / 28.79 | 3.88 / 21.36 / 28.05 | 5 (0) → 5 (0) |
+| 1 s | 23.5 → 27.4 | 6.90 / 32.97 / 33.07 | 5.91 / 33.31 / 62.89 | 10 (2) → 8 (0) |
+| bursts | 23.7 → 28.0 | 16.64 / 29.55 / 30.65 | 8.24 / 28.02 / 28.47 | 2 (1) → 0 |
+| silence, then dense | 19.2 → 20.9 | 18.42 / 27.13 / 27.76 | 6.77 / 24.56 / 26.21 | 7 (1) → 8 (1) |
+| 2 relevant in 31, every 1 s | 26.7 → 30.9 | 28.38 / 45.91 / 62.57 | 5.45 / 34.72 / 56.17 | 5 (0) → 4 (0) |
+
+Second looks per run: 13–19 in Window 6.2, 7–13 in Window 6.3. The tails (p95, p99) are those of
+Window 6.2's design: a sentence left behind is decided in the next pause, up to 30 s late, or given up
+and counted. Window 6.2's own report measured it without context and found up to 35 sentences a
+minute; with context, as its app ran, it is slower than that report says. Recap during goal matching:
+6.1 s after waiting 0.2 s for its turn (Window 6.2: 6.3 s, 0.5 s); unchanged. Single runs; a repeat
+differs by a sentence or two. At one sentence a second the relevant sentences that Window 6.3 decided
+were decided late (median 26 s, against 5 s for the fewer that Window 6.2 decided): the newest
+sentence goes first and the rest is repaired in the next pause, as designed in Window 6.2.
 
 ## 8. Model-session context stability
 
@@ -361,7 +444,13 @@ that was not evaluated is never reported as irrelevant.
 
 ## 10. Resources
 
-{{RESOURCES}}
+The model runs in a system process (`TGOnDeviceInferenceProviderService`), sampled with `top` every
+2 s during the stream runs: 162–763 MB (most runs 183–475 MB; the larger figures in runs that followed
+a recap benchmark), 5.0–6.5 % of one core on average, peaks of 8–21 %. No growth within a run. The
+evaluation tool itself: 14–32 MB. The model's weights and the GPU are not visible to these tools. The
+new rules cost a few milliseconds per sentence (a tagger pass and string comparisons); reading the
+listener's own words costs one model request per goal that speaks of the listener, once, when goals
+or the about line change. Nothing of this was measured on an iPhone.
 
 ## 11. Remaining limitations
 
@@ -398,7 +487,25 @@ that was not evaluated is never reported as irrelevant.
 
 ## 12. Regression
 
-{{REGRESSION}}
+| check | environment | result |
+|---|---|---|
+| `swift test` | Mac | **473 passed** (439 before; 34 new, 3 runs in a row) |
+| `xcodebuild test -scheme HearingSenseKit-Package -destination 'platform=iOS Simulator,name=iPhone 18 Pro Max'` | iOS 27 Simulator | **TEST SUCCEEDED**, 478 tests |
+| `xcodebuild build -project apps/ios/HearingSense.xcodeproj -scheme HearingSense` Debug | Simulator | **BUILD SUCCEEDED** |
+| … Release, `generic/platform=iOS`, unsigned | — | **BUILD SUCCEEDED** |
+| Scripted conversation in the app, `--hs-conversation-demo --hs-screen goals` | iOS 27 Simulator, microphone off | "About me" shows what was understood ("Name: Alex · Yours: study group B"); "Alex, can you bring the charger tomorrow?" is the newest match; screenshots in `docs/device-tests/window6-3-simulator/` (the lower part of the list could not be scrolled into view: no access to the simulator panel in this session) |
+| Development sets 3 and 2 (tuned on in earlier windows) | Mac | 91 / 7 / 3 and 78 / 4 / 4; Window 6.2: 91 / 7 / 3 and 78 / 5 / 4 |
+| Earlier sealed sets | — | not run again: all three have been read |
+
+The first simulator run failed, and that was a finding, not a flake: the system's name tagger returns
+no names in the Simulator (no linguistic data), so a sentence said to another person was not
+recognised there. A form-based fallback was added (commit `56358da`; no change where the tagger
+works). Two timing tests of Window 6.2 failed once each while the simulator shared the Mac with the
+language model; their margins were widened. Untouched and covered by the existing tests: Apple Sound
+Analysis and its 303 label mappings, the acoustic icons, the Window 4 priority engine and its phrase
+rule, the Live Activity and Dynamic Island code, the two-minute conversation buffer, the recap and
+continued understanding, the conversation history, the privacy controls. No second audio pipeline; no
+automatic summaries of ordinary speech.
 
 ## 13. Git
 
@@ -412,7 +519,7 @@ its own) and the Window 6, 6.1 and 6.2 worktrees were not touched.
 | `1e269b8` | the engine, **configuration frozen** before the sealed evaluation |
 | `56358da` | names told by their form where there is no name tagger (after the freeze; no change on the Mac) |
 | `778489c` | after the sealed evaluation: the rule for another group no longer decides by itself |
-| {{FINAL_COMMIT}} | sealed results, streams, regression, reports, handoff |
+| `8c592f4` and the commits after it up to the branch head | sealed runs of record, streams, regression, reports, handoff |
 
 ## Recommendations
 

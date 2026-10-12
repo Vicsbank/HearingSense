@@ -1,0 +1,16 @@
+Window 6.2, context given to every sentence, session reused up to 4 while sentences wait, kind first when no session is prepared — bursty, 31 sentences in 67.3 s
+  decided 31, dropped 2 (relevant among them: none), without any decision 0
+  end to end           p50 4.97  p95 28.63  p99 43.96  max 43.96  (n 29)
+  waiting for a turn   p50 1.59  p95 26.92  p99 40.46  max 40.46  (n 29)
+  model                p50 1.79  p95 3.63  p99 3.80  max 3.80  (n 29)
+    one request        p50 1.25  p95 2.70  p99 2.70  max 2.70  (n 18)
+    with a second look p50 3.50  p95 3.80  p99 3.80  max 3.80  (n 11)
+  longest queue 9; first judgements 39 (34.8 per minute); later than the deadline 19
+  throughput 25.9 sentences per minute; output tokens 848
+  not evaluated: 2 (expired 2, pushed out 0); relevant among them: none
+  relevant sentences   p50 4.02  p95 4.02  p99 4.02  max 4.02  (n 2)
+  waiting line: mean 2.91, longest 9; empty 17.92 s after the last sentence arrived; served newest first 8
+  second looks 14; extra model requests 0; model failures 0
+  answers from a continued session 17; judged again when nothing waited 10, alerts found that way 1
+  under load: TP 1 FP 5 FN 1 TN 20; missed te001; false alerts te012 te018 te019 te026 te052
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-3/results/window6_3/stream/sparse_window6_2_bursty.json

@@ -1,0 +1,42 @@
+Set dev3: 223 synthetic utterances — relevant 94, irrelevant 106, ambiguous 15, repeat 8
+
+  wall time 539.9 s; this process 14 → 32 MB resident (the model itself runs in a system process and is not included)
+Foundation Models, Window 6.3, a session per sentence — dev3 set
+  precision            92.9 % (91/98; 95 % CI 86.0–96.5)
+  recall               96.8 % (91/94; 95 % CI 91.0–98.9)
+  F1                   0.948
+  false alerts         4.7 % (5/106; 95 % CI 2.0–10.6) of irrelevant utterances
+  false alerts / hour  11.3 (derived: rate × 240 irrelevant utterances per hour, an assumption)
+  repeated alerts      25.0 % (2/8; 95 % CI 7.1–59.1)
+  important missed     0.0 % (0/11; 95 % CI 0.0–25.9)
+  goal named correctly 85.7 % (78/91; 95 % CI 77.1–91.5)
+  ambiguous items      11 alerted, 2 kept as uncertain, 2 nothing (of 15)
+  time per utterance   median 2.63 s, p95 2.86 s; model median 2.62 s; full judgements 222, stopped by the first pass 0, gated 0, fallbacks 1
+  verifier corrections cut_off 2, headline_not_shortened 11, nothing_changes 12, said_before 6, second_look 5, urgency_unconfirmed 8
+  by category          asr_error 7/8, attention 13/14, causal 12/13, hypothetical 8/8, idiom 11/12, implicit 30/30, multi 8/8, negation 18/18, obvious 12/13, past 10/10, repeated 6/8, sarcasm_quote 8/8, third_person 18/20, unrelated 31/32, urgent_short 6/6
+  confusion            TP 91  FP 7  FN 3  TN 107  (ambiguous, not scored: 11 alerted, 2 uncertain, 2 silent)
+  precision            92.9 % (91/98; 95 % CI 86.0–96.5)
+  recall               96.8 % (91/94; 95 % CI 91.0–98.9)
+  F1                   0.948
+  false-positive rate  6.1 % (7/114; 95 % CI 3.0–12.1)
+  false-negative rate  3.2 % (3/94; 95 % CI 1.1–9.0)
+  balanced accuracy    95.3 %
+  important-event recall                100.0 % (11/11; 95 % CI 74.1–100.0)
+  short urgent instruction recall       100.0 % (6/6; 95 % CI 61.0–100.0)
+  implicit relevance recall             97.7 % (42/43; 95 % CI 87.9–99.6)
+  explicit relevance recall             92.6 % (25/27; 95 % CI 76.6–97.9)
+  negation accuracy                     100.0 % (18/18; 95 % CI 82.4–100.0)
+  hypothetical accuracy                 100.0 % (8/8; 95 % CI 67.6–100.0)
+  personal relevance accuracy           90.0 % (18/20; 95 % CI 69.9–97.2)
+  past and quotation accuracy           100.0 % (18/18; 95 % CI 82.4–100.0)
+  idiom accuracy                        91.7 % (11/12; 95 % CI 64.6–98.5)
+  recognition-error accuracy            87.5 % (7/8; 95 % CI 52.9–97.8)
+  context (several sentences) accuracy  100.0 % (8/8; 95 % CI 67.6–100.0)
+  unrelated talk accuracy               96.9 % (31/32; 95 % CI 84.3–99.4)
+  repetition accuracy                   75.0 % (6/8; 95 % CI 40.9–92.9)
+  by profile           athlete TP 23 FP 1 FN 1 TN 27; attendee TP 22 FP 3 FN 1 TN 26; cook TP 22 FP 2 FN 1 TN 27; tenant TP 24 FP 1 FN 0 TN 27
+  decided at           fallback 1, model 222
+  seconds per item     p50 2.63  p95 2.86  p99 2.99   model only: p50 2.62  p95 2.86  p99 2.98
+  output tokens        26.1 per model decision (223 model decisions)
+
+Wrote /Users/vicwei/Desktop/Music Recognition/.claude/worktrees/window6-3/results/window6_3/engine/w63_final_dev3.json
