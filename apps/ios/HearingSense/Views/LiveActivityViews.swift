@@ -128,7 +128,8 @@ struct LiveActivitySettingsView: View {
                     .accessibilityIdentifier("island.enabled.switch")
             } footer: {
                 Text("While you listen, Hearing Sense stays in the Dynamic Island and on the Lock Screen. iOS ends a "
-                    + "Live Activity after about eight hours; open the app to show it again.")
+                    + "Live Activity after about eight hours. Listening continues; turn Hearing Sense off and on to "
+                    + "show it again.")
             }
 
             Section {
@@ -141,19 +142,24 @@ struct LiveActivitySettingsView: View {
             .disabled(!live.settings.isEnabled)
 
             Section {
-                Toggle("Expand for important events", isOn: binding(\.expandsForImportantEvents))
+                Toggle("Prominent alerts for urgent sounds", isOn: binding(\.expandsForImportantEvents))
                     .accessibilityIdentifier("island.expansion.switch")
+                Toggle("Also when the iPhone is locked", isOn: binding(\.alertsWhileLocked))
+                    .accessibilityIdentifier("island.alertsWhileLocked.switch")
+                    .disabled(!live.settings.expandsForImportantEvents)
                 Toggle("Play the alert sound", isOn: binding(\.playsAlertSound))
                     .accessibilityIdentifier("island.alertSound.switch")
                     .disabled(!live.settings.expandsForImportantEvents)
             } footer: {
-                Text("Prominent alerts for the highest-priority sounds (a siren, an alarm, a knock). Off: such a "
-                    + "sound changes the icon to a warning mark, silently; touch and hold the island to read what it "
-                    + "is. On: Hearing Sense also asks iOS to expand the island while the iPhone seems unlocked. "
-                    + "iOS decides whether it does. On a locked iPhone the activity is always updated silently. iOS "
-                    + "does not tell apps reliably whether the iPhone is locked: with this on, an event in the first "
-                    + "seconds after you lock it can light up the screen, and with the alert sound on it can play "
-                    + "a sound. Speech never causes an alert. This is not an emergency alert system.")
+                Text("When Hearing Sense has confirmed a highest-priority sound (a siren, an alarm), the icon changes to "
+                    + "a warning mark and Hearing Sense asks iOS to present it prominently: on an iPhone with a Dynamic "
+                    + "Island, to expand it for a moment. iOS decides whether it does; it is never guaranteed. "
+                    + "Everyday sounds and speech never cause an alert.\n\n"
+                    + "While the iPhone seems locked the update stays silent, unless “Also when the iPhone is locked” "
+                    + "is on: then an alert can light up the locked screen and, with the alert sound on, play a sound. "
+                    + "iOS does not tell apps reliably whether the iPhone is locked, so even with that switch off an "
+                    + "event in the first seconds after you lock the iPhone can light up the screen.\n\n"
+                    + "Hearing Sense is an awareness aid, not an emergency alert system.")
             }
             .disabled(!live.settings.isEnabled)
 
@@ -179,8 +185,9 @@ struct LiveActivitySettingsView: View {
             Section {
                 LabeledContent("Lock state", value: live.lockEstimate.rawValue.capitalized)
             } footer: {
-                Text("What this iPhone lets the app know. “Unknown” means expansion is not requested; it stays "
-                    + "unknown without a passcode and until the iPhone has been locked once while Hearing Sense was running.")
+                Text("What this iPhone lets the app know. “Unknown” is treated like “Locked”: no prominent alert, unless "
+                    + "you allowed alerts on the locked iPhone. It stays unknown without a passcode and until the iPhone "
+                    + "has been locked once while Hearing Sense was running.")
             }
         }
         .navigationTitle("Dynamic Island")

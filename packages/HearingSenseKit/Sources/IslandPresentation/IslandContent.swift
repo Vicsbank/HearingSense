@@ -162,11 +162,15 @@ public struct IslandSettings: Hashable, Sendable, Codable {
     public var isEnabled: Bool
     /// Show the icon of ordinary sounds. Off: only the app's glyph and attention episodes.
     public var showsAmbientIcons: Bool
-    /// Ask iOS to expand the Dynamic Island for important events — only while the iPhone is
-    /// judged to be unlocked (see `AlertGate`). Off by default, because the lock state can only
-    /// be estimated and an expansion request on a locked iPhone lights up the screen: the island
-    /// then never expands by itself and the text is one long press away.
+    /// "Prominent alerts": ask iOS to present a verified highest-priority acoustic event
+    /// prominently (on an iPhone with a Dynamic Island: to expand it). On by default since the
+    /// decision of 2026-10-11. While the iPhone is not judged unlocked the request is only made
+    /// with `alertsWhileLocked` (see `AlertGate`). iOS decides whether anything is shown.
     public var expandsForImportantEvents: Bool
+    /// The user's explicit opt-in to prominent alerts while the iPhone is locked, or while the
+    /// app cannot tell: such an alert can light up the locked screen and, with
+    /// `playsAlertSound`, play a sound. Off by default. Never applies to summaries.
+    public var alertsWhileLocked: Bool
     /// Show validated speech summaries in the expanded Dynamic Island. They are never shown on
     /// the Lock Screen. Off: speech appears as "Nearby Speech" without text.
     public var showsSpeechSummaries: Bool
@@ -177,8 +181,9 @@ public struct IslandSettings: Hashable, Sendable, Codable {
     /// user asked for the summary seconds earlier.
     public var expandsForSummaries: Bool
 
-    public init(isEnabled: Bool = true, showsAmbientIcons: Bool = true, expandsForImportantEvents: Bool = false,
-                showsSpeechSummaries: Bool = true, playsAlertSound: Bool = false, expandsForSummaries: Bool = true)
+    public init(isEnabled: Bool = true, showsAmbientIcons: Bool = true, expandsForImportantEvents: Bool = true,
+                showsSpeechSummaries: Bool = true, playsAlertSound: Bool = false, expandsForSummaries: Bool = true,
+                alertsWhileLocked: Bool = false)
     {
         self.isEnabled = isEnabled
         self.showsAmbientIcons = showsAmbientIcons
@@ -186,12 +191,25 @@ public struct IslandSettings: Hashable, Sendable, Codable {
         self.showsSpeechSummaries = showsSpeechSummaries
         self.playsAlertSound = playsAlertSound
         self.expandsForSummaries = expandsForSummaries
+        self.alertsWhileLocked = alertsWhileLocked
     }
 
     public static let `default` = IslandSettings()
 
+    /// Settings stored before the decision of 2026-10-11 (key `island.settings.v1`), carried
+    /// over once. "Prominent alerts" takes its new default: the stored value was the old
+    /// default (off) or a choice made under the old rule, and the two cannot be told apart. The
+    /// opt-in for the locked iPhone starts off. Everything else is kept.
+    public static func migrated(fromVersion1 data: Data) -> IslandSettings {
+        var settings = (try? JSONDecoder().decode(IslandSettings.self, from: data)) ?? .default
+        settings.expandsForImportantEvents = IslandSettings.default.expandsForImportantEvents
+        settings.alertsWhileLocked = false
+        return settings
+    }
+
     private enum CodingKeys: String, CodingKey {
         case isEnabled, showsAmbientIcons, expandsForImportantEvents, showsSpeechSummaries, playsAlertSound, expandsForSummaries
+        case alertsWhileLocked
     }
 
     public init(from decoder: Decoder) throws {
@@ -205,5 +223,6 @@ public struct IslandSettings: Hashable, Sendable, Codable {
             ?? fallback.showsSpeechSummaries
         playsAlertSound = try container.decodeIfPresent(Bool.self, forKey: .playsAlertSound) ?? fallback.playsAlertSound
         expandsForSummaries = try container.decodeIfPresent(Bool.self, forKey: .expandsForSummaries) ?? fallback.expandsForSummaries
+        alertsWhileLocked = try container.decodeIfPresent(Bool.self, forKey: .alertsWhileLocked) ?? fallback.alertsWhileLocked
     }
 }

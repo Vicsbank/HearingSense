@@ -16,10 +16,21 @@ actor ScriptedSummarizer: ConversationSummarizing {
     private(set) var recapRequests: [String] = []
     private(set) var updateRequests: [String] = []
 
-    init(recap: RecapDraft? = nil, update: RecapDraft? = nil, available: Bool = true) {
+    /// Answers to "restate this sentence"; a sentence without one cannot be restated.
+    var restatements: [String: String] = [:]
+    private(set) var restateRequests: [String] = []
+
+    init(recap: RecapDraft? = nil, update: RecapDraft? = nil, available: Bool = true, restatements: [String: String] = [:]) {
         recapDraft = recap
         updateDraft = update
         self.available = available
+        self.restatements = restatements
+    }
+
+    func restate(_ statement: String) async throws -> String {
+        restateRequests.append(statement)
+        guard let answer = restatements[statement] else { throw RecapError.restatementUnsupported }
+        return answer
     }
 
     func isAvailable() async -> Bool { available }

@@ -1,0 +1,43 @@
+Building for debugging...
+[1 / 1]
+Build complete! (0.49 sec)
+  c01
+  c02
+  c03
+Conversation recaps — dev scenes (synthetic; evaluated on a Mac)
+  scenes                3; summaries written 3
+  facts recalled        13/13 (100 %)
+  negations kept        3/3 (100 %)
+  statements removed    5/29 (17 %) by the lexical checks
+  copies restated       1 (a spoken sentence repeated word for word, rewritten in memory); left out as copies 0
+  word-for-word share   median 20 %, max 44 % of a summary's words lie in runs of 6 or more words of one utterance
+  continued: earlier facts kept 4/4 (100 %), later facts added 2/2 (100 %)
+  missing speech stated 1/1 (100 %)
+  model time            median 6.0 s, max 7.1 s
+
+[c01] Meeting schedule for chemistry project (languageModel, )
+Someone said the meeting for the chemistry project is no longer on Thursday because the library closes at five, and they agreed Saturday morning at ten won't work because the library is closed on weekends. They agreed to use the study room in the science building, room 204, on Saturday at ten, and someone agreed to finish graphs by Friday night so the report can be written on Saturday. Someone said they have lab data on their laptop but the graphs are not finished, and they requested the graphs be completed by Friday night.
+  • The meeting is on Saturday at ten in room 204
+  • The library closes at five on Thursday
+  • Saturday is closed for library use
+  • Graphs must be finished by Friday night
+  • Lab data is on laptop but graphs are incomplete
+  after the update: Someone said the meeting for the chemistry project is no longer on Thursday because the library closes at five, and they agreed Saturday morning at ten won't work because the library is closed on weekends. They agreed to use the study room in the science building, room 204, on Saturday at ten, and someone agreed to finish graphs by Friday night so the report can be written on Saturday. Someone said they have lab data on their laptop but the graphs are not finished, and they requested the graphs be completed by Friday night. They reported that the report is now due next Wednesday, not Monday, and the teacher stated it must be at least six pages long. They decided to divide the report into three pages each, and someone mentioned having lab data on their laptop but needing to finish the graphs by Friday night. • The meeting is on Saturday at ten in room 204 • The library closes at five on Thursday • Saturday is closed for library use • Graphs must be finished by Friday night • Lab data is on laptop but graphs are incomplete • The report is due next Wednesday, not Monday. • The report must be at least six pages. • Someone has lab data on their laptop but needs to finish the graphs by Friday night.
+
+[c02] Prescription instructions and follow-up (languageModel, unsupported_statement,restated_copy,unsupported_statement)
+Someone said to take one tablet twice a day with food, twice a day meaning morning and evening, and not with grapefruit juice. They agreed to take it for ten days, finishing all of them even if better after three days, and to stop and call a doctor if a rash appears. No appointment is needed, but the refill is not automatic and must be requested by phone.
+  • Someone said that someone should take one tablet twice a day with food.
+  • Do not take it with grapefruit juice
+  • Take for ten days, finish even if better after three days
+  • Stop and call a doctor if a rash appears
+  • No appointment needed, but refill requires phone call
+
+[c03] Bus schedule and museum visit details (languageModel, unsupported_number_or_time,unsupported_statement,unsupported_statement)
+Someone said the bus to the museum leaves at nine thirty from the main entrance and that a packed lunch is needed because there is no cafeteria at the museum. They also said the bus will not arrive at the intended time, and they will be back at school by three. Permission slips must be signed by tomorrow.
+  • The bus leaves at nine thirty from the main entrance.
+  • A packed lunch is required.
+  • There is no cafeteria at the museum.
+  • They will be back at school by three.
+  • Permission slips must be signed by tomorrow.
+Wrote ../../results/conversation_eval_window7b/recap_dev.json
+exit 0

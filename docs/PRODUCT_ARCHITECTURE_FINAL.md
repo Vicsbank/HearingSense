@@ -202,13 +202,15 @@ Separate layers, each with its own rule:
 | Deduplication, cooldown, fusion | One episode per event; repeats update it | `AttentionEngine` (W4) |
 | One request per episode; rate limit | 6 s between requests, urgent exempt | `IslandPipeline` (W5) |
 | Acoustic only | A speech episode never requests | `IslandPolicy.speechMayRequestExpansion = false` (W7) |
-| User preference | "Expand for important events", **off by default** | `IslandSettings` |
-| Lock gate | Sent only when the iPhone is judged unlocked | `AlertGate` (W5) |
+| Highest priority, verified | Only `high` and `urgent` acoustic episodes that are not marked uncertain | `IslandPolicy.alertMinimumPriority`, `alertsNeedVerifiedEvent` (decision of 2026-10-11) |
+| User preference | "Prominent alerts for urgent sounds", **on by default** (decision of 2026-10-11) | `IslandSettings.expandsForImportantEvents` |
+| Lock gate | Sent when the iPhone is judged unlocked; while locked or unknown only with the user's opt-in "Also when the iPhone is locked" (off by default) | `AlertGate`, `IslandSettings.alertsWhileLocked` |
 | Expiry and recovery | An episode leaves at its expiry; a later one can request again | `IslandPipeline` |
 
-With the preference off, a high-priority sound still changes the island to its warning icon
-with a priority mark — silently. With it on, the app additionally asks iOS for an expansion
-through `AlertConfiguration`; iOS decides. The settings screen states what that can cause
+A high-priority sound always changes the island to its warning icon with a priority mark.
+With the preference on (the default) the app additionally asks iOS for a prominent presentation
+through `AlertConfiguration`; iOS decides, and nothing is guaranteed. The lock state is an
+estimate: see the residual risk in `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md` §8.1. The settings screen states what that can cause
 (a lit screen in the seconds after locking; a sound if the alert sound is on). No notification
 is ever scheduled; no Critical Alerts entitlement is used. Reliability on real sound is not
 established: in Window 5's device session 6 of 9 high-priority episodes in ten minutes were
@@ -256,3 +258,21 @@ be started by an intent while the app is not on screen, which is untested on a d
 ## 12. Limits that are known
 
 See `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md` §6 and `docs/PROJECT_HANDOFF.md` §8.
+
+## 13. Final decisions of 2026-10-11
+
+The student accepted this architecture as the baseline of Window 8 and decided:
+
+1. **Prominent alerts** for verified highest-priority acoustic events are on by default; an
+   alert that may wake the locked screen needs an explicit opt-in (§8 above is updated).
+2. **Spoken warnings** stay as they are: speech never requests a prominent presentation, and
+   Personal Semantic Attention is not restored.
+3. **Git**: this branch is the baseline of Window 8. Nothing is merged or pushed; the original
+   uncommitted Window 5 work in the main checkout stays where it is.
+4. **Live Activity**: a running activity is never replaced, and nothing is requested after iOS
+   ended it at its eight-hour limit (`ActivityLifetimePolicy`). Updates and cleanup are unchanged.
+5. **Summary privacy**: a spoken sentence a draft repeats word for word is restated in memory
+   and checked instead of being deleted; a text that is mostly transcript is neither shown nor
+   stored (`RecapValidator.verbatimShare`, `ConversationRecapEngine.maySave`).
+
+Details, measurements and limits: `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md` §8.

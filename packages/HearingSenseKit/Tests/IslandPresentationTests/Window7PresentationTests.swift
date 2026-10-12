@@ -236,23 +236,88 @@ import Testing
 
     @Test func theGateFollowsTheRightSettingForEachKindOfRequest() {
         var settings = IslandSettings.default
-        #expect(!settings.expandsForImportantEvents)
+        // Defaults (decision of 2026-10-11): prominent alerts on, the locked iPhone only by opt-in.
+        #expect(settings.expandsForImportantEvents)
         #expect(settings.expandsForSummaries)
-        // Defaults: an event never expands by itself; a requested summary may.
-        #expect(AlertGate.evaluate(settings: settings, lock: .unlocked, appIsActive: false) == .blocked(.disabledInSettings))
+        #expect(!settings.alertsWhileLocked)
+        #expect(AlertGate.evaluate(settings: settings, lock: .unlocked, appIsActive: false) == .send)
         #expect(AlertGate.evaluate(settings: settings, lock: .unlocked, appIsActive: false, isUserRequested: true) == .send)
-        // The lock rule is the same for both.
-        settings.expandsForImportantEvents = true
+        // Without the opt-in the lock rule is the same for both.
         for requested in [false, true] {
             #expect(AlertGate.evaluate(settings: settings, lock: .locked, appIsActive: false, isUserRequested: requested)
                 == .blocked(.deviceLocked))
             #expect(AlertGate.evaluate(settings: settings, lock: .unknown, appIsActive: false, isUserRequested: requested)
                 == .blocked(.lockStateUnknown))
         }
+        // Each kind follows its own switch.
         settings.expandsForSummaries = false
         #expect(AlertGate.evaluate(settings: settings, lock: .unlocked, appIsActive: false, isUserRequested: true)
             == .blocked(.disabledInSettings))
         #expect(AlertGate.evaluate(settings: settings, lock: .unlocked, appIsActive: false) == .send)
+        settings.expandsForSummaries = true
+        settings.expandsForImportantEvents = false
+        #expect(AlertGate.evaluate(settings: settings, lock: .unlocked, appIsActive: false) == .blocked(.disabledInSettings))
+        #expect(AlertGate.evaluate(settings: settings, lock: .unlocked, appIsActive: false, isUserRequested: true) == .send)
+    }
+
+    @Test func anAlertOnTheLockedIPhoneNeedsTheUsersOptIn() {
+        var settings = IslandSettings.default
+        settings.alertsWhileLocked = true
+        // Acoustic events: the user accepted that the locked screen may light up.
+        #expect(AlertGate.evaluate(settings: settings, lock: .locked, appIsActive: false) == .send)
+        #expect(AlertGate.evaluate(settings: settings, lock: .unknown, appIsActive: false) == .send)
+        // A summary is never announced on a locked iPhone, opt-in or not.
+        #expect(AlertGate.evaluate(settings: settings, lock: .locked, appIsActive: false, isUserRequested: true) == .blocked(.deviceLocked))
+        #expect(AlertGate.evaluate(settings: settings, lock: .unknown, appIsActive: false, isUserRequested: true)
+            == .blocked(.lockStateUnknown))
+        // The opt-in is nothing without the main switch.
+        settings.expandsForImportantEvents = false
+        #expect(AlertGate.evaluate(settings: settings, lock: .locked, appIsActive: false) == .blocked(.disabledInSettings))
+        // While the app is on screen nothing is requested.
+        settings.expandsForImportantEvents = true
+        #expect(AlertGate.evaluate(settings: settings, lock: .unlocked, appIsActive: true) == .blocked(.appInForeground))
+    }
+
+    @Test func settingsStoredBeforeTheDecisionTakeTheNewDefaultOnce() throws {
+        let stored = Data(#"{"isEnabled":true,"showsAmbientIcons":false,"expandsForImportantEvents":false,"showsSpeechSummaries":false,"playsAlertSound":true,"expandsForSummaries":false}"#.utf8)
+        let migrated = IslandSettings.migrated(fromVersion1: stored)
+        #expect(migrated.expandsForImportantEvents)
+        #expect(!migrated.alertsWhileLocked)
+        // Everything else is the user's and is kept.
+        #expect(!migrated.showsAmbientIcons)
+        #expect(!migrated.showsSpeechSummaries)
+        #expect(migrated.playsAlertSound)
+        #expect(!migrated.expandsForSummaries)
+        // Unreadable data: the defaults.
+        #expect(IslandSettings.migrated(fromVersion1: Data("x".utf8)) == .default)
+        // Once stored under the new key, a choice survives encoding and decoding.
+        var chosen = migrated
+        chosen.expandsForImportantEvents = false
+        chosen.alertsWhileLocked = true
+        #expect(try JSONDecoder().decode(IslandSettings.self, from: JSONEncoder().encode(chosen)) == chosen)
+    }
+
+    // MARK: - Verified highest-priority acoustic events only
+
+    @Test func onlyAVerifiedHighPriorityAcousticEventAsksForAProminentPresentation() {
+        var driver = IslandDriver()
+        // Normal priority: an episode in the island, silently.
+        driver.send(.intent(intent(1, "Door or knock", priority: .normal, at: 5, expires: 25)))
+        #expect(driver.alerts.isEmpty)
+        // High priority but uncertain: nothing is asked.
+        driver.send(.intent(intent(2, "Possible Alarm", priority: .high, at: 30, expires: 50, category: .emergencySignals,
+                                   uncertain: true)))
+        #expect(driver.alerts.isEmpty)
+        #expect(driver.pipeline.statistics.unverifiedAlertsWithheld == 1)
+        // The same episode, verified: now it asks, once.
+        driver.send(.intent(intent(2, "Alarm", priority: .high, action: .update, at: 34, expires: 54, category: .emergencySignals)))
+        #expect(driver.alerts.count == 1)
+        #expect(driver.alerts.last?.title == "Alarm")
+        driver.send(.intent(intent(2, "Alarm", priority: .high, action: .update, at: 38, expires: 58, category: .emergencySignals)))
+        #expect(driver.alerts.count == 1)
+        // Urgent and verified: asks at once.
+        driver.send(.intent(intent(3, "Siren", priority: .urgent, at: 60, expires: 90, category: .emergencySignals)))
+        #expect(driver.alerts.count == 2)
     }
 
     @Test func contentAndSettingsOfAnOlderBuildStillDecode() throws {

@@ -1,0 +1,1217 @@
+Building for debugging...
+[Computing dependencies]
+Build complete! (0.88 sec)
+Test Suite 'All tests' started at 2026-10-11 20:57:08.266.
+Test Suite 'All tests' passed at 2026-10-11 20:57:08.267.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-11 20:57:08.380.
+Test Suite 'All tests' passed at 2026-10-11 20:57:08.381.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-11 20:57:08.493.
+Test Suite 'All tests' passed at 2026-10-11 20:57:08.494.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-11 20:57:08.602.
+Test Suite 'All tests' passed at 2026-10-11 20:57:08.603.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-11 20:57:08.714.
+Test Suite 'All tests' passed at 2026-10-11 20:57:08.715.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-11 20:57:08.834.
+Test Suite 'All tests' passed at 2026-10-11 20:57:08.835.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-11 20:57:08.951.
+Test Suite 'All tests' passed at 2026-10-11 20:57:08.952.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-11 20:57:09.067.
+Test Suite 'All tests' passed at 2026-10-11 20:57:09.068.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-11 20:57:09.184.
+Test Suite 'All tests' passed at 2026-10-11 20:57:09.185.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite SpeechAudioTapTests started.
+◇ Suite PreRollAudioBufferTests started.
+◇ Suite AppleSpeechTranscriberTests started.
+◇ Suite TranscriptAssemblerTests started.
+◇ Test finishingWithoutAudioEndsCleanly() started.
+◇ Test readersAreIndependentAndCanReadIncrementally() started.
+◇ Test cursorTimestampsFollowTheStreamClock() started.
+➜ Test aCancelledUtteranceDeliversNothingMore() skipped.
+◇ Test aReaderThatFallsBehindLearnsHowMuchItLost() started.
+◇ Test wrapsCorrectlyForBufferSizesThatDoNotDivideTheCapacity() started.
+◇ Test keepsSamplesContinuousAcrossVaryingBufferSizes() started.
+➜ Test transcribesAnUtteranceOnTheSessionAudioClock() skipped.
+◇ Test capacityIsConfigurableAndClamped() started.
+◇ Test wallClockDatesAreEstimatedFromTheNewestBuffer() started.
+◇ Test aBufferLongerThanTheRingKeepsItsNewestSamples() started.
+◇ Test captureGapsAreZeroFilledSoLaterAudioKeepsItsTime() started.
+◇ Test textHelpersNormalizeForComparison() started.
+◇ Test aFormatChangeStartsOverAndTellsExistingReaders() started.
+◇ Test aCaptureRestartOrNewSessionDiscardsOldAudio() started.
+◇ Test repeatedFinalsAreDroppedAsDuplicates() started.
+◇ Test concurrentReadersNeverSeeTornData() started.
+◇ Test availabilityCheckReturnsAStateWithoutDownloading() started.
+◇ Test buffersChannelZeroOnTheSharedClock() started.
+◇ Test overwritesTheOldestAudioAndStaysBounded() started.
+◇ Test ignoresNonFloatBuffersAndRestartsTheClockPerSession() started.
+◇ Test qualityIsWeightedByWordsAndSeparatesGoodFromPoor() started.
+◇ Test punctuationOnlyResultsAndLeadingPunctuationAreCleaned() started.
+◇ Test consecutiveSentencesAreAppendedInOrder() started.
+◇ Test partialResultsReplaceEachOtherUntilTheFinalArrives() started.
+◇ Test clearAndDisableLeaveNoAudioBehind() started.
+◇ Test aPartialCanBePromotedWhenTheRecognizerNeverFinalizes() started.
+✔ Test wallClockDatesAreEstimatedFromTheNewestBuffer() passed after 0.003 seconds.
+✔ Test textHelpersNormalizeForComparison() passed after 0.003 seconds.
+✔ Test aFormatChangeStartsOverAndTellsExistingReaders() passed after 0.003 seconds.
+✔ Test cursorTimestampsFollowTheStreamClock() passed after 0.003 seconds.
+✔ Test readersAreIndependentAndCanReadIncrementally() passed after 0.003 seconds.
+✔ Test repeatedFinalsAreDroppedAsDuplicates() passed after 0.003 seconds.
+✔ Test wrapsCorrectlyForBufferSizesThatDoNotDivideTheCapacity() passed after 0.004 seconds.
+✔ Test aReaderThatFallsBehindLearnsHowMuchItLost() passed after 0.004 seconds.
+✔ Test aCaptureRestartOrNewSessionDiscardsOldAudio() passed after 0.004 seconds.
+✔ Test punctuationOnlyResultsAndLeadingPunctuationAreCleaned() passed after 0.003 seconds.
+✔ Test aBufferLongerThanTheRingKeepsItsNewestSamples() passed after 0.004 seconds.
+✔ Test consecutiveSentencesAreAppendedInOrder() passed after 0.003 seconds.
+✔ Test qualityIsWeightedByWordsAndSeparatesGoodFromPoor() passed after 0.003 seconds.
+✔ Test clearAndDisableLeaveNoAudioBehind() passed after 0.003 seconds.
+✔ Test partialResultsReplaceEachOtherUntilTheFinalArrives() passed after 0.003 seconds.
+✔ Test captureGapsAreZeroFilledSoLaterAudioKeepsItsTime() passed after 0.004 seconds.
+✔ Test aPartialCanBePromotedWhenTheRecognizerNeverFinalizes() passed after 0.003 seconds.
+✔ Suite TranscriptAssemblerTests passed after 0.004 seconds.
+✔ Test ignoresNonFloatBuffersAndRestartsTheClockPerSession() passed after 0.004 seconds.
+✔ Test overwritesTheOldestAudioAndStaysBounded() passed after 0.005 seconds.
+✔ Test capacityIsConfigurableAndClamped() passed after 0.006 seconds.
+✔ Test keepsSamplesContinuousAcrossVaryingBufferSizes() passed after 0.008 seconds.
+✔ Test buffersChannelZeroOnTheSharedClock() passed after 0.009 seconds.
+✔ Suite SpeechAudioTapTests passed after 0.010 seconds.
+[environment] on-device transcription (en-US): Available (on device)
+✔ Test availabilityCheckReturnsAStateWithoutDownloading() passed after 0.089 seconds.
+✔ Test concurrentReadersNeverSeeTornData() passed after 0.096 seconds.
+✔ Suite PreRollAudioBufferTests passed after 0.097 seconds.
+✔ Test finishingWithoutAudioEndsCleanly() passed after 0.164 seconds.
+✔ Suite AppleSpeechTranscriberTests passed after 0.164 seconds.
+✔ Test run with 27 tests in 4 suites passed after 0.164 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite SpeechActivityTrackerTests started.
+◇ Suite SpeechRelevanceGateTests started.
+◇ Suite SpeechIntelligenceEngineTests started.
+◇ Test withoutClassifierWindowsNothingIsClaimed() started.
+◇ Test onlyWindowsThatOverlapTheUtteranceCount() started.
+◇ Test aSingleCandidateWindowActivatesBeforeTheSoundDetectorWouldConfirm() started.
+◇ Test clearScoresWithAVeryConfidentRecognizerAlsoCount() started.
+◇ Test speechWithoutMusicIsNearbySpeech() started.
+◇ Test inAMusicContextOnlyStrongOrVocalFreeSpeechActivates() started.
+◇ Test whisperingChatterAndShoutingCountAsSpeech() started.
+◇ Test theMusicContextIsRememberedWhenVocalsMaskTheMusicLabel() started.
+◇ Test thresholdsComeFromThePolicy() started.
+◇ Test sustainedStrongSpeechOverMusicIsSpeechOverMusic() started.
+◇ Test switchingTranscriptionOffDiscardsTranscriptsAndStopsBuffering() started.
+◇ Test historyIsBounded() started.
+◇ Test soundDetectorSpeechEventsAreLinkedToTheSpeechEvent() started.
+◇ Test vocalsInMusicDoNotStartTranscriptionButSpeechOverMusicDoes() started.
+◇ Test activityEndsAfterTheReleaseTimeWithoutSpeech() started.
+◇ Test aModelFailureKeepsTheTranscriptAndThePipelineRunning() started.
+◇ Test withTranscriptionOffSpeechIsOnlyReportedAsNearbySpeechAndNoAudioIsBuffered() started.
+◇ Test aRecognizerThatNeverFinalizesFallsBackToThePartialText() started.
+◇ Test sporadicSpeechScoresInVocalMusicArePossiblyMusic() started.
+◇ Test aShortUtteranceIsTranscribedFromItsFirstWordAndSummarized() started.
+◇ Test longSpeechIsSplitIntoBoundedUtterancesWithoutLosingOrRepeatingWords() started.
+◇ Test aLyricLineAfterSpeechDoesNotReplaceTheSpeechSummary() started.
+◇ Test aRunningModelRequestIsCancelledWhenListeningStops() started.
+◇ Test withoutTheLanguageModelTheTranscriptIsTheResult() started.
+◇ Test wordsRecognizedInVocalMusicAreNotInterpretedAsAConversation() started.
+◇ Test aConversationThatRunsTooLongIsCompletedAndANewSpeechEventStarts() started.
+◇ Test aFailedRecognizerStartIsRetriedAndTheBufferedSpeechIsNotLost() started.
+◇ Test aRecognizerFailureIsRecoveredWithinTheSameSpeech() started.
+◇ Test withoutEnoughPreRollTheBeginningOfTheSentenceIsLost() started.
+◇ Test poorlyRecognizedSpeechIsLabelledUnclearInsteadOfSummarized() started.
+◇ Test anUnavailableRecognizerFallsBackToDetectionOnly() started.
+◇ Test repeatedFinalsAndRepeatedHeadlinesAreNotPublishedTwice() started.
+◇ Test stoppingDiscardsSpeechDataAndDropsResultsThatArriveLate() started.
+◇ Test inputsOutsideASessionAreIgnored() started.
+◇ Test consecutiveUtterancesShareOneSpeechEventAndALongPauseStartsANewOne() started.
+◇ Test sustainedSpeechOverMusicIsInterpretedAndFlagged() started.
+◇ Test aSummaryThatReversesTheMeaningNeverReachesTheResult() started.
+◇ Test switchingTranscriptionOnAfterSpeechEndedStillCompletesTheOpenSpeechEvent() started.
+◇ Test whenTheClassifierStopsDeliveringWindowsSpeechActivityEndsInsteadOfTranscribingForever() started.
+◇ Test aStartThatOnlySucceedsAfterTheSpeechEndedStillTranscribesTheBufferedWords() started.
+◇ Test speechAfterLyricsInTheSameConversationIsStillSummarized() started.
+◇ Test repeatedRecognizerFailuresDegradeToDetectionOnlyUntilAvailabilityIsRefreshed() started.
+✔ Test thresholdsComeFromThePolicy() passed after 0.002 seconds.
+✔ Test aSingleCandidateWindowActivatesBeforeTheSoundDetectorWouldConfirm() passed after 0.002 seconds.
+✔ Test withoutClassifierWindowsNothingIsClaimed() passed after 0.002 seconds.
+✔ Test onlyWindowsThatOverlapTheUtteranceCount() passed after 0.002 seconds.
+✔ Test speechWithoutMusicIsNearbySpeech() passed after 0.002 seconds.
+✔ Test sustainedStrongSpeechOverMusicIsSpeechOverMusic() passed after 0.002 seconds.
+✔ Test clearScoresWithAVeryConfidentRecognizerAlsoCount() passed after 0.002 seconds.
+✔ Test activityEndsAfterTheReleaseTimeWithoutSpeech() passed after 0.002 seconds.
+✔ Test inAMusicContextOnlyStrongOrVocalFreeSpeechActivates() passed after 0.002 seconds.
+✔ Test theMusicContextIsRememberedWhenVocalsMaskTheMusicLabel() passed after 0.002 seconds.
+✔ Test sporadicSpeechScoresInVocalMusicArePossiblyMusic() passed after 0.002 seconds.
+✔ Test historyIsBounded() passed after 0.002 seconds.
+✔ Suite SpeechRelevanceGateTests passed after 0.004 seconds.
+✔ Test whisperingChatterAndShoutingCountAsSpeech() passed after 0.004 seconds.
+✔ Suite SpeechActivityTrackerTests passed after 0.006 seconds.
+✔ Test aRunningModelRequestIsCancelledWhenListeningStops() passed after 0.090 seconds.
+✔ Test inputsOutsideASessionAreIgnored() passed after 0.098 seconds.
+✔ Test vocalsInMusicDoNotStartTranscriptionButSpeechOverMusicDoes() passed after 0.112 seconds.
+✔ Test withTranscriptionOffSpeechIsOnlyReportedAsNearbySpeechAndNoAudioIsBuffered() passed after 0.139 seconds.
+✔ Test switchingTranscriptionOnAfterSpeechEndedStillCompletesTheOpenSpeechEvent() passed after 0.142 seconds.
+✔ Test poorlyRecognizedSpeechIsLabelledUnclearInsteadOfSummarized() passed after 0.145 seconds.
+✔ Test aStartThatOnlySucceedsAfterTheSpeechEndedStillTranscribesTheBufferedWords() passed after 0.147 seconds.
+✔ Test withoutTheLanguageModelTheTranscriptIsTheResult() passed after 0.150 seconds.
+✔ Test aShortUtteranceIsTranscribedFromItsFirstWordAndSummarized() passed after 0.150 seconds.
+✔ Test aFailedRecognizerStartIsRetriedAndTheBufferedSpeechIsNotLost() passed after 0.152 seconds.
+✔ Test aSummaryThatReversesTheMeaningNeverReachesTheResult() passed after 0.154 seconds.
+✔ Test soundDetectorSpeechEventsAreLinkedToTheSpeechEvent() passed after 0.155 seconds.
+✔ Test switchingTranscriptionOffDiscardsTranscriptsAndStopsBuffering() passed after 0.170 seconds.
+✔ Test sustainedSpeechOverMusicIsInterpretedAndFlagged() passed after 0.182 seconds.
+✔ Test aRecognizerFailureIsRecoveredWithinTheSameSpeech() passed after 0.186 seconds.
+✔ Test wordsRecognizedInVocalMusicAreNotInterpretedAsAConversation() passed after 0.188 seconds.
+✔ Test repeatedFinalsAndRepeatedHeadlinesAreNotPublishedTwice() passed after 0.188 seconds.
+✔ Test speechAfterLyricsInTheSameConversationIsStillSummarized() passed after 0.205 seconds.
+✔ Test aLyricLineAfterSpeechDoesNotReplaceTheSpeechSummary() passed after 0.219 seconds.
+✔ Test withoutEnoughPreRollTheBeginningOfTheSentenceIsLost() passed after 0.228 seconds.
+✔ Test aRecognizerThatNeverFinalizesFallsBackToThePartialText() passed after 0.228 seconds.
+✔ Test longSpeechIsSplitIntoBoundedUtterancesWithoutLosingOrRepeatingWords() passed after 0.229 seconds.
+✔ Test aConversationThatRunsTooLongIsCompletedAndANewSpeechEventStarts() passed after 0.244 seconds.
+✔ Test whenTheClassifierStopsDeliveringWindowsSpeechActivityEndsInsteadOfTranscribingForever() passed after 0.257 seconds.
+✔ Test aModelFailureKeepsTheTranscriptAndThePipelineRunning() passed after 0.269 seconds.
+✔ Test anUnavailableRecognizerFallsBackToDetectionOnly() passed after 0.298 seconds.
+✔ Test consecutiveUtterancesShareOneSpeechEventAndALongPauseStartsANewOne() passed after 0.316 seconds.
+✔ Test repeatedRecognizerFailuresDegradeToDetectionOnlyUntilAvailabilityIsRefreshed() passed after 0.405 seconds.
+✔ Test stoppingDiscardsSpeechDataAndDropsResultsThatArriveLate() passed after 0.752 seconds.
+✔ Suite SpeechIntelligenceEngineTests passed after 0.752 seconds.
+✔ Test run with 42 tests in 3 suites passed after 0.753 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite EnvironmentStatusTests started.
+◇ Suite WarningNearMissLogTests started.
+◇ Suite SoundTaxonomyTests started.
+◇ Suite SwitchingClassifierBackendTests started.
+◇ Suite StreamClockTests started.
+◇ Suite StreamResamplerTests started.
+◇ Suite SoundEventDetectorTests started.
+◇ Suite AudioChunkTests started.
+◇ Suite ClassifierBackendPipelineTests started.
+◇ Suite AudioSetTaxonomyTests started.
+◇ Suite CompetingClassificationTests started.
+◇ Suite CoreMLSoundClassifierBackendTests started.
+◇ Suite WindowAssemblerTests started.
+◇ Test unknownLabelsFallBackToOtherInsteadOfDisappearing() started.
+◇ Test aSirenBelowItsRuleIsKeptWithScoreAndCompetitor() started.
+◇ Suite SoundRecognitionEngineTests started.
+◇ Test otherKindsAndLowScoresAreIgnoredAndTheLogIsBounded() started.
+◇ Test kindIdentifiersAreUniqueAndEveryCategoryButOtherIsUsed() started.
+◇ Test everyKindHasARule() started.
+◇ Test aConfirmedSirenIsNotAMiss() started.
+◇ Test unknownLevelDoesNotImplyQuiet() started.
+◇ Test silenceNeverProducesEvents() started.
+◇ Test matchesTheLiveClassifierInventory() started.
+◇ Test distinguishesQuietUnclassifiedUncertainAndRecognized() started.
+◇ Test equalRatesPassThroughUnchanged() started.
+◇ Test positionsAreMonotonicAndGapsAdvanceTheClock() started.
+◇ Test mapsEveryLabelOfTheRecordedMacOSInventory() started.
+◇ Test restartAndSampleRateChangeStartNewSegmentsOnOneClock() started.
+◇ Test finishEndsActiveEventsAndDropsCandidates() started.
+◇ Test newSessionResetsTheClockAndBumpsTheGeneration() started.
+◇ Test keepsDurationFrequencyAndLevel(rates:) started.
+◇ Test keepsOriginalIdentifiersAndProvidesDisplayNames() started.
+◇ Test copiesChannelZeroFromDeinterleavedAndInterleavedBuffers() started.
+◇ Test briefLowConfidenceHornDuringSpeechIsSuppressed() started.
+◇ Test attenuatesContentAboveTheNewNyquistFrequency() started.
+◇ Test updatesAreRateLimitedButPrimaryLabelChangesArePublished() started.
+◇ Test switchingKeepsOneClockOneSegmentAndOneEvent() started.
+◇ Test rejectsNonFloatBuffers() started.
+◇ Test consecutiveBuffersJoinWithoutASeam() started.
+◇ Test continuousSpeechNeedsTwoWindowsAndFluctuationsStayOneEvent() started.
+◇ Test hysteresisKeepsAnActiveEventAtScoresThatCouldNotStartOne() started.
+◇ Test singleSpeechWindowIsOnlyACandidate() started.
+◇ Test hasTheSameKindsAndCategoriesAsTheAppleTaxonomy() started.
+◇ Test veryStrongHornConfirmsInstantly() started.
+◇ Test keepsOriginalLabelsAndMapsThemToTheExpectedKinds() started.
+◇ Test framesCarryTheBackendsModelLabelsAndTimestamps() started.
+◇ Test replayingTheSameFramesGivesTheSameDecisions() started.
+◇ Test everyTableEntryNamesAnExistingKindAndNoLabelIsListedTwice() started.
+◇ Test moderateKnocksInConsecutiveWindowsConfirm() started.
+◇ Test singleStrongHornWindowIsNotEnoughButARepeatedHornIs() started.
+◇ Test theAudioSetPolicyOnlyRenamesTheLabelSpecificRule() started.
+◇ Test briefKnockConfirmsFromOneClearWindow() started.
+◇ Test synonymousLabelsMergeAndDifferentKindsCoexist() started.
+◇ Test wallClockTimesFollowTheCaptureClock() started.
+◇ Test continuousEventEndsAfterItsTimeout() started.
+◇ Test hitsOutsideTheLookBackDoNotCombine() started.
+➜ Test readsTheModelContractFromItsMetadata() skipped.
+◇ Test broaderAndUnrelatedAudioSetClassesStayUnmapped() started.
+◇ Test foghornDuringMusicIsSuppressedButCarHornIsNot() started.
+◇ Test eventIdentityIsStableAcrossUpdates() started.
+◇ Test foghornWithoutMusicStillCounts() started.
+◇ Test case passing 1 argument rates → (48000.0, 32000.0) to keepsDurationFrequencyAndLevel(rates:) started.
+◇ Test case passing 1 argument rates → (44100.0, 16000.0) to keepsDurationFrequencyAndLevel(rates:) started.
+◇ Test case passing 1 argument rates → (48000.0, 16000.0) to keepsDurationFrequencyAndLevel(rates:) started.
+◇ Test case passing 1 argument rates → (44100.0, 32000.0) to keepsDurationFrequencyAndLevel(rates:) started.
+◇ Test aHopLongerThanTheWindowIsNotNeededButAHopEqualToItTilesTheStream() started.
+◇ Test flushPadsTheTailOnlyWhenItHoldsEnoughNewAudio() started.
+◇ Test resetStartsAgainAtTheGivenPosition() started.
+◇ Test emitsOverlappingWindowsWithoutLosingOrRepeatingSamples() started.
+◇ Test producesWindowsEveryHopWithMonotonicAudioTime() started.
+✔ Test silenceNeverProducesEvents() passed after 0.009 seconds.
+✔ Test unknownLabelsFallBackToOtherInsteadOfDisappearing() passed after 0.009 seconds.
+✔ Test positionsAreMonotonicAndGapsAdvanceTheClock() passed after 0.009 seconds.
+✔ Test kindIdentifiersAreUniqueAndEveryCategoryButOtherIsUsed() passed after 0.009 seconds.
+✔ Test unknownLevelDoesNotImplyQuiet() passed after 0.009 seconds.
+✔ Test otherKindsAndLowScoresAreIgnoredAndTheLogIsBounded() passed after 0.009 seconds.
+✔ Test everyKindHasARule() passed after 0.009 seconds.
+✔ Test restartAndSampleRateChangeStartNewSegmentsOnOneClock() passed after 0.009 seconds.
+✔ Test keepsOriginalIdentifiersAndProvidesDisplayNames() passed after 0.009 seconds.
+✔ Test distinguishesQuietUnclassifiedUncertainAndRecognized() passed after 0.009 seconds.
+✔ Test finishEndsActiveEventsAndDropsCandidates() passed after 0.009 seconds.
+✔ Test equalRatesPassThroughUnchanged() passed after 0.009 seconds.
+✔ Test copiesChannelZeroFromDeinterleavedAndInterleavedBuffers() passed after 0.009 seconds.
+✔ Test newSessionResetsTheClockAndBumpsTheGeneration() passed after 0.009 seconds.
+✔ Test briefLowConfidenceHornDuringSpeechIsSuppressed() passed after 0.009 seconds.
+✔ Test aConfirmedSirenIsNotAMiss() passed after 0.009 seconds.
+✔ Test rejectsNonFloatBuffers() passed after 0.009 seconds.
+✔ Test mapsEveryLabelOfTheRecordedMacOSInventory() passed after 0.009 seconds.
+✔ Test updatesAreRateLimitedButPrimaryLabelChangesArePublished() passed after 0.009 seconds.
+✔ Test continuousSpeechNeedsTwoWindowsAndFluctuationsStayOneEvent() passed after 0.009 seconds.
+✔ Test veryStrongHornConfirmsInstantly() passed after 0.009 seconds.
+✔ Test keepsOriginalLabelsAndMapsThemToTheExpectedKinds() passed after 0.009 seconds.
+✔ Test hasTheSameKindsAndCategoriesAsTheAppleTaxonomy() passed after 0.009 seconds.
+✔ Test singleSpeechWindowIsOnlyACandidate() passed after 0.009 seconds.
+✔ Test hysteresisKeepsAnActiveEventAtScoresThatCouldNotStartOne() passed after 0.009 seconds.
+✔ Test aSirenBelowItsRuleIsKeptWithScoreAndCompetitor() passed after 0.010 seconds.
+✔ Test everyTableEntryNamesAnExistingKindAndNoLabelIsListedTwice() passed after 0.026 seconds.
+✔ Test replayingTheSameFramesGivesTheSameDecisions() passed after 0.027 seconds.
+✔ Test moderateKnocksInConsecutiveWindowsConfirm() passed after 0.027 seconds.
+✔ Test singleStrongHornWindowIsNotEnoughButARepeatedHornIs() passed after 0.027 seconds.
+✔ Test theAudioSetPolicyOnlyRenamesTheLabelSpecificRule() passed after 0.027 seconds.
+✔ Test briefKnockConfirmsFromOneClearWindow() passed after 0.027 seconds.
+✔ Test synonymousLabelsMergeAndDifferentKindsCoexist() passed after 0.027 seconds.
+✔ Test wallClockTimesFollowTheCaptureClock() passed after 0.027 seconds.
+✔ Test continuousEventEndsAfterItsTimeout() passed after 0.026 seconds.
+✔ Test hitsOutsideTheLookBackDoNotCombine() passed after 0.027 seconds.
+✔ Test broaderAndUnrelatedAudioSetClassesStayUnmapped() passed after 0.027 seconds.
+✔ Test foghornDuringMusicIsSuppressedButCarHornIsNot() passed after 0.026 seconds.
+✔ Test eventIdentityIsStableAcrossUpdates() passed after 0.026 seconds.
+✔ Test foghornWithoutMusicStillCounts() passed after 0.026 seconds.
+✔ Test aHopLongerThanTheWindowIsNotNeededButAHopEqualToItTilesTheStream() passed after 0.025 seconds.
+✔ Test flushPadsTheTailOnlyWhenItHoldsEnoughNewAudio() passed after 0.025 seconds.
+✔ Test resetStartsAgainAtTheGivenPosition() passed after 0.025 seconds.
+✔ Test emitsOverlappingWindowsWithoutLosingOrRepeatingSamples() passed after 0.024 seconds.
+✔ Suite StreamClockTests passed after 0.027 seconds.
+✔ Suite EnvironmentStatusTests passed after 0.028 seconds.
+✔ Suite WarningNearMissLogTests passed after 0.027 seconds.
+✔ Suite SoundEventDetectorTests passed after 0.027 seconds.
+✔ Suite AudioChunkTests passed after 0.027 seconds.
+✔ Suite AudioSetTaxonomyTests passed after 0.027 seconds.
+➜ Test classifiesAStreamOnTheCPUWithCorrectWindowTiming() skipped.
+✔ Suite CompetingClassificationTests passed after 0.027 seconds.
+✔ Suite WindowAssemblerTests passed after 0.027 seconds.
+➜ Test realSpeechRecordingProducesASpeechEventThroughTheUnchangedDetector() skipped.
+➜ Test theRealHybridKeepsRecognizingSpeechAcrossTheSwitch() skipped.
+➜ Test aShortAnalysisWindowIsRepeatedIntoTheModelInput() skipped.
+◇ Test aMissingModelIsAnErrorNotACrash() started.
+✔ Test aMissingModelIsAnErrorNotACrash() passed after 0.001 seconds.
+✔ Suite CoreMLSoundClassifierBackendTests passed after 0.028 seconds.
+✔ Test framesCarryTheBackendsModelLabelsAndTimestamps() passed after 0.054 seconds.
+◇ Test aRestartedCaptureContinuesTheAudioClockInANewSegment() started.
+✔ Test attenuatesContentAboveTheNewNyquistFrequency() passed after 0.069 seconds.
+✔ Test consecutiveBuffersJoinWithoutASeam() passed after 0.084 seconds.
+✔ Test matchesTheLiveClassifierInventory() passed after 0.089 seconds.
+✔ Suite SoundTaxonomyTests passed after 0.089 seconds.
+✔ Test switchingKeepsOneClockOneSegmentAndOneEvent() passed after 0.096 seconds.
+◇ Test aFailingPrimaryHandsOverWithoutAPipelineFailureAndIsRetriedOnlyWhenSelectedAgain() started.
+✔ Test keepsDurationFrequencyAndLevel(rates:) with 4 test cases passed after 0.099 seconds.
+✔ Suite StreamResamplerTests passed after 0.099 seconds.
+✔ Test aRestartedCaptureContinuesTheAudioClockInANewSegment() passed after 0.053 seconds.
+◇ Test aFailingSegmentIsRetriedAfterABackOffAndRecovers() started.
+✔ Test aFailingSegmentIsRetriedAfterABackOffAndRecovers() passed after 0.045 seconds.
+◇ Test aBackendThatCannotStartIsReportedAndRetriedWithoutCrashing() started.
+✔ Test producesWindowsEveryHopWithMonotonicAudioTime() passed after 0.153 seconds.
+◇ Test silenceIsReportedAsQuietWithoutEvents() started.
+✔ Test aFailingPrimaryHandsOverWithoutAPipelineFailureAndIsRetriedOnlyWhenSelectedAgain() passed after 0.066 seconds.
+◇ Test theMergedTaxonomyReadsBothLabelSets() started.
+✔ Test theMergedTaxonomyReadsBothLabelSets() passed after 0.002 seconds.
+✔ Suite SwitchingClassifierBackendTests passed after 0.165 seconds.
+✔ Test aBackendThatCannotStartIsReportedAndRetriedWithoutCrashing() passed after 0.038 seconds.
+◇ Test endingTheSessionDiscardsLateResultsOfTheOldSession() started.
+✔ Test endingTheSessionDiscardsLateResultsOfTheOldSession() passed after 0.030 seconds.
+✔ Suite ClassifierBackendPipelineTests passed after 0.222 seconds.
+✔ Test silenceIsReportedAsQuietWithoutEvents() passed after 0.076 seconds.
+◇ Test fullBacklogDropsBuffersInsteadOfBlocking() started.
+✔ Test fullBacklogDropsBuffersInsteadOfBlocking() passed after 0.006 seconds.
+◇ Test detectsInputGapsFromSampleTime() started.
+✔ Test detectsInputGapsFromSampleTime() passed after 0.063 seconds.
+➜ Test realSpeechRecordingProducesASpeechEvent() skipped.
+✔ Suite SoundRecognitionEngineTests passed after 0.304 seconds.
+✔ Test run with 67 tests in 14 suites passed after 0.305 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite SpeechSemanticAnalyzerTests started.
+◇ Suite RuleBasedInterpreterTests started.
+◇ Suite SummaryValidatorTests started.
+◇ Suite UtteranceAnalysisTests started.
+◇ Test retriesOnceWithFeedbackWhenTheModelReversesTheMeaning() started.
+◇ Test boundsWhatIsSentToTheModel() started.
+◇ Test aModelErrorDoesNotPropagateOrLeakTheTranscript() started.
+◇ Test aSlowModelTimesOutAndTheTranscriptLevelIsUsed() started.
+◇ Test rejectsHallucinatedDetailsFromTheModel() started.
+◇ Test asksOnceMoreWhenAHeadlineDropsTheNumber() started.
+◇ Test unclearTranscriptsAreNotSentToTheModel() started.
+◇ Test cancellationStopsFurtherAttempts() started.
+◇ Test acceptsAFaithfulHeadlineOnTheFirstAttempt() started.
+◇ Suite FoundationModelInterpreterTests started.
+◇ Test fallsBackToRulesWhenTheModelIsUnavailable() started.
+◇ Test packageArrived() started.
+◇ Test neverShowsAReversedSummaryWhenTheModelKeepsGettingItWrong() started.
+◇ Test categorizesWithKeywordRules() started.
+◇ Test detailsComeFromRules() started.
+◇ Test flagsTranscriptsThatAreTooThinToInterpret() started.
+◇ Test aHeadlineMayNegateTheStatementOnlyIfTheTranscriptDoes() started.
+◇ Test issueNamesContainNoTranscriptText() started.
+◇ Test enforcesTheDisplayLimitButAllowsLongerThanTargetWhenNeeded() started.
+◇ Test allowsAFewGenericLabelWords() started.
+◇ Test formatsHeadlinesInTitleCase() started.
+◇ Test idiomaticDontForgetIsNotANegation() started.
+◇ Test classStartsAtThreePM() started.
+◇ Test rejectsContentThatIsNotInTheTranscript() started.
+◇ Test rejectsEmptyHeadlines() started.
+◇ Test groundingAcceptsInflectionsAndRejectsOtherWords() started.
+◇ Test pleaseDontOpenTheDoor() started.
+◇ Test packageHasNotArrived() started.
+◇ Test detectsNegationButNotNeutralIdioms() started.
+◇ Test aClockTimeIsKeptEvenWhenTheDayIsKept() started.
+◇ Test recognizesQuestions() started.
+◇ Test classDoesNotStartAtThreePM() started.
+◇ Test findsTimeExpressionsAndKeepsTheirNumbersApart() started.
+◇ Test promptQuotesTheUtteranceAndKeepsContextSeparate() started.
+◇ Test availabilityIsReportedWithoutThrowing() started.
+➜ Test realModelSummariesKeepNegations() skipped.
+◇ Test instructionsForbidInventingAndObeying() started.
+◇ Test errorKindsCarryNoMessageText() started.
+✔ Test detailsComeFromRules() passed after 0.009 seconds.
+✔ Test issueNamesContainNoTranscriptText() passed after 0.009 seconds.
+✔ Test unclearTranscriptsAreNotSentToTheModel() passed after 0.009 seconds.
+✔ Test packageArrived() passed after 0.009 seconds.
+✔ Test formatsHeadlinesInTitleCase() passed after 0.009 seconds.
+✔ Test flagsTranscriptsThatAreTooThinToInterpret() passed after 0.009 seconds.
+✔ Test rejectsEmptyHeadlines() passed after 0.009 seconds.
+✔ Test groundingAcceptsInflectionsAndRejectsOtherWords() passed after 0.009 seconds.
+✔ Test fallsBackToRulesWhenTheModelIsUnavailable() passed after 0.010 seconds.
+✔ Test categorizesWithKeywordRules() passed after 0.010 seconds.
+✔ Test enforcesTheDisplayLimitButAllowsLongerThanTargetWhenNeeded() passed after 0.010 seconds.
+✔ Test allowsAFewGenericLabelWords() passed after 0.009 seconds.
+✔ Test idiomaticDontForgetIsNotANegation() passed after 0.010 seconds.
+✔ Test recognizesQuestions() passed after 0.009 seconds.
+✔ Test classStartsAtThreePM() passed after 0.009 seconds.
+✔ Test rejectsContentThatIsNotInTheTranscript() passed after 0.009 seconds.
+✔ Test packageHasNotArrived() passed after 0.009 seconds.
+✔ Test detectsNegationButNotNeutralIdioms() passed after 0.009 seconds.
+✔ Test promptQuotesTheUtteranceAndKeepsContextSeparate() passed after 0.001 seconds.
+✔ Test pleaseDontOpenTheDoor() passed after 0.010 seconds.
+✔ Test instructionsForbidInventingAndObeying() passed after 0.001 seconds.
+✔ Suite RuleBasedInterpreterTests passed after 0.010 seconds.
+✔ Test errorKindsCarryNoMessageText() passed after 0.001 seconds.
+✔ Test findsTimeExpressionsAndKeepsTheirNumbersApart() passed after 0.011 seconds.
+✔ Suite UtteranceAnalysisTests passed after 0.012 seconds.
+✔ Test neverShowsAReversedSummaryWhenTheModelKeepsGettingItWrong() passed after 0.013 seconds.
+✔ Test aModelErrorDoesNotPropagateOrLeakTheTranscript() passed after 0.013 seconds.
+✔ Test aHeadlineMayNegateTheStatementOnlyIfTheTranscriptDoes() passed after 0.013 seconds.
+✔ Test boundsWhatIsSentToTheModel() passed after 0.013 seconds.
+✔ Test acceptsAFaithfulHeadlineOnTheFirstAttempt() passed after 0.014 seconds.
+✔ Test rejectsHallucinatedDetailsFromTheModel() passed after 0.014 seconds.
+✔ Test retriesOnceWithFeedbackWhenTheModelReversesTheMeaning() passed after 0.015 seconds.
+✔ Test classDoesNotStartAtThreePM() passed after 0.015 seconds.
+✔ Test aClockTimeIsKeptEvenWhenTheDayIsKept() passed after 0.015 seconds.
+✔ Suite SummaryValidatorTests passed after 0.016 seconds.
+✔ Test asksOnceMoreWhenAHeadlineDropsTheNumber() passed after 0.027 seconds.
+[environment] on-device language model (en-US): Available (on device)
+✔ Test availabilityIsReportedWithoutThrowing() passed after 0.024 seconds.
+✔ Suite FoundationModelInterpreterTests passed after 0.034 seconds.
+✔ Test cancellationStopsFurtherAttempts() passed after 0.060 seconds.
+✔ Test aSlowModelTimesOutAndTheTranscriptLevelIsUsed() passed after 0.063 seconds.
+✔ Suite SpeechSemanticAnalyzerTests passed after 0.064 seconds.
+✔ Test run with 37 tests in 5 suites passed after 0.064 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite SemanticDatasetTests started.
+◇ Suite GoalMatchAttentionTests started.
+◇ Suite SemanticBaselineTests started.
+◇ Suite EvidenceVerifierTests started.
+◇ Suite SemanticAttentionEngineTests started.
+◇ Test theHeldOutSetSharesNoUtteranceWithTheDevelopmentSet() started.
+◇ Test goalIdentifiersAreStable() started.
+◇ Test metricsCountWhatTheySay() started.
+◇ Test bothSetsLoadAndAreWellFormed() started.
+◇ Test aRepeatedAnnouncementIsNotPresentedTwiceButANewOneIs() started.
+◇ Test itExpiresByItselfAndIsForgotten() started.
+◇ Test speechAttentionOffSuppressesGoalMatches() started.
+◇ Test aGoalMatchIsShownWithAGenericTitleAndAPrivateHeadline() started.
+◇ Test clearingSpeechDataRemovesAGoalMatchAndItsText() started.
+◇ Test itIsPresentedInQuietModeBecauseTheUserAskedForIt() started.
+◇ Test goalMatchesAreReplayedIdentically() started.
+◇ Test goalTextIsNormalized() started.
+◇ Test aStatementThatNothingChangesIsNotAnAlert() started.
+◇ Test theGateIsGenerous() started.
+◇ Test citedEvidenceMustHaveBeenSaid() started.
+◇ Test anIdenticalUtteranceIsAnsweredFromTheCache() started.
+◇ Test theKeywordBaselineSeesSharedWordsOnly() started.
+◇ Test onlyAnUrgentCertainMatchInterrupts() started.
+◇ Test resetForgetsWaitingUtterancesAndWhatWasAccepted() started.
+◇ Test poorRecognitionMakesAMatchUncertain() started.
+◇ Test fillersNeverReachTheModel() started.
+◇ Test aWishAJokeOrAFragmentIsNotAnEvent() started.
+◇ Test aModelFailureGivesNoAlertAndNoGuess() started.
+◇ Test anythingThatSoundsLikeAWarningSkipsTheFirstPass() started.
+◇ Test theVerifierNeverMakesADecisionLessCautious() started.
+◇ Test aHypotheticalMarkerOverridesTheModel() started.
+◇ Test theQueueIsBoundedAndDropsTheOldestWaitingUtterance() started.
+◇ Test theFirstPassStopsEverydayTalkBeforeTheFullJudgement() started.
+◇ Test aReasonMayNotNameADayOrNumberThatWasNotSaid() started.
+◇ Test aHeadlineMayNotAddWordsLoseANegationOrChangeANumber() started.
+◇ Test onlyAnUrgentCertainMatchAsksForAnAlert() started.
+◇ Test aQuestionAddressedToTheListenerCanStillMatter() started.
+◇ Test anUrgentLookingUtteranceGoesToTheFrontOfTheQueue() started.
+◇ Test somebodyElsesSituationIsKeptOutOfTheAlerts() started.
+◇ Test aSlowModelIsAbandoned() started.
+◇ Test aRelevantStatementIsAcceptedForItsGoal() started.
+◇ Test aGoalThatDoesNotExistIsNoMatch() started.
+◇ Test theSameStatementIsNotAcceptedTwiceButAChangedDayIs() started.
+◇ Test aDecisionSummaryForLogsHoldsNoSpeechText() started.
+◇ Test whilePausedNothingIsEvaluatedAndTheQueueStaysBounded() started.
+◇ Test withoutGoalsOrWhenDisabledNothingIsEvaluated() started.
+✔ Test goalIdentifiersAreStable() passed after 0.003 seconds.
+✔ Test itIsPresentedInQuietModeBecauseTheUserAskedForIt() passed after 0.003 seconds.
+✔ Test speechAttentionOffSuppressesGoalMatches() passed after 0.003 seconds.
+✔ Test itExpiresByItselfAndIsForgotten() passed after 0.003 seconds.
+✔ Test goalTextIsNormalized() passed after 0.003 seconds.
+✔ Test clearingSpeechDataRemovesAGoalMatchAndItsText() passed after 0.003 seconds.
+✔ Test aStatementThatNothingChangesIsNotAnAlert() passed after 0.003 seconds.
+✔ Test aRepeatedAnnouncementIsNotPresentedTwiceButANewOneIs() passed after 0.003 seconds.
+✔ Test theGateIsGenerous() passed after 0.003 seconds.
+✔ Test theKeywordBaselineSeesSharedWordsOnly() passed after 0.003 seconds.
+✔ Test fillersNeverReachTheModel() passed after 0.003 seconds.
+✔ Test goalMatchesAreReplayedIdentically() passed after 0.003 seconds.
+✔ Test onlyAnUrgentCertainMatchInterrupts() passed after 0.003 seconds.
+✔ Test poorRecognitionMakesAMatchUncertain() passed after 0.003 seconds.
+✔ Test citedEvidenceMustHaveBeenSaid() passed after 0.003 seconds.
+✔ Test aHypotheticalMarkerOverridesTheModel() passed after 0.003 seconds.
+✔ Test theVerifierNeverMakesADecisionLessCautious() passed after 0.003 seconds.
+✔ Test aWishAJokeOrAFragmentIsNotAnEvent() passed after 0.003 seconds.
+✔ Test aReasonMayNotNameADayOrNumberThatWasNotSaid() passed after 0.003 seconds.
+✔ Test aQuestionAddressedToTheListenerCanStillMatter() passed after 0.003 seconds.
+✔ Test aGoalThatDoesNotExistIsNoMatch() passed after 0.003 seconds.
+✔ Test withoutGoalsOrWhenDisabledNothingIsEvaluated() passed after 0.002 seconds.
+✔ Test somebodyElsesSituationIsKeptOutOfTheAlerts() passed after 0.003 seconds.
+✔ Test onlyAnUrgentCertainMatchAsksForAnAlert() passed after 0.003 seconds.
+✔ Suite SemanticBaselineTests passed after 0.003 seconds.
+✔ Test theFirstPassStopsEverydayTalkBeforeTheFullJudgement() passed after 0.003 seconds.
+✔ Test aHeadlineMayNotAddWordsLoseANegationOrChangeANumber() passed after 0.003 seconds.
+✔ Test aModelFailureGivesNoAlertAndNoGuess() passed after 0.003 seconds.
+✔ Suite EvidenceVerifierTests passed after 0.004 seconds.
+✔ Test anythingThatSoundsLikeAWarningSkipsTheFirstPass() passed after 0.003 seconds.
+✔ Test aRelevantStatementIsAcceptedForItsGoal() passed after 0.003 seconds.
+✔ Test resetForgetsWaitingUtterancesAndWhatWasAccepted() passed after 0.004 seconds.
+✔ Test anIdenticalUtteranceIsAnsweredFromTheCache() passed after 0.004 seconds.
+✔ Test aGoalMatchIsShownWithAGenericTitleAndAPrivateHeadline() passed after 0.005 seconds.
+✔ Test aDecisionSummaryForLogsHoldsNoSpeechText() passed after 0.004 seconds.
+✔ Suite GoalMatchAttentionTests passed after 0.005 seconds.
+✔ Test theSameStatementIsNotAcceptedTwiceButAChangedDayIs() passed after 0.004 seconds.
+✔ Test theHeldOutSetSharesNoUtteranceWithTheDevelopmentSet() passed after 0.019 seconds.
+✔ Test bothSetsLoadAndAreWellFormed() passed after 0.022 seconds.
+✔ Test metricsCountWhatTheySay() passed after 0.034 seconds.
+✔ Suite SemanticDatasetTests passed after 0.035 seconds.
+✔ Test aSlowModelIsAbandoned() passed after 0.063 seconds.
+✔ Test whilePausedNothingIsEvaluatedAndTheQueueStaysBounded() passed after 0.159 seconds.
+✔ Test theQueueIsBoundedAndDropsTheOldestWaitingUtterance() passed after 0.317 seconds.
+✔ Test anUrgentLookingUtteranceGoesToTheFrontOfTheQueue() passed after 0.523 seconds.
+✔ Suite SemanticAttentionEngineTests passed after 0.524 seconds.
+✔ Test run with 41 tests in 5 suites passed after 0.524 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite AmbientIconStreamTests started.
+◇ Suite AlertGateTests started.
+◇ Suite IslandPipelineTests started.
+◇ Suite AcousticSceneTrackerTests started.
+◇ Suite Window6PresentationTests started.
+◇ Suite Window7CostTests started.
+◇ Suite Window7PresentationTests started.
+◇ Test aSoundDuringTheIdleHoldReplacesTheIconDirectly() started.
+◇ Suite SoundSymbolCatalogTests started.
+◇ Suite ActivityLifetimeTests started.
+◇ Test aPendingLockNoticeMeansLockedAlthoughTheDataIsStillAvailable() started.
+◇ Test storedSettingsFromAnOlderBuildKeepTheirDefaults() started.
+◇ Test availableDataMeansNothingUntilTheSignalWasSeenToChange() started.
+◇ Test identicalContentIsNotSentAgainExceptAsKeepAlive() started.
+◇ Test prominentAlertsAreOnByDefaultAndTheLockedIPhoneIsOptIn() started.
+◇ Test anAlertIsSentOnlyWhenTheDeviceIsJudgedUnlocked() started.
+◇ Test theLockStateIsOnlyKnownWithAPasscode() started.
+◇ Test anOrdinarySoundIsAnIconWithoutAnyText() started.
+◇ Test anAttentionEpisodeTakesTheIslandAndAmbientUpdatesCannotOverwriteIt() started.
+◇ Test aSoundThatIsOverDoesNotAppearLate() started.
+◇ Test anExpansionIsRequestedOncePerEpisodeAndAgainWhenThePriorityRises() started.
+◇ Test theSettingTurnsExpansionOffEverywhere() started.
+◇ Test aConversationSummaryTravelsFromTheEngineToTheExpandedIsland() started.
+◇ Test theLatestSummaryStaysReadableAfterItsEpisodeIsOver() started.
+◇ Test theSessionEndRemovesTheIconAtOnce() started.
+◇ Test secondaryDetailsAloneAreNotWorthAnUpdate() started.
+◇ Test weakEvidenceGetsNoIconUntilItImproves() started.
+◇ Test aLowerRankedNewSoundShowsFirstThenTheHigherRankedOneReturns() started.
+◇ Test anInterruptionShowsPausedAndKeepsTheActivity() started.
+◇ Test aLongSceneStaysWithinAModestUpdateRate() started.
+◇ Test anEventWithoutUpdatesIsDroppedAsStale() started.
+◇ Test normalAndLowPrioritiesDoNotRequestAnExpansion() started.
+◇ Test aConfirmedSoundBecomesAnIconWithoutText() started.
+◇ Test changesAreLimitedPerMinute() started.
+◇ Test anUncertainEpisodeIsMarkedAsSuch() started.
+◇ Test aKindShownAMomentAgoDoesNotTakeTheIconAgainUnlessItIsStrong() started.
+◇ Test anOrdinarySoundTakesTheIconAndTheSummaryStaysReadable() started.
+◇ Test aSpeechSummaryIsTheHeadlineWhenTheSettingAllowsIt() started.
+◇ Test aNewSoundShowsAtOnceAndTheOneThatKeepsGoingComesBack() started.
+◇ Test aBriefSoundLingersThenTheIconGoesAfterTheIdleHold() started.
+◇ Test ambientIconsCanBeTurnedOff() started.
+◇ Test anEpisodeBehindAnotherOneDoesNotRequestAnExpansion() started.
+◇ Test theSameInputsGiveTheSameChanges() started.
+◇ Test everyKindOfTheTaxonomyGetsAnIconOrIsExcluded() started.
+◇ Test aShownIconStaysForTheMinimumDisplayTime() started.
+◇ Test turningSummariesOffOrEndingTheSessionForgetsTheRecalledSummary() started.
+◇ Test withSummariesOffNoSpokenWordEntersTheContent() started.
+◇ Test anIconThatTookOverFromAnEpisodeStaysForTheMinimumDisplayTime() started.
+◇ Test whileTheIPhoneIsLockedNoSpokenWordIsInTheContent() started.
+◇ Test eachKindOfSurroundingsIsRecognizedFromItsSounds() started.
+◇ Test microphoneWindNoiseNeverGetsAnIcon() started.
+◇ Test aSoundThatComesBackKeepsItsIconWithoutAChange() started.
+◇ Test everySceneHasWordsAndASymbol() started.
+◇ Test aLastingChangeSwitchesTheSceneOnceAfterADelay() started.
+◇ Test alternatingSoundsDoNotMakeTheSceneFlicker() started.
+◇ Test severalKindsAtOnceWithoutALeaderAreMixed() started.
+◇ Test aRecapStateIsAQuietGenericEpisodeThatIsRemovedWhenDismissed() started.
+◇ Test aLowerPriorityEpisodeGivesWayToANewerOrdinarySound() started.
+◇ Test theFirstSpeechSummaryRequestsAnExpansionWithoutCarryingTheWords() started.
+◇ Test theSameSceneGivesTheSameCommands() started.
+◇ Test nothingRecognizedBecomesQuietAfterAWhileAndThenNeedsNoTimer() started.
+◇ Test theSummaryOfOrdinaryConversationIsShownWithoutAnExpansionRequest() started.
+◇ Test aShortSoundDoesNotChangeTheScene() started.
+◇ Test switchingTranscriptionOffRemovesEverySpokenWordAtOnce() started.
+◇ Test weakEvidenceCountsLessAndSomeSoundsSayNothingAboutTheScene() started.
+◇ Test theSceneTrackerAndThePipelineCostMicrosecondsPerInput() started.
+◇ Test expansionRequestsAreSpacedOutExceptForUrgentEpisodes() started.
+◇ Test aGoalMatchIsShownWithAGenericTitleAndNeverAsksToExpand() started.
+◇ Test soundsTheAttentionEngineSuppressesAreStillIcons() started.
+◇ Test withSpeechSummariesAllowedTheHeadlineIsShownAsSpeech() started.
+◇ Test aResolvedEpisodeStaysUntilItsExpiryAndCanComeBack() started.
+◇ Test afterTheSoundsEndItBecomesQuietAgain() started.
+◇ Test sustainedMusicBecomesTheMusicScene() started.
+◇ Test anEpisodeIsRemovedAtItsOwnExpiryEvenWithoutADismissal() started.
+◇ Test everyScriptedSceneKeepsThePresentationRulesInEveryMode() started.
+◇ Test endingTheSessionForgetsEverything() started.
+◇ Test aHighPriorityEpisodeIsProtectedForALimitedTimeAndAnUrgentOneThroughout() started.
+◇ Test quietChangesCloseTogetherAreCoalesced() started.
+◇ Test aNewerSummaryReplacesTheRecalledOne() started.
+◇ Test theSameInputsGiveTheSameScenesAndTheStateIsBounded() started.
+◇ Test anAlertIsNotRepeatedExpiresAndCanHappenAgainLater() started.
+◇ Test aHighestPriorityAcousticEventAsksForAnExpansion() started.
+◇ Test theHigherPriorityIsInFrontAndEqualPrioritiesWaitForTheMinimumHold() started.
+◇ Test withTheActivityTurnedOffNothingIsSentUntilItIsTurnedOn() started.
+◇ Test ordinarySoundsChangeTheIconSilentlyInTheOneActivity() started.
+◇ Test aSpeechEpisodeNeverAsksForAnExpansion() started.
+◇ Test nearbySpeechWithoutASummaryIsOnlyAnIcon() started.
+◇ Test aResolvedEpisodeDoesNotComeBackToTheFrontAfterAnotherOne() started.
+◇ Test aSessionStartsOneActivityAndItsEndEndsIt() started.
+◇ Test theEndOfTheSessionRemovesTheConversationState() started.
+◇ Test theExpandedPresentationCanNameTheCurrentSound() started.
+◇ Test theSceneTravelsWithTheContentAndNeverCausesAnUpdateOfItsOwn() started.
+◇ Test inTheScriptedScenesOnlyImportantAcousticEventsAskForAnExpansion() started.
+◇ Test aLongSummaryIsClippedForTheIsland() started.
+◇ Test settingsStoredBeforeTheDecisionTakeTheNewDefaultOnce() started.
+◇ Test onlyAVerifiedHighPriorityAcousticEventAsksForAProminentPresentation() started.
+◇ Test anEventsRequestHasPrecedenceOverTheSummarys() started.
+◇ Test aRequestedSummaryIsShownAtOnceAndAsksForOneExpansionWhenReady() started.
+◇ Test anAlertOnTheLockedIPhoneNeedsTheUsersOptIn() started.
+◇ Test noScriptedSceneLetsSpeechAskForAnExpansion() started.
+◇ Test theSummaryTextLeavesTheContentWhenLockedWhenNotWantedAndWhenCleared() started.
+◇ Test theGateFollowsTheRightSettingForEachKindOfRequest() started.
+◇ Test contentAndSettingsOfAnOlderBuildStillDecode() started.
+◇ Test humanSoundsAndSpeechHaveTellingIcons() started.
+◇ Test anUnknownLabelFallsBackToItsKindThenItsCategory() started.
+◇ Test theTablesNameOnlyLabelsAndKindsThatExist() started.
+◇ Test voiceOverNamesTheSoundTheIconShows() started.
+◇ Test everyCustomGlyphNameIsUsedAndRoundTrips() started.
+◇ Test everySymbolNameExistsOnThisSystem() started.
+◇ Test everyClassifierLabelResolvesToASymbol() started.
+◇ Test everyEventKindHasItsOwnSymbol() started.
+◇ Test aRunningActivityIsNeverReplacedHoweverOldItIs() started.
+◇ Test specificLabelsWinOverTheirKind() started.
+◇ Test anActivityRemovedBeforeItsTimeIsShownAgainWhenTheAppIsOpened() started.
+◇ Test withoutASessionNothingIsEverRequested() started.
+◇ Test theExpectedEndIsEightHoursAfterTheStart() started.
+◇ Test afterTheSystemsLimitNothingIsRequestedForThisSession() started.
+✔ Test aPendingLockNoticeMeansLockedAlthoughTheDataIsStillAvailable() passed after 0.007 seconds.
+✔ Test availableDataMeansNothingUntilTheSignalWasSeenToChange() passed after 0.008 seconds.
+✔ Test storedSettingsFromAnOlderBuildKeepTheirDefaults() passed after 0.009 seconds.
+✔ Test theLockStateIsOnlyKnownWithAPasscode() passed after 0.009 seconds.
+✔ Test anAlertIsSentOnlyWhenTheDeviceIsJudgedUnlocked() passed after 0.009 seconds.
+✔ Test prominentAlertsAreOnByDefaultAndTheLockedIPhoneIsOptIn() passed after 0.009 seconds.
+✔ Test theSettingTurnsExpansionOffEverywhere() passed after 0.010 seconds.
+✔ Test anOrdinarySoundIsAnIconWithoutAnyText() passed after 0.011 seconds.
+✔ Test theSessionEndRemovesTheIconAtOnce() passed after 0.011 seconds.
+✔ Test anExpansionIsRequestedOncePerEpisodeAndAgainWhenThePriorityRises() passed after 0.011 seconds.
+✔ Test weakEvidenceGetsNoIconUntilItImproves() passed after 0.011 seconds.
+✔ Test theLatestSummaryStaysReadableAfterItsEpisodeIsOver() passed after 0.011 seconds.
+✔ Test anAttentionEpisodeTakesTheIslandAndAmbientUpdatesCannotOverwriteIt() passed after 0.011 seconds.
+✔ Test anEventWithoutUpdatesIsDroppedAsStale() passed after 0.011 seconds.
+✔ Test secondaryDetailsAloneAreNotWorthAnUpdate() passed after 0.011 seconds.
+✔ Test anInterruptionShowsPausedAndKeepsTheActivity() passed after 0.011 seconds.
+✔ Test anUncertainEpisodeIsMarkedAsSuch() passed after 0.011 seconds.
+✔ Test normalAndLowPrioritiesDoNotRequestAnExpansion() passed after 0.011 seconds.
+✔ Test aSpeechSummaryIsTheHeadlineWhenTheSettingAllowsIt() passed after 0.012 seconds.
+✔ Test anOrdinarySoundTakesTheIconAndTheSummaryStaysReadable() passed after 0.012 seconds.
+✔ Test changesAreLimitedPerMinute() passed after 0.012 seconds.
+✔ Test anEpisodeBehindAnotherOneDoesNotRequestAnExpansion() passed after 0.012 seconds.
+✔ Test ambientIconsCanBeTurnedOff() passed after 0.012 seconds.
+✔ Test aConversationSummaryTravelsFromTheEngineToTheExpandedIsland() passed after 0.012 seconds.
+✔ Test identicalContentIsNotSentAgainExceptAsKeepAlive() passed after 0.012 seconds.
+✔ Test aSoundThatIsOverDoesNotAppearLate() passed after 0.013 seconds.
+✔ Test aConfirmedSoundBecomesAnIconWithoutText() passed after 0.012 seconds.
+✔ Test turningSummariesOffOrEndingTheSessionForgetsTheRecalledSummary() passed after 0.012 seconds.
+✔ Test aBriefSoundLingersThenTheIconGoesAfterTheIdleHold() passed after 0.012 seconds.
+✔ Test anIconThatTookOverFromAnEpisodeStaysForTheMinimumDisplayTime() passed after 0.012 seconds.
+✔ Test aSoundDuringTheIdleHoldReplacesTheIconDirectly() passed after 0.013 seconds.
+✔ Test aLowerRankedNewSoundShowsFirstThenTheHigherRankedOneReturns() passed after 0.013 seconds.
+✔ Test aKindShownAMomentAgoDoesNotTakeTheIconAgainUnlessItIsStrong() passed after 0.012 seconds.
+✔ Test withSummariesOffNoSpokenWordEntersTheContent() passed after 0.012 seconds.
+✔ Test aShownIconStaysForTheMinimumDisplayTime() passed after 0.012 seconds.
+✔ Test whileTheIPhoneIsLockedNoSpokenWordIsInTheContent() passed after 0.012 seconds.
+✔ Test microphoneWindNoiseNeverGetsAnIcon() passed after 0.012 seconds.
+✔ Test aNewSoundShowsAtOnceAndTheOneThatKeepsGoingComesBack() passed after 0.012 seconds.
+✔ Test everySceneHasWordsAndASymbol() passed after 0.012 seconds.
+✔ Test aSoundThatComesBackKeepsItsIconWithoutAChange() passed after 0.012 seconds.
+✔ Test theSameInputsGiveTheSameChanges() passed after 0.013 seconds.
+✔ Test aRecapStateIsAQuietGenericEpisodeThatIsRemovedWhenDismissed() passed after 0.012 seconds.
+✔ Test nothingRecognizedBecomesQuietAfterAWhileAndThenNeedsNoTimer() passed after 0.012 seconds.
+✔ Test theSummaryOfOrdinaryConversationIsShownWithoutAnExpansionRequest() passed after 0.012 seconds.
+✔ Test theFirstSpeechSummaryRequestsAnExpansionWithoutCarryingTheWords() passed after 0.012 seconds.
+✔ Test switchingTranscriptionOffRemovesEverySpokenWordAtOnce() passed after 0.012 seconds.
+✔ Test weakEvidenceCountsLessAndSomeSoundsSayNothingAboutTheScene() passed after 0.012 seconds.
+✔ Test everyKindOfTheTaxonomyGetsAnIconOrIsExcluded() passed after 0.013 seconds.
+✔ Test severalKindsAtOnceWithoutALeaderAreMixed() passed after 0.013 seconds.
+✔ Test expansionRequestsAreSpacedOutExceptForUrgentEpisodes() passed after 0.012 seconds.
+✔ Test aShortSoundDoesNotChangeTheScene() passed after 0.012 seconds.
+✔ Test aGoalMatchIsShownWithAGenericTitleAndNeverAsksToExpand() passed after 0.012 seconds.
+✔ Test aLastingChangeSwitchesTheSceneOnceAfterADelay() passed after 0.013 seconds.
+✔ Test aLowerPriorityEpisodeGivesWayToANewerOrdinarySound() passed after 0.013 seconds.
+✔ Test withSpeechSummariesAllowedTheHeadlineIsShownAsSpeech() passed after 0.012 seconds.
+✔ Test aResolvedEpisodeStaysUntilItsExpiryAndCanComeBack() passed after 0.013 seconds.
+✔ Test afterTheSoundsEndItBecomesQuietAgain() passed after 0.013 seconds.
+✔ Test anEpisodeIsRemovedAtItsOwnExpiryEvenWithoutADismissal() passed after 0.013 seconds.
+✔ Test sustainedMusicBecomesTheMusicScene() passed after 0.013 seconds.
+✔ Test quietChangesCloseTogetherAreCoalesced() passed after 0.013 seconds.
+✔ Test endingTheSessionForgetsEverything() passed after 0.013 seconds.
+✔ Test soundsTheAttentionEngineSuppressesAreStillIcons() passed after 0.013 seconds.
+✔ Test eachKindOfSurroundingsIsRecognizedFromItsSounds() passed after 0.013 seconds.
+✔ Test aNewerSummaryReplacesTheRecalledOne() passed after 0.013 seconds.
+✔ Test aHighestPriorityAcousticEventAsksForAnExpansion() passed after 0.013 seconds.
+✔ Test anAlertIsNotRepeatedExpiresAndCanHappenAgainLater() passed after 0.013 seconds.
+✔ Test theHigherPriorityIsInFrontAndEqualPrioritiesWaitForTheMinimumHold() passed after 0.013 seconds.
+✔ Test withTheActivityTurnedOffNothingIsSentUntilItIsTurnedOn() passed after 0.013 seconds.
+✔ Test aSpeechEpisodeNeverAsksForAnExpansion() passed after 0.013 seconds.
+✔ Test aSessionStartsOneActivityAndItsEndEndsIt() passed after 0.013 seconds.
+✔ Test nearbySpeechWithoutASummaryIsOnlyAnIcon() passed after 0.013 seconds.
+✔ Test aResolvedEpisodeDoesNotComeBackToTheFrontAfterAnotherOne() passed after 0.013 seconds.
+✔ Test theEndOfTheSessionRemovesTheConversationState() passed after 0.013 seconds.
+✔ Test theExpandedPresentationCanNameTheCurrentSound() passed after 0.013 seconds.
+✔ Test theSameSceneGivesTheSameCommands() passed after 0.013 seconds.
+✔ Test aLongSummaryIsClippedForTheIsland() passed after 0.013 seconds.
+✔ Test theSceneTravelsWithTheContentAndNeverCausesAnUpdateOfItsOwn() passed after 0.013 seconds.
+✔ Test anEventsRequestHasPrecedenceOverTheSummarys() passed after 0.013 seconds.
+✔ Test aHighPriorityEpisodeIsProtectedForALimitedTimeAndAnUrgentOneThroughout() passed after 0.013 seconds.
+✔ Test ordinarySoundsChangeTheIconSilentlyInTheOneActivity() passed after 0.013 seconds.
+✔ Test settingsStoredBeforeTheDecisionTakeTheNewDefaultOnce() passed after 0.013 seconds.
+✔ Test anAlertOnTheLockedIPhoneNeedsTheUsersOptIn() passed after 0.013 seconds.
+✔ Test aRequestedSummaryIsShownAtOnceAndAsksForOneExpansionWhenReady() passed after 0.013 seconds.
+✔ Test theGateFollowsTheRightSettingForEachKindOfRequest() passed after 0.013 seconds.
+✔ Test theSummaryTextLeavesTheContentWhenLockedWhenNotWantedAndWhenCleared() passed after 0.013 seconds.
+✔ Test contentAndSettingsOfAnOlderBuildStillDecode() passed after 0.012 seconds.
+✔ Test anUnknownLabelFallsBackToItsKindThenItsCategory() passed after 0.012 seconds.
+✔ Test humanSoundsAndSpeechHaveTellingIcons() passed after 0.012 seconds.
+✔ Test onlyAVerifiedHighPriorityAcousticEventAsksForAProminentPresentation() passed after 0.013 seconds.
+✔ Test voiceOverNamesTheSoundTheIconShows() passed after 0.012 seconds.
+✔ Test everyCustomGlyphNameIsUsedAndRoundTrips() passed after 0.012 seconds.
+✔ Test theTablesNameOnlyLabelsAndKindsThatExist() passed after 0.012 seconds.
+✔ Test everyEventKindHasItsOwnSymbol() passed after 0.012 seconds.
+✔ Test aRunningActivityIsNeverReplacedHoweverOldItIs() passed after 0.012 seconds.
+✔ Test everyClassifierLabelResolvesToASymbol() passed after 0.012 seconds.
+✔ Test anActivityRemovedBeforeItsTimeIsShownAgainWhenTheAppIsOpened() passed after 0.012 seconds.
+✔ Test specificLabelsWinOverTheirKind() passed after 0.012 seconds.
+✔ Test theExpectedEndIsEightHoursAfterTheStart() passed after 0.011 seconds.
+✔ Test withoutASessionNothingIsEverRequested() passed after 0.011 seconds.
+✔ Test afterTheSystemsLimitNothingIsRequestedForThisSession() passed after 0.011 seconds.
+✔ Suite AlertGateTests passed after 0.015 seconds.
+✔ Test alternatingSoundsDoNotMakeTheSceneFlicker() passed after 0.014 seconds.
+✔ Suite Window6PresentationTests passed after 0.015 seconds.
+✔ Suite AmbientIconStreamTests passed after 0.015 seconds.
+✔ Suite ActivityLifetimeTests passed after 0.015 seconds.
+✔ Test inTheScriptedScenesOnlyImportantAcousticEventsAskForAnExpansion() passed after 0.032 seconds.
+✔ Test theSameInputsGiveTheSameScenesAndTheStateIsBounded() passed after 0.084 seconds.
+✔ Suite AcousticSceneTrackerTests passed after 0.085 seconds.
+✔ Test noScriptedSceneLetsSpeechAskForAnExpansion() passed after 0.102 seconds.
+✔ Suite Window7PresentationTests passed after 0.103 seconds.
+✔ Test everySymbolNameExistsOnThisSystem() passed after 0.102 seconds.
+✔ Suite SoundSymbolCatalogTests passed after 0.104 seconds.
+✔ Test aLongSceneStaysWithinAModestUpdateRate() passed after 0.165 seconds.
+✔ Test everyScriptedSceneKeepsThePresentationRulesInEveryMode() passed after 0.246 seconds.
+✔ Suite IslandPipelineTests passed after 0.247 seconds.
+Window 7 cost per input (debug build, this Mac): scene tracker 16.2 µs, island pipeline 16.7 µs, 15000 inputs
+✔ Test theSceneTrackerAndThePipelineCostMicrosecondsPerInput() passed after 0.544 seconds.
+✔ Suite Window7CostTests passed after 0.545 seconds.
+✔ Test run with 108 tests in 9 suites passed after 0.546 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite DiagnosticEventLogTests started.
+◇ Suite CaptureThroughputTests started.
+◇ Suite SessionTimeLimitTests started.
+◇ Suite LevelMeterTests started.
+◇ Test exportContainsKindAndMessage() started.
+◇ Suite RouteAssessmentTests started.
+◇ Suite AudioSessionPolicyTests started.
+◇ Test trimsOldestEntriesBeyondCapacity() started.
+◇ Test resetClearsCounters() started.
+◇ Test aNegativeDurationIsAlreadyOver() started.
+◇ Suite ListeningSessionMachineTests started.
+◇ Test heartbeatField() started.
+◇ Test intervalNeedsElapsedTimeAndSampleRate() started.
+◇ Test onlyTheFirstTriggerIsRecorded() started.
+◇ Test interleavedBufferMatchesDeinterleaved() started.
+◇ Test halfAmplitudeIsSixDecibelsLower() started.
+◇ Test itIsDueFromTheDeadlineUntilItFired() started.
+◇ Test normalizationClamps() started.
+◇ Test nothingMayCaptureAfterTheDeadlineEvenAfterTheStop() started.
+◇ Test nonFloatBufferIsRejected() started.
+◇ Test pcmBufferReportsLoudestChannel() started.
+◇ Test intervalCoverage() started.
+◇ Test fullScaleSine() started.
+◇ Test noInput() started.
+◇ Test hfpInput() started.
+◇ Test otherInput() started.
+◇ Test highQualityBluetoothInput() started.
+◇ Test targetRoute() started.
+◇ Test everyPolicyMixesAndNeverDucks() started.
+◇ Test silenceAndEmptyInputClampToFloor() started.
+◇ Test reportListsRoutesAndAssessment() started.
+◇ Test recommendedPolicyKeepsBluetoothOutputOnA2DP() started.
+◇ Test builtInMicWithSpeaker() started.
+◇ Test aRecordThatSaysOnIsReportedAsLostAndNothingRestarts() started.
+◇ Test stoppingWhileOffAndStartingWhileOnAreRefused() started.
+◇ Test anInterruptionKeepsTheSessionAndAStartResumesIt() started.
+✔ Test resetClearsCounters() passed after 0.001 seconds.
+◇ Test manyTogglesAlternateAndEveryStartIsANewSession() started.
+✔ Test trimsOldestEntriesBeyondCapacity() passed after 0.001 seconds.
+◇ Test aFailedStartClosesTheSession() started.
+◇ Test requestsDuringAStartAreRefusedNotQueued() started.
+◇ Test theRecordSurvivesEncodingAndSaysWhetherASessionWasOpen() started.
+✔ Test aNegativeDurationIsAlreadyOver() passed after 0.001 seconds.
+◇ Test aToggleWhileInterruptedTurnsItOff() started.
+◇ Test aToggleTurnsItOnAndTheNextOneOff() started.
+✔ Test intervalNeedsElapsedTimeAndSampleRate() passed after 0.001 seconds.
+✔ Test nothingMayCaptureAfterTheDeadlineEvenAfterTheStop() passed after 0.001 seconds.
+✔ Test onlyTheFirstTriggerIsRecorded() passed after 0.001 seconds.
+✔ Test normalizationClamps() passed after 0.001 seconds.
+✔ Test intervalCoverage() passed after 0.001 seconds.
+✔ Test itIsDueFromTheDeadlineUntilItFired() passed after 0.001 seconds.
+✔ Test nonFloatBufferIsRejected() passed after 0.001 seconds.
+✔ Test hfpInput() passed after 0.001 seconds.
+✔ Test highQualityBluetoothInput() passed after 0.001 seconds.
+✔ Test noInput() passed after 0.001 seconds.
+✔ Test otherInput() passed after 0.001 seconds.
+✔ Test exportContainsKindAndMessage() passed after 0.001 seconds.
+✔ Test targetRoute() passed after 0.001 seconds.
+✔ Test recommendedPolicyKeepsBluetoothOutputOnA2DP() passed after 0.001 seconds.
+✔ Test everyPolicyMixesAndNeverDucks() passed after 0.001 seconds.
+✔ Test silenceAndEmptyInputClampToFloor() passed after 0.001 seconds.
+✔ Test builtInMicWithSpeaker() passed after 0.001 seconds.
+✔ Test aRecordThatSaysOnIsReportedAsLostAndNothingRestarts() passed after 0.001 seconds.
+✔ Suite CaptureThroughputTests passed after 0.001 seconds.
+✔ Test stoppingWhileOffAndStartingWhileOnAreRefused() passed after 0.001 seconds.
+✔ Test aFailedStartClosesTheSession() passed after 0.001 seconds.
+✔ Test anInterruptionKeepsTheSessionAndAStartResumesIt() passed after 0.001 seconds.
+✔ Test manyTogglesAlternateAndEveryStartIsANewSession() passed after 0.001 seconds.
+✔ Test aToggleWhileInterruptedTurnsItOff() passed after 0.001 seconds.
+✔ Test requestsDuringAStartAreRefusedNotQueued() passed after 0.001 seconds.
+✔ Test aToggleTurnsItOnAndTheNextOneOff() passed after 0.001 seconds.
+✔ Test fullScaleSine() passed after 0.001 seconds.
+✔ Suite DiagnosticEventLogTests passed after 0.001 seconds.
+✔ Suite AudioSessionPolicyTests passed after 0.001 seconds.
+✔ Test theRecordSurvivesEncodingAndSaysWhetherASessionWasOpen() passed after 0.001 seconds.
+✔ Suite ListeningSessionMachineTests passed after 0.001 seconds.
+✔ Test halfAmplitudeIsSixDecibelsLower() passed after 0.001 seconds.
+✔ Test pcmBufferReportsLoudestChannel() passed after 0.002 seconds.
+✔ Test interleavedBufferMatchesDeinterleaved() passed after 0.003 seconds.
+✔ Suite LevelMeterTests passed after 0.003 seconds.
+✔ Test heartbeatField() passed after 0.004 seconds.
+✔ Suite SessionTimeLimitTests passed after 0.004 seconds.
+✔ Test reportListsRoutesAndAssessment() passed after 0.004 seconds.
+✔ Suite RouteAssessmentTests passed after 0.004 seconds.
+✔ Test run with 35 tests in 7 suites passed after 0.004 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite ConversationSessionMachineTests started.
+◇ Suite RecapRestatementTests started.
+◇ Suite Window7BufferTests started.
+◇ Suite RecapValidatorTests started.
+◇ Suite ConversationRecapEngineTests started.
+◇ Suite Window7VerbatimTests started.
+◇ Suite ProductionAuditTests started.
+◇ Suite RollingConversationBufferTests started.
+◇ Suite Window7ConversationMachineTests started.
+◇ Suite RecapVerbatimShareTests started.
+◇ Test theNextPressStopsFinalizesAndDeletesTheTemporaryContext() started.
+◇ Test aContinuedSessionEndsByItselfAfterTheLimit() started.
+◇ Test fillersAreNotMeaningfulWords() started.
+◇ Test statusTitlesAreGenericAndHaveSymbols() started.
+◇ Test speechThatNeverPausesIsSummarizedBeforeItExpires() started.
+◇ Suite ConversationRecordTests started.
+◇ Test stoppingListeningOrWithdrawingPermissionEndsEverything() started.
+◇ Test continuingAsksForUpdatesOnlyWhenSomethingNewWasSaidAndThePausedCame() started.
+◇ Test withoutAnAcceptableRestatementTheCopyIsStillLeftOut() started.
+◇ Test theFirstPressWritesARecapAndSavesIt() started.
+◇ Test onlyAFewStatementsAreRestatedPerDraft() started.
+◇ Test aCopiedFactIsRestatedInsteadOfDeleted() started.
+◇ Test aRestatementThatFailsTheOrdinaryChecksIsRefused() started.
+◇ Test aRecapNeedsListeningAndPermission() started.
+◇ Test aRestatementMustCarryTheSameFactsAndNothingElse() started.
+◇ Test anUpdateRestatesWhatItCopied() started.
+◇ Test anExcerptHoldsOnlyWhatWasSaidInTheLastTwoMinutes() started.
+◇ Test itEmptiesItselfWhenNobodySpeaksAndWhenCleared() started.
+◇ Test missingSpeechAndPoorRecognitionBecomeCaveats() started.
+◇ Test nothingNewOrAFailedUpdateLeavesTheRecapAlone() started.
+◇ Test nothingIsKeptBeforeTranscriptionWasAllowed() started.
+◇ Test aCheckedRecapIsReturnedWithItsCoverage() started.
+◇ Test anUpdateThatOnlyAppendsTheTranscriptChangesNothing() started.
+◇ Test theProductBufferLooksBackTwoMinutes() started.
+◇ Test theBoundsHoldWhateverIsSaid() started.
+◇ Test tooLittleSpeechIsSaidPlainlyAndTheModelIsNotAsked() started.
+◇ Test supportedStatementsPass() started.
+◇ Test theAppDoesNotUseTheSemanticAttentionModule() started.
+◇ Test restatingTheEarlierRecapIsNotACopy() started.
+◇ Test sentencesCopiedFromTheTranscriptAreRemovedFromASummary() started.
+◇ Test withoutAModelNoSummaryIsInventedAndNoTranscriptIsPutInItsPlace() started.
+◇ Test aRecapThatMostlyFailsTheChecksIsNotShownAsASummary() started.
+◇ Test anUpdateKeepsEarlierKeyPointsAndAddsNewOnes() started.
+◇ Test numbersAsWordsAndDigitsAgree() started.
+◇ Test aNumberDayOrNameThatWasNotSaidIsRemoved() started.
+◇ Test aSentenceMadeOfOtherWordsIsRemoved() started.
+◇ Test theAppTargetsDoNotLinkTheSemanticAttentionModule() started.
+◇ Test anExcerptStopsAtTheLastLongPause() started.
+◇ Test theBufferIsBoundedInCountAndSize() started.
+◇ Test theAppOpensNoLanguageModelSessionOfItsOwn() started.
+◇ Test nothingIsKeptUntilCollectionBegins() started.
+◇ Test aConversationThatWasGoingOnWhenListeningBeganIsMarkedTruncated() started.
+◇ Test summarizeWritesSavesAndOffersContinue() started.
+◇ Test clearDeletesEverythingAndStopsCollecting() started.
+◇ Test textExpiresAfterTheRetentionTime() started.
+◇ Test stopDoesNothingUnlessAConversationIsFollowed() started.
+◇ Test aDuplicateFinalResultIsStoredOnce() started.
+◇ Test missingSpeechIsRememberedAndReported() started.
+◇ Test anExcerptLooksBackNoFurtherThanTheWindow() started.
+◇ Test aRequestWithoutASummaryIsNotSavedAndNotContinued() started.
+◇ Test turningListeningOffFinalizesAFollowedConversation() started.
+◇ Test tentativeWordsAreForCaptionsOnly() started.
+◇ Test continueFollowsAndStopEndsOnlyTheConversation() started.
+◇ Test withoutTranscriptionTheRequestExplainsThatPastSpeechIsGone() started.
+◇ Test theLastCheckBeforeSavingRefusesATranscript() started.
+◇ Test theShareIsZeroForOwnWordsAndOneForTheTranscript() started.
+◇ Test anOrdinarySummaryOfPlainFactsStaysUnderTheLimit() started.
+◇ Test anUpdateThatIsMostlyTranscriptIsNotTaken() started.
+◇ Test summarizeNeverStopsAnything() started.
+◇ Test speechAloneNeverStartsASummary() started.
+◇ Test aTranscriptGluedIntoSentencesIsNotASummary() started.
+✔ Test statusTitlesAreGenericAndHaveSymbols() passed after 0.002 seconds.
+◇ Test aRecordSurvivesEncoding() started.
+◇ Test theInMemoryStoreSavesFindsAndDeletes() started.
+✔ Test fillersAreNotMeaningfulWords() passed after 0.003 seconds.
+◇ Test aRecordIsSearchableByAnyOfItsWords() started.
+◇ Test aNewerRecapReplacesTheTextUnlessTheUserEditedIt() started.
+✔ Test aContinuedSessionEndsByItselfAfterTheLimit() passed after 0.003 seconds.
+✔ Test theNextPressStopsFinalizesAndDeletesTheTemporaryContext() passed after 0.003 seconds.
+✔ Test continuingAsksForUpdatesOnlyWhenSomethingNewWasSaidAndThePausedCame() passed after 0.003 seconds.
+✔ Test theFirstPressWritesARecapAndSavesIt() passed after 0.003 seconds.
+✔ Test stoppingListeningOrWithdrawingPermissionEndsEverything() passed after 0.003 seconds.
+✔ Test speechThatNeverPausesIsSummarizedBeforeItExpires() passed after 0.003 seconds.
+✔ Test aRecapNeedsListeningAndPermission() passed after 0.003 seconds.
+✔ Test itEmptiesItselfWhenNobodySpeaksAndWhenCleared() passed after 0.003 seconds.
+✔ Test nothingIsKeptBeforeTranscriptionWasAllowed() passed after 0.003 seconds.
+✔ Test theProductBufferLooksBackTwoMinutes() passed after 0.003 seconds.
+✔ Test tooLittleSpeechIsSaidPlainlyAndTheModelIsNotAsked() passed after 0.003 seconds.
+✔ Test anExcerptHoldsOnlyWhatWasSaidInTheLastTwoMinutes() passed after 0.004 seconds.
+✔ Test sentencesCopiedFromTheTranscriptAreRemovedFromASummary() passed after 0.003 seconds.
+✔ Test restatingTheEarlierRecapIsNotACopy() passed after 0.004 seconds.
+✔ Test aSentenceMadeOfOtherWordsIsRemoved() passed after 0.003 seconds.
+✔ Test numbersAsWordsAndDigitsAgree() passed after 0.004 seconds.
+✔ Test anExcerptStopsAtTheLastLongPause() passed after 0.004 seconds.
+✔ Test theBufferIsBoundedInCountAndSize() passed after 0.004 seconds.
+✔ Test nothingIsKeptUntilCollectionBegins() passed after 0.004 seconds.
+✔ Test aNumberDayOrNameThatWasNotSaidIsRemoved() passed after 0.004 seconds.
+✔ Test supportedStatementsPass() passed after 0.004 seconds.
+✔ Test aRestatementMustCarryTheSameFactsAndNothingElse() passed after 0.004 seconds.
+✔ Test summarizeWritesSavesAndOffersContinue() passed after 0.004 seconds.
+✔ Test aConversationThatWasGoingOnWhenListeningBeganIsMarkedTruncated() passed after 0.004 seconds.
+✔ Test stopDoesNothingUnlessAConversationIsFollowed() passed after 0.004 seconds.
+✔ Test textExpiresAfterTheRetentionTime() passed after 0.004 seconds.
+✔ Test clearDeletesEverythingAndStopsCollecting() passed after 0.004 seconds.
+✔ Test aDuplicateFinalResultIsStoredOnce() passed after 0.004 seconds.
+✔ Test missingSpeechIsRememberedAndReported() passed after 0.004 seconds.
+✔ Test aRestatementThatFailsTheOrdinaryChecksIsRefused() passed after 0.004 seconds.
+✔ Test turningListeningOffFinalizesAFollowedConversation() passed after 0.004 seconds.
+✔ Test continueFollowsAndStopEndsOnlyTheConversation() passed after 0.004 seconds.
+✔ Test withoutTranscriptionTheRequestExplainsThatPastSpeechIsGone() passed after 0.004 seconds.
+✔ Test aRequestWithoutASummaryIsNotSavedAndNotContinued() passed after 0.004 seconds.
+✔ Test anExcerptLooksBackNoFurtherThanTheWindow() passed after 0.004 seconds.
+✔ Test theAppTargetsDoNotLinkTheSemanticAttentionModule() passed after 0.004 seconds.
+✔ Test summarizeNeverStopsAnything() passed after 0.004 seconds.
+✔ Test speechAloneNeverStartsASummary() passed after 0.004 seconds.
+✔ Test anOrdinarySummaryOfPlainFactsStaysUnderTheLimit() passed after 0.004 seconds.
+✔ Suite ConversationSessionMachineTests passed after 0.005 seconds.
+✔ Test aRecordSurvivesEncoding() passed after 0.002 seconds.
+✔ Test theInMemoryStoreSavesFindsAndDeletes() passed after 0.002 seconds.
+✔ Test aNewerRecapReplacesTheTextUnlessTheUserEditedIt() passed after 0.001 seconds.
+✔ Test theLastCheckBeforeSavingRefusesATranscript() passed after 0.004 seconds.
+✔ Test tentativeWordsAreForCaptionsOnly() passed after 0.004 seconds.
+✔ Test aRecordIsSearchableByAnyOfItsWords() passed after 0.002 seconds.
+✔ Suite RecapValidatorTests passed after 0.005 seconds.
+✔ Suite Window7ConversationMachineTests passed after 0.005 seconds.
+✔ Suite RollingConversationBufferTests passed after 0.005 seconds.
+✔ Suite ConversationRecordTests passed after 0.007 seconds.
+✔ Test nothingNewOrAFailedUpdateLeavesTheRecapAlone() passed after 0.007 seconds.
+✔ Test theShareIsZeroForOwnWordsAndOneForTheTranscript() passed after 0.006 seconds.
+✔ Test aCheckedRecapIsReturnedWithItsCoverage() passed after 0.007 seconds.
+✔ Test missingSpeechAndPoorRecognitionBecomeCaveats() passed after 0.007 seconds.
+✔ Test anUpdateKeepsEarlierKeyPointsAndAddsNewOnes() passed after 0.007 seconds.
+✔ Test aRecapThatMostlyFailsTheChecksIsNotShownAsASummary() passed after 0.007 seconds.
+✔ Test anUpdateThatIsMostlyTranscriptIsNotTaken() passed after 0.007 seconds.
+✔ Test withoutAModelNoSummaryIsInventedAndNoTranscriptIsPutInItsPlace() passed after 0.008 seconds.
+✔ Suite ConversationRecapEngineTests passed after 0.009 seconds.
+✔ Test anUpdateRestatesWhatItCopied() passed after 0.009 seconds.
+✔ Test aTranscriptGluedIntoSentencesIsNotASummary() passed after 0.008 seconds.
+✔ Suite RecapVerbatimShareTests passed after 0.009 seconds.
+✔ Test anUpdateThatOnlyAppendsTheTranscriptChangesNothing() passed after 0.010 seconds.
+✔ Suite Window7VerbatimTests passed after 0.011 seconds.
+✔ Test aCopiedFactIsRestatedInsteadOfDeleted() passed after 0.011 seconds.
+✔ Test onlyAFewStatementsAreRestatedPerDraft() passed after 0.012 seconds.
+✔ Test theBoundsHoldWhateverIsSaid() passed after 0.015 seconds.
+✔ Suite Window7BufferTests passed after 0.016 seconds.
+✔ Test withoutAnAcceptableRestatementTheCopyIsStillLeftOut() passed after 0.017 seconds.
+✔ Suite RecapRestatementTests passed after 0.017 seconds.
+✔ Test theAppOpensNoLanguageModelSessionOfItsOwn() passed after 0.022 seconds.
+✔ Test theAppDoesNotUseTheSemanticAttentionModule() passed after 0.062 seconds.
+✔ Suite ProductionAuditTests passed after 0.062 seconds.
+✔ Test run with 64 tests in 11 suites passed after 0.063 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite AttentionStateTests started.
+◇ Suite AttentionPriorityTests started.
+◇ Suite AttentionCooldownTests started.
+◇ Suite AttentionPreferencesTests started.
+◇ Suite AttentionPolicyTests started.
+◇ Suite AttentionScenarioTests started.
+◇ Test urgentNeedsMoreThanWeakEvidenceAndRisesWhenItArrives() started.
+◇ Test modeSwitchAppliesToActiveEvents() started.
+◇ Test conditionalDogWaitsForSustainedEvidence() started.
+◇ Test aSecondDogWithinTheCooldownIsSuppressedAndALaterOneIsShown() started.
+◇ Test outOfOrderAndUnknownInputsAreHarmless() started.
+◇ Test aBriefConditionalSoundIsDroppedSilently() started.
+◇ Test sessionEndDismissesEverything() started.
+◇ Test thePresentationBudgetDefersOrdinaryEventsOnly() started.
+◇ Test minorSoundsStayAmbientInEveryMode() started.
+◇ Test snapshotOrdersByPriorityThenRecency() started.
+◇ Test cooldownsAreScaledByTheMode() started.
+◇ Test deadlinesDriveExpirationWithoutPolling() started.
+◇ Test everyDecisionHasReasonCodes() started.
+◇ Suite AttentionSpeechTests started.
+◇ Test confidenceIsNotImportance() started.
+◇ Test intentsCarryWhatWindow5Needs() started.
+◇ Test aDeferredEventIsShownWhenTheBudgetFrees() started.
+◇ Test repeatedKnocksEscalateInQuiet() started.
+◇ Test switchingTranscriptionOffDropsSpeechAndItsText() started.
+◇ Test defaultsAreBalancedAndAutomatic() started.
+◇ Test privateTextIsNeverEncoded() started.
+◇ Test stateIsBounded() started.
+◇ Test aWarningSignalIsShownAgainAsSoonAsItIsANewOccurrence() started.
+◇ Test unknownOrMissingValuesFallBackToDefaults() started.
+◇ Test everySoundKindOfTheTaxonomyHasAPolicyRow() started.
+◇ Test aSoundThatBeganDuringItsCooldownDoesNotPopUpWhenTheCooldownEnds() started.
+◇ Test roundTripsThroughJSON() started.
+◇ Test playbackMovesAScenarioInTimeWithFreshIdentifiers() started.
+◇ Test basePrioritiesFollowTheBrief() started.
+◇ Test aKindFromAFutureTaxonomyIsTrackedButAmbient() started.
+◇ Test configurationRoundTripsAsData() started.
+◇ Test repeatedHornsUpdateAndIndependentHornsAlert(mode:) started.
+◇ Test rapidBurstKeepsImportantEventsAndStaysBounded(mode:) started.
+◇ Test generatedHourKeepsImportantEventsAndBoundedState(mode:) started.
+◇ Test everySceneIsDeterministic() started.
+◇ Test withTranscriptionOffSpeechIsNeverAnEpisode(mode:) started.
+◇ Test continuousRainNeverAlertsTwice(mode:) started.
+◇ Test summaryRevisionsAreComparedByMeaning() started.
+◇ Test baselineAlertsOnEveryConfirmedEvent() started.
+◇ Test lateSummaryInQuietStaysBelowTheThreshold() started.
+◇ Test preferenceChangesApplyAtOnce() started.
+◇ Test repeatedMusicAndItsLyricsStaySilent(mode:) started.
+◇ Test lyricsAreNotWarningsButASpokenWarningOverMusicIs(mode:) started.
+◇ Test theThreeModesDiffer() started.
+◇ Test aLateSummaryIsWhatPresentsTheSpeech(mode:) started.
+◇ Test carHornDuringRainIsShown(mode:) started.
+◇ Test everythingExpiresAndIsCleanedUp(mode:) started.
+◇ Test speechThatWasAlreadyGoingOnIsNotAttachedToAKnock(mode:) started.
+◇ Test lifecycleTransitionsLeaveNoStaleState(mode:) started.
+◇ Test simultaneousHighPriorityEventsAreAllKept(mode:) started.
+◇ Test unavailableModelsDegradeGracefully(mode:) started.
+◇ Test knockThenSpeechIsOneEvolvingEpisode(mode:) started.
+◇ Test sirensAreNeverHeldBack(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to repeatedHornsUpdateAndIndependentHornsAlert(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to repeatedHornsUpdateAndIndependentHornsAlert(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to repeatedHornsUpdateAndIndependentHornsAlert(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to rapidBurstKeepsImportantEventsAndStaysBounded(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to rapidBurstKeepsImportantEventsAndStaysBounded(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to rapidBurstKeepsImportantEventsAndStaysBounded(mode:) started.
+✔ Test conditionalDogWaitsForSustainedEvidence() passed after 0.005 seconds.
+✔ Test urgentNeedsMoreThanWeakEvidenceAndRisesWhenItArrives() passed after 0.005 seconds.
+◇ Test theSummaryIsWhatMakesOrdinarySpeechAnEpisode() started.
+◇ Test watchOutIsHighInEveryModeAndDoesNotClaimAnAddressee() started.
+◇ Test aWarningAfterAKnockAsksForAttentionAgain() started.
+✔ Test outOfOrderAndUnknownInputsAreHarmless() passed after 0.005 seconds.
+◇ Test semanticSignaturesSeparateRewordingFromReversal() started.
+✔ Test modeSwitchAppliesToActiveEvents() passed after 0.005 seconds.
+◇ Test speechLongAfterAKnockIsItsOwnEpisode() started.
+◇ Test aWarningAfterThePresentationTimedOutIsANewEpisode() started.
+◇ Test speechDuringMusicWaitsForTheRelevanceEstimate() started.
+✔ Test sessionEndDismissesEverything() passed after 0.006 seconds.
+◇ Test urgentPhraseRules() started.
+◇ Test aNegatedKeywordIsNotAWarning() started.
+◇ Test speechWithoutASummaryIsNeverAnEpisode() started.
+◇ Test speechReportedJustBeforeTheKnockIsConfirmedStillJoinsIt() started.
+◇ Test ordinarySpeechHasACooldownButAWarningIgnoresIt() started.
+◇ Test speechAttentionSettings() started.
+✔ Test aSecondDogWithinTheCooldownIsSuppressedAndALaterOneIsShown() passed after 0.006 seconds.
+◇ Test laterOrdinarySentencesDoNotLowerAWarning() started.
+◇ Test partialTranscriptsCauseNoDecisions() started.
+✔ Test snapshotOrdersByPriorityThenRecency() passed after 0.006 seconds.
+✔ Test confidenceIsNotImportance() passed after 0.006 seconds.
+✔ Test thePresentationBudgetDefersOrdinaryEventsOnly() passed after 0.006 seconds.
+◇ Test case passing 1 argument mode → .quiet to withTranscriptionOffSpeechIsNeverAnEpisode(mode:) started.
+✔ Test deadlinesDriveExpirationWithoutPolling() passed after 0.006 seconds.
+◇ Test case passing 1 argument mode → .quiet to generatedHourKeepsImportantEventsAndBoundedState(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to withTranscriptionOffSpeechIsNeverAnEpisode(mode:) started.
+✔ Test aBriefConditionalSoundIsDroppedSilently() passed after 0.009 seconds.
+◇ Test case passing 1 argument mode → .sensitive to withTranscriptionOffSpeechIsNeverAnEpisode(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to continuousRainNeverAlertsTwice(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to continuousRainNeverAlertsTwice(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to generatedHourKeepsImportantEventsAndBoundedState(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to continuousRainNeverAlertsTwice(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to generatedHourKeepsImportantEventsAndBoundedState(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to repeatedMusicAndItsLyricsStaySilent(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to lyricsAreNotWarningsButASpokenWarningOverMusicIs(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to repeatedMusicAndItsLyricsStaySilent(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to lyricsAreNotWarningsButASpokenWarningOverMusicIs(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to repeatedMusicAndItsLyricsStaySilent(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to lyricsAreNotWarningsButASpokenWarningOverMusicIs(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to aLateSummaryIsWhatPresentsTheSpeech(mode:) started.
+✔ Test defaultsAreBalancedAndAutomatic() passed after 0.031 seconds.
+◇ Test case passing 1 argument mode → .quiet to carHornDuringRainIsShown(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to aLateSummaryIsWhatPresentsTheSpeech(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to carHornDuringRainIsShown(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to carHornDuringRainIsShown(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to everythingExpiresAndIsCleanedUp(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to speechThatWasAlreadyGoingOnIsNotAttachedToAKnock(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to everythingExpiresAndIsCleanedUp(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to speechThatWasAlreadyGoingOnIsNotAttachedToAKnock(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to everythingExpiresAndIsCleanedUp(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to speechThatWasAlreadyGoingOnIsNotAttachedToAKnock(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to lifecycleTransitionsLeaveNoStaleState(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to lifecycleTransitionsLeaveNoStaleState(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to lifecycleTransitionsLeaveNoStaleState(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to simultaneousHighPriorityEventsAreAllKept(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to simultaneousHighPriorityEventsAreAllKept(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to simultaneousHighPriorityEventsAreAllKept(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to unavailableModelsDegradeGracefully(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to unavailableModelsDegradeGracefully(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to unavailableModelsDegradeGracefully(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to knockThenSpeechIsOneEvolvingEpisode(mode:) started.
+✔ Test repeatedKnocksEscalateInQuiet() passed after 0.041 seconds.
+◇ Test case passing 1 argument mode → .balanced to knockThenSpeechIsOneEvolvingEpisode(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to knockThenSpeechIsOneEvolvingEpisode(mode:) started.
+◇ Test case passing 1 argument mode → .quiet to sirensAreNeverHeldBack(mode:) started.
+◇ Test case passing 1 argument mode → .balanced to sirensAreNeverHeldBack(mode:) started.
+◇ Test case passing 1 argument mode → .sensitive to sirensAreNeverHeldBack(mode:) started.
+✔ Test cooldownsAreScaledByTheMode() passed after 0.043 seconds.
+✔ Test unknownOrMissingValuesFallBackToDefaults() passed after 0.043 seconds.
+✔ Test aWarningSignalIsShownAgainAsSoonAsItIsANewOccurrence() passed after 0.043 seconds.
+✔ Test roundTripsThroughJSON() passed after 0.043 seconds.
+✔ Test everySoundKindOfTheTaxonomyHasAPolicyRow() passed after 0.043 seconds.
+✔ Test minorSoundsStayAmbientInEveryMode() passed after 0.043 seconds.
+✔ Test basePrioritiesFollowTheBrief() passed after 0.043 seconds.
+✔ Test aKindFromAFutureTaxonomyIsTrackedButAmbient() passed after 0.043 seconds.
+✔ Test aDeferredEventIsShownWhenTheBudgetFrees() passed after 0.043 seconds.
+✔ Test aSoundThatBeganDuringItsCooldownDoesNotPopUpWhenTheCooldownEnds() passed after 0.043 seconds.
+✔ Test switchingTranscriptionOffDropsSpeechAndItsText() passed after 0.044 seconds.
+✔ Test playbackMovesAScenarioInTimeWithFreshIdentifiers() passed after 0.043 seconds.
+✔ Test privateTextIsNeverEncoded() passed after 0.044 seconds.
+✔ Test repeatedHornsUpdateAndIndependentHornsAlert(mode:) with 3 test cases passed after 0.043 seconds.
+✔ Test configurationRoundTripsAsData() passed after 0.044 seconds.
+✔ Test withTranscriptionOffSpeechIsNeverAnEpisode(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test intentsCarryWhatWindow5Needs() passed after 0.048 seconds.
+✔ Test summaryRevisionsAreComparedByMeaning() passed after 0.045 seconds.
+✔ Test continuousRainNeverAlertsTwice(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test baselineAlertsOnEveryConfirmedEvent() passed after 0.045 seconds.
+✔ Test stateIsBounded() passed after 0.048 seconds.
+✔ Test lateSummaryInQuietStaysBelowTheThreshold() passed after 0.045 seconds.
+✔ Test rapidBurstKeepsImportantEventsAndStaysBounded(mode:) with 3 test cases passed after 0.048 seconds.
+✔ Test lyricsAreNotWarningsButASpokenWarningOverMusicIs(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test repeatedMusicAndItsLyricsStaySilent(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test preferenceChangesApplyAtOnce() passed after 0.045 seconds.
+✔ Test aLateSummaryIsWhatPresentsTheSpeech(mode:) with 2 test cases passed after 0.045 seconds.
+✔ Test carHornDuringRainIsShown(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test speechThatWasAlreadyGoingOnIsNotAttachedToAKnock(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test simultaneousHighPriorityEventsAreAllKept(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test lifecycleTransitionsLeaveNoStaleState(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test unavailableModelsDegradeGracefully(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test knockThenSpeechIsOneEvolvingEpisode(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test everythingExpiresAndIsCleanedUp(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test sirensAreNeverHeldBack(mode:) with 3 test cases passed after 0.045 seconds.
+✔ Test theSummaryIsWhatMakesOrdinarySpeechAnEpisode() passed after 0.043 seconds.
+✔ Test watchOutIsHighInEveryModeAndDoesNotClaimAnAddressee() passed after 0.043 seconds.
+✔ Test aWarningAfterAKnockAsksForAttentionAgain() passed after 0.043 seconds.
+✔ Test semanticSignaturesSeparateRewordingFromReversal() passed after 0.043 seconds.
+✔ Test aNegatedKeywordIsNotAWarning() passed after 0.043 seconds.
+✔ Test speechDuringMusicWaitsForTheRelevanceEstimate() passed after 0.043 seconds.
+✔ Test speechLongAfterAKnockIsItsOwnEpisode() passed after 0.043 seconds.
+✔ Test aWarningAfterThePresentationTimedOutIsANewEpisode() passed after 0.043 seconds.
+✔ Test speechReportedJustBeforeTheKnockIsConfirmedStillJoinsIt() passed after 0.043 seconds.
+✔ Test ordinarySpeechHasACooldownButAWarningIgnoresIt() passed after 0.043 seconds.
+✔ Suite AttentionCooldownTests passed after 0.049 seconds.
+✔ Test laterOrdinarySentencesDoNotLowerAWarning() passed after 0.043 seconds.
+✔ Test urgentPhraseRules() passed after 0.043 seconds.
+✔ Suite AttentionPreferencesTests passed after 0.049 seconds.
+✔ Test partialTranscriptsCauseNoDecisions() passed after 0.043 seconds.
+✔ Test speechAttentionSettings() passed after 0.043 seconds.
+✔ Test speechWithoutASummaryIsNeverAnEpisode() passed after 0.043 seconds.
+✔ Suite AttentionPolicyTests passed after 0.049 seconds.
+✔ Suite AttentionStateTests passed after 0.049 seconds.
+✔ Suite AttentionSpeechTests passed after 0.049 seconds.
+✔ Test theThreeModesDiffer() passed after 0.052 seconds.
+✔ Test everyDecisionHasReasonCodes() passed after 0.070 seconds.
+✔ Suite AttentionPriorityTests passed after 0.070 seconds.
+✔ Test generatedHourKeepsImportantEventsAndBoundedState(mode:) with 3 test cases passed after 0.109 seconds.
+✔ Test everySceneIsDeterministic() passed after 0.322 seconds.
+✔ Suite AttentionScenarioTests passed after 0.325 seconds.
+✔ Test run with 67 tests in 7 suites passed after 0.326 seconds.

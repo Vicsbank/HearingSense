@@ -32,9 +32,14 @@ import Testing
                                             lockNoticePending: true) == .unknown)
     }
 
-    @Test func expansionIsOffUnlessTheUserTurnsItOn() {
-        #expect(IslandSettings.default.expandsForImportantEvents == false)
-        #expect(AlertGate.evaluate(settings: .default, lock: .unlocked, appIsActive: false) == .blocked(.disabledInSettings))
+    /// Decision of 2026-10-11 (it was off by default before): on, but never on a locked iPhone
+    /// unless the user opts in to that separately.
+    @Test func prominentAlertsAreOnByDefaultAndTheLockedIPhoneIsOptIn() {
+        #expect(IslandSettings.default.expandsForImportantEvents)
+        #expect(!IslandSettings.default.alertsWhileLocked)
+        #expect(AlertGate.evaluate(settings: .default, lock: .unlocked, appIsActive: false) == .send)
+        #expect(AlertGate.evaluate(settings: .default, lock: .locked, appIsActive: false) == .blocked(.deviceLocked))
+        #expect(AlertGate.evaluate(settings: .default, lock: .unknown, appIsActive: false) == .blocked(.lockStateUnknown))
     }
 
     @Test func anAlertIsSentOnlyWhenTheDeviceIsJudgedUnlocked() {

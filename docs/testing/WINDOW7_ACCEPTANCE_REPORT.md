@@ -22,12 +22,12 @@ a device, and it says nothing about recognition quality, the background, battery
 
 | | Result |
 |---|---|
-| `swift test` (Mac) | **474 test results passed**, 9 skipped (opt-in or recognizer tests without their signals), 0 failed. 413 at the baseline; 61 new |
-| `xcodebuild test`, package, iOS Simulator | **475 passed**, 10 skipped, 0 failed |
+| `swift test` (Mac) | **488 test results passed**, 9 skipped (opt-in or recognizer tests without their signals), 0 failed. 413 at the baseline; 75 new (474 before the final decisions, §8) |
+| `xcodebuild test`, package, iOS Simulator | **475 passed**, 10 skipped, 0 failed (before the final decisions; not repeated after them, §8) |
 | App + widget extension, Debug, Simulator | Build succeeded |
 | App + widget extension, Release, generic iOS device, unsigned | Build succeeded |
 | Self-test in the Simulator, 28 checks over the 18 acceptance tests | **28 passed, 0 failed** (final build, with on-disk history) |
-| Summary evaluation, real on-device model, Mac | dev 13/13 facts, 3/3 negations; held-out 25/26 facts, 4/4 negations; 8 of 8 summaries written |
+| Summary evaluation, real on-device model, Mac | dev 13/13 facts, 3/3 negations; held-out **26/26** facts, 4/4 negations (25/26 before §8); 8 of 8 summaries written |
 | Physical iPhone | **Nothing run** |
 
 One privacy defect of the inherited code was found by the storage check and fixed (§4.1).
@@ -50,7 +50,7 @@ One privacy defect of the inherited code was found by the storage check and fixe
 | 12 | Highest-priority events trigger the presentation request | `aHighestPriorityAcousticEventAsksForAnExpansion`, `inTheScriptedScenesOnlyImportantAcousticEventsAskForAnExpansion` | scripted siren: 1 request, content `attention … urgent "Siren"`; the gate held it back (`disabled_in_settings`: the default) | Window 5 D4 (expansion with the setting on). **Not verified** in this build |
 | 13 | Ordinary sounds remain silent | same + `ordinarySoundsChangeTheIconSilentlyInTheOneActivity` | 0 requests, 0 sent to iOS during the ordinary scene | Window 5 D4–D6: silent updates did not wake the locked screen (student-observed). Not rerun |
 | 14 | No continuous semantic relevance model calls in production | `ProductionAuditTests` (3): no app source mentions the module, the project does not link it, the app opens no model session | Model calls in the run: 2 summaries + 1 update, all requested | — |
-| 15 | Eight-hour Live Activity expiration is handled | `ActivityLifetimeTests` (5) | Not exercised (no 7-hour run) | **Not verified** |
+| 15 | Eight-hour Live Activity expiration is handled | `ActivityLifetimeTests` (5): nothing is replaced, nothing is requested after the limit (§8) | Not exercised (no 8-hour run) | **Not verified** |
 | 16 | Spotify / AirPods integration not broken by code changes | Existing audio policy tests pass | — | **Not verified.** Evidence is indirect: no file of the audio session, the capture or the Info.plist changed (`git diff faf8b35 -- packages/HearingSenseKit/Sources/HearingSenseAudio apps/ios/Config`: one new file, the switch) |
 | 17 | No unauthorized transcript persistence | `Window7VerbatimTests` (3), `itEmptiesItselfWhenNobodySpeaksAndWhenCleared` | App container scanned after a run with on-disk history: none of the 10 spoken sentences and not the old sentence's marker word in any file; files written: the SwiftData store, preferences (session record), the self-test report | **Not verified** |
 | 18 | No background summary without an explicit request | `speechAloneNeverStartsASummary`, `summarizeNeverStopsAnything` | Summarize while OFF does nothing; model-call count equals the requests | **Not verified** |
@@ -93,7 +93,7 @@ conversation state machine, the on-device language model, SwiftData. Synthetic: 
 
 The one lost fact ("the lot reopens on Friday") was a sentence the model copied word for word;
 the new copy check removed it (§4.1). The held-out set has been seen since Window 6 and is not
-a fresh measurement.
+a fresh measurement. **Superseded by §8.4:** the copy is now restated in memory and the fact is kept (26 of 26).
 
 ## 4. Findings of this window
 
@@ -154,9 +154,9 @@ one 35-minute run on a charger (Window 5).
 | **Nothing of Window 7 ran on an iPhone** | Every device column above | §7 |
 | Starting from the Action Button in the background is an assumption about `AudioRecordingIntent` | If iOS refuses, ON works only with the app open | Fallback exists: the intent can continue in the foreground; decide after device step 2 |
 | The scene thresholds were chosen on scripted events | Scenes may flicker or lag with real sound | Tune on recorded device events (`island-device-trace` has them) |
-| Prominent alerts are off by default | Feature B is a silent warning icon until the user turns "Expand for important events" on | The student's decision (Window 5 rule: not on by default without device evidence) |
+| ~~Prominent alerts are off by default~~ | Decided 2026-10-11: on by default, the locked iPhone only by opt-in (§8.1) | Device steps W8 measure what a locked screen does |
 | A possible spoken warning no longer requests an expansion | Speech is never an alert in this product | By the brief; `IslandPolicy.window5` restores it |
-| The copy check costs facts | 1 of 26 in the held-out scenes | Accept, or lower the bar only for sentences with a date or number (not done) |
+| ~~The copy check costs facts~~ | Decided 2026-10-11: a copied sentence is restated in memory instead of deleted (§8.4); 26 of 26 | A restatement is mostly "Someone said that …" around the sentence; see §8.4 |
 | The summary of a followed conversation only grows | 30 minutes can give a long text | The followed session ends by itself after 30 minutes |
 | An update that fails its checks drops that stretch of speech from the summary | Seen as "nothing new" in the log | The captions stay readable for two minutes |
 | No controls on the Lock Screen | Summarize needs the unlocked island or the app | By design (no speech text on the Lock Screen) |
@@ -181,8 +181,133 @@ is recorded or transcribed without it. Synthetic speech can be played from the M
 | W7-7 | Transcription on, synthetic sentences from the Mac's speakers, Summarize: summary in the island and in the app; time it | on, synthetic speech |
 | W7-8 | Continue: captions in the app, an update; Stop in the island: listening goes on | on, synthetic speech |
 | W7-9 | Action Button OFF while following: everything ends, the summary is in History | on |
-| W7-10 | A siren clip with "Expand for important events" off, then on; watch the locked screen | on |
+| W7-10 | A siren clip with "Prominent alerts" on (default), then with "Also when the iPhone is locked" on; watch the locked screen | on |
 | W7-11 | Swipe the activity away while listening; open the app again | on |
 | W7-12 | Scene line during five minutes each of music, a street recording, quiet | on |
 | W7-13 | Thirty minutes locked with Spotify: classifier failures, updates per hour, battery percent before and after | on |
 | W7-14 | Eight hours (or as long as allowed): what happens at the activity's limit | on |
+
+## 8. Final decisions of 2026-10-11 and what changed after the first report
+
+The student accepted Window 7 as the baseline of the next stage and decided five points. This
+section records what was changed for them and how it was checked. Sections 1–7 describe the
+state before these changes unless a line says otherwise. Everything here ran on the Mac and in
+the iOS Simulator; nothing on an iPhone.
+
+| | Mac | Simulator |
+|---|---|---|
+| `swift test` | **488 passed**, 9 skipped, 0 failed (`results/window7_final/swift_test_mac.log`) | not repeated |
+| App, Debug | — | Build succeeded |
+| App, Release, unsigned, generic device | Build succeeded | — |
+| Self-test, History on disk | — | **28 passed, 0 failed** (`results/window7_final/selftest_persist.txt`); 0 of 11 spoken sentences in any file of the app's container |
+| Summary evaluation, real model | dev 13/13; held-out 26/26 (`results/conversation_eval_window7b/`) | — |
+
+### 8.1 Prominent alerts for verified highest-priority acoustic events (decision 1)
+
+- "Prominent alerts for urgent sounds" (`IslandSettings.expandsForImportantEvents`) is **on by
+  default**. Settings stored by an earlier build are carried over once and take the new
+  default for this one switch (`IslandSettings.migrated(fromVersion1:)`; the change is written
+  to the settings audit). The other switches keep the user's values.
+- A request is made only for an acoustic episode of priority **high or urgent** that the
+  attention engine does **not mark as uncertain** (`IslandPolicy.alertMinimumPriority`,
+  `alertsNeedVerifiedEvent`). The same episode may ask later, once it is verified. Ordinary
+  sounds, scene changes and every speech episode stay silent.
+- While the iPhone is judged locked, or the app cannot tell, the update is silent **unless the
+  user opted in** with the new switch "Also when the iPhone is locked"
+  (`IslandSettings.alertsWhileLocked`, off by default). A summary is never announced on a
+  locked iPhone, opt-in or not.
+- Only `Activity.update(_:alertConfiguration:)` is used. The settings text says that iOS
+  decides and that nothing is guaranteed.
+
+**Known residual risk, not removed by code:** the lock state is an estimate. Data protection
+lags the lock by 4–12 s (measured in Window 5); iOS's earlier "will become unavailable" notice
+closed that gap in the two runs that were instrumented. With the default now on, an alert in
+the first seconds after locking could reach a locked screen without the opt-in. The settings
+screen says so. Window 8 measures it (`docs/testing/WINDOW8_DEVICE_TEST_PLAN.md`, group F).
+
+Tests: `AlertGateTests` (default, lock rule), `Window7PresentationTests`
+(`anAlertOnTheLockedIPhoneNeedsTheUsersOptIn`, `settingsStoredBeforeTheDecisionTakeTheNewDefaultOnce`,
+`onlyAVerifiedHighPriorityAcousticEventAsksForAProminentPresentation`). In the Simulator the
+siren of the self-test produced one request, held back because the app was on screen
+(`app_in_foreground`): no alert has been presented by iOS in this window.
+
+### 8.2 Spoken warnings (decision 2)
+
+Nothing was restored. `IslandPolicy.speechMayRequestExpansion` stays false, the app does not
+link `SemanticAttention`, and `ProductionAuditTests` still guards both.
+
+### 8.3 Live Activity lifetime (decision 4)
+
+The replacement of an activity older than seven hours was removed: no `renew` job, no
+`renewAfter`. In addition, when iOS ends the activity at its limit (it ended at least 7 h 50 min
+after it was requested), **no activity is requested in its place for that session**; the status
+says so, listening goes on, and the next listening session gets its own activity. What remains
+is ordinary lifecycle: content updates, the keep-alive, ending the activity with the session,
+ending leftovers of an earlier launch, and showing the activity again when the user opens the
+app if it could not be started or was removed *before* its time.
+
+That last case is an interpretation: the decision names replacement "to extend the eight-hour
+presentation limit", and an activity the user swiped away after ten minutes is not that. If no
+activity should ever be requested again within a session, `ActivityLifetimePolicy.decide` is
+the one place to change (return `.stayEnded` for every missing activity).
+
+Tests: `ActivityLifetimeTests` (5). Not exercised: any run long enough to reach the limit.
+
+### 8.4 The lost fact, and summaries that must not become transcripts (decision 5)
+
+**What was lost.** Held-out scene h05, fact "friday". The announcement ends with the utterance
+"The lot reopens on Friday." The model put that sentence into the summary and into a key point
+exactly as it was said (five words), and the copy check deleted both. A second key point, a
+whole 15-word utterance, was deleted the same way. Nothing was wrong with the fact; the
+sentence was simply too short to be said differently by a model that was not asked to.
+
+**What changed.**
+
+1. *Restating in memory instead of deleting.* A statement that repeats a spoken sentence is
+   given back to the model with a short instruction to rewrite it as one sentence of reported
+   speech (`ConversationSummarizing.restate`, at most three per draft, ten seconds together).
+   The answer replaces the copy only if it passes `RecapValidator.restatementProblem` — the same
+   numbers, days and times; the same negations; no new name; at least three quarters of the
+   content words; one sentence; not much longer; not the spoken sentence again — and every
+   ordinary check. Otherwise the statement is left out, as before. Nothing is shown or stored
+   before these checks.
+2. *The rule itself is unchanged.* No statement of five or more words that is, word for word,
+   a whole spoken sentence or utterance is kept. An accepted restatement meets exactly the
+   checks every model-written statement had to meet before.
+3. *New: a limit on the whole text.* `RecapValidator.verbatimShare` measures the share of a
+   text's words that lie in runs of six or more consecutive words of one utterance. A text
+   above 0.65 is not a summary: it is not shown or saved (`too_much_verbatim`), and an update
+   above it is not taken. This catches what the sentence rule cannot — utterances glued
+   together with "and". The limit was chosen on the development scenes (0.13, 0.20, 0.44).
+4. *New: a last check before storage.* `ConversationIntelligenceController.save` asks
+   `ConversationRecapEngine.maySave` with the words still held in memory, whatever path the
+   text took; a refused text is not written and the count is in the diagnostics.
+
+**Result (Mac, real on-device model, `results/conversation_eval_window7b/`).**
+
+| | Window 6 | Window 7 first report | Window 7 final |
+|---|---|---|---|
+| dev: facts / negations | 13 of 13 / 3 of 3 | 13 of 13 / 3 of 3 | 13 of 13 / 3 of 3 |
+| held-out: facts / negations | 26 of 26 / 4 of 4 | 25 of 26 / 4 of 4 | **26 of 26** / 4 of 4 |
+| copies restated / left out | — | 0 / 5 | 5 / 0 (dev 1, held-out 4) |
+| statements removed by the checks | 11 of 91 | 16 of 91 | 11 of 91 |
+| word-for-word share, max (first two columns recomputed from the saved texts) | 0.48 | 0.46 | dev 0.44, held-out 0.47 |
+| held-out: model time per summary, median / max | 6–7 s | 6.8 s / 8.6 s | 6.8 s / 10.9 s |
+
+**What this result does and does not show.**
+
+- It is not a blind result. Scene h05 is the scene whose failure led to the change, and the
+  held-out set has been read since Window 6. Five held-out scenes are a small sample.
+- The restatements the on-device model wrote are the spoken sentence in reported speech:
+  "Someone said that the lot reopens on Friday.", "Someone said that cars left in the north lot
+  after six will be towed at the owner's expense." The fact is kept and no statement equals a
+  spoken sentence, but this is a change of form, not of wording. What bounds how much of a
+  conversation can end up in storage is the limit on the whole text, not the restatement.
+- The 0.65 limit rests on three development scenes. A very short announcement summarized very
+  tersely can exceed it and would then give "no summary" (the safe direction; not seen in the
+  eight scenes).
+- A restatement costs one more model request: up to about 2 s more per summary here.
+
+Tests: `RecapRestatementTests` (6) and `RecapVerbatimShareTests` (5) in
+`Tests/ConversationUnderstandingTests/RecapRestatementTests.swift`; the earlier
+`Window7VerbatimTests` (3) are unchanged and pass.

@@ -23,10 +23,12 @@ import UIKit
 /// - Updates are plain `Activity.update` calls without an alert configuration. They do not wake
 ///   the screen, play a sound or vibrate; a locked iPhone shows the new state the next time the
 ///   screen is on.
-/// - An alert configuration (the only way to ask iOS to expand the island) is attached only when
-///   the user turned "Expand for important events" on (off by default) and `AlertGate` judges
-///   the iPhone unlocked. The lock state is an estimate (see `DeviceLockEstimate`), so "locked"
-///   and "cannot tell" both mean a silent update.
+/// - An alert configuration (the only way to ask iOS to present an update prominently) is attached
+///   only for a verified highest-priority acoustic event, or for a summary the user asked for,
+///   and only when `AlertGate` lets it through: "Prominent alerts" is on (the default) and the
+///   iPhone is judged unlocked. The lock state is an estimate (see `DeviceLockEstimate`), so
+///   "locked" and "cannot tell" both mean a silent update — unless the user opted in to
+///   "Also when the iPhone is locked" (off by default), which applies to acoustic events only.
 /// - No notification is ever scheduled.
 ///
 /// Main-actor isolated (app default) and owned by `ListeningController`, so it keeps working in
@@ -43,6 +45,9 @@ final class LiveActivityController {
         /// The activity could not be started or was ended by iOS while the app was not on screen;
         /// it is started again the next time the app is opened.
         case waitingForForeground
+        /// iOS ended the activity at its limit of about eight hours. Listening goes on; the app
+        /// requests no activity in its place for this session.
+        case endedAtLimit
         /// Live Activities are turned off for this app in Settings.
         case notAllowed
         case failed(String)
@@ -52,13 +57,17 @@ final class LiveActivityController {
             case .idle: "Not running"
             case .running: "Running"
             case .waitingForForeground: "Open the app to show it again"
+            case .endedAtLimit: "Ended by iOS after about eight hours; still listening. Turn Hearing Sense off and on to show it again"
             case .notAllowed: "Live Activities are off in Settings"
             case .failed(let message): "Failed: \(message)"
             }
         }
     }
 
-    private static let settingsKey = "island.settings.v1"
+    private static let settingsKey = "island.settings.v2"
+    /// Where builds before the decision of 2026-10-11 stored the settings ("Prominent alerts"
+    /// was off by default then). Read once, see `IslandSettings.migrated(fromVersion1:)`.
+    private static let legacySettingsKey = "island.settings.v1"
     /// Set once protected data was seen to become unavailable on this installation.
     private static let lockSignalKey = "island.lockSignalObserved.v1"
 
@@ -75,10 +84,13 @@ final class LiveActivityController {
     /// Activities requested in this launch, and how often iOS ended one that was still wanted.
     private(set) var activitiesStarted = 0
     private(set) var endedBySystem = 0
-    /// Activities replaced by a fresh one before the system's eight-hour limit.
-    private(set) var renewals = 0
-    @ObservationIgnored private let lifetime = ActivityLifetimePolicy.standard
+    /// When the activity was requested. iOS ends a Live Activity after about eight hours; the
+    /// app neither replaces a running activity nor requests a new one after that limit
+    /// (decision of 2026-10-11). A new listening session gets a new activity.
     private(set) var activityStartedAt: Date?
+    /// The activity of this session was ended by iOS at its limit.
+    private(set) var reachedSystemLimit = false
+    @ObservationIgnored private let lifetime = ActivityLifetimePolicy.standard
     private(set) var isDemoRunning = false
     /// Every update handed to ActivityKit in this launch (bounded), for measuring the real update
     /// rate on a device. Metadata only: `summary` is `IslandContent.redactedSummary`.
@@ -121,16 +133,24 @@ final class LiveActivityController {
         /// End activities a previous launch left behind.
         case cleanUp
         case start
-        /// End the activity and request a fresh one (it is close to the system's eight-hour limit).
-        case renew
         case update(IslandContent, IslandAlertRequest?)
         case end
     }
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        let stored = defaults.data(forKey: Self.settingsKey)
+        var stored = defaults.data(forKey: Self.settingsKey)
             .flatMap { try? JSONDecoder().decode(IslandSettings.self, from: $0) }
+        if stored == nil, let legacy = defaults.data(forKey: Self.legacySettingsKey) {
+            let before = try? JSONDecoder().decode(IslandSettings.self, from: legacy)
+            let migrated = IslandSettings.migrated(fromVersion1: legacy)
+            if let before, before.expandsForImportantEvents != migrated.expandsForImportantEvents {
+                SettingsAudit.record("Prominent alerts (new default, set by the app update)", from: before.expandsForImportantEvents,
+                                     to: migrated.expandsForImportantEvents, defaults: defaults)
+            }
+            if let data = try? JSONEncoder().encode(migrated) { defaults.set(data, forKey: Self.settingsKey) }
+            stored = migrated
+        }
         settings = stored ?? .default
         pipeline = IslandPipeline(settings: stored ?? .default)
         lockSignalObserved = defaults.bool(forKey: Self.lockSignalKey)
@@ -253,13 +273,14 @@ final class LiveActivityController {
         willLockNoticeAt = nil
         refreshLockEstimate(checkPasscode: true)
         syncLockWithPipeline()
-        // An activity can only be requested while the app is on screen: this is where a session
-        // that lost its activity (eight-hour limit, removed by the user) gets a new one, and
-        // where an old activity is replaced before the system ends it.
-        switch lifetime.decide(sessionIsLive: pipeline.isLive, activityStartedAt: activityStartedAt, appIsActive: true, now: .now) {
-        case .renew: jobs.yield(.renew)
-        case .start: jobs.yield(.start)
-        case .keep, .waitForForeground: if needsStart, pipeline.isLive { jobs.yield(.start) }
+        // An activity can only be requested while the app is on screen. A session whose activity
+        // could not be started, or was removed before its time, shows one again when the user
+        // opens the app. A running activity is never replaced, and after the system's limit
+        // nothing is requested for this session.
+        if lifetime.decide(sessionIsLive: pipeline.isLive, hasActivity: activity != nil, reachedLimit: reachedSystemLimit,
+                           appIsActive: true) == .start
+        {
+            jobs.yield(.start)
         }
     }
 
@@ -271,7 +292,8 @@ final class LiveActivityController {
         guard updated != settings else { return }
         let switches: [(String, KeyPath<IslandSettings, Bool>)] = [
             ("Show in the Dynamic Island", \.isEnabled), ("Icons for ordinary sounds", \.showsAmbientIcons),
-            ("Expand for important events", \.expandsForImportantEvents), ("Show speech summaries", \.showsSpeechSummaries),
+            ("Prominent alerts", \.expandsForImportantEvents), ("Prominent alerts while locked", \.alertsWhileLocked),
+            ("Show speech summaries", \.showsSpeechSummaries),
             ("Play the alert sound", \.playsAlertSound), ("Show the summary when it is ready", \.expandsForSummaries),
         ]
         for (name, keyPath) in switches where settings[keyPath: keyPath] != updated[keyPath: keyPath] {
@@ -280,8 +302,8 @@ final class LiveActivityController {
         settings = updated
         if let data = try? JSONEncoder().encode(updated) { defaults.set(data, forKey: Self.settingsKey) }
         log(.lifecycle, "Live Activity settings: activity \(updated.isEnabled ? "on" : "off"), ambient icons "
-            + "\(updated.showsAmbientIcons ? "on" : "off"), expansion \(updated.expandsForImportantEvents ? "on" : "off"), "
-            + "speech summaries \(updated.showsSpeechSummaries ? "on" : "off"), alert sound \(updated.playsAlertSound ? "on" : "off")")
+            + "\(updated.showsAmbientIcons ? "on" : "off"), prominent alerts \(updated.expandsForImportantEvents ? "on" : "off") "
+            + "(while locked: \(updated.alertsWhileLocked ? "on" : "off")), speech summaries \(updated.showsSpeechSummaries ? "on" : "off"), alert sound \(updated.playsAlertSound ? "on" : "off")")
         process(.settings(updated, at: .now))
     }
 
@@ -292,11 +314,13 @@ final class LiveActivityController {
             switch command {
             case .start:
                 needsStart = true
+                reachedSystemLimit = false
                 jobs.yield(.start)
             case .update(let content, let alert):
                 jobs.yield(.update(content, alert.flatMap(gate)))
             case .end:
                 needsStart = false
+                reachedSystemLimit = false
                 jobs.yield(.end)
             }
         }
@@ -308,7 +332,8 @@ final class LiveActivityController {
         syncLockWithPipeline()
     }
 
-    /// Lets an expansion request through only when the iPhone is judged unlocked.
+    /// Lets a request for a prominent presentation through only when the iPhone is judged
+    /// unlocked, or when the user opted in to alerts on the locked iPhone.
     private func gate(_ request: IslandAlertRequest) -> IslandAlertRequest? {
         refreshLockEstimate(checkPasscode: false)
         let isActive = UIApplication.shared.applicationState == .active
@@ -320,7 +345,8 @@ final class LiveActivityController {
                                   isUserRequested: request.isUserRequested) {
         case .send:
             alertsSent += 1
-            log(.recognition, "Live Activity: expansion requested for “\(request.title)” [\(request.priority)]")
+            log(.recognition, "Live Activity: prominent presentation requested for “\(request.title)” [\(request.priority)]"
+                + (lockEstimate == .unlocked ? "" : " (lock estimate \(lockEstimate.rawValue), allowed by the user's opt-in)"))
             return request
         case .blocked(let reason):
             alertsBlocked[reason, default: 0] += 1
@@ -373,19 +399,6 @@ final class LiveActivityController {
             await endLeftovers()
         case .start:
             await startActivity()
-        case .renew:
-            guard pipeline.isLive, let held = activity else { return }
-            stateTask?.cancel()
-            stateTask = nil
-            nonisolated(unsafe) let old = held
-            let age = activityStartedAt.map { Date.now.timeIntervalSince($0) } ?? 0
-            await old.end(nil, dismissalPolicy: .immediate)
-            activity = nil
-            activityStartedAt = nil
-            renewals += 1
-            log(.lifecycle, "Live Activity renewed after \((age / 3600).formatted(.number.precision(.fractionLength(1)))) h "
-                + "(the system ends an activity after about 8 h)")
-            await startActivity()
         case .update(let content, let alert):
             // `Activity` is not declared Sendable, but its async methods are made to be awaited
             // from any context; this controller is the only one that holds the activity.
@@ -414,7 +427,7 @@ final class LiveActivityController {
 
     private func startActivity() async {
         // The session may have ended, or the activity may exist, by the time this job runs.
-        guard pipeline.isLive, activity == nil, let content = pipeline.shown else { return }
+        guard pipeline.isLive, activity == nil, !reachedSystemLimit, let content = pipeline.shown else { return }
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
             status = .notAllowed
             needsStart = false
@@ -454,23 +467,32 @@ final class LiveActivityController {
     }
 
     /// iOS ends a Live Activity after its maximum duration (8 hours, per Apple's documentation)
-    /// and the user can remove it. If the session is still running it is requested again as soon
-    /// as the app is on screen; it cannot be requested from the background.
+    /// and the user can remove it. Listening is not affected by either.
+    /// - Ended at the limit: nothing is requested in its place for this session.
+    /// - Removed earlier: it is shown again when the user opens the app (`appBecameActive`).
     private func observe(_ observed: Activity<HearingSenseActivityAttributes>) {
         stateTask?.cancel()
         stateTask = Task { [weak self] in
             for await state in observed.activityStateUpdates {
                 guard let self, !Task.isCancelled else { return }
                 guard state == .ended || state == .dismissed, self.activity?.id == observed.id else { continue }
+                let atLimit = self.activityStartedAt.map { self.lifetime.endedAtLimit(startedAt: $0, endedAt: .now) } ?? false
                 self.activity = nil
                 self.activityStartedAt = nil
                 guard self.pipeline.isLive else { continue }
                 self.endedBySystem += 1
-                self.needsStart = true
-                self.status = .waitingForForeground
-                self.log(.lifecycle, "Live Activity was ended by iOS or the user (\(state)); listening continues, "
-                    + "and a new activity is requested when the app is opened")
-                if UIApplication.shared.applicationState == .active { self.jobs.yield(.start) }
+                if atLimit {
+                    self.reachedSystemLimit = true
+                    self.needsStart = false
+                    self.status = .endedAtLimit
+                    self.log(.lifecycle, "Live Activity ended at the system's limit (\(state)); listening continues, and no "
+                        + "activity is requested in its place")
+                } else {
+                    self.needsStart = true
+                    self.status = .waitingForForeground
+                    self.log(.lifecycle, "Live Activity was ended by iOS or the user (\(state)); listening continues, "
+                        + "and the activity is shown again when the app is opened")
+                }
             }
         }
     }
@@ -519,13 +541,14 @@ final class LiveActivityController {
             + "\(lockEstimate.rawValue) (passcode \(passcodeSet.map { $0 ? "set" : "not set" } ?? "unknown"), "
             + "lock signal \(lockSignalObserved ? "observed" : "never observed"))")
         lines.append("Settings: activity \(settings.isEnabled ? "on" : "off"), ambient icons "
-            + "\(settings.showsAmbientIcons ? "on" : "off"), expansion \(settings.expandsForImportantEvents ? "on" : "off"), "
-            + "speech summaries \(settings.showsSpeechSummaries ? "on" : "off"), alert sound \(settings.playsAlertSound ? "on" : "off")")
+            + "\(settings.showsAmbientIcons ? "on" : "off"), prominent alerts \(settings.expandsForImportantEvents ? "on" : "off") "
+            + "(while locked: \(settings.alertsWhileLocked ? "on" : "off")), speech summaries \(settings.showsSpeechSummaries ? "on" : "off"), alert sound \(settings.playsAlertSound ? "on" : "off")")
         if let activityStartedAt {
-            lines.append("Activity started \(activityStartedAt.formatted(.iso8601)); the system's limit is reached "
-                + lifetime.expectedEnd(startedAt: activityStartedAt).formatted(.iso8601))
+            lines.append("Activity started \(activityStartedAt.formatted(.iso8601)); iOS ends it at about "
+                + lifetime.expectedEnd(startedAt: activityStartedAt).formatted(.iso8601) + " (it is not replaced)")
         }
-        lines.append("Activities started \(activitiesStarted), renewed \(renewals), ended by iOS or the user \(endedBySystem); updates "
+        lines.append("Activities started \(activitiesStarted), ended by iOS or the user \(endedBySystem)"
+            + (reachedSystemLimit ? " (at the system's limit)" : "") + "; updates "
             + "\(statistics.updates), keep-alives \(statistics.keepAlives), coalesced \(statistics.coalesced)")
         lines.append("Ambient icons: \(ambientStatistics.changes) changes from \(ambientStatistics.soundInputs) sound inputs; "
             + "held back \(ambientStatistics.heldBack), below quality \(ambientStatistics.belowQuality), "

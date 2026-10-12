@@ -186,39 +186,52 @@ import Testing
     }
 }
 
-/// Acceptance test 15: the eight-hour limit of a Live Activity.
+/// Acceptance test 15: the eight-hour limit of a Live Activity. The app does not work around
+/// it (decision of 2026-10-11): nothing is replaced, and nothing is requested after the limit.
 @Suite struct ActivityLifetimeTests {
     private let policy = ActivityLifetimePolicy.standard
     private func hours(_ value: Double) -> Date { T.date(value * 3600) }
 
-    @Test func aYoungActivityIsKept() {
-        #expect(policy.decide(sessionIsLive: true, activityStartedAt: T.origin, appIsActive: true, now: hours(1)) == .keep)
-        #expect(policy.decide(sessionIsLive: true, activityStartedAt: T.origin, appIsActive: false, now: hours(6.9)) == .keep)
+    @Test func aRunningActivityIsNeverReplacedHoweverOldItIs() {
+        for reachedLimit in [false, true] {
+            for active in [true, false] {
+                #expect(policy.decide(sessionIsLive: true, hasActivity: true, reachedLimit: reachedLimit, appIsActive: active) == .keep)
+            }
+        }
+        // The policy has no decision that ends a running activity.
+        #expect(!ActivityLifetimePolicy.Decision.allCases.map(\.rawValue).contains { $0.contains("renew") || $0.contains("replace") })
     }
 
-    @Test func anOldActivityIsRenewedWhileTheAppIsOnScreen() {
-        #expect(policy.decide(sessionIsLive: true, activityStartedAt: T.origin, appIsActive: true, now: hours(7)) == .renew)
-        #expect(policy.decide(sessionIsLive: true, activityStartedAt: T.origin, appIsActive: true, now: hours(9)) == .renew)
-        // In the background nothing can be requested: it is kept until the system ends it.
-        #expect(policy.decide(sessionIsLive: true, activityStartedAt: T.origin, appIsActive: false, now: hours(7.5)) == .keep)
-        #expect(policy.decide(sessionIsLive: true, activityStartedAt: T.origin, appIsActive: false, now: hours(8)) == .waitForForeground)
+    @Test func afterTheSystemsLimitNothingIsRequestedForThisSession() {
+        #expect(policy.endedAtLimit(startedAt: T.origin, endedAt: hours(8)))
+        #expect(policy.endedAtLimit(startedAt: T.origin, endedAt: hours(7.9)))
+        #expect(policy.endedAtLimit(startedAt: T.origin, endedAt: hours(11)))
+        for active in [true, false] {
+            #expect(policy.decide(sessionIsLive: true, hasActivity: false, reachedLimit: true, appIsActive: active) == .stayEnded)
+        }
     }
 
-    @Test func aSessionWithoutAnActivityGetsOneWhenTheAppIsOpened() {
-        #expect(policy.decide(sessionIsLive: true, activityStartedAt: nil, appIsActive: false, now: hours(8.1)) == .waitForForeground)
-        #expect(policy.decide(sessionIsLive: true, activityStartedAt: nil, appIsActive: true, now: hours(8.2)) == .start)
+    @Test func anActivityRemovedBeforeItsTimeIsShownAgainWhenTheAppIsOpened() {
+        #expect(!policy.endedAtLimit(startedAt: T.origin, endedAt: hours(0.5)))
+        #expect(!policy.endedAtLimit(startedAt: T.origin, endedAt: hours(7.5)))
+        #expect(policy.decide(sessionIsLive: true, hasActivity: false, reachedLimit: false, appIsActive: false) == .waitForForeground)
+        #expect(policy.decide(sessionIsLive: true, hasActivity: false, reachedLimit: false, appIsActive: true) == .start)
     }
 
     @Test func withoutASessionNothingIsEverRequested() {
         for active in [true, false] {
-            #expect(policy.decide(sessionIsLive: false, activityStartedAt: nil, appIsActive: active, now: hours(9)) == .keep)
-            #expect(policy.decide(sessionIsLive: false, activityStartedAt: T.origin, appIsActive: active, now: hours(9)) == .keep)
+            for hasActivity in [true, false] {
+                for reachedLimit in [true, false] {
+                    #expect(policy.decide(sessionIsLive: false, hasActivity: hasActivity, reachedLimit: reachedLimit, appIsActive: active)
+                        == .keep)
+                }
+            }
         }
     }
 
     @Test func theExpectedEndIsEightHoursAfterTheStart() {
         #expect(policy.expectedEnd(startedAt: T.origin) == hours(8))
-        #expect(policy.renewAfter < policy.systemLimit)
+        #expect(policy.limitTolerance < 3600)
     }
 }
 

@@ -21,6 +21,15 @@ public protocol ConversationSummarizing: Sendable {
     func recap(transcript: String, notes: [String]) async throws -> RecapDraft
     /// The earlier recap, extended by what was said since. Earlier details must be kept.
     func update(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft
+    /// One sentence that was said, rewritten as one sentence of a recap (reported speech) with
+    /// the same facts. Used when a draft repeats a spoken sentence word for word; the result is
+    /// checked like every other statement.
+    func restate(_ statement: String) async throws -> String
+}
+
+extension ConversationSummarizing {
+    /// A summarizer that cannot restate: the copied sentence is then left out.
+    public func restate(_ statement: String) async throws -> String { throw RecapError.restatementUnsupported }
 }
 
 /// A checked recap, ready to show and to save.
@@ -47,6 +56,9 @@ public struct ConversationRecap: Hashable, Sendable {
     public var coveredTo: Date?
     public var utteranceCount: Int
     public var modelSeconds: TimeInterval
+    /// Share of the text that repeats an utterance word for word (`RecapValidator.verbatimShare`),
+    /// measured when it was checked. A number only; for diagnostics and the evaluation.
+    public var verbatimShare = 0.0
 
     public init(title: String, summary: String, keyPoints: [String] = [], source: Source, caveats: [String] = [],
                 corrections: [String] = [], coveredFrom: Date? = nil, coveredTo: Date? = nil, utteranceCount: Int = 0,
@@ -84,17 +96,32 @@ public struct RecapValidator: Hashable, Sendable {
     /// Share of a sentence's content words that must occur in the transcript.
     public var minimumSupport: Double
     /// Window 7: a statement of at least this many words that is, word for word, a whole
-    /// sentence of the transcript is a copy, not a summary, and is removed — a saved summary
-    /// must never turn into a saved transcript. (Found in the Simulator: asked to extend a
-    /// recap, the on-device model appended the three new utterances unchanged, and every other
-    /// check passed them, because a copy is fully supported by its source.) A summary still
-    /// uses the speakers' words; this only stops whole sentences from being stored as they
-    /// were said.
+    /// sentence of the transcript is a copy, not a summary, and is never kept as it is — a saved
+    /// summary must never turn into a saved transcript. (Found in the Simulator: asked to extend
+    /// a recap, the on-device model appended the three new utterances unchanged, and every other
+    /// check passed them, because a copy is fully supported by its source.)
+    ///
+    /// A copy is not simply deleted, because a short spoken sentence is often a fact the reader
+    /// needs ("The lot reopens on Friday."): the engine asks the model to restate it, in memory,
+    /// and `validate` puts the restatement in its place when it passes `restatementProblem`.
+    /// Only when no acceptable restatement exists is the statement left out.
     public var copiedMinimumWords: Int
+    /// Words in a row, taken from one utterance, that count as repeated word for word when the
+    /// whole text is measured (`verbatimShare`).
+    public var verbatimRun: Int
+    /// A restatement may be this many words longer than the sentence it restates.
+    public var restatementExtraWords: Int
+    /// Share of the original's content words a restatement must keep.
+    public var restatementKeeps: Double
 
-    public init(minimumSupport: Double = 0.5, copiedMinimumWords: Int = 5) {
+    public init(minimumSupport: Double = 0.5, copiedMinimumWords: Int = 5, verbatimRun: Int = 6,
+                restatementExtraWords: Int = 10, restatementKeeps: Double = 0.75)
+    {
         self.minimumSupport = minimumSupport
         self.copiedMinimumWords = copiedMinimumWords
+        self.verbatimRun = verbatimRun
+        self.restatementExtraWords = restatementExtraWords
+        self.restatementKeeps = restatementKeeps
     }
 
     public struct Result: Hashable, Sendable {
@@ -105,9 +132,77 @@ public struct RecapValidator: Hashable, Sendable {
         /// Sentences and key points checked, and how many were removed.
         public var statements: Int
         public var removed: Int
+        /// Statements that repeated a spoken sentence word for word and are not in the result as
+        /// they were (each once). Speech-derived: for the engine's restating only, never logged.
+        public var copied: [String]
+        /// How many statements were replaced by a checked restatement.
+        public var restated: Int
+        /// Share of the kept text's words that repeat an utterance word for word (see `verbatimShare`).
+        public var verbatimShare: Double
     }
 
-    public func validate(_ draft: RecapDraft, transcript: String, earlierText: String = "") -> Result {
+    /// The name of the correction recorded when a copied statement was replaced by a restatement.
+    public static let restatedCorrection = "restated_copy"
+
+    /// How much of `text` repeats the transcript word for word: the share of its words that lie
+    /// in a run of at least `verbatimRun` consecutive words of one utterance. A summary of plain
+    /// facts shares runs with its source (0.2–0.4 is ordinary); a text that is mostly transcript
+    /// is close to 1.
+    public func verbatimShare(of text: String, transcript: String) -> Double {
+        let run = max(verbatimRun, 2)
+        var spokenRuns: Set<[String]> = []
+        for line in transcript.split(whereSeparator: \.isNewline) {
+            let words = RecapText.words(in: String(line))
+            guard words.count >= run else { continue }
+            for start in 0...(words.count - run) { spokenRuns.insert(Array(words[start ..< start + run])) }
+        }
+        var total = 0, covered = 0
+        // Statement by statement: a run never spans two sentences of the text.
+        for statement in text.split(whereSeparator: \.isNewline).flatMap({ RecapText.sentences(in: String($0)) }) {
+            let words = RecapText.words(in: statement)
+            total += words.count
+            guard words.count >= run else { continue }
+            var isCovered = [Bool](repeating: false, count: words.count)
+            for start in 0...(words.count - run) where spokenRuns.contains(Array(words[start ..< start + run])) {
+                for index in start ..< start + run { isCovered[index] = true }
+            }
+            covered += isCovered.count(where: { $0 })
+        }
+        return total == 0 ? 0 : Double(covered) / Double(total)
+    }
+
+    /// Why `restated` cannot stand in for the spoken sentence `original`; nil when it can. It
+    /// has to carry the same facts and nothing else: the same numbers, days and times, the same
+    /// negations, most of the content words, no new name, and not much more text.
+    public func restatementProblem(_ restated: String, of original: String) -> String? {
+        let words = RecapText.words(in: restated), originalWords = RecapText.words(in: original)
+        guard !words.isEmpty, words != originalWords else { return "restatement_unchanged" }
+        if RecapText.sentences(in: restated).count > 1 { return "restatement_not_one_sentence" }
+        if words.count > originalWords.count + restatementExtraWords { return "restatement_too_long" }
+        if RecapText.quantities(in: restated) != RecapText.quantities(in: original) { return "restatement_changed_number_or_time" }
+        if RecapText.negations(in: restated) != RecapText.negations(in: original) { return "restatement_changed_negation" }
+        // Stricter than the ordinary name test, which cannot judge a sentence's first word: every
+        // capitalized word has to be a word of the original or an ordinary opening ("Someone").
+        let known = Set(originalWords)
+        for word in RecapText.capitalizedWords(in: restated)
+            where !known.contains(word) && !RecapText.stopWords.contains(word) && !RecapText.reportingOpeners.contains(word)
+        {
+            return "restatement_added_name"
+        }
+        let content = Set(RecapText.contentWords(in: original).map(RecapText.stem))
+        if !content.isEmpty {
+            let kept = Set(RecapText.words(in: restated).map(RecapText.stem))
+            if Double(content.count(where: kept.contains)) / Double(content.count) < restatementKeeps { return "restatement_lost_content" }
+        }
+        return nil
+    }
+
+    /// - Parameter restatements: for statements that repeat a spoken sentence, what the model
+    ///   wrote when asked to restate them (keyed by the statement). Used only where it passes
+    ///   the checks.
+    public func validate(_ draft: RecapDraft, transcript: String, earlierText: String = "",
+                         restatements: [String: String] = [:]) -> Result
+    {
         let source = transcript + " " + earlierText
         let sourceStems = Set(RecapText.words(in: source).map(RecapText.stem))
         let sourceQuantities = RecapText.quantities(in: source)
@@ -122,9 +217,13 @@ public struct RecapValidator: Hashable, Sendable {
             for sentence in RecapText.sentences(in: String(line)) { spoken.insert(RecapText.words(in: sentence)) }
         }
 
-        func problem(in statement: String) -> String? {
+        func isCopy(_ statement: String) -> Bool {
             let words = RecapText.words(in: statement)
-            if words.count >= copiedMinimumWords, spoken.contains(words) { return "copied_from_transcript" }
+            return words.count >= copiedMinimumWords && spoken.contains(words)
+        }
+
+        func problem(in statement: String) -> String? {
+            if isCopy(statement) { return "copied_from_transcript" }
             let quantities = RecapText.quantities(in: statement)
             if !quantities.isSubset(of: sourceQuantities) { return "unsupported_number_or_time" }
             if !RecapText.names(in: statement).isSubset(of: sourceNames) { return "unsupported_name" }
@@ -136,25 +235,37 @@ public struct RecapValidator: Hashable, Sendable {
             return nil
         }
 
-        var kept: [String] = []
-        for sentence in RecapText.sentences(in: draft.summary) {
+        var copied: [String] = []
+        var restated = 0
+
+        /// The statement as it may be kept: itself, a checked restatement of a copy, or nil.
+        func resolved(_ statement: String) -> String? {
             statements += 1
-            if let issue = problem(in: sentence) {
+            if isCopy(statement) {
+                if !copied.contains(statement) { copied.append(statement) }
+                if let candidate = restatements[statement]?.trimmingCharacters(in: .whitespacesAndNewlines),
+                   restatementProblem(candidate, of: statement) == nil, problem(in: candidate) == nil
+                {
+                    restated += 1
+                    corrections.append(Self.restatedCorrection)
+                    return candidate
+                }
+            }
+            if let issue = problem(in: statement) {
                 removed += 1
                 corrections.append(issue)
-            } else {
-                kept.append(sentence)
+                return nil
             }
+            return statement
+        }
+
+        var kept: [String] = []
+        for sentence in RecapText.sentences(in: draft.summary) {
+            if let statement = resolved(sentence) { kept.append(statement) }
         }
         var points: [String] = []
         for point in draft.keyPoints.map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) }) where !point.isEmpty {
-            statements += 1
-            if let issue = problem(in: point) {
-                removed += 1
-                corrections.append(issue)
-            } else if !points.contains(point) {
-                points.append(point)
-            }
+            if let statement = resolved(point), !points.contains(statement) { points.append(statement) }
         }
         var title = draft.title.trimmingCharacters(in: .whitespacesAndNewlines)
         // A title names the topic in words of its own ("Medication instructions"), so only its
@@ -165,8 +276,9 @@ public struct RecapValidator: Hashable, Sendable {
             if !title.isEmpty { corrections.append("title_replaced") }
             title = ""
         }
+        let share = verbatimShare(of: (kept + points).joined(separator: "\n"), transcript: transcript)
         return Result(summary: kept.joined(separator: " "), keyPoints: points, title: title, corrections: corrections,
-                      statements: statements, removed: removed)
+                      statements: statements, removed: removed, copied: copied, restated: restated, verbatimShare: share)
     }
 }
 
@@ -180,6 +292,15 @@ public struct ConversationRecapEngine: Sendable {
         public var maximumTranscriptWords = 900
         /// Missing speech longer than this in total is mentioned in the recap.
         public var missingSpeechNotice: TimeInterval = 6
+        /// Statements of one draft that repeat a spoken sentence and are given to the model to
+        /// restate (one short request each). Further ones are left out.
+        public var maximumRestatements = 3
+        /// Time for all restatements of one draft together.
+        public var restateTimeout: TimeInterval = 10
+        /// A text of which more than this share repeats the transcript word for word is not a
+        /// summary and is not shown or saved as one. Chosen on the development scenes, whose
+        /// summaries measure 0.13–0.44 (`docs/testing/WINDOW7_ACCEPTANCE_REPORT.md`, section 4).
+        public var maximumVerbatimShare = 0.65
 
         public init() {}
     }
@@ -240,8 +361,9 @@ public struct ConversationRecapEngine: Sendable {
             return unavailable(excerpt, caveats: caveats, seconds: Date().timeIntervalSince(started))
         }
         var rejected: [String] = []
-        if let recap = checked(draft, transcript: text, earlier: "", excerpt: excerpt, caveats: caveats,
-                               seconds: Date().timeIntervalSince(started), rejected: &rejected)
+        let result = await validated(draft, transcript: text, earlierText: "")
+        if let recap = checked(result, excerpt: excerpt, caveats: caveats, seconds: Date().timeIntervalSince(started),
+                               rejected: &rejected)
         {
             return recap
         }
@@ -263,9 +385,10 @@ public struct ConversationRecapEngine: Sendable {
             try await summarizer.update(previous: earlier, newTranscript: fresh)
         }) else { return nil }
         // Earlier text counts as support: the update may restate what the first recap said.
-        let result = validator.validate(draft, transcript: fresh + "\n" + earlierTranscript, earlierText: previous.fullText)
+        let result = await validated(draft, transcript: fresh + "\n" + earlierTranscript, earlierText: previous.fullText)
         guard !result.summary.isEmpty,
-              result.statements == 0 || Double(result.removed) / Double(result.statements) <= policy.maximumRemovedShare
+              result.statements == 0 || Double(result.removed) / Double(result.statements) <= policy.maximumRemovedShare,
+              result.verbatimShare <= policy.maximumVerbatimShare
         else { return nil }
         var updated = previous
         updated.summary = result.summary
@@ -281,23 +404,58 @@ public struct ConversationRecapEngine: Sendable {
         updated.coveredTo = utterances.last?.end ?? previous.coveredTo
         updated.utteranceCount += utterances.count
         updated.modelSeconds = Date().timeIntervalSince(started)
+        updated.verbatimShare = result.verbatimShare
         return updated
     }
 
-    private func checked(_ draft: RecapDraft, transcript: String, earlier: String, excerpt: ConversationExcerpt,
-                         caveats: [String], seconds: TimeInterval, rejected: inout [String]) -> ConversationRecap?
+    /// The draft after the checks. A statement that repeats a spoken sentence word for word is
+    /// given back to the model to be restated, and the draft is checked again with the answers.
+    /// All of this happens in memory: nothing is shown or stored before the checks have passed.
+    private func validated(_ draft: RecapDraft, transcript: String, earlierText: String) async -> RecapValidator.Result {
+        let first = validator.validate(draft, transcript: transcript, earlierText: earlierText)
+        guard !first.copied.isEmpty, policy.maximumRestatements > 0 else { return first }
+        var restatements: [String: String] = [:]
+        let deadline = Date().addingTimeInterval(policy.restateTimeout)
+        for statement in first.copied.prefix(policy.maximumRestatements) {
+            let remaining = deadline.timeIntervalSinceNow
+            guard remaining > 0.5, !Task.isCancelled else { break }
+            if let restated = try? await withTimeout(seconds: remaining, { [summarizer] in try await summarizer.restate(statement) }) {
+                restatements[statement] = restated
+            }
+        }
+        guard !restatements.isEmpty else { return first }
+        return validator.validate(draft, transcript: transcript, earlierText: earlierText, restatements: restatements)
+    }
+
+    private func checked(_ result: RecapValidator.Result, excerpt: ConversationExcerpt, caveats: [String],
+                         seconds: TimeInterval, rejected: inout [String]) -> ConversationRecap?
     {
-        let result = validator.validate(draft, transcript: transcript, earlierText: earlier)
+        guard result.verbatimShare <= policy.maximumVerbatimShare else {
+            rejected = result.corrections + ["too_much_verbatim"]
+            return nil
+        }
         guard !result.summary.isEmpty,
               result.statements == 0 || Double(result.removed) / Double(result.statements) <= policy.maximumRemovedShare
         else {
             rejected = result.corrections
             return nil
         }
-        return ConversationRecap(title: result.title.isEmpty ? Self.untitled : result.title, summary: result.summary,
-                                 keyPoints: result.keyPoints, source: .languageModel, caveats: caveats,
-                                 corrections: result.corrections, coveredFrom: excerpt.start, coveredTo: excerpt.end,
-                                 utteranceCount: excerpt.utterances.count, modelSeconds: seconds)
+        var recap = ConversationRecap(title: result.title.isEmpty ? Self.untitled : result.title, summary: result.summary,
+                                      keyPoints: result.keyPoints, source: .languageModel, caveats: caveats,
+                                      corrections: result.corrections, coveredFrom: excerpt.start, coveredTo: excerpt.end,
+                                      utteranceCount: excerpt.utterances.count, modelSeconds: seconds)
+        recap.verbatimShare = result.verbatimShare
+        return recap
+    }
+
+    /// The last check before a recap is written to storage, independent of how it was made:
+    /// false when it repeats too much of the words it was written from. `transcript` is what
+    /// the app still holds in memory; without it nothing can be compared and the earlier checks stand.
+    public func maySave(_ recap: ConversationRecap, transcript: String) -> Bool {
+        guard recap.isSummary else { return false }
+        guard !transcript.isEmpty else { return true }
+        return validator.verbatimShare(of: recap.summary + "\n" + recap.keyPoints.joined(separator: "\n"),
+                                       transcript: transcript) <= policy.maximumVerbatimShare
     }
 
     /// No summary could be written. The raw transcript is deliberately not put in its place:
@@ -313,8 +471,10 @@ public struct ConversationRecapEngine: Sendable {
             coveredFrom: excerpt.start, coveredTo: excerpt.end, utteranceCount: excerpt.utterances.count, modelSeconds: seconds)
     }
 
-    private func withTimeout<Value: Sendable>(_ operation: @escaping @Sendable () async throws -> Value) async throws -> Value {
-        let timeout = policy.timeout
+    private func withTimeout<Value: Sendable>(seconds: TimeInterval? = nil,
+                                              _ operation: @escaping @Sendable () async throws -> Value) async throws -> Value
+    {
+        let timeout = seconds ?? policy.timeout
         return try await withThrowingTaskGroup(of: Value.self) { group in
             group.addTask { try await operation() }
             group.addTask {
@@ -388,6 +548,21 @@ enum RecapText {
         }
         return names
     }
+
+    /// How many denying words the text has.
+    static func negations(in text: String) -> Int {
+        words(in: text).count { negationWords.contains($0) || $0.hasSuffix("n't") }
+    }
+
+    /// Every capitalized word, wherever it stands (lowercased).
+    static func capitalizedWords(in text: String) -> [String] {
+        text.split { !($0.isLetter || $0 == "'") }.filter { $0.first?.isUppercase == true && $0.count > 1 }.map { $0.lowercased() }
+    }
+
+    /// Capitalized first words of reported speech that are not names.
+    static let reportingOpeners: Set<String> = ["somebody", "everyone", "everybody", "anyone", "nobody", "apparently", "reportedly"]
+
+    static let negationWords: Set<String> = ["not", "no", "never", "cannot", "nobody", "nothing", "none", "neither", "nor", "without"]
 
     static let numberWords: [String: Int] = [
         "zero": 0, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,

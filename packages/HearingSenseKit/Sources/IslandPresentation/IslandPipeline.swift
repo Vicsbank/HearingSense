@@ -107,6 +107,13 @@ public struct IslandPolicy: Hashable, Sendable {
     /// Window 7: only acoustic events ask iOS for an expansion. A speech episode (including a
     /// possible spoken warning, which rests on recognized words) is presented without one.
     public var speechMayRequestExpansion = false
+    /// Only an acoustic event of at least this priority asks for a prominent presentation
+    /// (`high`: a signal made to be noticed; `urgent`: a siren, a persisting alarm). Everything
+    /// below changes the icon silently, whatever interruption the attention engine suggests.
+    public var alertMinimumPriority = AttentionPriority.high
+    /// An event the attention engine marks as uncertain asks for nothing: a prominent alert
+    /// needs a verified event.
+    public var alertsNeedVerifiedEvent = true
 
     public init(ambient: AmbientIconPolicy, minimumUpdateInterval: TimeInterval, attentionMinimumHold: TimeInterval,
                 protectedPriority: AttentionPriority = .high, protectedFor: TimeInterval = 20,
@@ -167,6 +174,9 @@ public struct IslandStatistics: Hashable, Sendable, Codable {
     public var summaryReadyRequests = 0
     /// Episodes that would have asked for an expansion but are speech: speech never does.
     public var speechAlertsWithheld = 0
+    /// Acoustic events that asked for nothing because they were below the alert priority or
+    /// marked uncertain.
+    public var unverifiedAlertsWithheld = 0
 
     public init() {}
 }
@@ -431,6 +441,14 @@ public struct IslandPipeline: Sendable {
                     item.summaryAlerted = true
                     statistics.summariesWithoutExpansion += 1
                 }
+            }
+            if wantsAlert, intent.category != .speech,
+               intent.priority < policy.alertMinimumPriority || (policy.alertsNeedVerifiedEvent && intent.isUncertain)
+            {
+                // Not marked as alerted: the same episode may still ask once it is verified or
+                // its priority has risen.
+                wantsAlert = false
+                statistics.unverifiedAlertsWithheld += 1
             }
             if wantsAlert, !policy.speechMayRequestExpansion, intent.category == .speech {
                 wantsAlert = false

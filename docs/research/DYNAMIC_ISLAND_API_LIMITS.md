@@ -126,20 +126,22 @@ Two observations are not a guarantee.
 **What the app does.**
 
 - Ordinary sounds and scene changes: plain `Activity.update`, never an alert configuration.
-- A high-priority **acoustic** episode (the attention engine's decision) produces a request;
-  `AlertGate` passes it to iOS only when "Expand for important events" is on (**off by
-  default**) and the iPhone is judged unlocked. Otherwise the update is silent and the island
-  shows the warning icon with its priority mark.
+- A **verified** acoustic episode of priority high or urgent (the attention engine's decision,
+  not marked uncertain) produces a request; `AlertGate` passes it to iOS when "Prominent alerts
+  for urgent sounds" is on (**on by default** since the decision of 2026-10-11) and the iPhone
+  is judged unlocked. While it is judged locked, or the app cannot tell, the request is passed
+  only if the user opted in to "Also when the iPhone is locked" (off by default). Otherwise the
+  update is silent and the island shows the warning icon with its priority mark.
 - A speech episode never produces a request (`IslandPolicy.speechMayRequestExpansion == false`).
 - A summary the user asked for produces one request when it is ready, under its own setting
   ("Show the summary when it is ready", on by default), through the same lock gate.
 - The alert's title and body are generic words. They never contain speech.
 - The sound is a silent file unless "Play the alert sound" is on.
 
-**Why the default for events is off.** The lock state can only be estimated (data protection
-lags the lock by 4–12 s, measured in Window 5). An alert in those seconds can light a locked
-screen. The student decides whether the default changes; the settings screen says what the
-switch can cause.
+**What the default (on) cannot rule out.** The lock state can only be estimated (data protection
+lags the lock by 4–12 s, measured in Window 5; iOS's earlier notice closed the gap in two
+instrumented runs). An alert in those seconds can light a locked screen although the user did
+not opt in. The settings screen says so, and Window 8 measures it on the iPhone.
 
 **Not the same as.** *Critical Alerts* (notifications that ignore the mute switch and Focus)
 need an entitlement from Apple and are for health, safety and security apps. *Time Sensitive
@@ -151,14 +153,13 @@ no claim to detect emergencies.
 
 | Limit | Source | Handling |
 |---|---|---|
-| Active for up to 8 hours, then ended by the system | Apple's documentation; **not verified** | `ActivityLifetimePolicy`: an activity older than 7 hours is replaced by a fresh one whenever the app is on screen. If the system ends it while the app is in the background, listening goes on, the app logs it, and a new activity is requested when the app is opened next. |
+| Active for up to 8 hours, then ended by the system | Apple's documentation; **not verified** | `ActivityLifetimePolicy` (decision of 2026-10-11): the app does not work around the limit. A running activity is never replaced. When the system ends it at the limit, listening goes on, the app logs it, and no activity is requested for that session; the next session gets its own. |
 | Can be requested only while the app is on screen (or by an intent made for it) | Apple's documentation; **Simulator**: requests at launch succeeded | `LiveActivityController` retries in `appBecameActive` |
-| The user can remove the activity | — | Same path as the system ending it |
+| The user can remove the activity | — | Removed before its time: shown again when the user opens the app while still listening |
 | A stale date marks content as outdated | **Device (earlier)** | Stale after 15 minutes without an update; drawn as "Not updating". A keep-alive update is sent every 10 minutes. |
 | Updates may be throttled by the system | Apple's documentation; **Device (earlier)**: 256–282 updates per hour were all delivered in 35 and 5 minute runs | Icon changes are limited to 12 per minute and coalesced |
 
-One listening session uses one activity; a renewal ends the old one before the new one is
-requested, and leftovers of an earlier launch are ended at launch. The Simulator self-test saw
+One listening session uses one activity; leftovers of an earlier launch are ended at launch. The Simulator self-test saw
 exactly one activity alive after nine toggles.
 
 The eight-hour figure is about the *presentation*. How long the microphone, the sound

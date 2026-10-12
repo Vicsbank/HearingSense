@@ -132,6 +132,10 @@ public struct RecapSceneResult: Sendable, Codable {
     /// was not said, or a sentence mostly made of other words).
     public var statementsRemoved: Int
     public var corrections: [String]
+    /// Statements that repeated a spoken sentence and were replaced by a checked restatement.
+    public var statementsRestated: Int?
+    /// Share of the recap's words that repeat an utterance word for word.
+    public var verbatimShare: Double?
     public var mentionsMissingSpeech: Bool?
     public var seconds: Double
     public var words: Int
@@ -169,12 +173,14 @@ public enum RecapEvaluator {
             // Statements counted on the model's own text are not available after the check, so
             // the engine's corrections are the removed ones; the kept ones are counted here.
             let kept = RecapSentences.count(in: recap.summary) + recap.keyPoints.count
-            let removed = recap.corrections.count { $0 != "title_replaced" }
+            let restated = recap.corrections.count { $0 == RecapValidator.restatedCorrection }
+            let removed = recap.corrections.count { $0 != "title_replaced" && $0 != RecapValidator.restatedCorrection }
             var result = RecapSceneResult(
                 id: scene.id, split: scene.split, source: recap.source.rawValue, factsFound: found.count,
                 factsTotal: firstFacts.count, negationsKept: negations.count { $0.isPresent(in: text) },
                 negationsTotal: negations.count, statements: kept + removed, statementsRemoved: removed,
-                corrections: recap.corrections,
+                corrections: recap.corrections, statementsRestated: restated,
+                verbatimShare: recap.isSummary ? recap.verbatimShare : nil,
                 mentionsMissingSpeech: scene.missing.isEmpty ? nil : recap.caveats.contains { $0.contains("could not be transcribed") },
                 seconds: recap.modelSeconds, words: text.split(whereSeparator: \.isWhitespace).count,
                 missedFacts: firstFacts.filter { !$0.isPresent(in: text) }.map(\.text), title: recap.title,
@@ -208,11 +214,17 @@ public enum RecapEvaluator {
             whole == 0 ? "–" : "\(part)/\(whole) (\((Double(part) / Double(whole) * 100).formatted(.number.precision(.fractionLength(0)))) %)"
         }
         let seconds = results.map(\.seconds).sorted()
+        let shares = results.compactMap(\.verbatimShare).sorted()
+        func percent(_ value: Double) -> String { (value * 100).formatted(.number.precision(.fractionLength(0))) + " %" }
         var lines = [
             "  scenes                \(results.count); summaries written \(results.count { $0.source == "languageModel" })",
             "  facts recalled        \(share(sum(\.factsFound), sum(\.factsTotal)))",
             "  negations kept        \(share(sum(\.negationsKept), sum(\.negationsTotal)))",
             "  statements removed    \(share(sum(\.statementsRemoved), sum(\.statements))) by the lexical checks",
+            "  copies restated       \(sum { $0.statementsRestated ?? 0 }) (a spoken sentence repeated word for word, rewritten in memory); "
+                + "left out as copies \(results.reduce(0) { $0 + $1.corrections.count { $0 == "copied_from_transcript" } })",
+            "  word-for-word share   " + (shares.isEmpty ? "–" : "median \(percent(shares[shares.count / 2])), max \(percent(shares[shares.count - 1]))")
+                + " of a summary's words lie in runs of 6 or more words of one utterance",
             "  continued: earlier facts kept \(share(sum { $0.earlierFactsKept ?? 0 }, sum { $0.earlierFactsTotal ?? 0 })), "
                 + "later facts added \(share(sum { $0.laterFactsFound ?? 0 }, sum { $0.laterFactsTotal ?? 0 }))",
             "  missing speech stated \(share(results.count { $0.mentionsMissingSpeech == true }, results.count { $0.mentionsMissingSpeech != nil }))",

@@ -60,6 +60,8 @@ final class ConversationIntelligenceController {
     private(set) var continuedSince: Date?
     private(set) var recapsMade = 0
     private(set) var updatesMade = 0
+    /// Summaries the last check before storage refused (they repeated the speech word for word).
+    private(set) var summariesNotSaved = 0
     private(set) var lastRecapSeconds: TimeInterval?
 
     // History
@@ -315,6 +317,15 @@ final class ConversationIntelligenceController {
 
     private func save(_ recap: ConversationRecap, status: ConversationRecord.Status) {
         guard let store else { return }
+        // The last check before anything is written, whatever path the text took: a text that
+        // repeats too much of the words still held in memory is not a summary and is not stored.
+        // An earlier saved version of this summary stays as it is.
+        guard recapEngine.maySave(recap, transcript: recapTranscript) else {
+            summariesNotSaved += 1
+            storageError = "This summary repeated too much of what was said word for word, so it was not saved."
+            log(.error, "A summary was not saved: it failed the word-for-word check before storage")
+            return
+        }
         do {
             let now = Date.now
             if let id = currentRecordID, var record = try store.record(id) {
@@ -451,7 +462,7 @@ final class ConversationIntelligenceController {
                 + "\(isLanguageModelAvailable ? "available" : "not available") (used only for summaries the user asks for)",
             "Recent speech for summaries: \(isTranscriptionOn ? "kept in memory" : "not kept (transcription off)") · look-back \(Int(lookBack)) s · "
                 + "buffered \(captions.count) utterance(s), \(bufferedWordCount) words, expired \(buffer.expiredUtterances)",
-            "Phase: \(phase.rawValue) · summary requests \(recapsMade) · updates \(updatesMade) · last summary model time "
+            "Phase: \(phase.rawValue) · summary requests \(recapsMade) · updates \(updatesMade) · refused before storage \(summariesNotSaved) · last summary model time "
                 + "\(lastRecapSeconds.map(Self.seconds) ?? "–") · saved summaries \(history.count)",
         ].joined(separator: "\n")
     }

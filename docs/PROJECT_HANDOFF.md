@@ -1,7 +1,23 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-11, end of **Window 7** (product integration and stabilization). The
+Last updated: 2026-10-11, **Window 7 finalized** after the student's decisions. The
 paragraphs below it describe the earlier windows as they were written at the time.
+
+**Final decisions of 2026-10-11 (implemented in the commit "Window 7 final decisions" on this
+branch, the one after `9788704`).** Window 7 is accepted as the baseline of Window 8 (physical
+device validation); nothing is merged into main and nothing is pushed. (1) Prominent alerts
+for verified highest-priority acoustic events are on by default; an alert on a locked iPhone
+needs the user's opt-in ("Also when the iPhone is locked"). (2) Speech never requests an alert
+and Personal Semantic Attention stays out. (3) The Window 5 work in the main checkout stays
+uncommitted there, untouched. (4) A Live Activity is never replaced, and nothing is requested
+after iOS ended it at its eight-hour limit. (5) A spoken sentence that a summary draft repeats
+word for word is restated in memory and checked instead of deleted; a text that is mostly
+transcript is neither shown nor stored. Mac: 488 package tests pass; held-out summary facts 26
+of 26 (not a blind result). Simulator: Debug build, self-test 28 of 28, no spoken sentence on
+disk. Details: `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md` §8. **Next: Window 8**, branch
+`feature/window8-device-validation`, worktree `.claude/worktrees/window8`: read
+`docs/testing/WINDOW8_PREFLIGHT.md` and `docs/testing/WINDOW8_DEVICE_TEST_PLAN.md` there.
+The paragraph below was written before these decisions.
 
 **Window 7 status: code complete on `feature/window7-product-integration` in the worktree
 `.claude/worktrees/window7`. Not merged, not pushed. Verified on the Mac (474 package tests
@@ -350,10 +366,13 @@ Full description: `docs/PRODUCT_ARCHITECTURE_FINAL.md`; results: `docs/testing/W
    not discoverable), `HearingSenseActionCenter`, `IslandControls`.
 5. `IslandPresentation`: `IslandConversation`, `IslandContent.conversation` / `.sceneTitle`,
    pipeline inputs `.conversation` and `.scene`, `IslandPolicy.speechMayRequestExpansion`
-   (off) and `.window5`, `IslandSettings.expandsForSummaries`, `ActivityLifetimePolicy`.
+   (off) and `.window5`, `IslandSettings.expandsForSummaries`, `ActivityLifetimePolicy`
+   (final: no replacement, nothing after the limit), `IslandSettings.alertsWhileLocked`,
+   `IslandPolicy.alertMinimumPriority` / `alertsNeedVerifiedEvent`.
    `IslandViews`: expanded presentation with the sound's name, status, scene and a slot for controls.
 6. `ConversationUnderstanding`: `.summarizeRequested`, `.noSummary`, policy `.product`; the
-   copy check in `RecapValidator`; updates written as additions.
+   copy check in `RecapValidator`; updates written as additions. Final: `restate` (a copied
+   sentence is rewritten in memory), `restatementProblem`, `verbatimShare`, `maySave`.
    App: `ConversationIntelligenceController.summarize()`, fixed two-minute buffer that follows
    "Transcribe nearby speech", `ConversationButtons`.
 7. `HearingSenseDomain/AcousticScene`, `SoundEventDetection/AcousticSceneTracker`, app
@@ -653,12 +672,12 @@ Details: `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md`. Mac and Simulator only; sy
 
 | Check | Environment | Result |
 |---|---|---|
-| `swift test` | Mac | **474 passed**, 9 skipped, 0 failed (61 new) |
+| `swift test` | Mac | **488 passed**, 9 skipped, 0 failed after the final decisions (474 before) |
 | `xcodebuild test -scheme HearingSenseKit-Package` | iOS 27.0 Simulator, iPhone 18 Pro Max | **TEST SUCCEEDED**: 475 passed, 10 skipped |
 | App + extension, Debug (Simulator) / Release unsigned (generic device) | — | **Succeeded** |
 | Self-test: 28 checks over the 18 acceptance tests | Simulator, microphone off, real language model, on-disk history | **28 passed, 0 failed** |
 | Storage check after that run | Simulator app container | no spoken sentence in any file (a defect found here was fixed first) |
-| Summary evaluation | Mac, real language model | dev 13/13 facts; held-out 25/26 (26/26 in Window 6: one copied sentence is now removed); 8/8 summaries |
+| Summary evaluation | Mac, real language model | dev 13/13 facts; held-out 26/26 after the final decisions (25/26 before: one copied sentence was deleted; it is now restated in memory); 8/8 summaries |
 | CPU and memory with a session on | Simulator (Mac hardware; microphone and classifier not running) | 0.6–0.9 % of one core; 48–51 MB |
 | Action Button, background and locked start, touch on the island, real microphone, Spotify / AirPods, battery | Physical iPhone | **Not run** |
 
@@ -668,9 +687,9 @@ Details: `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md`. Mac and Simulator only; sy
 |---|---|---|
 | **(W7) Nothing of Window 7 ran on the iPhone** | The Action Button, starting from the background or a locked iPhone, a real press in the island, real speech, audio coexistence and battery are all unverified | Steps W7-1 to W7-14 in `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md` §7 |
 | (W7) Background start rests on `AudioRecordingIntent`'s contract | If iOS refuses, ON from the Action Button needs the app open | The intent can continue in the foreground; decide after W7-3 |
-| (W7) Prominent alerts are off by default | Feature B is a silent warning icon until the user turns it on | The student's decision; Window 5's rule was "not on by default without device evidence" |
+| (W7, decided) Prominent alerts are on by default | An alert in the first seconds after locking can reach a locked screen although the user did not opt in (the lock state is an estimate) | Measure in Window 8, group F |
 | (W7) Scene thresholds were chosen on scripted events | May lag or flicker on real sound | Tune `AcousticScenePolicy.standard` on recorded device events |
-| (W7) The copy check costs facts | 1 of 26 in the held-out scenes | Accept or refine |
+| (W7, decided) Copied sentences are restated, not deleted | The model's restatement is the sentence in reported speech; the whole-text limit (0.65) rests on three development scenes | Watch with real speech in Window 8, group I |
 | (W7) Three branches hold work that is not in one place | Window 5's uncommitted work is in the main checkout and (as a patch) in this branch; Windows 6.1–6.3 are research branches | The student decides what to commit and merge; this branch contains everything the product needs |
 
 The rows that follow are from the earlier windows.
@@ -919,7 +938,13 @@ On the iPhone: Settings → Action Button → Shortcut → Hearing Sense → "To
 
 ## 12. Recommended next steps
 
-0000. (After Window 7) Decisions for the student: (a) whether "Expand for important events"
+00000. (After the final decisions of 2026-10-11) Window 8, physical device validation, on its
+   own branch and worktree. Nothing on the iPhone until the student authorizes a specific
+   scope; the plan and the permissions each group needs are in
+   `docs/testing/WINDOW8_DEVICE_TEST_PLAN.md` (Window 8 branch). The four decisions of the
+   next item are made (see the top of this file).
+
+0000. (After Window 7; decided on 2026-10-11) Decisions for the student: (a) whether "Expand for important events"
    stays off by default; (b) whether a possible spoken warning should be able to ask for an
    expansion again (`IslandPolicy.window5`); (c) what to do with the Window 5 work that is
    still uncommitted in the main checkout, and whether this branch becomes the line that is
