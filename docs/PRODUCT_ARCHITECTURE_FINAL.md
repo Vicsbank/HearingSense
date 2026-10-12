@@ -2,7 +2,7 @@
 
 Written 2026-10-11. Branch `feature/window7-product-integration`, worktree
 `.claude/worktrees/window7`. Not merged, not pushed. Verified on the Mac and in the iOS
-Simulator only; nothing of this window ran on a physical iPhone.
+Simulator only; nothing of this window ran on a physical iPhone. Code state: commit `f765725`.
 
 Hearing Sense is an ambient-awareness app for people who wear AirPods. It is an awareness aid,
 not a safety or emergency system.

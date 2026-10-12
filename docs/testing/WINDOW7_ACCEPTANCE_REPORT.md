@@ -1,6 +1,7 @@
 # Window 7 Acceptance Report — Product Integration and Stabilization
 
 2026-10-11. Branch `feature/window7-product-integration`, worktree `.claude/worktrees/window7`.
+Code state: commit `f765725` (baseline `faf8b35`, M1 `f6d9849`, M2 `4bd6701`, M3 + M4 `15859d2`, M5 `262eed4`).
 
 **Where things ran.** The Mac (macOS 27.2, M1 Max) and the iOS 27.0 Simulator (iPhone 18 Pro
 Max). **Nothing ran on a physical iPhone**, and no microphone was used anywhere: sound events

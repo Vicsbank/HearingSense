@@ -18,8 +18,8 @@ patch from the main checkout (which was only read). Windows 6.1–6.3 were not m
 changed only the semantic research. Read `docs/PRODUCT_ARCHITECTURE_FINAL.md`, then
 `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md` (what is verified where; the device steps W7-1 to
 W7-14) and `docs/research/DYNAMIC_ISLAND_API_LIMITS.md`. Commits: `faf8b35` (baseline),
-`f6d9849` (M1), `4bd6701` (M2), `15859d2` (M3 + M4), `262eed4` (M5), then the stabilization
-commit (see `git log`). Next: the student's decisions in §12, then the device steps.
+`f6d9849` (M1), `4bd6701` (M2), `15859d2` (M3 + M4), `262eed4` (M5), `f765725` (M6,
+stabilization; one documentation commit follows it). Next: the student's decisions in §12, then the device steps.
 The main checkout still holds the Window 5 work uncommitted; the handoffs of Windows 6.1–6.3
 are on their own branches and are not repeated here.
 
