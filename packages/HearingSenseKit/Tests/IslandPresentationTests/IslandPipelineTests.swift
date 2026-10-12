@@ -266,7 +266,7 @@ import Testing
     /// The student's decision after the device session: speech with nothing to read is an
     /// ordinary sound in every mode — an icon, never an episode, never an expansion.
     @Test func nearbySpeechWithoutASummaryIsOnlyAnIcon() {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .window5)
         driver.send(.sound(sound("speech", 1, at: 2).started()))
         #expect(driver.shown?.symbolName == "bubble.left.fill")
         let before = driver.commands.count
@@ -403,7 +403,7 @@ import Testing
     }
 
     @Test func theFirstSpeechSummaryRequestsAnExpansionWithoutCarryingTheWords() {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .window5)
         driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech)))
         #expect(driver.alerts.isEmpty)
         // The engine delivers a late summary with "no interruption".
@@ -436,7 +436,7 @@ import Testing
     /// "Do not turn every conversation into an alert": the summary of ordinary conversation is
     /// shown (touch and hold reads it) but does not ask iOS to expand the island.
     @Test func theSummaryOfOrdinaryConversationIsShownWithoutAnExpansionRequest() {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .window5)
         driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech,
                                    summary: "Talking About Lunch", reasons: [.ordinarySpeech, .conditionMet])))
         #expect(driver.shown?.mode == .attention)
@@ -455,7 +455,7 @@ import Testing
     /// the text existed only while its episode was in front (20–30 s); a touch and hold after
     /// that found "Listening". The latest summary now stays readable for `summaryRecall`.
     @Test func theLatestSummaryStaysReadableAfterItsEpisodeIsOver() throws {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .window5)
         driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, expires: 35, category: .speech,
                                    summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
         #expect(driver.shown?.headline == "Biology Test Tomorrow")
@@ -510,7 +510,7 @@ import Testing
     // MARK: - Privacy of speech-derived text
 
     @Test func whileTheIPhoneIsLockedNoSpokenWordIsInTheContent() throws {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .window5)
         driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, expires: 35, category: .speech,
                                    summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
         driver.send(.deviceLock(isLocked: true, at: T.date(10)))
@@ -576,7 +576,7 @@ import Testing
     /// results): the summary becomes the headline with one expansion request, stays readable
     /// after the episode, and is gone at the end.
     @Test func aConversationSummaryTravelsFromTheEngineToTheExpandedIsland() throws {
-        let run = IslandReplayer.run(ScenarioLibrary.lateSummary, tail: 200)
+        let run = IslandReplayer.run(ScenarioLibrary.lateSummary, policy: .window5, tail: 200)
         #expect(run.violations.isEmpty)
         let headline = try #require(run.commands.first { $0.content.headline == "Biology Test Tomorrow" })
         #expect(headline.content.mode == .attention)

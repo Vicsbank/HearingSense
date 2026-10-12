@@ -146,10 +146,12 @@ final class ListeningController {
                                  conversation.speechDataCleared()
                                  liveActivity.speechDataCleared()
                              })
-        // Recap states go to the Live Activity as generic episodes. The conversation
-        // controller follows the attention controller's session, which starts and ends with capture.
+        // The state of a requested summary goes to the Live Activity, whose expanded
+        // presentation offers the controls for it. The conversation controller follows the attention controller's session, which starts and ends with capture.
         conversation.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
-        conversation.onStatusIntent = { [liveActivity] in liveActivity.receive($0) }
+        conversation.onIslandState = { [liveActivity] in liveActivity.receive(conversation: $0) }
+        // The buttons of the expanded Dynamic Island (Live Activity intents) arrive here.
+        HearingSenseActionCenter.handler = { [weak self] action in self?.perform(action) }
         conversation.transcriptionProvider = { [speech] in speech.isTranscriptionEnabled }
         attention.onSessionChange = { [conversation, speech] isActive in
             if isActive {
@@ -197,6 +199,17 @@ final class ListeningController {
         case .permissionDenied: return .failed("Microphone access is off in Settings.")
         case .failed(let message): return .failed(message)
         default: return session.isOn ? .turnedOn : .failed("Open the app and try again.")
+        }
+    }
+
+    /// A control of the expanded Dynamic Island was pressed. Each one acts on the conversation
+    /// only; none of them starts or stops listening.
+    func perform(_ action: HearingSenseAction) {
+        log.append(.lifecycle, "Live Activity control: \(action.rawValue)")
+        switch action {
+        case .summarize: conversation.summarize()
+        case .continueUnderstanding: conversation.continueUnderstanding()
+        case .stopUnderstanding: conversation.stopUnderstanding()
         }
     }
 

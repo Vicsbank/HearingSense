@@ -38,7 +38,7 @@ import Testing
             date: T.date(5)))).compactMap(\.intent).first)
         var settings = IslandSettings.default
         settings.showsSpeechSummaries = true
-        var driver = IslandDriver(settings: settings)
+        var driver = IslandDriver(settings: settings, policy: .window5)
         driver.send(.intent(intent))
         driver.advance(to: 8)
         #expect(driver.shown?.headline == "exam postponed until Friday")

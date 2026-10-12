@@ -53,14 +53,27 @@ public enum RecapUnavailableReason: String, Hashable, Sendable, Codable {
     public var message: String {
         switch self {
         case .notListening: "Hearing Sense is not listening. Start listening first."
-        case .contextNotAllowed: "Recaps need “Keep recent speech for recaps” to be on."
+        case .contextNotAllowed:
+            "Summaries need “Transcribe nearby speech”. It is off, so nothing was kept, and speech from before it is turned on cannot be recovered."
+        }
+    }
+
+    /// A few generic words for the Dynamic Island.
+    public var title: String {
+        switch self {
+        case .notListening: "Not listening"
+        case .contextNotAllowed: "Transcription is off"
         }
     }
 }
 
 public enum ConversationInput: Hashable, Sendable {
-    /// The Action Button shortcut (or the button in the app).
+    /// Window 6's single control: a recap, or a stop while a conversation is followed. Kept for
+    /// the research tools; the app (Window 7) sends the three explicit inputs instead.
     case actionInvoked(at: Date)
+    /// Window 7, "Summarize": a summary of the recent conversation. It never stops anything:
+    /// while a summary is being written or a conversation is followed it does nothing.
+    case summarizeRequested(at: Date)
     /// The excerpt was cut out; the model starts.
     case excerptReady(at: Date)
     case recapReady(ConversationRecap, at: Date)
@@ -78,7 +91,8 @@ public enum ConversationInput: Hashable, Sendable {
 
     public var date: Date {
         switch self {
-        case .actionInvoked(let date), .excerptReady(let date), .continueSelected(let date), .stopSelected(let date),
+        case .actionInvoked(let date), .summarizeRequested(let date), .excerptReady(let date), .continueSelected(let date),
+             .stopSelected(let date),
              .listeningStopped(let date), .contextRevoked(let date), .tick(let date):
             date
         case .recapReady(_, let date), .updateFinished(_, let date): date
@@ -103,6 +117,9 @@ public enum ConversationEffect: Hashable, Sendable {
     /// What to show; `until` nil means until the next status.
     case status(ConversationStatus?, until: Date?)
     case unavailable(RecapUnavailableReason)
+    /// Window 7: the request ended without a summary (too little was said, or the model could
+    /// not write one). The host explains it with the recap's own words; nothing is saved.
+    case noSummary(ConversationRecap)
 }
 
 public struct ConversationSessionPolicy: Hashable, Sendable {
@@ -121,10 +138,20 @@ public struct ConversationSessionPolicy: Hashable, Sendable {
     public var maximumPendingAge: TimeInterval = 75
     /// A continued session ends by itself after this long.
     public var maximumContinuedDuration: TimeInterval = 30 * 60
+    /// Window 7: only a summary the model wrote and the checks accepted is saved and can be
+    /// continued. Off (Window 6): the note that explains why there is none is saved as well.
+    public var savesOnlySummaries = false
 
     public init() {}
 
     public static let standard = ConversationSessionPolicy()
+
+    /// The app's policy (Window 7).
+    public static var product: ConversationSessionPolicy {
+        var policy = ConversationSessionPolicy()
+        policy.savesOnlySummaries = true
+        return policy
+    }
 }
 
 /// The state machine behind the Action Button (Window 6).
@@ -176,13 +203,15 @@ public struct ConversationSessionMachine: Sendable {
             case .preparing, .summarizing:
                 return []  // already working on it
             case .idle, .summaryAvailable:
-                guard isListening else { return [.unavailable(.notListening), .status(.unavailable, until: now + policy.notice)] }
-                guard isContextAllowed else { return [.unavailable(.contextNotAllowed), .status(.unavailable, until: now + policy.notice)] }
-                phase = .preparing
-                recap = nil
-                offerEnds = nil
-                noticeEnds = nil
-                return [.status(.preparingRecap, until: nil), .generateRecap]
+                return beginRecap(at: now)
+            }
+
+        case .summarizeRequested:
+            switch phase {
+            case .continuing, .preparing, .summarizing:
+                return []
+            case .idle, .summaryAvailable:
+                return beginRecap(at: now)
             }
 
         case .excerptReady:
@@ -192,6 +221,12 @@ public struct ConversationSessionMachine: Sendable {
 
         case .recapReady(let ready, _):
             guard phase == .preparing || phase == .summarizing else { return [] }
+            if policy.savesOnlySummaries, !ready.isSummary {
+                phase = .idle
+                recap = nil
+                noticeEnds = now + policy.notice
+                return [.noSummary(ready), .status(.unavailable, until: noticeEnds)]
+            }
             phase = .summaryAvailable
             recap = ready
             coveredTo = ready.coveredTo ?? now
@@ -280,6 +315,19 @@ public struct ConversationSessionMachine: Sendable {
             }
         }
         return deadlines.min()
+    }
+
+    private mutating func beginRecap(at now: Date) -> [ConversationEffect] {
+        guard isListening, isContextAllowed else {
+            // The notice ends by itself (`tick`), like the others.
+            if phase == .idle { noticeEnds = now + policy.notice }
+            return [.unavailable(isListening ? .contextNotAllowed : .notListening), .status(.unavailable, until: now + policy.notice)]
+        }
+        phase = .preparing
+        recap = nil
+        offerEnds = nil
+        noticeEnds = nil
+        return [.status(.preparingRecap, until: nil), .generateRecap]
     }
 
     private var earliestUpdate: Date {

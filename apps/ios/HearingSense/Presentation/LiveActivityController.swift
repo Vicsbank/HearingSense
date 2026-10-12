@@ -226,6 +226,17 @@ final class LiveActivityController {
         process(.intent(intent))
     }
 
+    /// Window 7: where a summary the user asked for stands (nil: ordinary listening). It decides
+    /// which controls the expanded Dynamic Island offers.
+    func receive(conversation state: IslandConversation?) {
+        process(.conversation(state, at: .now))
+    }
+
+    /// Window 7: the acoustic scene in generic words; secondary text of the expanded presentation.
+    func receive(sceneTitle: String?) {
+        process(.scene(sceneTitle, at: .now))
+    }
+
     /// The user switched transcription off or deleted the speech data: no speech-derived text
     /// stays in the activity, whether or not a speech episode is presented right now.
     func speechDataCleared() {
@@ -250,7 +261,7 @@ final class LiveActivityController {
         let switches: [(String, KeyPath<IslandSettings, Bool>)] = [
             ("Show in the Dynamic Island", \.isEnabled), ("Icons for ordinary sounds", \.showsAmbientIcons),
             ("Expand for important events", \.expandsForImportantEvents), ("Show speech summaries", \.showsSpeechSummaries),
-            ("Play the alert sound", \.playsAlertSound),
+            ("Play the alert sound", \.playsAlertSound), ("Show the summary when it is ready", \.expandsForSummaries),
         ]
         for (name, keyPath) in switches where settings[keyPath: keyPath] != updated[keyPath: keyPath] {
             SettingsAudit.record(name, from: settings[keyPath: keyPath], to: updated[keyPath: keyPath], defaults: defaults)
@@ -294,7 +305,8 @@ final class LiveActivityController {
         #if DEBUG
         if Self.assumesUnlocked { effective.expandsForImportantEvents = true }
         #endif
-        switch AlertGate.evaluate(settings: effective, lock: lockEstimate, appIsActive: isActive) {
+        switch AlertGate.evaluate(settings: effective, lock: lockEstimate, appIsActive: isActive,
+                                  isUserRequested: request.isUserRequested) {
         case .send:
             alertsSent += 1
             log(.recognition, "Live Activity: expansion requested for “\(request.title)” [\(request.priority)]")

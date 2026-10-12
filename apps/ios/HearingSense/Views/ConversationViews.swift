@@ -20,17 +20,7 @@ struct ConversationCard: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                Button {
-                    conversation.actionInvoked()
-                    if conversation.phase != .idle { navigation.showsConversation = true }
-                } label: {
-                    Label(conversation.actionTitle, systemImage: conversation.phase == .continuing ? "stop.circle" : "text.bubble")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .disabled(!conversation.canRecap || conversation.phase == .preparing || conversation.phase == .summarizing)
-                .accessibilityHint("Also available as the Recap Conversation shortcut for the Action Button.")
+                ConversationButtons(conversation: conversation) { navigation.showsConversation = true }
 
                 if let message = conversation.unavailableMessage {
                     Label(message, systemImage: "exclamationmark.triangle")
@@ -79,21 +69,72 @@ struct ConversationCard: View {
 
     private static func explanation(_ conversation: ConversationIntelligenceController, isTranscribing: Bool) -> String {
         if !isTranscribing {
-            return "Speech near you is shown as an icon only. Turn on “Transcribe nearby speech” to use summaries and live captions."
-        }
-        if !conversation.keepsRecentSpeech {
-            return "Recaps are off. Turn on “Keep recent speech for recaps” under Speech data and privacy to ask what was just said."
+            return "Speech near you is shown as an icon only. Turn on “Transcribe nearby speech” to be able to ask for a summary. Speech from before it is on cannot be recovered."
         }
         switch conversation.phase {
         case .idle:
-            return "Ask for a recap of the last \(ConversationIntelligenceController.describe(conversation.lookBack)) at any time, here or with the Action Button."
+            return "Nothing is summarized by itself. Press Summarize, here or in the Dynamic Island (touch and hold it), for a summary of the last two minutes."
         case .preparing, .summarizing:
-            return "Writing the recap…"
+            return "Writing the summary…"
         case .summaryAvailable:
-            return "The recap is saved. You can keep following the conversation."
+            return "The summary is saved. You can keep following the conversation."
         case .continuing:
             return "Following the conversation: live captions, and a summary that grows."
         }
+    }
+}
+
+/// Summarize, Continue and Stop: three separate controls, the same ones the expanded Dynamic
+/// Island offers. None of them starts or stops listening.
+struct ConversationButtons: View {
+    let conversation: ConversationIntelligenceController
+    var onSummarize: () -> Void
+
+    var body: some View {
+        VStack(spacing: 10) {
+            switch conversation.phase {
+            case .idle:
+                Button {
+                    conversation.summarize()
+                    if conversation.phase != .idle { onSummarize() }
+                } label: {
+                    Label("Summarize Last 2 Minutes", systemImage: "text.bubble").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(!conversation.isSessionActive)
+                .accessibilityIdentifier("conversation.summarize")
+                .accessibilityHint("Writes a summary of what was transcribed in the last two minutes and saves it.")
+            case .preparing, .summarizing:
+                Label("Writing the summary…", systemImage: "ellipsis.bubble")
+                    .frame(maxWidth: .infinity)
+                    .foregroundStyle(.secondary)
+            case .summaryAvailable:
+                Button {
+                    conversation.continueUnderstanding()
+                } label: {
+                    Label("Continue Understanding", systemImage: "captions.bubble").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("conversation.continue")
+                .accessibilityHint("Keeps showing live captions and extends the saved summary.")
+                Button {
+                    conversation.summarize()
+                } label: {
+                    Label("Summarize Again", systemImage: "arrow.clockwise").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+            case .continuing:
+                Button(role: .destructive) {
+                    conversation.stopUnderstanding()
+                } label: {
+                    Label("Stop Understanding", systemImage: "stop.circle").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("conversation.stop")
+                .accessibilityHint("Finishes the saved summary and deletes the temporary captions. Hearing Sense keeps listening for sounds.")
+            }
+        }
+        .controlSize(.large)
     }
 }
 
@@ -152,7 +193,7 @@ struct ConversationLiveView: View {
 
     private func statusLine(_ conversation: ConversationIntelligenceController) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: conversation.status?.symbolName ?? (conversation.canRecap ? "ear" : "ear.trianglebadge.exclamationmark"))
+            Image(systemName: conversation.status?.symbolName ?? (conversation.canSummarize ? "ear" : "ear.trianglebadge.exclamationmark"))
                 .accessibilityHidden(true)
             Text(Self.statusText(conversation))
             if conversation.phase == .preparing || conversation.phase == .summarizing {
@@ -207,9 +248,9 @@ struct ConversationLiveView: View {
     @ViewBuilder
     private func captionSection(_ conversation: ConversationIntelligenceController) -> some View {
         sectionHeader(conversation.phase == .continuing ? "Live captions" : "Recent speech (temporary)",
-                      detail: conversation.keepsRecentSpeech ? "kept \(ConversationIntelligenceController.describe(conversation.lookBack)), never saved" : nil)
+                      detail: conversation.isTranscriptionOn ? "kept \(ConversationIntelligenceController.describe(conversation.lookBack)), never saved" : nil)
         if conversation.captions.isEmpty, conversation.tentativeCaption == nil {
-            Text(conversation.canRecap ? "Nothing has been said yet." : Self.unavailableText(conversation))
+            Text(conversation.canSummarize ? "Nothing has been said yet." : Self.unavailableText(conversation))
                 .font(.system(size: captionSize * 0.85))
                 .foregroundStyle(dimmed)
         }
@@ -259,45 +300,9 @@ struct ConversationLiveView: View {
     }
 
     private func controls(_ conversation: ConversationIntelligenceController) -> some View {
-        VStack(spacing: 10) {
-            switch conversation.phase {
-            case .summaryAvailable:
-                Button {
-                    conversation.continueUnderstanding()
-                } label: {
-                    Label("Continue Understanding", systemImage: "captions.bubble").frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .accessibilityHint("Keeps showing live captions and extends the saved summary.")
-                Button {
-                    conversation.actionInvoked()
-                } label: {
-                    Label("New Recap", systemImage: "arrow.clockwise").frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
-            case .continuing:
-                Button(role: .destructive) {
-                    conversation.stopUnderstanding()
-                } label: {
-                    Label("Stop Following", systemImage: "stop.circle").frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .accessibilityHint("Finishes the saved summary and deletes the temporary captions.")
-            case .preparing, .summarizing:
-                EmptyView()
-            case .idle:
-                Button {
-                    conversation.actionInvoked()
-                } label: {
-                    Label(conversation.actionTitle, systemImage: "text.bubble").frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(!conversation.canRecap)
-            }
-        }
-        .controlSize(.large)
-        .padding()
-        .background(highContrast ? AnyShapeStyle(Color(white: 0.1)) : AnyShapeStyle(.bar))
+        ConversationButtons(conversation: conversation) {}
+            .padding()
+            .background(highContrast ? AnyShapeStyle(Color(white: 0.1)) : AnyShapeStyle(.bar))
     }
 
     private var textSettings: some View {
@@ -321,14 +326,13 @@ struct ConversationLiveView: View {
 
     private static func statusText(_ conversation: ConversationIntelligenceController) -> String {
         if let status = conversation.status { return status.title }
-        if !conversation.canRecap { return "Recaps unavailable" }
+        if !conversation.canSummarize { return "Summaries unavailable" }
         return conversation.phase == .summaryAvailable ? "Summary saved" : "Listening"
     }
 
     private static func unavailableText(_ conversation: ConversationIntelligenceController) -> String {
         if !conversation.isSessionActive { return "Hearing Sense is not listening." }
-        if !conversation.isTranscriptionOn { return "“Transcribe nearby speech” is off, so there is no text to show." }
-        return "“Keep recent speech for recaps” is off, so nothing is kept to show here."
+        return "“Transcribe nearby speech” is off, so there is no text to show. Speech from before it is turned on cannot be recovered."
     }
 
     private static func span(_ from: Date?, _ to: Date?) -> String? {
@@ -513,21 +517,14 @@ struct ConversationPrivacyView: View {
             }
 
             Section {
-                Toggle("Keep recent speech for recaps", isOn: Binding(get: { conversation.keepsRecentSpeech },
-                                                                    set: { conversation.setKeepsRecentSpeech($0) }))
-                Picker("Look back", selection: Binding(get: { conversation.lookBack }, set: { conversation.setLookBack($0) })) {
-                    ForEach(ConversationBufferPolicy.lookBackChoices, id: \.self) { seconds in
-                        Text(ConversationIntelligenceController.describe(seconds)).tag(seconds)
-                    }
-                }
-                .disabled(!conversation.keepsRecentSpeech)
+                LabeledContent("Kept for a summary", value: speech.isTranscriptionEnabled ? "The last 2 minutes" : "Nothing")
                 LabeledContent("Held right now", value: "\(conversation.captions.count) sentences, \(conversation.bufferedWordCount) words")
                 Button("Clear Recent Speech Now", role: .destructive) { conversation.speechDataCleared() }
                     .disabled(conversation.captions.isEmpty && conversation.tentativeCaption == nil)
             } header: {
                 Text("Temporary")
             } footer: {
-                Text("Needed to answer “what was just said?”. Transcribed sentences stay in memory for the look-back time and are then deleted. They are never written to storage, and they are deleted at once when you switch this off, stop listening or stop following a conversation.")
+                Text("Needed for a summary you ask for. While “Transcribe nearby speech” is on, transcribed sentences stay in memory for two minutes and are then deleted. They are never written to storage, and they are deleted at once when you switch transcription off, stop listening or stop following a conversation. Nothing is summarized unless you press Summarize.")
             }
 
             Section {

@@ -8,8 +8,9 @@ import SwiftUI
 //
 // Presentations:
 // - compact / minimal: icons only, for every mode.
-// - expanded: text for attention episodes; while an ordinary sound or nothing is shown, the
-//   latest speech summary of the last minutes, if there is one (marked with its age).
+// - expanded (touch and hold): the current sound and the listening status with the acoustic
+//   scene; text for attention episodes; the state of a summary the user asked for; and the
+//   controls the widget extension puts into the bottom region (Summarize, Continue, Stop).
 // - Lock Screen: icon-focused for every mode and priority; no event text, no speech text.
 
 public enum IslandStyle {
@@ -22,6 +23,9 @@ public enum IslandStyle {
         case .attention: tint(for: content.priority ?? .normal)
         }
     }
+
+    /// A requested summary and a followed conversation.
+    public static let conversationTint = Color.cyan
 
     public static func tint(for priority: AttentionPriority) -> Color {
         switch priority {
@@ -83,7 +87,15 @@ public struct IslandCompactLeading: View {
 
     public var body: some View {
         Group {
-            if content.mode == .ambient, !isStale {
+            if !isStale, content.mode != .attention, content.mode != .paused, let conversation = content.conversation,
+               conversation.isActive
+            {
+                // A summary is being written or a conversation is followed: said by a bubble
+                // here, while the sound's icon keeps its place on the other side.
+                Image(systemName: conversation.symbolName)
+                    .foregroundStyle(IslandStyle.conversationTint)
+                    .accessibilityLabel(conversation.title)
+            } else if content.mode == .ambient, !isStale {
                 Image(systemName: IslandSymbol.listening)
                     .foregroundStyle(.white.opacity(0.6))
                     .accessibilityLabel("Hearing Sense is listening")
@@ -206,6 +218,21 @@ public struct IslandExpandedCenter: View {
                 if let caption = content.caption {
                     Text(caption).font(.caption).foregroundStyle(.secondary).lineLimit(1)
                 }
+            } else if content.mode != .paused, let conversation = content.conversation {
+                Text(conversation.title).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
+                if let detail = conversation.detail {
+                    // Speech-derived: hidden by the system wherever content is redacted for privacy.
+                    Text(detail)
+                        .privacySensitive()
+                        .font(.caption)
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Text(conversation.message ?? Self.hint(for: conversation.phase))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
             } else if content.mode != .paused, let recent = content.recentSummary {
                 // The episode is over or gave way to an ordinary sound; its summary stays readable
                 // for a short while. Speech-derived: hidden wherever the system redacts content.
@@ -216,11 +243,31 @@ public struct IslandExpandedCenter: View {
                     .minimumScaleFactor(0.8)
                 recentCaption
             } else {
-                Text(content.mode == .paused ? "Paused" : "Listening").font(.headline)
-                Text("Hearing Sense").font(.caption).foregroundStyle(.secondary)
+                // The current sound by name (the icon's label), or that nothing is recognized.
+                Text(content.mode == .paused ? "Paused" : content.mode == .ambient ? content.spokenLabel : "Listening")
+                    .font(.headline)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                Text(statusLine).font(.caption).foregroundStyle(.secondary).lineLimit(1)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    /// "Listening · Traffic nearby": the status and, when there is one, the acoustic scene.
+    private var statusLine: String {
+        if content.mode == .paused { return "Hearing Sense" }
+        let status = content.mode == .ambient ? "Listening" : "Hearing Sense"
+        return content.sceneTitle.map { "\(status) · \($0)" } ?? status
+    }
+
+    static func hint(for phase: IslandConversation.Phase) -> String {
+        switch phase {
+        case .summarizing: "The last two minutes, on this iPhone"
+        case .summaryReady: "Saved. Open Hearing Sense to read it."
+        case .following: "Captions and a growing summary in Hearing Sense"
+        case .notice: "Hearing Sense"
+        }
     }
 
     /// "Nearby speech · 40 sec ago": the age counts up without an update from the app.
@@ -249,41 +296,54 @@ public struct IslandExpandedCenter: View {
     }
 }
 
-public struct IslandExpandedBottom: View {
+/// The bottom region: details of an attention episode and the controls.
+///
+/// The controls are given by the caller, because a button in a Live Activity runs an App
+/// Intent and the intents are the app's and its extension's (`apps/ios/Shared`); this module
+/// only reserves their place.
+public struct IslandExpandedBottom<Controls: View>: View {
     let content: IslandContent
+    let controls: Controls
 
-    public init(_ content: IslandContent) {
+    public init(_ content: IslandContent, @ViewBuilder controls: () -> Controls) {
         self.content = content
+        self.controls = controls()
     }
 
     public var body: some View {
-        HStack(spacing: 8) {
-            if content.mode == .attention {
-                if content.isUncertain {
-                    Label("Uncertain", systemImage: "questionmark.circle")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                }
-                if content.additionalCount > 0 {
-                    Text("+\(content.additionalCount) more")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                        .accessibilityLabel("\(content.additionalCount) more events")
+        VStack(spacing: 6) {
+            if content.mode == .attention, content.isUncertain || content.additionalCount > 0 || content.ambientSymbolName != nil {
+                HStack(spacing: 8) {
+                    if content.isUncertain {
+                        Label("Uncertain", systemImage: "questionmark.circle")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    if content.additionalCount > 0 {
+                        Text("+\(content.additionalCount) more")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            .accessibilityLabel("\(content.additionalCount) more events")
+                    }
+                    Spacer(minLength: 0)
+                    if let ambient = content.ambientSymbolName {
+                        SoundSymbolImage(ambient)
+                            .font(.footnote)
+                            .foregroundStyle(.mint)
+                            .accessibilityLabel("Another sound in the background")
+                    }
                 }
             }
-            Spacer(minLength: 0)
-            if content.mode == .attention, let ambient = content.ambientSymbolName {
-                SoundSymbolImage(ambient)
-                    .font(.footnote)
-                    .foregroundStyle(.mint)
-                    .accessibilityLabel("Another sound in the background")
-            }
-            Image(systemName: IslandSymbol.listening)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
+            controls
         }
         .padding(.horizontal, 6)
+    }
+}
+
+extension IslandExpandedBottom where Controls == EmptyView {
+    /// Without controls (previews of the layout).
+    public init(_ content: IslandContent) {
+        self.init(content) { EmptyView() }
     }
 }
 
@@ -310,7 +370,9 @@ public struct IslandLockScreenView: View {
                 .frame(width: 44, height: 44)
             VStack(alignment: .leading, spacing: 1) {
                 Text("Hearing Sense").font(.subheadline.weight(.semibold))
-                Text(isStale ? "Not updating" : content.mode == .paused ? "Paused" : "Listening")
+                // Generic words only: a requested summary is named by its state, never by its text.
+                Text(isStale ? "Not updating" : content.mode == .paused ? "Paused"
+                    : content.conversation.flatMap { $0.isActive ? $0.title : nil } ?? "Listening")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

@@ -94,7 +94,7 @@ struct IslandExpandedPreview: View {
                 IslandExpandedCenter(content)
                 IslandExpandedTrailing(content, sessionStart: sessionStart)
             }
-            IslandExpandedBottom(content)
+            IslandExpandedBottom(content) { IslandControls(content: content) }
         }
         .padding(16)
         .foregroundStyle(.white)
@@ -147,11 +147,22 @@ struct LiveActivitySettingsView: View {
                     .accessibilityIdentifier("island.alertSound.switch")
                     .disabled(!live.settings.expandsForImportantEvents)
             } footer: {
-                Text("Off: the island never expands by itself; touch and hold it to read the text. On: Hearing Sense "
-                    + "asks iOS to expand it while the iPhone seems unlocked. On a locked iPhone the activity is "
-                    + "always updated silently, without waking the screen, sound or vibration. iOS does not tell "
-                    + "apps reliably whether the iPhone is locked: with this on, an event in the first seconds after "
-                    + "you lock it can still light up the screen.")
+                Text("Prominent alerts for the highest-priority sounds (a siren, an alarm, a knock). Off: such a "
+                    + "sound changes the icon to a warning mark, silently; touch and hold the island to read what it "
+                    + "is. On: Hearing Sense also asks iOS to expand the island while the iPhone seems unlocked. "
+                    + "iOS decides whether it does. On a locked iPhone the activity is always updated silently. iOS "
+                    + "does not tell apps reliably whether the iPhone is locked: with this on, an event in the first "
+                    + "seconds after you lock it can light up the screen, and with the alert sound on it can play "
+                    + "a sound. Speech never causes an alert. This is not an emergency alert system.")
+            }
+            .disabled(!live.settings.isEnabled)
+
+            Section {
+                Toggle("Show the summary when it is ready", isOn: binding(\.expandsForSummaries))
+                    .accessibilityIdentifier("island.summaryExpansion.switch")
+            } footer: {
+                Text("After you press Summarize, Hearing Sense asks iOS to expand the island once, when the summary "
+                    + "is written, while the iPhone seems unlocked. Off: the island shows a bubble; touch and hold it.")
             }
             .disabled(!live.settings.isEnabled)
 
@@ -159,10 +170,9 @@ struct LiveActivitySettingsView: View {
                 Toggle("Show speech summaries", isOn: binding(\.showsSpeechSummaries))
                     .accessibilityIdentifier("island.speechSummaries.switch")
             } footer: {
-                Text("A short summary of nearby speech in the expanded island, when “Transcribe nearby speech” is on. "
-                    + "Touch and hold the island to read it; the latest one stays readable for about two minutes. "
-                    + "The Lock Screen never shows it, and it is removed while the iPhone is locked. "
-                    + "Off: speech appears as an icon only.")
+                Text("The first lines of a summary you asked for, in the expanded island. The Lock Screen never "
+                    + "shows it, and it is removed while the iPhone is locked. Off: the island says that a summary "
+                    + "is ready and the text is read in the app.")
             }
             .disabled(!live.settings.isEnabled)
 

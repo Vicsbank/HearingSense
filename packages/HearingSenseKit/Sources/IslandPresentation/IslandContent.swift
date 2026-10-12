@@ -9,6 +9,10 @@ import HearingSenseDomain
 /// - `attention`: an episode the attention engine (Window 4) decided to present, with text for
 ///   the expanded Dynamic Island.
 public struct IslandContent: Hashable, Sendable, Codable {
+    // Window 7 adds two things beside the channels: the state of a summary the user asked for
+    // (`conversation`), which decides the controls of the expanded presentation, and the
+    // acoustic scene (`sceneTitle`), a secondary line of text.
+
     public enum Mode: String, Hashable, Sendable, Codable {
         /// Listening, nothing to show: the app's own glyph.
         case listening
@@ -50,11 +54,17 @@ public struct IslandContent: Hashable, Sendable, Codable {
     public var recentSummary: String?
     /// When `recentSummary` was last presented as an episode.
     public var recentSummaryDate: Date?
+    /// A summary the user asked for, or a conversation the user chose to keep following; nil
+    /// during ordinary listening. Never set by the app on its own.
+    public var conversation: IslandConversation?
+    /// "Traffic nearby": the acoustic scene, in generic words. Drawn in the expanded
+    /// presentation only.
+    public var sceneTitle: String?
 
     public init(mode: Mode, symbolName: String, spokenLabel: String, headline: String? = nil, caption: String? = nil,
                 headlineIsSpeech: Bool = false, priority: AttentionPriority? = nil, isUncertain: Bool = false,
                 since: Date, ambientSymbolName: String? = nil, additionalCount: Int = 0, recentSummary: String? = nil,
-                recentSummaryDate: Date? = nil)
+                recentSummaryDate: Date? = nil, conversation: IslandConversation? = nil, sceneTitle: String? = nil)
     {
         self.mode = mode
         self.symbolName = symbolName
@@ -69,6 +79,8 @@ public struct IslandContent: Hashable, Sendable, Codable {
         self.additionalCount = additionalCount
         self.recentSummary = recentSummary
         self.recentSummaryDate = recentSummaryDate
+        self.conversation = conversation
+        self.sceneTitle = sceneTitle
     }
 
     public static func listening(since: Date) -> IslandContent {
@@ -79,6 +91,57 @@ public struct IslandContent: Hashable, Sendable, Codable {
     public static func paused(since: Date) -> IslandContent {
         IslandContent(mode: .paused, symbolName: IslandSymbol.paused, spokenLabel: "Hearing Sense is paused", since: since)
     }
+}
+
+/// Where a summary the user asked for stands, as the Live Activity shows it (Window 7).
+///
+/// It exists only between the user's request ("Summarize" in the expanded Dynamic Island or in
+/// the app) and the end of what followed from it. The expanded presentation offers its controls
+/// by `phase`: Summarize during ordinary listening, Continue when a summary is ready, Stop while
+/// a conversation is followed.
+public struct IslandConversation: Hashable, Sendable, Codable {
+    public enum Phase: String, Hashable, Sendable, Codable {
+        /// The summary of the last two minutes is being written.
+        case summarizing
+        /// The summary is saved; "Continue" is on offer.
+        case summaryReady
+        /// The user chose to keep following: captions in the app, a summary that grows.
+        case following
+        /// A short message: nothing to summarize, transcription off, stopped.
+        case notice
+    }
+
+    public var phase: Phase
+    /// Generic words, safe on the Lock Screen ("Summary ready").
+    public var title: String
+    /// Speech-derived text (the summary). The pipeline removes it while the iPhone is judged
+    /// locked or summaries are not to be shown; views mark it privacy sensitive.
+    public var detail: String?
+    /// A second line in generic words ("Past speech cannot be recovered"). Never speech-derived.
+    public var message: String?
+    public var since: Date
+
+    public init(phase: Phase, title: String, detail: String? = nil, message: String? = nil, since: Date) {
+        self.phase = phase
+        self.title = title
+        self.detail = detail
+        self.message = message
+        self.since = since
+    }
+
+    public var symbolName: String {
+        switch phase {
+        case .summarizing: "ellipsis.bubble"
+        case .summaryReady: "text.bubble"
+        case .following: "captions.bubble"
+        case .notice: "exclamationmark.bubble"
+        }
+    }
+
+    /// The compact presentation marks it (a small bubble beside the sound's icon).
+    public var isActive: Bool { phase != .notice }
+
+    public static var symbolNames: [String] { ["ellipsis.bubble", "text.bubble", "captions.bubble", "exclamationmark.bubble"] }
 }
 
 /// Symbols of the presentation itself (not of sounds).
@@ -109,21 +172,26 @@ public struct IslandSettings: Hashable, Sendable, Codable {
     public var showsSpeechSummaries: Bool
     /// Play the system alert sound with an expansion. Off: a silent sound file is used.
     public var playsAlertSound: Bool
+    /// Ask iOS to expand the Dynamic Island when a summary the user asked for is ready — like
+    /// `expandsForImportantEvents`, only while the iPhone is judged unlocked. On by default: the
+    /// user asked for the summary seconds earlier.
+    public var expandsForSummaries: Bool
 
     public init(isEnabled: Bool = true, showsAmbientIcons: Bool = true, expandsForImportantEvents: Bool = false,
-                showsSpeechSummaries: Bool = true, playsAlertSound: Bool = false)
+                showsSpeechSummaries: Bool = true, playsAlertSound: Bool = false, expandsForSummaries: Bool = true)
     {
         self.isEnabled = isEnabled
         self.showsAmbientIcons = showsAmbientIcons
         self.expandsForImportantEvents = expandsForImportantEvents
         self.showsSpeechSummaries = showsSpeechSummaries
         self.playsAlertSound = playsAlertSound
+        self.expandsForSummaries = expandsForSummaries
     }
 
     public static let `default` = IslandSettings()
 
     private enum CodingKeys: String, CodingKey {
-        case isEnabled, showsAmbientIcons, expandsForImportantEvents, showsSpeechSummaries, playsAlertSound
+        case isEnabled, showsAmbientIcons, expandsForImportantEvents, showsSpeechSummaries, playsAlertSound, expandsForSummaries
     }
 
     public init(from decoder: Decoder) throws {
@@ -136,5 +204,6 @@ public struct IslandSettings: Hashable, Sendable, Codable {
         showsSpeechSummaries = try container.decodeIfPresent(Bool.self, forKey: .showsSpeechSummaries)
             ?? fallback.showsSpeechSummaries
         playsAlertSound = try container.decodeIfPresent(Bool.self, forKey: .playsAlertSound) ?? fallback.playsAlertSound
+        expandsForSummaries = try container.decodeIfPresent(Bool.self, forKey: .expandsForSummaries) ?? fallback.expandsForSummaries
     }
 }

@@ -59,6 +59,10 @@ struct ContentView: View {
         .onChange(of: scenePhase) { _, phase in
             controller.scenePhaseChanged(phase)
         }
+        // A tap on the Live Activity, or its "Open" control.
+        .onOpenURL { url in
+            if url == HearingSenseLink.conversation { ConversationNavigation.shared.showsConversation = true }
+        }
         #if DEBUG
         .task {
             // Checks without a microphone: `--hs-conversation-demo` plays a scripted conversation,
@@ -81,7 +85,7 @@ private struct BrandHeader: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Hearing Sense")
                     .font(.title.bold())
-                Text("Environmental awareness · Sound, speech and attention (debug)")
+                Text("Ambient awareness for headphone wearers")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -243,8 +247,9 @@ private struct PrivacyNote: View {
         Label {
             Text("Audio is processed on this iPhone, in memory only. Hearing Sense does not record, "
                 + "store or upload audio. Speech is transcribed only while “Transcribe nearby speech” is on; "
-                + "transcripts stay in memory. While listening, a Live Activity shows icons outside the app; "
-                + "it does not wake the screen. It is not a safety or emergency alert system.")
+                + "the last two minutes stay in memory for a summary you ask for, and only that summary is saved. "
+                + "While listening, a Live Activity shows icons outside the app. "
+                + "It is not a safety or emergency alert system.")
         } icon: {
             Image(systemName: "lock.shield")
         }

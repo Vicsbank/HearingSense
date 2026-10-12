@@ -23,6 +23,10 @@ public enum IslandInput: Hashable, Sendable {
     /// Every speech-derived text must go now (the user switched transcription off or deleted the
     /// speech data), whether or not an episode is presented.
     case speechTextCleared(at: Date)
+    /// Window 7: where a summary the user asked for stands; nil when that is over.
+    case conversation(IslandConversation?, at: Date)
+    /// Window 7: the acoustic scene in generic words ("Traffic nearby"); nil when there is none.
+    case scene(String?, at: Date)
     /// Time passed (the host calls this at `IslandPipeline.nextDeadline`).
     case tick(at: Date)
 
@@ -30,7 +34,7 @@ public enum IslandInput: Hashable, Sendable {
         switch self {
         case .sessionStarted(let date), .sessionPaused(let date), .sessionEnded(let date), .tick(let date),
              .speechTextCleared(let date): date
-        case .settings(_, let date), .deviceLock(_, let date): date
+        case .settings(_, let date), .deviceLock(_, let date), .conversation(_, let date), .scene(_, let date): date
         case .intent(let intent): intent.timestamp
         case .sound(let update): AmbientIconInput.sound(update).date
         }
@@ -44,11 +48,15 @@ public struct IslandAlertRequest: Hashable, Sendable {
     public var title: String
     public var body: String
     public var priority: AttentionPriority
+    /// Window 7: not an event at all but the summary the user asked for a moment ago. It follows
+    /// its own setting (`IslandSettings.expandsForSummaries`).
+    public var isUserRequested: Bool
 
-    public init(title: String, body: String, priority: AttentionPriority) {
+    public init(title: String, body: String, priority: AttentionPriority, isUserRequested: Bool = false) {
         self.title = title
         self.body = body
         self.priority = priority
+        self.isUserRequested = isUserRequested
     }
 }
 
@@ -93,6 +101,12 @@ public struct IslandPolicy: Hashable, Sendable {
     /// drawn as "not updating" (the app was terminated).
     public var staleAfter: TimeInterval
     public var maximumTextLength: Int
+    /// Window 7: a requested summary may be longer than an event's text (the expanded
+    /// presentation shows a few lines of it; the whole summary is in the app).
+    public var maximumSummaryLength = 240
+    /// Window 7: only acoustic events ask iOS for an expansion. A speech episode (including a
+    /// possible spoken warning, which rests on recognized words) is presented without one.
+    public var speechMayRequestExpansion = false
 
     public init(ambient: AmbientIconPolicy, minimumUpdateInterval: TimeInterval, attentionMinimumHold: TimeInterval,
                 protectedPriority: AttentionPriority = .high, protectedFor: TimeInterval = 20,
@@ -117,6 +131,14 @@ public struct IslandPolicy: Hashable, Sendable {
     public static let standard = IslandPolicy(ambient: .standard, minimumUpdateInterval: 1, attentionMinimumHold: 3,
                                               alertMinimumInterval: 6, alertsOnFirstSummary: true,
                                               keepAliveInterval: 600, staleAfter: 900, maximumTextLength: 120)
+
+    /// The rules before Window 7, in which a speech episode could ask for an expansion (its first
+    /// summary, a possible spoken warning). Kept for the replay tools and for comparison.
+    public static var window5: IslandPolicy {
+        var policy = IslandPolicy.standard
+        policy.speechMayRequestExpansion = true
+        return policy
+    }
 }
 
 public struct IslandStatistics: Hashable, Sendable, Codable {
@@ -139,6 +161,12 @@ public struct IslandStatistics: Hashable, Sendable, Codable {
     /// First summaries that did not ask for an expansion because the speech was ordinary
     /// conversation (they are readable with a touch and hold).
     public var summariesWithoutExpansion = 0
+    /// Window 7: states of a requested summary that were put into the content, and the
+    /// expansion requests made for a summary that became ready.
+    public var conversationStates = 0
+    public var summaryReadyRequests = 0
+    /// Episodes that would have asked for an expansion but are speech: speech never does.
+    public var speechAlertsWithheld = 0
 
     public init() {}
 }
@@ -205,6 +233,8 @@ public struct IslandPipeline: Sendable {
     /// The latest summary an episode showed: when it first appeared and when its episode was
     /// last held for presentation.
     private var recalled: (text: String, since: Date, lastPresented: Date)?
+    private var conversation: IslandConversation?
+    private var sceneTitle: String?
 
     public init(policy: IslandPolicy = .standard, settings: IslandSettings = .default) {
         self.policy = policy
@@ -221,6 +251,7 @@ public struct IslandPipeline: Sendable {
         let now = input.date
         lastEvaluated = now
         var alertCandidate: (id: AttentionEventID, request: IslandAlertRequest, isUrgent: Bool)?
+        var summaryAlert: IslandAlertRequest?
 
         switch input {
         case .sessionStarted:
@@ -230,6 +261,8 @@ public struct IslandPipeline: Sendable {
                 items.removeAll()
                 leadID = nil
                 recalled = nil
+                conversation = nil
+                sceneTitle = nil
             }
             pausedSince = nil
             noteAmbient(ambient.process(.sessionStarted(at: now)))
@@ -246,6 +279,8 @@ public struct IslandPipeline: Sendable {
             items.removeAll()
             leadID = nil
             recalled = nil
+            conversation = nil
+            sceneTitle = nil
             noteAmbient(ambient.process(.sessionEnded(at: now)))
         case .sound(let update):
             guard sessionActive, pausedSince == nil else { break }
@@ -258,8 +293,21 @@ public struct IslandPipeline: Sendable {
             if !updated.showsSpeechSummaries { recalled = nil }
         case .deviceLock(let isLocked, _):
             isDeviceLocked = isLocked
+        case .conversation(let state, _):
+            guard sessionActive else { break }
+            if let state, state.phase != conversation?.phase { statistics.conversationStates += 1 }
+            // The summary the user asked for is ready: one request to show it.
+            if let state, state.phase == .summaryReady, conversation?.phase == .summarizing {
+                summaryAlert = IslandAlertRequest(title: state.title, body: "Hearing Sense", priority: .normal,
+                                                  isUserRequested: true)
+            }
+            conversation = state
+        case .scene(let title, _):
+            guard sessionActive else { break }
+            sceneTitle = title
         case .speechTextCleared:
             recalled = nil
+            conversation?.detail = nil
             for (id, item) in items where item.intent.hasPrivateDetail { items[id] = nil }
         case .tick:
             break
@@ -302,6 +350,11 @@ public struct IslandPipeline: Sendable {
                     lastAlertAt = now
                     statistics.alertRequests += 1
                 }
+            }
+            // An event's request has precedence; the summary is then one touch and hold away.
+            if alert == nil, let summaryAlert, content.mode != .attention {
+                alert = summaryAlert
+                statistics.summaryReadyRequests += 1
             }
             if let command = update(to: content, alert: alert, at: now) { commands.append(command) }
         }
@@ -378,6 +431,12 @@ public struct IslandPipeline: Sendable {
                     item.summaryAlerted = true
                     statistics.summariesWithoutExpansion += 1
                 }
+            }
+            if wantsAlert, !policy.speechMayRequestExpansion, intent.category == .speech {
+                wantsAlert = false
+                item.alertedPriority = max(item.alertedPriority ?? intent.priority, intent.priority)
+                if intent.privateDetail != nil { item.summaryAlerted = true }
+                statistics.speechAlertsWithheld += 1
             }
             if wantsAlert {
                 item.alertedPriority = max(item.alertedPriority ?? intent.priority, intent.priority)
@@ -460,7 +519,22 @@ public struct IslandPipeline: Sendable {
         return content
     }
 
+    /// The channels' content with the two Window 7 additions.
     private func compose(at now: Date) -> IslandContent {
+        var content = composeChannels(at: now)
+        guard content.mode != .paused else { return content }
+        if var conversation {
+            if !showsSpeechText { conversation.detail = nil }
+            conversation.detail = conversation.detail.map { text in
+                text.count <= policy.maximumSummaryLength ? text : String(text.prefix(policy.maximumSummaryLength - 1)) + "…"
+            }
+            content.conversation = conversation
+        }
+        content.sceneTitle = sceneTitle
+        return content
+    }
+
+    private func composeChannels(at now: Date) -> IslandContent {
         if let pausedSince { return .paused(since: pausedSince) }
         let ambientIcon = settings.showsAmbientIcons ? ambient.current : nil
         if let leadID, let item = items[leadID] {
@@ -511,6 +585,7 @@ public struct IslandPipeline: Sendable {
         var copy = content
         copy.ambientSymbolName = nil
         copy.additionalCount = 0
+        copy.sceneTitle = nil
         return copy
     }
 
@@ -530,7 +605,8 @@ public struct IslandPipeline: Sendable {
         }
         let involvesAttention = content.mode == .attention || shown.mode == .attention
             || content.mode == .paused || shown.mode == .paused
-        let isQuiet = alert == nil && !involvesAttention
+        // A requested summary's state is the answer to something the user did: never held back.
+        let isQuiet = alert == nil && !involvesAttention && content.conversation == shown.conversation
         // An icon that is on the island stays for the icon channel's minimum display time, also
         // when it only just took over from an episode (seen on the iPhone: 1.0 s).
         let quietInterval = shown.mode == .ambient ? max(policy.minimumUpdateInterval, policy.ambient.minimumDisplay)
@@ -578,6 +654,8 @@ extension IslandContent {
         if let headline { parts.append(headlineIsSpeech ? "<speech summary>" : "“\(headline)”") }
         if additionalCount > 0 { parts.append("+\(additionalCount)") }
         if recentSummary != nil { parts.append("(recent <speech summary>)") }
+        if let conversation { parts.append("[\(conversation.phase.rawValue)\(conversation.detail == nil ? "" : " <summary>")]") }
+        if let sceneTitle { parts.append("{\(sceneTitle)}") }
         return parts.joined(separator: " ")
     }
 }

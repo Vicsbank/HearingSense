@@ -1,7 +1,7 @@
-import Attention
 import ConversationUnderstanding
 import HearingSenseAudio
 import HearingSenseDomain
+import IslandPresentation
 import Observation
 import SwiftUI
 
@@ -21,8 +21,8 @@ import SwiftUI
 /// counts, states and timings only.
 @Observable
 final class ConversationIntelligenceController {
-    private static let contextKey = "conversation.keepsRecentSpeech"
-    private static let lookBackKey = "conversation.lookBackSeconds"
+    /// A summary covers what was transcribed in the last two minutes. Not a setting.
+    static let lookBack: TimeInterval = ConversationBufferPolicy.standard.lookBack
 
     /// `--hs-conversation-demo` (Debug builds): a scripted conversation instead of the microphone,
     /// with nothing read from or written to the device's storage. See `runDemo`.
@@ -37,9 +37,6 @@ final class ConversationIntelligenceController {
     /// For App Intents, which have no reference to the app's object graph.
     private(set) static weak var shared: ConversationIntelligenceController?
 
-    // Settings
-    private(set) var keepsRecentSpeech: Bool
-    private(set) var lookBack: TimeInterval
 
     private(set) var isLanguageModelAvailable = false
 
@@ -63,8 +60,9 @@ final class ConversationIntelligenceController {
     private(set) var isSessionActive = false
     private(set) var isTranscriptionOn = false
 
-    /// Recap states go to the Live Activity as generic, lock-screen-safe episodes.
-    @ObservationIgnored var onStatusIntent: ((AttentionPresentationIntent) -> Void)?
+    /// Where a requested summary stands, for the Live Activity (its expanded presentation offers
+    /// Summarize, Continue and Stop by this). nil during ordinary listening.
+    @ObservationIgnored var onIslandState: ((IslandConversation?) -> Void)?
     /// The state of "Transcribe nearby speech" (Window 3), read whenever it matters.
     @ObservationIgnored var transcriptionProvider: () -> Bool = { false }
 
@@ -72,15 +70,16 @@ final class ConversationIntelligenceController {
     @ObservationIgnored private let store: SwiftDataConversationHistory?
     @ObservationIgnored private let recapEngine: ConversationRecapEngine
     @ObservationIgnored private var buffer: RollingConversationBuffer
-    @ObservationIgnored private var machine = ConversationSessionMachine()
+    @ObservationIgnored private var machine = ConversationSessionMachine(policy: .product)
+    @ObservationIgnored private var islandState: IslandConversation?
+    @ObservationIgnored private var statusSince = Date.now
+    @ObservationIgnored private var unavailableTitle: String?
     @ObservationIgnored private var workTask: Task<Void, Never>?
     @ObservationIgnored private var deadlineTask: Task<Void, Never>?
     @ObservationIgnored private var lastUtteranceIndex: [SpeechEventID: Int] = [:]
     /// The words the saved recap was written from, kept only while the session is followed so
     /// that an update can be checked against them. Cleared with the temporary context.
     @ObservationIgnored private var recapTranscript = ""
-    @ObservationIgnored private var statusEpisode = 0
-    @ObservationIgnored private var statusRevision = 0
     @ObservationIgnored private var log: (DiagnosticEventLog.Kind, String) -> Void = { _, _ in }
 
     /// - Parameter inMemory: no files are read or written (UI checks, previews).
@@ -88,11 +87,7 @@ final class ConversationIntelligenceController {
          summarizer: any ConversationSummarizing = FoundationModelRecapSummarizer())
     {
         self.defaults = defaults
-        keepsRecentSpeech = defaults.bool(forKey: Self.contextKey)
-        let stored = defaults.double(forKey: Self.lookBackKey)
-        let seconds = ConversationBufferPolicy.lookBackChoices.contains(stored) ? stored : ConversationBufferPolicy.standard.lookBack
-        lookBack = seconds
-        let policy = ConversationBufferPolicy(lookBack: seconds)
+        let policy = ConversationBufferPolicy.standard
         buffer = RollingConversationBuffer(policy: policy)
         recapEngine = ConversationRecapEngine(summarizer: summarizer, bufferPolicy: policy)
         var opened: SwiftDataConversationHistory?
@@ -132,8 +127,8 @@ final class ConversationIntelligenceController {
         self.isTranscriptionOn = isTranscriptionOn
         lastUtteranceIndex.removeAll()
         machine.setListening(true)
-        machine.setContextAllowed(keepsRecentSpeech && isTranscriptionOn)
-        if keepsRecentSpeech, isTranscriptionOn { buffer.begin(at: .now) }
+        machine.setContextAllowed(isTranscriptionOn)
+        if isTranscriptionOn { buffer.begin(at: .now) }
     }
 
     /// Capture stopped: a continued session is finalized and every temporary text is deleted.
@@ -156,9 +151,9 @@ final class ConversationIntelligenceController {
     func speechDataCleared() {
         isTranscriptionOn = transcriptionProvider()
         run(machine.process(.contextRevoked(at: .now)))
-        machine.setContextAllowed(keepsRecentSpeech && isTranscriptionOn)
+        machine.setContextAllowed(isTranscriptionOn)
         clearTemporaryText()
-        if isSessionActive, keepsRecentSpeech, isTranscriptionOn { buffer.begin(at: .now) }
+        if isSessionActive, isTranscriptionOn { buffer.begin(at: .now) }
     }
 
     // MARK: - Input from the speech pipeline
@@ -167,7 +162,7 @@ final class ConversationIntelligenceController {
         guard isSessionActive else { return }
         transcriptionChanged(isOn: transcriptionProvider())
         let now = Date.now
-        let keeps = keepsRecentSpeech && isTranscriptionOn
+        let keeps = isTranscriptionOn
         if keeps {
             buffer.setTentative(result.volatileText)
             tentativeCaption = buffer.tentative
@@ -197,25 +192,8 @@ final class ConversationIntelligenceController {
 
     // MARK: - Settings
 
-    func setKeepsRecentSpeech(_ keeps: Bool) {
-        guard keeps != keepsRecentSpeech else { return }
-        keepsRecentSpeech = keeps
-        defaults.set(keeps, forKey: Self.contextKey)
-        applyContextPermission()
-        log(.recognition, "Recent speech for recaps switched \(keeps ? "on" : "off") by the user")
-    }
-
-    func setLookBack(_ seconds: TimeInterval) {
-        guard ConversationBufferPolicy.lookBackChoices.contains(seconds), seconds != lookBack else { return }
-        lookBack = seconds
-        defaults.set(seconds, forKey: Self.lookBackKey)
-        buffer.setPolicy(ConversationBufferPolicy(lookBack: seconds), now: .now)
-        captions = buffer.utterances
-    }
-
     private func applyContextPermission() {
-        let allowed = keepsRecentSpeech && isTranscriptionOn
-        if allowed {
+        if isTranscriptionOn {
             machine.setContextAllowed(true)
             if isSessionActive, buffer.collectingSince == nil { buffer.begin(at: .now) }
         } else {
@@ -226,18 +204,22 @@ final class ConversationIntelligenceController {
 
     // MARK: - Recap and continued understanding
 
-    /// The Action Button shortcut, or the button in the app. First press: recap. While
-    /// continuing: stop. Returns a generic sentence for the shortcut's answer (never speech text).
+    /// "Summarize" (the expanded Dynamic Island, or the button in the app): a summary of what was
+    /// transcribed in the last two minutes. Only ever called for something the user pressed.
+    /// It stops nothing: while a summary is being written or a conversation is followed it does
+    /// nothing. Returns a generic sentence (never speech text).
     @discardableResult
-    func actionInvoked() -> String {
+    func summarize() -> String {
         unavailableMessage = nil
+        unavailableTitle = nil
         transcriptionChanged(isOn: transcriptionProvider())
         let before = phase
-        run(machine.process(.actionInvoked(at: .now)))
+        run(machine.process(.summarizeRequested(at: .now)))
         switch (before, phase) {
-        case (.continuing, _): return "Stopped following the conversation. The summary is saved in Hearing Sense."
-        case (_, .preparing), (_, .summarizing): return "Writing a recap of the last \(Self.describe(lookBack)). It will be saved in Hearing Sense."
-        default: return unavailableMessage ?? "A recap is already being written."
+        case (_, .preparing), (_, .summarizing):
+            return before == phase ? "A summary is already being written." : "Writing a summary of the last two minutes."
+        case (.continuing, _): return "Following the conversation. Stop it first to ask for a new summary."
+        default: return unavailableMessage ?? "No summary could be written."
         }
     }
 
@@ -249,16 +231,9 @@ final class ConversationIntelligenceController {
         run(machine.process(.stopSelected(at: .now)))
     }
 
-    /// What `actionInvoked()` would do now, for button titles.
-    var actionTitle: String {
-        switch phase {
-        case .continuing: "Stop Following"
-        case .preparing, .summarizing: "Writing Recap…"
-        case .idle, .summaryAvailable: "Recap Last \(Self.describe(lookBack).capitalized)"
-        }
-    }
-
-    var canRecap: Bool { isSessionActive && keepsRecentSpeech && isTranscriptionOn }
+    var lookBack: TimeInterval { Self.lookBack }
+    /// A summary can be asked for: listening, and speech is being transcribed.
+    var canSummarize: Bool { isSessionActive && isTranscriptionOn }
     var bufferedWordCount: Int { captions.reduce(0) { $0 + $1.wordCount } }
 
     private func run(_ effects: [ConversationEffect]) {
@@ -308,15 +283,25 @@ final class ConversationIntelligenceController {
                 currentRecordID = nil
             case .clearTemporaryContext:
                 clearTemporaryText()
-                if isSessionActive, keepsRecentSpeech, isTranscriptionOn { buffer.begin(at: .now) }
-            case .status(let status, _):
-                present(status)
+                if isSessionActive, isTranscriptionOn { buffer.begin(at: .now) }
+            case .status(let newStatus, _):
+                if newStatus != status { statusSince = .now }
+                status = newStatus
             case .unavailable(let reason):
                 unavailableMessage = reason.message
+                unavailableTitle = reason.title
+            case .noSummary(let note):
+                // The engine's own explanation ("too little was said", "the model is not
+                // available"): shown, never saved, and never a summary.
+                recap = nil
+                unavailableMessage = note.summary
+                unavailableTitle = "No summary"
+                log(.recognition, "Summary request ended without a summary (\(note.source.rawValue))")
             }
         }
         phase = machine.phase
         continuedSince = machine.continuedSince
+        publishIslandState()
         scheduleDeadline()
     }
 
@@ -364,28 +349,32 @@ final class ConversationIntelligenceController {
 
     // MARK: - Dynamic Island
 
-    /// The recap's state as an episode of the Live Activity: a generic title and icon, no
-    /// speech-derived text, no interruption (it never asks for an expansion or a sound).
-    private func present(_ newStatus: ConversationStatus?) {
-        let now = Date.now
-        if let old = status, newStatus == nil || newStatus != old {
-            onStatusIntent?(statusIntent(old, action: .dismiss, at: now))
+    /// Titles and messages are generic and safe on the Lock Screen. The summary's own text is
+    /// `detail`: the Live Activity pipeline shows it only in the expanded presentation, only
+    /// while "Show speech summaries" is on, and never while the iPhone is judged locked.
+    private func publishIslandState() {
+        let state: IslandConversation? = switch status {
+        case nil:
+            nil
+        case .preparingRecap, .summarizing:
+            IslandConversation(phase: .summarizing, title: "Summarizing", since: statusSince)
+        case .summarySaved, .summaryAvailable:
+            IslandConversation(phase: .summaryReady, title: "Summary ready", detail: recap?.summary, since: statusSince)
+        case .continuing:
+            IslandConversation(phase: .following, title: "Following the conversation", detail: recap?.summary, since: statusSince)
+        case .stopped:
+            IslandConversation(phase: .notice, title: "Stopped following", message: "The summary is saved. Still listening for sounds.",
+                               since: statusSince)
+        case .unavailable:
+            IslandConversation(phase: .notice, title: unavailableTitle ?? "No summary",
+                               message: unavailableTitle == RecapUnavailableReason.contextNotAllowed.title
+                                   ? "Past speech cannot be recovered. Turn it on in Hearing Sense."
+                                   : "Open Hearing Sense for details.",
+                               since: statusSince)
         }
-        status = newStatus
-        guard let newStatus else { return }
-        statusEpisode += 1
-        statusRevision = 1
-        onStatusIntent?(statusIntent(newStatus, action: .present, at: now))
-    }
-
-    private func statusIntent(_ status: ConversationStatus, action: PresentationAction, at date: Date) -> AttentionPresentationIntent {
-        // Ids far above the attention engine's own (which count up from 1).
-        let event = AttentionEvent(id: AttentionEventID(rawValue: 1_000_000 + statusEpisode), revision: statusRevision,
-                                   category: .other, kindID: "conversation_status", title: status.title,
-                                   subtitle: "Hearing Sense", symbolName: status.symbolName, priority: .normal,
-                                   createdAt: date, updatedAt: date, isPresented: action != .dismiss)
-        return AttentionPresentationIntent(event: event, action: action, interruption: .none, timestamp: date,
-                                           expiresAt: nil, reasons: [])
+        guard state != islandState else { return }
+        islandState = state
+        onIslandState?(state)
     }
 
     // MARK: - History
@@ -444,7 +433,7 @@ final class ConversationIntelligenceController {
             "Conversation summaries (Window 7)",
             "Continuous semantic relevance inference: not part of this build · language model "
                 + "\(isLanguageModelAvailable ? "available" : "not available") (used only for summaries the user asks for)",
-            "Recent speech for summaries: \(keepsRecentSpeech ? "on" : "off") · look-back \(Int(lookBack)) s · "
+            "Recent speech for summaries: \(isTranscriptionOn ? "kept in memory" : "not kept (transcription off)") · look-back \(Int(lookBack)) s · "
                 + "buffered \(captions.count) utterance(s), \(bufferedWordCount) words, expired \(buffer.expiredUtterances)",
             "Phase: \(phase.rawValue) · summary requests \(recapsMade) · updates \(updatesMade) · last summary model time "
                 + "\(lastRecapSeconds.map(Self.seconds) ?? "–") · saved summaries \(history.count)",
@@ -480,7 +469,6 @@ extension ConversationIntelligenceController {
     func runDemo() {
         guard Self.isDemoRequested, !isSessionActive else { return }
         log(.lifecycle, "Conversation demo (synthetic sentences, microphone off, nothing stored)")
-        keepsRecentSpeech = true
         transcriptionProvider = { true }
         sessionWillStart(isTranscriptionOn: true)
         Task {
@@ -502,7 +490,7 @@ extension ConversationIntelligenceController {
             }
             try? await Task.sleep(for: .seconds(1))
             for line in Self.demoFirstPart { await say(line) }
-            actionInvoked()
+            summarize()
             // Wait for the recap, then keep following.
             for _ in 0 ..< 60 where phase != .summaryAvailable { try? await Task.sleep(for: .seconds(0.5)) }
             try? await Task.sleep(for: .seconds(2))

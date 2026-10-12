@@ -58,8 +58,15 @@ public enum AlertGate {
         case blocked(BlockReason)
     }
 
-    public static func evaluate(settings: IslandSettings, lock: DeviceLockEstimate, appIsActive: Bool) -> Outcome {
-        guard settings.expandsForImportantEvents else { return .blocked(.disabledInSettings) }
+    /// - Parameter isUserRequested: the request announces a summary the user asked for; it
+    ///   follows "Show the summary when it is ready" instead of "Expand for important events".
+    ///   The lock rule is the same for both.
+    public static func evaluate(settings: IslandSettings, lock: DeviceLockEstimate, appIsActive: Bool,
+                                isUserRequested: Bool = false) -> Outcome
+    {
+        guard isUserRequested ? settings.expandsForSummaries : settings.expandsForImportantEvents else {
+            return .blocked(.disabledInSettings)
+        }
         switch lock {
         case .locked: return .blocked(.deviceLocked)
         case .unknown: return .blocked(.lockStateUnknown)
