@@ -162,6 +162,7 @@ one 35-minute run on a charger (Window 5).
 | No controls on the Lock Screen | Summarize needs the unlocked island or the app | By design (no speech text on the Lock Screen) |
 | Release build still contains debug screens and scripted scenes | App size and surface (since Window 4) | Gate before a release |
 | `--hs-w7-selftest` calls `perform()` directly | The system's intent routing is not exercised | Device steps |
+| No touch on the real island, not even in the Simulator | A long press and a press on Summarize were to be tried in the Simulator at the end; the access request for the Simulator control was not answered (the student was away), so it was not done | Can be done in the Simulator with `--hs-synthetic-capture --hs-autostart` (go Home, touch and hold the island, press Summarize: "Transcription is off" should appear), or as device step W7-6 |
 | Window 5's four post-R1 fixes are in this branch and still unverified on the device | As before | R2–R3 of the Window 5 protocol |
 
 ## 7. Remaining physical-device tests
