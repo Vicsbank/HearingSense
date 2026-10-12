@@ -184,6 +184,54 @@ import Testing
         #expect(driver.alerts.first?.isUserRequested == false)
     }
 
+    // MARK: - Alert lifecycle, end to end (attention engine + pipeline, scripted scenes)
+
+    /// Acceptance tests 12 and 13 through the real attention engine: a siren asks for an
+    /// expansion, rain and music never do.
+    @Test func inTheScriptedScenesOnlyImportantAcousticEventsAskForAnExpansion() {
+        for scenario in [ScenarioLibrary.continuousRain, ScenarioLibrary.repeatedMusic] {
+            let run = IslandReplayer.run(scenario)
+            #expect(run.statistics.alertRequests == 0, "\(scenario.id)")
+            #expect(run.commands.compactMap(\.alert).isEmpty, "\(scenario.id)")
+            #expect(run.violations.isEmpty, "\(scenario.id)")
+        }
+        let siren = IslandReplayer.run(ScenarioLibrary.sirenDuringCooldown)
+        let alerts = siren.commands.compactMap(\.alert)
+        #expect(!alerts.isEmpty)
+        #expect(alerts.contains { $0.priority >= .high })
+        #expect(siren.violations.isEmpty)
+        // One Live Activity for the whole scene.
+        #expect(siren.statistics.starts == 1)
+    }
+
+    /// Speech in the scripted scenes (with and without transcripts) never asks, under the product's rules.
+    @Test func noScriptedSceneLetsSpeechAskForAnExpansion() {
+        for scenario in ScenarioLibrary.all {
+            let run = IslandReplayer.run(scenario)
+            let speech = run.commands.filter { $0.alert != nil && $0.content.headlineIsSpeech }
+            #expect(speech.isEmpty, "\(scenario.id)")
+        }
+    }
+
+    /// Deduplication, cooldown, expiry and recovery of one alert.
+    @Test func anAlertIsNotRepeatedExpiresAndCanHappenAgainLater() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Alarm", priority: .high, at: 5, expires: 25, category: .emergencySignals)))
+        // More evidence for the same episode: no second request.
+        driver.send(.intent(intent(1, "Alarm", priority: .high, action: .update, at: 8, expires: 28, category: .emergencySignals)))
+        // Another high-priority episode inside the minimum interval: shown, but no request.
+        driver.send(.intent(intent(2, "Door or knock", priority: .high, at: 9, expires: 30)))
+        #expect(driver.alerts.count == 1)
+        #expect(driver.pipeline.statistics.alertRequestsRateLimited == 1)
+        // Expiry: both episodes leave by themselves and the island is quiet again.
+        driver.advance(to: 40)
+        #expect(driver.shown?.mode == .listening)
+        #expect(driver.pipeline.presentedCount == 0)
+        // Recovery: a new episode later asks again.
+        driver.send(.intent(intent(3, "Alarm", priority: .high, at: 120, expires: 140, category: .emergencySignals)))
+        #expect(driver.alerts.count == 2)
+    }
+
     // MARK: - Gate and settings
 
     @Test func theGateFollowsTheRightSettingForEachKindOfRequest() {

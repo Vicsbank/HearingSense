@@ -75,6 +75,9 @@ final class LiveActivityController {
     /// Activities requested in this launch, and how often iOS ended one that was still wanted.
     private(set) var activitiesStarted = 0
     private(set) var endedBySystem = 0
+    /// Activities replaced by a fresh one before the system's eight-hour limit.
+    private(set) var renewals = 0
+    @ObservationIgnored private let lifetime = ActivityLifetimePolicy.standard
     private(set) var activityStartedAt: Date?
     private(set) var isDemoRunning = false
     /// Every update handed to ActivityKit in this launch (bounded), for measuring the real update
@@ -118,6 +121,8 @@ final class LiveActivityController {
         /// End activities a previous launch left behind.
         case cleanUp
         case start
+        /// End the activity and request a fresh one (it is close to the system's eight-hour limit).
+        case renew
         case update(IslandContent, IslandAlertRequest?)
         case end
     }
@@ -248,8 +253,14 @@ final class LiveActivityController {
         willLockNoticeAt = nil
         refreshLockEstimate(checkPasscode: true)
         syncLockWithPipeline()
-        // An activity can only be requested while the app is on screen.
-        if needsStart, pipeline.isLive { jobs.yield(.start) }
+        // An activity can only be requested while the app is on screen: this is where a session
+        // that lost its activity (eight-hour limit, removed by the user) gets a new one, and
+        // where an old activity is replaced before the system ends it.
+        switch lifetime.decide(sessionIsLive: pipeline.isLive, activityStartedAt: activityStartedAt, appIsActive: true, now: .now) {
+        case .renew: jobs.yield(.renew)
+        case .start: jobs.yield(.start)
+        case .keep, .waitForForeground: if needsStart, pipeline.isLive { jobs.yield(.start) }
+        }
     }
 
     // MARK: - Settings
@@ -362,6 +373,19 @@ final class LiveActivityController {
             await endLeftovers()
         case .start:
             await startActivity()
+        case .renew:
+            guard pipeline.isLive, let held = activity else { return }
+            stateTask?.cancel()
+            stateTask = nil
+            nonisolated(unsafe) let old = held
+            let age = activityStartedAt.map { Date.now.timeIntervalSince($0) } ?? 0
+            await old.end(nil, dismissalPolicy: .immediate)
+            activity = nil
+            activityStartedAt = nil
+            renewals += 1
+            log(.lifecycle, "Live Activity renewed after \((age / 3600).formatted(.number.precision(.fractionLength(1)))) h "
+                + "(the system ends an activity after about 8 h)")
+            await startActivity()
         case .update(let content, let alert):
             // `Activity` is not declared Sendable, but its async methods are made to be awaited
             // from any context; this controller is the only one that holds the activity.
@@ -444,7 +468,8 @@ final class LiveActivityController {
                 self.endedBySystem += 1
                 self.needsStart = true
                 self.status = .waitingForForeground
-                self.log(.lifecycle, "Live Activity was ended by iOS or the user (\(state)); listening continues")
+                self.log(.lifecycle, "Live Activity was ended by iOS or the user (\(state)); listening continues, "
+                    + "and a new activity is requested when the app is opened")
                 if UIApplication.shared.applicationState == .active { self.jobs.yield(.start) }
             }
         }
@@ -496,7 +521,11 @@ final class LiveActivityController {
         lines.append("Settings: activity \(settings.isEnabled ? "on" : "off"), ambient icons "
             + "\(settings.showsAmbientIcons ? "on" : "off"), expansion \(settings.expandsForImportantEvents ? "on" : "off"), "
             + "speech summaries \(settings.showsSpeechSummaries ? "on" : "off"), alert sound \(settings.playsAlertSound ? "on" : "off")")
-        lines.append("Activities started \(activitiesStarted), ended by iOS or the user \(endedBySystem); updates "
+        if let activityStartedAt {
+            lines.append("Activity started \(activityStartedAt.formatted(.iso8601)); the system's limit is reached "
+                + lifetime.expectedEnd(startedAt: activityStartedAt).formatted(.iso8601))
+        }
+        lines.append("Activities started \(activitiesStarted), renewed \(renewals), ended by iOS or the user \(endedBySystem); updates "
             + "\(statistics.updates), keep-alives \(statistics.keepAlives), coalesced \(statistics.coalesced)")
         lines.append("Ambient icons: \(ambientStatistics.changes) changes from \(ambientStatistics.soundInputs) sound inputs; "
             + "held back \(ambientStatistics.heldBack), below quality \(ambientStatistics.belowQuality), "
@@ -508,6 +537,8 @@ final class LiveActivityController {
             + "(rate-limited \(statistics.alertRequestsRateLimited)): sent to iOS \(alertsSent), silent instead "
             + (blocked.isEmpty ? "0" : blocked.joined(separator: ", ")))
         lines.append("Secondary-only changes not sent: \(statistics.secondaryChangesNotSent)")
+        lines.append("Requested summaries: states shown \(statistics.conversationStates), expansion requests when ready "
+            + "\(statistics.summaryReadyRequests); speech episodes that asked for no expansion: \(statistics.speechAlertsWithheld)")
         lines.append("Speech summaries presented \(statistics.summariesPresented) (without an expansion request: "
             + "\(statistics.summariesWithoutExpansion)); speech episodes without a summary kept as an icon: "
             + "\(statistics.speechWithoutSummary); speech text withheld right now because locked: \(pipelineKnowsLocked ? "yes" : "no")")

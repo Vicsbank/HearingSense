@@ -72,6 +72,8 @@ final class ListeningController {
     let attention = AttentionController()
     /// Window 5: the Live Activity (Dynamic Island and Lock Screen) of the listening session.
     let liveActivity = LiveActivityController()
+    /// Window 7: the acoustic scene, from the same confirmed sound events.
+    let scene = SceneAwarenessController()
     /// Conversation summaries on request, continued understanding with live captions, saved summaries.
     let conversation = ConversationIntelligenceController()
 
@@ -129,12 +131,15 @@ final class ListeningController {
         attention.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         liveActivity.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         recognition.setForwarding(frame: { [engine = speech.engine] in engine.process($0) },
-                                  event: { [engine = speech.engine, attention, liveActivity] update in
+                                  event: { [engine = speech.engine, attention, liveActivity, scene] update in
                                       engine.process(update)
                                       attention.receive(update)
                                       // Every confirmed event, whatever the attention engine decides.
                                       liveActivity.receive(update)
+                                      scene.receive(update)
                                   })
+        scene.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
+        scene.onChange = { [liveActivity] in liveActivity.receive(sceneTitle: $0?.scene.title) }
         attention.onIntent = { [liveActivity] in liveActivity.receive($0) }
         attention.onInjectedSound = { [liveActivity] in liveActivity.receive($0) }
         speech.setForwarding(result: { [attention, conversation] in
@@ -444,6 +449,8 @@ final class ListeningController {
             "",
             attention.reportText(),
             "",
+            scene.reportText(),
+            "",
             liveActivity.reportText(),
             "",
             conversation.reportText(),
@@ -467,6 +474,7 @@ final class ListeningController {
             recognition.sessionWillStart()
             speech.sessionWillStart()
             attention.sessionWillStart()
+            scene.sessionWillStart()
             liveActivity.sessionWillStart()
             let engineStart = ContinuousClock.now
             let format = try capture.start()
@@ -496,6 +504,7 @@ final class ListeningController {
         recognition.sessionDidEnd()
         speech.sessionDidEnd()
         attention.sessionDidEnd()
+        scene.sessionDidEnd()
         liveActivity.sessionDidEnd()
         if keepSession {
             log.append(.session, "Session kept active (microphone off)")
@@ -552,6 +561,7 @@ final class ListeningController {
             recognition.sessionDidEnd()
             speech.sessionDidEnd()
             attention.sessionDidEnd()
+            scene.sessionDidEnd()
             // The session is expected to resume: the activity stays and shows "paused".
             liveActivity.sessionPaused()
             audioSession.noteDeactivatedBySystem()
@@ -587,6 +597,7 @@ final class ListeningController {
             recognition.sessionDidEnd()
             speech.sessionDidEnd()
             attention.sessionDidEnd()
+            scene.sessionDidEnd()
             liveActivity.sessionDidEnd()
             audioSession.noteDeactivatedBySystem()
             capture = MicrophoneCapture()

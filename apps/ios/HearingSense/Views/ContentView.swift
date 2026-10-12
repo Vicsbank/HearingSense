@@ -1,4 +1,5 @@
 import HearingSenseAudio
+import HearingSenseDomain
 import SwiftUI
 
 struct ContentView: View {
@@ -25,6 +26,7 @@ struct ContentView: View {
                     BrandHeader()
                     StatusCard(state: controller.state, format: controller.captureFormat)
                     ListeningButtons()
+                    SceneRow()
                     LiveActivityCard()
                     AttentionCard()
                     ConversationCard()
@@ -132,6 +134,23 @@ private struct ListeningButtons: View {
                     Label("Open Settings to allow microphone access", systemImage: "gear")
                 }
             }
+        }
+    }
+}
+
+/// The acoustic scene, as a line under the listening buttons. Secondary: the individual sounds
+/// are in the recognition card and in the Dynamic Island.
+private struct SceneRow: View {
+    @Environment(ListeningController.self) private var controller
+
+    var body: some View {
+        if controller.state.isCapturing {
+            let scene = controller.scene.estimate?.scene
+            Label(scene?.title ?? "Listening for the surroundings…", systemImage: scene?.symbolName ?? "waveform")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .accessibilityLabel("Surroundings: \(scene?.title ?? "not known yet")")
+                .accessibilityIdentifier("scene.row")
         }
     }
 }
