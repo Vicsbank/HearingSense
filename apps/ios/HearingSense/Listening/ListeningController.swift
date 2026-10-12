@@ -141,7 +141,10 @@ final class ListeningController {
         scene.setLogger { [weak self] kind, message in self?.log.append(kind, message) }
         scene.onChange = { [liveActivity] in liveActivity.receive(sceneTitle: $0?.scene.title) }
         attention.onIntent = { [liveActivity] in liveActivity.receive($0) }
-        attention.onInjectedSound = { [liveActivity] in liveActivity.receive($0) }
+        attention.onInjectedSound = { [liveActivity, scene] in
+            liveActivity.receive($0)
+            scene.receive($0)
+        }
         speech.setForwarding(result: { [attention, conversation] in
                                  attention.receive($0)
                                  conversation.receive($0)
@@ -220,7 +223,25 @@ final class ListeningController {
 
     /// A start would have to show the microphone permission prompt, which iOS only shows while
     /// the app is on screen.
-    var needsForegroundToStart: Bool { !session.isOn && MicrophonePermission.current == .undetermined }
+    var needsForegroundToStart: Bool {
+        #if DEBUG
+        if Self.usesSyntheticCapture { return false }
+        #endif
+        return !session.isOn && MicrophonePermission.current == .undetermined
+    }
+
+    #if DEBUG
+    /// `--hs-synthetic-capture` (Debug builds): a listening session without the microphone. The
+    /// audio session is not activated and the engine is not started; everything else — the
+    /// switch, the Live Activity, the conversation controller — runs as usual and is fed with
+    /// synthetic events. For checks on the Mac and in the Simulator, where the microphone would
+    /// pick up real speech in the room.
+    static let syntheticCaptureArgument = "--hs-synthetic-capture"
+    static var usesSyntheticCapture: Bool {
+        let arguments = ProcessInfo.processInfo.arguments
+        return arguments.contains(syntheticCaptureArgument) || arguments.contains("--hs-w7-selftest")
+    }
+    #endif
 
     @discardableResult
     private func request(_ input: ListeningSessionMachine.Input) async -> [ListeningSessionMachine.Effect] {
@@ -272,7 +293,11 @@ final class ListeningController {
             return
         }
 
-        switch MicrophonePermission.current {
+        var permission = MicrophonePermission.current
+        #if DEBUG
+        if Self.usesSyntheticCapture { permission = .granted }
+        #endif
+        switch permission {
         case .granted:
             break
         case .denied:
@@ -466,6 +491,19 @@ final class ListeningController {
     /// Sets `.listening` or `.failed` and returns whether capture is running.
     @discardableResult
     private func beginCapture() -> Bool {
+        #if DEBUG
+        if Self.usesSyntheticCapture {
+            log.append(.session, "Synthetic capture: the microphone stays off and the audio session is not activated")
+            recognition.sessionWillStart()
+            speech.sessionWillStart()
+            attention.sessionWillStart()
+            scene.sessionWillStart()
+            liveActivity.sessionWillStart()
+            state = .listening
+            report(.captureStarted(at: .now))
+            return true
+        }
+        #endif
         do {
             let input = try audioSession.activate(policy: policy)
             log.append(.session, "Session active (playAndRecord, \(policy.mode.rawValue), "

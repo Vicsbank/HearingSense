@@ -1,7 +1,27 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-10, end of **Window 6** (semantic intelligence, accessible conversation,
-icon redesign) on its own branch; the Window 5 paragraph below describes the Window 5 branch.
+Last updated: 2026-10-11, end of **Window 7** (product integration and stabilization). The
+paragraphs below it describe the earlier windows as they were written at the time.
+
+**Window 7 status: code complete on `feature/window7-product-integration` in the worktree
+`.claude/worktrees/window7`. Not merged, not pushed. Verified on the Mac (474 package tests
+pass) and in the iOS Simulator (475 package tests, Debug and Release builds, a 28-check
+walk-through of the 18 acceptance tests in the running app with the microphone off and the
+real on-device language model). Nothing ran on the iPhone; no microphone was used.** The
+product now has three features and one switch: (A) ambient sound icons and an acoustic scene,
+(B) alerts for the highest-priority acoustic events, (C) a summary of the last two minutes
+when the user asks for it, with Continue and Stop. The Action Button's intent turns listening
+on and off and does nothing else. Personal semantic attention (Windows 6–6.3) is not part of
+the app; its code stays in the `SemanticAttention` package module and on its branches.
+**Baseline:** Window 6 (`ead23f3`) plus the Window 5 session's uncommitted work, taken as a
+patch from the main checkout (which was only read). Windows 6.1–6.3 were not merged in: they
+changed only the semantic research. Read `docs/PRODUCT_ARCHITECTURE_FINAL.md`, then
+`docs/testing/WINDOW7_ACCEPTANCE_REPORT.md` (what is verified where; the device steps W7-1 to
+W7-14) and `docs/research/DYNAMIC_ISLAND_API_LIMITS.md`. Commits: `faf8b35` (baseline),
+`f6d9849` (M1), `4bd6701` (M2), `15859d2` (M3 + M4), `262eed4` (M5), then the stabilization
+commit (see `git log`). Next: the student's decisions in §12, then the device steps.
+The main checkout still holds the Window 5 work uncommitted; the handoffs of Windows 6.1–6.3
+are on their own branches and are not repeated here.
 
 **Window 6 status: code complete on `feature/window6-semantic-intelligence`, branched from the
 committed Window 5 state `eddc450` in a separate worktree (`.claude/worktrees/window6`) because
@@ -313,6 +333,39 @@ Full report: `docs/WINDOW6_SEMANTIC_INTELLIGENCE_REPORT.md`; numbers and methods
 8. Tests: `SemanticAttentionTests` (41), `ConversationUnderstandingTests` (34), 3 in
    `IslandPresentationTests/Window6PresentationTests`, 3 new in `SoundSymbolCatalogTests`.
 
+## 4g. Completed in Window 7
+
+Full description: `docs/PRODUCT_ARCHITECTURE_FINAL.md`; results: `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md`.
+
+1. Baseline `faf8b35`: Window 6 + the Window 5 session's uncommitted work (one conflict in
+   `ListeningController`, both sides kept).
+2. Semantic attention removed from the app: no import, no link (`project.pbxproj`), no goals
+   screen, no per-utterance model call; `ProductionAuditTests` guards it. Release builds never
+   write the Window 3 automatic headline.
+3. `HearingSenseAudio/ListeningSessionMachine` (the ON/OFF switch with a stored record);
+   `ListeningController.shared`, `start` / `stop` / `toggle`; `Listening/ListeningIntents`
+   (Toggle / Start / Stop Hearing Sense; `AudioRecordingIntent` + `LiveActivityIntent`).
+4. `apps/ios/Shared/` (new folder, member of the app and the widget extension):
+   `HearingSenseActions.swift` with the three `LiveActivityIntent`s (Summarize, Continue, Stop;
+   not discoverable), `HearingSenseActionCenter`, `IslandControls`.
+5. `IslandPresentation`: `IslandConversation`, `IslandContent.conversation` / `.sceneTitle`,
+   pipeline inputs `.conversation` and `.scene`, `IslandPolicy.speechMayRequestExpansion`
+   (off) and `.window5`, `IslandSettings.expandsForSummaries`, `ActivityLifetimePolicy`.
+   `IslandViews`: expanded presentation with the sound's name, status, scene and a slot for controls.
+6. `ConversationUnderstanding`: `.summarizeRequested`, `.noSummary`, policy `.product`; the
+   copy check in `RecapValidator`; updates written as additions.
+   App: `ConversationIntelligenceController.summarize()`, fixed two-minute buffer that follows
+   "Transcribe nearby speech", `ConversationButtons`.
+7. `HearingSenseDomain/AcousticScene`, `SoundEventDetection/AcousticSceneTracker`, app
+   `Recognition/SceneAwarenessController`.
+8. Debug aids: `--hs-synthetic-capture` (a session without the microphone),
+   `--hs-w7-selftest [--hs-w7-persist]` (`Diagnostics/Window7SelfTest`),
+   `--hs-screen island|islandsettings`.
+9. Tests: 61 new (`ListeningSessionMachineTests`, `Window7ConversationTests`,
+   `Window7PresentationTests`, `Window7SceneAndLifetimeTests`, `ProductionAuditTests`).
+   Results: `results/window7_simulator/`, `results/conversation_eval_window7/`. Screenshots:
+   `docs/device-tests/window7-simulator/`.
+
 ## 5. Repository structure (current)
 
 ```
@@ -437,6 +490,33 @@ Full list: `docs/IOS_ARCHITECTURE.md` §9. Most important:
   `hs-attention-eval island-device-trace results/device_window5/<export>.txt`.
 - (W5) `xcrun simctl io screenshot` often omits the Dynamic Island; capture through the Simulator
   itself. The app's own activity is not shown in the island while the app is on screen.
+
+- (W7) The Action Button's intent switches listening and nothing else. Never add Summarize,
+  Continue or a conversation stop to an intent that Shortcuts can see: the three conversation
+  intents are `isDiscoverable == false` on purpose.
+- (W7) One switch: every start and stop goes through `ListeningController.start/stop/toggle`
+  and `ListeningSessionMachine`. Code that switches the microphone off by itself (time limit,
+  failures, interruptions) reports it with `report(_:)`. A relaunch never restarts the microphone.
+- (W7) The language model runs only for something the user pressed (a summary, the updates of
+  a followed conversation). Nothing judges speech continuously. `ProductionAuditTests` fails
+  if the app imports `SemanticAttention` or opens a model session of its own.
+- (W7) Touch and hold only reveals the controls. The controls of the expanded island are
+  chosen from `IslandContent.conversation`; change them in `apps/ios/Shared/HearingSenseActions.swift`.
+  A type used by a button in the Live Activity must be in that shared folder.
+- (W7) Only acoustic events ask iOS for an expansion (`speechMayRequestExpansion == false`), and
+  only with "Expand for important events" on (off by default) and the iPhone judged unlocked.
+  A summary the user asked for has its own setting (on by default) and the same lock gate.
+- (W7) A saved summary must not be a transcript: `RecapValidator` removes statements that are
+  whole spoken sentences word for word. Do not weaken it without rerunning the storage check
+  (acceptance report §4.1).
+- (W7) Model instructions contain no example with a day, a time or a number: the model
+  repeated one in a summary. Rerun `hs-semantic-eval recap` after any prompt change.
+- (W7) The scene is secondary: it never causes a Live Activity update by itself, and its
+  titles describe sounds, never a place. Thresholds live in `AcousticScenePolicy.standard`.
+- (W7) Simulator and Mac checks run without the microphone (`--hs-synthetic-capture`): the
+  Mac's microphone would pick up real speech in the room.
+- (W7) The Simulator runs of the on-device model and the Mac evaluation share one model: do
+  not run them at the same time (timings and timeouts get worse).
 
 ## 7. Verification results (Window 1)
 
@@ -567,11 +647,37 @@ Details: `docs/testing/WINDOW6_EVALUATION_RESULTS.md`. Synthetic text; Mac and S
 | App Intent / Action Button, background, locked phone | — | **Not run** |
 | Anything on the physical iPhone | — | **Not run in Window 6** |
 
+## 7g. Verification results (Window 7)
+
+Details: `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md`. Mac and Simulator only; synthetic events and text.
+
+| Check | Environment | Result |
+|---|---|---|
+| `swift test` | Mac | **474 passed**, 9 skipped, 0 failed (61 new) |
+| `xcodebuild test -scheme HearingSenseKit-Package` | iOS 27.0 Simulator, iPhone 18 Pro Max | **TEST SUCCEEDED**: 475 passed, 10 skipped |
+| App + extension, Debug (Simulator) / Release unsigned (generic device) | — | **Succeeded** |
+| Self-test: 28 checks over the 18 acceptance tests | Simulator, microphone off, real language model, on-disk history | **28 passed, 0 failed** |
+| Storage check after that run | Simulator app container | no spoken sentence in any file (a defect found here was fixed first) |
+| Summary evaluation | Mac, real language model | dev 13/13 facts; held-out 25/26 (26/26 in Window 6: one copied sentence is now removed); 8/8 summaries |
+| CPU and memory with a session on | Simulator (Mac hardware; microphone and classifier not running) | 0.6–0.9 % of one core; 48–51 MB |
+| Action Button, background and locked start, touch on the island, real microphone, Spotify / AirPods, battery | Physical iPhone | **Not run** |
+
 ## 8. Known issues
 
 | Issue | Impact | Suggested handling |
 |---|---|---|
-| **(W6) Nothing of Window 6 ran on the iPhone** | Model speed and availability in the background and when locked, the Action Button shortcut, battery and heat are unknown | Device steps in `docs/WINDOW6_SEMANTIC_INTELLIGENCE_REPORT.md` §11 |
+| **(W7) Nothing of Window 7 ran on the iPhone** | The Action Button, starting from the background or a locked iPhone, a real press in the island, real speech, audio coexistence and battery are all unverified | Steps W7-1 to W7-14 in `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md` §7 |
+| (W7) Background start rests on `AudioRecordingIntent`'s contract | If iOS refuses, ON from the Action Button needs the app open | The intent can continue in the foreground; decide after W7-3 |
+| (W7) Prominent alerts are off by default | Feature B is a silent warning icon until the user turns it on | The student's decision; Window 5's rule was "not on by default without device evidence" |
+| (W7) Scene thresholds were chosen on scripted events | May lag or flicker on real sound | Tune `AcousticScenePolicy.standard` on recorded device events |
+| (W7) The copy check costs facts | 1 of 26 in the held-out scenes | Accept or refine |
+| (W7) Three branches hold work that is not in one place | Window 5's uncommitted work is in the main checkout and (as a patch) in this branch; Windows 6.1–6.3 are research branches | The student decides what to commit and merge; this branch contains everything the product needs |
+
+The rows that follow are from the earlier windows.
+
+| Issue | Impact | Suggested handling |
+|---|---|---|
+| (W6, superseded by Window 7 for goal matching, which is no longer in the app) **Nothing of Window 6 ran on the iPhone** | Model speed and availability in the background and when locked, the Action Button shortcut, battery and heat are unknown | Device steps in `docs/WINDOW6_SEMANTIC_INTELLIGENCE_REPORT.md` §11 |
 | **(W6) Two branches to bring together** | Window 6 was built from `eddc450` while Window 5 work continued uncommitted in the main checkout | Commit Window 5 first, then rebase or merge Window 6; overlapping files are listed in the report §10 |
 | (W6) A full goal judgement takes 2.7 s on the Mac | In fast conversation the bounded queue drops the oldest utterances | Measure on the iPhone; options in `docs/research/SEMANTIC_MODEL_COMPARISON.md` §4 |
 | (W6) Goals unlike the prompt's examples are matched worse | Shop-worker profile: 8 of 14 found | Per-goal examples; write a new held-out set before tuning (the current one has been seen) |
@@ -743,6 +849,25 @@ tools/window6_sim_screens.sh <UDID> <dir>/Build/Products/Debug-iphonesimulator/H
 
 Do not tune prompts or rules on `semantic_heldout.txt`.
 
+Window 7 commands (Mac and Simulator; no microphone):
+
+```bash
+cd packages/HearingSenseKit
+swift test --filter "ListeningSessionMachineTests|Window7|ProductionAudit|AcousticSceneTracker|ActivityLifetime"
+swift run hs-semantic-eval recap --split dev       # after any change to the summary prompts or checks
+swift run hs-semantic-eval recap --split heldout   # (do not run while a Simulator self-test uses the model)
+# Simulator (a simulator no other session uses; here the iPhone 18 Pro Max):
+tools/build_ios_sim.sh <derived data dir>
+xcrun simctl install <UDID> <dir>/Build/Products/Debug-iphonesimulator/HearingSense.app
+xcrun simctl launch --terminate-running-process <UDID> org.hearingsense.HearingSense --hs-w7-selftest
+#   about 90 s; report: <app data container>/Documents/hearing-sense-w7-selftest.txt
+#   add --hs-w7-persist to keep History on disk and check what was stored (uninstall the app afterwards)
+#   add --hs-screen island to watch the island preview; --hs-screen islandsettings for the settings
+#   --hs-synthetic-capture alone: Start / Stop and the intents work without the microphone
+```
+
+On the iPhone: Settings → Action Button → Shortcut → Hearing Sense → "Toggle Hearing Sense".
+
 ## 11. Files to read first (in order)
 
 1. `docs/PROJECT_HANDOFF.md` (this file)
@@ -783,7 +908,24 @@ Do not tune prompts or rules on `semantic_heldout.txt`.
    `Sources/ConversationUnderstanding/{RollingConversationBuffer, ConversationRecapEngine, ConversationSession}.swift`,
    `apps/ios/HearingSense/Conversation/ConversationIntelligenceController.swift`, `Views/ConversationViews.swift`.
 
+9d. (Window 7, read these first for the product as it is)
+   `docs/PRODUCT_ARCHITECTURE_FINAL.md`, `docs/testing/WINDOW7_ACCEPTANCE_REPORT.md`,
+   `docs/research/DYNAMIC_ISLAND_API_LIMITS.md`. Code: `Sources/HearingSenseAudio/ListeningSessionMachine.swift`,
+   `apps/ios/HearingSense/Listening/{ListeningController, ListeningIntents}.swift`,
+   `apps/ios/Shared/HearingSenseActions.swift`, `Sources/IslandPresentation/{IslandContent, IslandPipeline, ActivityLifetime}.swift`,
+   `Sources/ConversationUnderstanding/{ConversationSession, ConversationRecapEngine, FoundationModelRecapSummarizer}.swift`,
+   `apps/ios/HearingSense/Conversation/ConversationIntelligenceController.swift`,
+   `Sources/SoundEventDetection/AcousticSceneTracker.swift`, `apps/ios/HearingSense/Diagnostics/Window7SelfTest.swift`.
+
 ## 12. Recommended next steps
+
+0000. (After Window 7) Decisions for the student: (a) whether "Expand for important events"
+   stays off by default; (b) whether a possible spoken warning should be able to ask for an
+   expansion again (`IslandPolicy.window5`); (c) what to do with the Window 5 work that is
+   still uncommitted in the main checkout, and whether this branch becomes the line that is
+   merged; (d) the copy check's cost (1 fact of 26). Then the device steps W7-1 to W7-14 of
+   the acceptance report, one at a time, each with authorization; W7-1 to W7-6 need no speech.
+   Do not resume the semantic-attention research (Windows 6.1–6.3) unless the student asks.
 
 000. (After Window 6) Bring the branches together (Window 5's uncommitted work first), then the
    device steps of the Window 6 report §11, one at a time, each with the student's authorization.

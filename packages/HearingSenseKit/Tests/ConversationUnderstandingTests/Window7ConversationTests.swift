@@ -188,3 +188,58 @@ private func said(_ text: String, _ start: TimeInterval, _ end: TimeInterval) ->
         #expect(buffer.characterCount <= 6000)
     }
 }
+
+/// Acceptance test 17: a saved summary never becomes a saved transcript.
+@Suite struct Window7VerbatimTests {
+    private let spoken = [
+        "One more thing, the report is due next Wednesday, not Monday.",
+        "And the teacher said it has to be at least six pages.",
+        "Fine, then let's split it, three pages each.",
+    ]
+
+    @Test func sentencesCopiedFromTheTranscriptAreRemovedFromASummary() {
+        let draft = RecapDraft(title: "Report deadline",
+                               summary: "Someone said the report is due next Wednesday and not Monday. "
+                                   + "And the teacher said it has to be at least six pages. Fine, then let's split it, three pages each.",
+                               keyPoints: ["The report is due next Wednesday.", "One more thing, the report is due next Wednesday, not Monday."])
+        let result = RecapValidator().validate(draft, transcript: spoken.joined(separator: "\n"))
+        #expect(result.summary == "Someone said the report is due next Wednesday and not Monday.")
+        #expect(result.keyPoints == ["The report is due next Wednesday."])
+        #expect(result.corrections.filter { $0 == "copied_from_transcript" }.count == 3)
+        for sentence in spoken {
+            #expect(!result.summary.contains(sentence))
+        }
+    }
+
+    @Test func restatingTheEarlierRecapIsNotACopy() {
+        let earlier = "They agreed to meet on Saturday at ten in room 204."
+        let draft = RecapDraft(title: "Plans", summary: earlier + " Someone said the report is due next Wednesday.", keyPoints: [])
+        let result = RecapValidator().validate(draft, transcript: spoken.joined(separator: "\n"), earlierText: earlier)
+        #expect(result.summary == draft.summary)
+        #expect(result.corrections.isEmpty)
+    }
+
+    /// What the on-device model did in the Simulator: the new utterances appended unchanged.
+    @Test func anUpdateThatOnlyAppendsTheTranscriptChangesNothing() async {
+        let earlier = "They agreed to meet on Saturday at ten in room 204. The graphs have to be finished by Friday night."
+        let previous = ConversationRecap(title: "Chemistry project", summary: earlier, source: .languageModel, coveredTo: at(10))
+        let copying = ScriptedSummarizer(update: RecapDraft(title: "Chemistry project",
+                                                            summary: earlier + " " + spoken.joined(separator: " "), keyPoints: []))
+        let engine = ConversationRecapEngine(summarizer: copying)
+        let new = spoken.enumerated().map { said($0.element, 20 + Double($0.offset) * 5, 23 + Double($0.offset) * 5) }
+        let updated = await engine.update(previous, earlierTranscript: "we meet on saturday at ten in room 204", new: new)
+        #expect(updated == nil)
+
+        // The same new speech, restated: the update is kept and holds no utterance word for word.
+        let restating = ScriptedSummarizer(update: RecapDraft(
+            title: "Chemistry project",
+            summary: earlier + " Someone said the report is due next Wednesday, not Monday, and must be at least six pages.",
+            keyPoints: []))
+        let better = await ConversationRecapEngine(summarizer: restating)
+            .update(previous, earlierTranscript: "we meet on saturday at ten in room 204", new: new)
+        #expect(better?.summary.contains("at least six pages") == true)
+        for sentence in spoken {
+            #expect(better?.fullText.contains(sentence) == false)
+        }
+    }
+}

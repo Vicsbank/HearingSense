@@ -221,3 +221,34 @@ import Testing
         #expect(policy.renewAfter < policy.systemLimit)
     }
 }
+
+/// Cost of the Window 7 layers per input, on the machine that runs the tests (a debug build;
+/// printed for the report, and bounded loosely so that an accidental quadratic step fails).
+@Suite struct Window7CostTests {
+    @Test func theSceneTrackerAndThePipelineCostMicrosecondsPerInput() {
+        var tracker = AcousticSceneTracker()
+        var pipeline = IslandPipeline()
+        tracker.process(.sessionStarted(at: T.origin))
+        _ = pipeline.process(.sessionStarted(at: T.origin))
+        let kinds = ["music", "speech", "road_vehicle", "rain", "bird", "appliance", "vehicle_horn", "crowd", "dog", "door"]
+        var updates: [AcousticEventUpdate] = []
+        var time = 1.0
+        for index in 0 ..< 5_000 {
+            var event = SyntheticSoundEvent(kindID: kinds[index % kinds.count], number: index + 1, start: T.date(time), confirmDelay: 0)
+            updates.append(event.started())
+            updates.append(event.updated(at: T.date(time + 2)))
+            updates.append(event.ended(at: T.date(time + 3)))
+            time += 3.5
+        }
+        let clock = ContinuousClock()
+        let sceneTime = clock.measure { for update in updates { tracker.process(.sound(update)) } }
+        let islandTime = clock.measure { for update in updates { _ = pipeline.process(.sound(update)) } }
+        func microseconds(_ duration: Duration) -> Double {
+            (Double(duration.components.seconds) * 1e6 + Double(duration.components.attoseconds) / 1e12) / Double(updates.count)
+        }
+        print("Window 7 cost per input (debug build, this Mac): scene tracker \(microseconds(sceneTime).formatted(.number.precision(.fractionLength(1)))) µs, "
+            + "island pipeline \(microseconds(islandTime).formatted(.number.precision(.fractionLength(1)))) µs, \(updates.count) inputs")
+        #expect(microseconds(sceneTime) < 2_000)
+        #expect(microseconds(islandTime) < 2_000)
+    }
+}

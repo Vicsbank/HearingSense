@@ -221,7 +221,7 @@ actor ScriptedSummarizer: ConversationSummarizing {
 
     @Test func aCheckedRecapIsReturnedWithItsCoverage() async {
         let summarizer = ScriptedSummarizer(recap: RecapDraft(
-            title: "Client meeting moved", summary: "The client meeting moved from Monday to Thursday at two. It is in conference room B.",
+            title: "Client meeting moved", summary: "Someone said the client meeting moved from Monday to Thursday at two, in conference room B.",
             keyPoints: ["Slides ready by Wednesday noon"]))
         let engine = ConversationRecapEngine(summarizer: summarizer)
         let recap = await engine.recap(excerpt(lines))
@@ -262,7 +262,9 @@ actor ScriptedSummarizer: ConversationSummarizing {
             title: "Budget", summary: "The budget is 90 thousand dollars. Then Tanaka approved it on Sunday. The meeting moved to Thursday."))
         let recap = await ConversationRecapEngine(summarizer: summarizer).recap(excerpt(lines))
         #expect(recap.source == .unavailable)
-        #expect(recap.corrections == ["summary_failed_checks"])
+        // Window 7: the names of the checks that failed follow (for diagnostics; never text).
+        #expect(recap.corrections.first == "summary_failed_checks")
+        #expect(recap.corrections.count > 1)
     }
 
     @Test func missingSpeechAndPoorRecognitionBecomeCaveats() async {

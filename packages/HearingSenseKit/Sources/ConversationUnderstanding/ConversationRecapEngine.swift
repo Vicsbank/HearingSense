@@ -83,9 +83,18 @@ public struct ConversationRecap: Hashable, Sendable {
 public struct RecapValidator: Hashable, Sendable {
     /// Share of a sentence's content words that must occur in the transcript.
     public var minimumSupport: Double
+    /// Window 7: a statement of at least this many words that is, word for word, a whole
+    /// sentence of the transcript is a copy, not a summary, and is removed — a saved summary
+    /// must never turn into a saved transcript. (Found in the Simulator: asked to extend a
+    /// recap, the on-device model appended the three new utterances unchanged, and every other
+    /// check passed them, because a copy is fully supported by its source.) A summary still
+    /// uses the speakers' words; this only stops whole sentences from being stored as they
+    /// were said.
+    public var copiedMinimumWords: Int
 
-    public init(minimumSupport: Double = 0.5) {
+    public init(minimumSupport: Double = 0.5, copiedMinimumWords: Int = 5) {
         self.minimumSupport = minimumSupport
+        self.copiedMinimumWords = copiedMinimumWords
     }
 
     public struct Result: Hashable, Sendable {
@@ -105,8 +114,17 @@ public struct RecapValidator: Hashable, Sendable {
         let sourceNames = RecapText.names(in: source)
         var corrections: [String] = []
         var statements = 0, removed = 0
+        // Every spoken sentence and every whole utterance, as words (the earlier recap is not
+        // part of it: restating it is fine).
+        var spoken: Set<[String]> = []
+        for line in transcript.split(whereSeparator: \.isNewline) {
+            spoken.insert(RecapText.words(in: String(line)))
+            for sentence in RecapText.sentences(in: String(line)) { spoken.insert(RecapText.words(in: sentence)) }
+        }
 
         func problem(in statement: String) -> String? {
+            let words = RecapText.words(in: statement)
+            if words.count >= copiedMinimumWords, spoken.contains(words) { return "copied_from_transcript" }
             let quantities = RecapText.quantities(in: statement)
             if !quantities.isSubset(of: sourceQuantities) { return "unsupported_number_or_time" }
             if !RecapText.names(in: statement).isSubset(of: sourceNames) { return "unsupported_name" }
@@ -221,10 +239,17 @@ public struct ConversationRecapEngine: Sendable {
         }) else {
             return unavailable(excerpt, caveats: caveats, seconds: Date().timeIntervalSince(started))
         }
-        return checked(draft, transcript: text, earlier: "", excerpt: excerpt, caveats: caveats,
-                       seconds: Date().timeIntervalSince(started)) ?? unavailable(excerpt, caveats: caveats,
-                                                                                seconds: Date().timeIntervalSince(started),
-                                                                                correction: "summary_failed_checks")
+        var rejected: [String] = []
+        if let recap = checked(draft, transcript: text, earlier: "", excerpt: excerpt, caveats: caveats,
+                               seconds: Date().timeIntervalSince(started), rejected: &rejected)
+        {
+            return recap
+        }
+        // The names of the checks that failed travel with the note (for diagnostics; no text).
+        var note = unavailable(excerpt, caveats: caveats, seconds: Date().timeIntervalSince(started),
+                               correction: "summary_failed_checks")
+        note.corrections += rejected
+        return note
     }
 
     /// Extends `previous` with the utterances said since. Returns nil when there is nothing new
@@ -247,6 +272,9 @@ public struct ConversationRecapEngine: Sendable {
         // Earlier verified key points are never lost: new ones are added to them.
         var points = previous.keyPoints
         for point in result.keyPoints where !points.contains(point) { points.append(point) }
+        // Nothing but copies was added: the earlier recap stays, and the new utterances are
+        // offered again with the next update.
+        guard result.summary != previous.summary || points != previous.keyPoints else { return nil }
         updated.keyPoints = points
         if !result.title.isEmpty { updated.title = result.title }
         updated.corrections += result.corrections
@@ -257,12 +285,15 @@ public struct ConversationRecapEngine: Sendable {
     }
 
     private func checked(_ draft: RecapDraft, transcript: String, earlier: String, excerpt: ConversationExcerpt,
-                         caveats: [String], seconds: TimeInterval) -> ConversationRecap?
+                         caveats: [String], seconds: TimeInterval, rejected: inout [String]) -> ConversationRecap?
     {
         let result = validator.validate(draft, transcript: transcript, earlierText: earlier)
         guard !result.summary.isEmpty,
               result.statements == 0 || Double(result.removed) / Double(result.statements) <= policy.maximumRemovedShare
-        else { return nil }
+        else {
+            rejected = result.corrections
+            return nil
+        }
         return ConversationRecap(title: result.title.isEmpty ? Self.untitled : result.title, summary: result.summary,
                                  keyPoints: result.keyPoints, source: .languageModel, caveats: caveats,
                                  corrections: result.corrections, coveredFrom: excerpt.start, coveredTo: excerpt.end,

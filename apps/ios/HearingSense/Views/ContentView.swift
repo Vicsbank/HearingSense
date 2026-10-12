@@ -6,9 +6,9 @@ struct ContentView: View {
     @Environment(ListeningController.self) private var controller
     @Environment(\.scenePhase) private var scenePhase
     #if DEBUG
-    /// `--hs-screen conversation|history|summary|privacy|icons`
+    /// `--hs-screen conversation|history|summary|privacy|icons|island|islandsettings`
     enum DebugScreen: String, Hashable, Identifiable {
-        case conversation, history, summary, privacy, icons
+        case conversation, history, summary, privacy, icons, island, islandsettings
         var id: String { rawValue }
     }
 
@@ -54,6 +54,8 @@ struct ContentView: View {
                 case .summary: NewestConversationRecordView()
                 case .privacy: ConversationPrivacyView()
                 case .icons: SoundIconGalleryView()
+                case .island: LiveActivityDebugView()
+                case .islandsettings: LiveActivitySettingsView()
                 }
             }
             #endif

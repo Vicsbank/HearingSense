@@ -38,6 +38,10 @@ struct HearingSenseApp: App {
                     if DebugDiagnosticsExporter.isAutostartRequested {
                         await controller.start(source: .automation)
                     }
+                    // The Window 7 acceptance walk-through, microphone off; see Window7SelfTest.
+                    if Window7SelfTest.isRequested {
+                        await Window7SelfTest(controller: controller).run()
+                    }
                     // Presentation check without a microphone; see LiveActivityController.
                     if let scene = LiveActivityController.requestedDemo {
                         controller.liveActivity.runDemo(scene, attention: controller.attention,

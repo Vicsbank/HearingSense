@@ -1,0 +1,45 @@
+Hearing Sense Window 7 self-test · 2026-10-12T01:25:28Z · Simulator (iPhone19,3), iOS 27.0
+Microphone: off for the whole run (synthetic capture). Sound events and speech text are synthetic.
+Language model available: true
+
+[PASS] 1   OFF → ON with the Toggle intent — starts off
+[PASS] 1   OFF → ON with the Toggle intent — session on, state Listening, Live Activity Running
+[PASS] 1   one Live Activity exists — 1 activity(ies)
+[PASS] 3   repeated toggles never give two sessions — started 5, ended 4, toggles 9, refused 0, activities alive 1
+[PASS] 4   ordinary sounds change the icon — icon changes 1, showing ambient cloud.rain
+[PASS] 13  ordinary sounds ask for nothing — expansion requests 0, sent to iOS 0
+[PASS] 5b  without transcription Summarize explains that past speech is gone — phase idle, island notice
+[PASS] 5   speech does not start a summary — phase idle, summaries 0, buffered 7 utterances
+[PASS] 7   speech older than two minutes is not kept — buffered 7 utterances, all from the last two minutes
+[PASS] 6   the island offers Summarize while nothing was asked — controls for state: listening
+[PASS] 6   Summarize starts a summary and the island says so — phase summarizing, island summarizing
+[PASS] 7   a summary of the last two minutes was written — in 9.2 s, 7 utterances, model 9.20 s
+[PASS] 7   the old sentence is not in it — checked
+[PASS] 10  the summary is saved to History — saved summaries 1
+[PASS] 6   the island offers Continue — island summaryReady; expansion requests for the summary 1
+[PASS] 8   Continue starts continued understanding — phase continuing, island following
+[PASS] 8   live captions hold the new sentences — 10 captions
+[PASS] 8   the summary was extended — updates 1
+[PASS] 8   the extension holds what was said since (the day, the page count) — checked for two facts of the later sentences
+[PASS] 17  no sentence is in the summary word for word — 0 of 10 sentences copied
+[PASS] 9   Stop ends understanding and listening goes on — phase idle, state Listening, activities 1
+[PASS] 10  the final summary is in History, completed — saved 1, newest completed
+[PASS] 17  the temporary captions are deleted after Stop — 0 captions left
+[PASS] 12  a siren makes the presentation request — requests 1; sent to iOS 0; held back by the gate: disabled_in_settings 1, lock_state_unknown 1; showing attention light.beacon.max urgent “Siren” [notice] {Nature sounds}
+[PASS] 2   ON → OFF with the Toggle intent — session off, state Not listening
+[PASS] 11  OFF ends everything cleanly — was following: true; phase idle; captions 0; activities alive 0
+[PASS] 11  saved summaries survive OFF — saved 2, all completed: true
+[PASS] 18  nothing is summarized while off — phase idle
+
+Resources (iOS Simulator = Mac hardware; not an iPhone measurement, microphone and classifier not running):
+  whole run: 88.8 s, CPU 3.2 % of one core on average
+  20 s with a session on and no speech: CPU 0.9 % of one core; memory footprint 48.5 MB (start of run 29.3 MB, end 48.5 MB)
+  Live Activity updates in the run: 21, keep-alives 0; activities started 5; scene changes 1
+  language model calls: 2 summary request(s) + 1 update(s); none without a request
+
+Summary log (metadata only):
+  Recap: languageModel, 7 utterance(s), 83 words, model 9.20 s, 2 correction(s) (unsupported_name ×1, unsupported_statement ×1)
+  Recap update: extended from 3 utterance(s)
+  Recap: languageModel, 7 utterance(s), 83 words, model 8.38 s, 0 correction(s)
+
+RESULT: 28 checks passed, 0 failed

@@ -34,8 +34,17 @@ final class ConversationIntelligenceController {
         #endif
     }
 
-    /// For App Intents, which have no reference to the app's object graph.
-    private(set) static weak var shared: ConversationIntelligenceController?
+    /// Nothing is read from or written to storage: the demo, and the Window 7 self-test unless
+    /// it is asked to check what is stored (`--hs-w7-persist`).
+    static var usesMemoryOnly: Bool {
+        #if DEBUG
+        let arguments = ProcessInfo.processInfo.arguments
+        return isDemoRequested || (arguments.contains("--hs-w7-selftest") && !arguments.contains("--hs-w7-persist"))
+        #else
+        false
+        #endif
+    }
+
 
 
     private(set) var isLanguageModelAvailable = false
@@ -83,7 +92,7 @@ final class ConversationIntelligenceController {
     @ObservationIgnored private var log: (DiagnosticEventLog.Kind, String) -> Void = { _, _ in }
 
     /// - Parameter inMemory: no files are read or written (UI checks, previews).
-    init(defaults: UserDefaults = .standard, inMemory: Bool = ConversationIntelligenceController.isDemoRequested,
+    init(defaults: UserDefaults = .standard, inMemory: Bool = ConversationIntelligenceController.usesMemoryOnly,
          summarizer: any ConversationSummarizing = FoundationModelRecapSummarizer())
     {
         self.defaults = defaults
@@ -104,7 +113,6 @@ final class ConversationIntelligenceController {
         store = opened
         history = records
         storageError = problem
-        Self.shared = self
         Task { [weak self] in
             let isAvailable = await summarizer.isAvailable()
             self?.isLanguageModelAvailable = isAvailable
@@ -251,7 +259,7 @@ final class ConversationIntelligenceController {
                     self.lastRecapSeconds = recap.modelSeconds
                     self.log(.recognition, "Recap: \(recap.source.rawValue), \(excerpt.utterances.count) utterance(s), "
                         + "\(excerpt.wordCount) words, model \(Self.seconds(recap.modelSeconds)), "
-                        + "\(recap.corrections.count) correction(s)")
+                        + "\(recap.corrections.count) correction(s)" + Self.tally(recap.corrections))
                     self.run(self.machine.process(.recapReady(recap, at: .now)))
                 }
             case .cancelWork:
@@ -417,6 +425,14 @@ final class ConversationIntelligenceController {
     }
 
     // MARK: - Reports
+
+    /// " (copied_from_transcript ×2, unsupported_name ×1)": the names of the checks that removed
+    /// something, never what they removed.
+    static func tally(_ corrections: [String]) -> String {
+        guard !corrections.isEmpty else { return "" }
+        let counts = Dictionary(grouping: corrections, by: \.self).mapValues(\.count)
+        return " (" + counts.sorted { $0.key < $1.key }.map { "\($0.key) ×\($0.value)" }.joined(separator: ", ") + ")"
+    }
 
     static func seconds(_ value: TimeInterval) -> String {
         value.formatted(.number.precision(.fractionLength(2))) + " s"
