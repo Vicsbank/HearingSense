@@ -71,9 +71,15 @@ final class SpeechIntelligenceController {
         let transcriber = AppleSpeechTranscriber(locale: Locale(identifier: "en-US"))
         var configuration = SpeechIntelligenceConfiguration.standard
         // Window 6: ordinary speech is an icon; no 2–3 word headline is written for it and the
-        // language model is left to the recap and the attention goals. The earlier behaviour
+        // language model is left to the summary the user asks for. The earlier behaviour
         // remains available for comparison: launch with `-speech.automaticHeadlines YES`.
+        // Window 7: release builds never write one; the language model runs only for a summary
+        // the user asks for.
+        #if DEBUG
         configuration.summary.writesHeadlines = defaults.bool(forKey: "speech.automaticHeadlines")
+        #else
+        configuration.summary.writesHeadlines = false
+        #endif
         if let vocalMusicLabels { configuration.activation.vocalMusicLabels = vocalMusicLabels }
         let engine = SpeechIntelligenceEngine(transcriber: transcriber, interpreter: FoundationModelInterpreter(),
                                               configuration: configuration, taxonomy: taxonomy,

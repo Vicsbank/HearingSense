@@ -1,6 +1,5 @@
 import ConversationUnderstanding
 import Foundation
-import SemanticAttention
 import SwiftData
 
 /// One saved summary (Window 6). SwiftData model behind `ConversationRecord`.
@@ -61,8 +60,8 @@ final class StoredConversation {
     }
 }
 
-/// Where Window 6 keeps what the user asked it to keep: saved summaries (SwiftData) and the
-/// attention goals (one JSON file), in one folder of Application Support.
+/// Where the app keeps what the user asked it to keep: saved summaries (SwiftData), in one
+/// folder of Application Support.
 ///
 /// - On this iPhone only: no CloudKit, and the folder is excluded from iCloud and computer backups.
 /// - Data protection `completeUntilFirstUserAuthentication`: encrypted at rest and unreadable
@@ -149,24 +148,5 @@ final class SwiftDataConversationHistory {
             record.status = .completed
             try save(record)
         }
-    }
-}
-
-/// The user's attention goals, as one small JSON file beside the history.
-struct AttentionGoalStore {
-    private let url: URL?
-
-    init(inMemory: Bool = false) {
-        url = inMemory ? nil : (try? ConversationStorage.folder())?.appendingPathComponent("goals.json")
-    }
-
-    func load() -> [AttentionGoal] {
-        guard let url, let data = try? Data(contentsOf: url) else { return [] }
-        return (try? JSONDecoder().decode([AttentionGoal].self, from: data)) ?? []
-    }
-
-    func save(_ goals: [AttentionGoal]) {
-        guard let url, let data = try? JSONEncoder().encode(goals) else { return }
-        try? data.write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
     }
 }

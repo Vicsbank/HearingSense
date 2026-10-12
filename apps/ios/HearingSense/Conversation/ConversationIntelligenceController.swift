@@ -3,37 +3,24 @@ import ConversationUnderstanding
 import HearingSenseAudio
 import HearingSenseDomain
 import Observation
-import SemanticAttention
 import SwiftUI
 
-/// Window 6 in the app: semantic attention goals, the two-minute recap behind the Action Button,
-/// continued understanding with live captions, and the saved history.
+/// Conversation summaries in the app (Window 7; built on Window 6): the two-minute summary the
+/// user asks for, continued understanding with live captions, and the saved history.
 ///
 /// Main-actor isolated (app default) and owned by `ListeningController`, so it keeps working in
 /// the background. It adds no microphone path: it reads the finalized utterances the Window 3
 /// speech pipeline already produces.
 ///
-/// Two separate opt-ins, both off until the user turns them on, and both require "Transcribe
-/// nearby speech" (Window 3):
-/// - *Semantic attention*: finalized utterances are compared with the user's goals by the
-///   on-device language model. Nothing is kept beyond a short list of recent matches in memory.
-/// - *Keep recent speech for recaps*: finalized utterances stay in memory for the look-back
-///   time (two minutes by default) so that a recap can be asked for. Never written to disk.
+/// The language model runs only when the user asks: for a summary, and for the updates of a
+/// conversation the user chose to keep following. Nothing here judges what is said while the
+/// user has not asked (the personal semantic attention of Windows 6–6.3 is not part of the
+/// product; its code stays in the `SemanticAttention` package module and on its branches).
 ///
-/// What is stored on the device: the goals, and the summaries the user asked for. Log lines and
-/// reports hold counts, states and timings only.
+/// What is stored on the device: the summaries the user asked for. Log lines and reports hold
+/// counts, states and timings only.
 @Observable
 final class ConversationIntelligenceController {
-    /// A match (accepted or uncertain) as the app's own list shows it. In memory only.
-    struct GoalMatch: Identifiable {
-        let id: UUID
-        var goalText: String
-        var decision: SemanticAttentionDecision
-        var receivedAt: Date
-    }
-
-    static let matchCapacity = 20
-    private static let semanticKey = "conversation.semanticAttentionEnabled"
     private static let contextKey = "conversation.keepsRecentSpeech"
     private static let lookBackKey = "conversation.lookBackSeconds"
 
@@ -51,14 +38,9 @@ final class ConversationIntelligenceController {
     private(set) static weak var shared: ConversationIntelligenceController?
 
     // Settings
-    private(set) var isSemanticAttentionEnabled: Bool
     private(set) var keepsRecentSpeech: Bool
     private(set) var lookBack: TimeInterval
-    private(set) var goals: [AttentionGoal]
 
-    // Semantic attention
-    private(set) var matches: [GoalMatch] = []
-    private(set) var semanticStatistics = SemanticAttentionEngine.Statistics()
     private(set) var isLanguageModelAvailable = false
 
     // Recap and continued understanding
@@ -81,51 +63,38 @@ final class ConversationIntelligenceController {
     private(set) var isSessionActive = false
     private(set) var isTranscriptionOn = false
 
-    /// Accepted goal matches go to the attention engine (Window 4), which decides on presentation.
-    @ObservationIgnored var onSignal: ((SemanticAttentionSignal) -> Void)?
     /// Recap states go to the Live Activity as generic, lock-screen-safe episodes.
     @ObservationIgnored var onStatusIntent: ((AttentionPresentationIntent) -> Void)?
     /// The state of "Transcribe nearby speech" (Window 3), read whenever it matters.
     @ObservationIgnored var transcriptionProvider: () -> Bool = { false }
 
     @ObservationIgnored private let defaults: UserDefaults
-    @ObservationIgnored private let goalStore: AttentionGoalStore
     @ObservationIgnored private let store: SwiftDataConversationHistory?
-    @ObservationIgnored private let semanticEngine: SemanticAttentionEngine
     @ObservationIgnored private let recapEngine: ConversationRecapEngine
     @ObservationIgnored private var buffer: RollingConversationBuffer
     @ObservationIgnored private var machine = ConversationSessionMachine()
-    @ObservationIgnored private var decisionTask: Task<Void, Never>?
     @ObservationIgnored private var workTask: Task<Void, Never>?
     @ObservationIgnored private var deadlineTask: Task<Void, Never>?
     @ObservationIgnored private var lastUtteranceIndex: [SpeechEventID: Int] = [:]
     /// The words the saved recap was written from, kept only while the session is followed so
     /// that an update can be checked against them. Cleared with the temporary context.
     @ObservationIgnored private var recapTranscript = ""
-    @ObservationIgnored private var contextLines: [String] = []
     @ObservationIgnored private var statusEpisode = 0
     @ObservationIgnored private var statusRevision = 0
     @ObservationIgnored private var log: (DiagnosticEventLog.Kind, String) -> Void = { _, _ in }
 
     /// - Parameter inMemory: no files are read or written (UI checks, previews).
     init(defaults: UserDefaults = .standard, inMemory: Bool = ConversationIntelligenceController.isDemoRequested,
-         summarizer: any ConversationSummarizing = FoundationModelRecapSummarizer(),
-         reasoner: any SemanticRelevanceReasoning = FoundationModelRelevanceReasoner())
+         summarizer: any ConversationSummarizing = FoundationModelRecapSummarizer())
     {
         self.defaults = defaults
-        goalStore = AttentionGoalStore(inMemory: inMemory)
-        isSemanticAttentionEnabled = defaults.bool(forKey: Self.semanticKey)
         keepsRecentSpeech = defaults.bool(forKey: Self.contextKey)
         let stored = defaults.double(forKey: Self.lookBackKey)
         let seconds = ConversationBufferPolicy.lookBackChoices.contains(stored) ? stored : ConversationBufferPolicy.standard.lookBack
         lookBack = seconds
-        let loadedGoals = goalStore.load()
-        goals = loadedGoals
         let policy = ConversationBufferPolicy(lookBack: seconds)
         buffer = RollingConversationBuffer(policy: policy)
         recapEngine = ConversationRecapEngine(summarizer: summarizer, bufferPolicy: policy)
-        let engine = SemanticAttentionEngine(reasoner: reasoner, scorer: SentenceEmbeddingScorer())
-        semanticEngine = engine
         var opened: SwiftDataConversationHistory?
         var records: [ConversationRecord] = []
         var problem: String?
@@ -141,25 +110,13 @@ final class ConversationIntelligenceController {
         history = records
         storageError = problem
         Self.shared = self
-        let isEnabled = isSemanticAttentionEnabled
-        decisionTask = Task { [weak self, decisions = engine.decisions] in
-            for await decision in decisions {
-                guard let self else { return }
-                await self.handle(decision)
-            }
-        }
-        Task {
-            await engine.setGoals(loadedGoals)
-            await engine.setEnabled(isEnabled)
-        }
         Task { [weak self] in
-            let isUsable = await reasoner.availability().isUsable
-            self?.isLanguageModelAvailable = isUsable
+            let isAvailable = await summarizer.isAvailable()
+            self?.isLanguageModelAvailable = isAvailable
         }
     }
 
     deinit {
-        decisionTask?.cancel()
         workTask?.cancel()
         deadlineTask?.cancel()
     }
@@ -174,11 +131,9 @@ final class ConversationIntelligenceController {
         isSessionActive = true
         self.isTranscriptionOn = isTranscriptionOn
         lastUtteranceIndex.removeAll()
-        contextLines.removeAll()
         machine.setListening(true)
         machine.setContextAllowed(keepsRecentSpeech && isTranscriptionOn)
         if keepsRecentSpeech, isTranscriptionOn { buffer.begin(at: .now) }
-        if isSemanticAttentionEnabled, isTranscriptionOn { Task { [semanticEngine] in await semanticEngine.prewarm() } }
     }
 
     /// Capture stopped: a continued session is finalized and every temporary text is deleted.
@@ -187,9 +142,7 @@ final class ConversationIntelligenceController {
         isSessionActive = false
         run(machine.process(.listeningStopped(at: .now)))
         clearTemporaryText()
-        Task { [semanticEngine] in await semanticEngine.reset() }
-        log(.recognition, "Conversation intelligence: \(recapsMade) recap(s), \(updatesMade) update(s), "
-            + "\(semanticStatistics.accepted) goal match(es) this launch")
+        log(.recognition, "Conversation: \(recapsMade) summary request(s), \(updatesMade) update(s) this launch")
     }
 
     /// The user switched "Transcribe nearby speech" (Window 3).
@@ -205,8 +158,6 @@ final class ConversationIntelligenceController {
         run(machine.process(.contextRevoked(at: .now)))
         machine.setContextAllowed(keepsRecentSpeech && isTranscriptionOn)
         clearTemporaryText()
-        matches.removeAll()
-        Task { [semanticEngine] in await semanticEngine.reset() }
         if isSessionActive, keepsRecentSpeech, isTranscriptionOn { buffer.begin(at: .now) }
     }
 
@@ -229,12 +180,6 @@ final class ConversationIntelligenceController {
                                                 isLowQuality: utterance.quality == .poor), now: now)
                 run(machine.process(.utterance(meaningfulWords: MeaningfulWords.count(in: utterance.text), end: now)))
             }
-            if isSemanticAttentionEnabled, goals.contains(where: \.isEnabled) {
-                let semantic = SemanticUtterance(text: utterance.text, context: contextLines, date: utterance.endDate,
-                                                 isLowQuality: utterance.quality == .poor)
-                Task { [semanticEngine] in await semanticEngine.submit(semantic) }
-            }
-            contextLines = Array((contextLines + [utterance.text]).suffix(2))
         }
         if result.state.isTerminal {
             lastUtteranceIndex[result.id] = nil
@@ -250,39 +195,7 @@ final class ConversationIntelligenceController {
         }
     }
 
-    private func handle(_ decision: SemanticAttentionDecision) async {
-        semanticStatistics = await semanticEngine.statistics
-        guard decision.verdict != .irrelevant, isSessionActive else { return }
-        let goalText = decision.matchedGoalID.flatMap { id in goals.first { $0.id == id }?.text } ?? ""
-        matches.insert(GoalMatch(id: decision.id, goalText: goalText, decision: decision, receivedAt: .now), at: 0)
-        if matches.count > Self.matchCapacity { matches.removeLast(matches.count - Self.matchCapacity) }
-        // Metadata only: never the utterance, the headline or the reason.
-        log(.recognition, "Goal decision: \(decision.redactedSummary), \(Self.seconds(decision.latency)) after the utterance "
-            + "(model \(Self.seconds(decision.modelTime)))")
-        guard decision.isAccepted, let goalID = decision.matchedGoalID else { return }
-        let urgency: SemanticAttentionSignal.Urgency = switch decision.urgency {
-        case .low: .low
-        case .normal: .normal
-        case .high: .high
-        }
-        onSignal?(SemanticAttentionSignal(id: decision.id, goalID: goalID, headline: decision.headline,
-                                          statement: decision.evidence, urgency: urgency,
-                                          isUncertain: decision.isPersonalRelevanceUncertain, date: .now))
-    }
-
     // MARK: - Settings
-
-    func setSemanticAttentionEnabled(_ isEnabled: Bool) {
-        guard isEnabled != isSemanticAttentionEnabled else { return }
-        isSemanticAttentionEnabled = isEnabled
-        defaults.set(isEnabled, forKey: Self.semanticKey)
-        if !isEnabled { matches.removeAll() }
-        Task { [semanticEngine] in
-            await semanticEngine.setEnabled(isEnabled)
-            if isEnabled { await semanticEngine.prewarm() }
-        }
-        log(.recognition, "Semantic attention switched \(isEnabled ? "on" : "off") by the user")
-    }
 
     func setKeepsRecentSpeech(_ keeps: Bool) {
         guard keeps != keepsRecentSpeech else { return }
@@ -309,44 +222,6 @@ final class ConversationIntelligenceController {
             run(machine.process(.contextRevoked(at: .now)))
             clearTemporaryText()
         }
-    }
-
-    // MARK: - Goals
-
-    @discardableResult
-    func addGoal(_ text: String) -> Bool {
-        let normalized = AttentionGoal.normalized(text)
-        guard !normalized.isEmpty, !goals.contains(where: { $0.text.caseInsensitiveCompare(normalized) == .orderedSame })
-        else { return false }
-        goals.append(AttentionGoal(text: normalized))
-        goalsChanged()
-        return true
-    }
-
-    func setGoal(_ id: UUID, isEnabled: Bool) {
-        guard let index = goals.firstIndex(where: { $0.id == id }), goals[index].isEnabled != isEnabled else { return }
-        goals[index].isEnabled = isEnabled
-        goalsChanged()
-    }
-
-    func updateGoal(_ id: UUID, text: String) {
-        let normalized = AttentionGoal.normalized(text)
-        guard !normalized.isEmpty, let index = goals.firstIndex(where: { $0.id == id }), goals[index].text != normalized else { return }
-        goals[index].text = normalized
-        goalsChanged()
-    }
-
-    func deleteGoals(_ ids: Set<UUID>) {
-        goals.removeAll { ids.contains($0.id) }
-        matches.removeAll { match in match.decision.matchedGoalID.map(ids.contains) ?? false }
-        goalsChanged()
-    }
-
-    private func goalsChanged() {
-        goalStore.save(goals)
-        Task { [semanticEngine, goals] in await semanticEngine.setGoals(goals) }
-        // The number only: a goal's wording is the user's and does not belong in a log.
-        log(.recognition, "Attention goals changed: \(goals.count(where: \.isEnabled)) of \(goals.count) enabled")
     }
 
     // MARK: - Recap and continued understanding
@@ -394,11 +269,8 @@ final class ConversationIntelligenceController {
                 recapTranscript = recapEngine.transcript(of: excerpt)
                 run(machine.process(.excerptReady(at: .now)))
                 workTask?.cancel()
-                workTask = Task { [recapEngine, semanticEngine] in
-                    // What the user asked for comes first: goal matching waits for the model.
-                    await semanticEngine.setPaused(true)
+                workTask = Task { [recapEngine] in
                     let recap = await recapEngine.recap(excerpt)
-                    await semanticEngine.setPaused(false)
                     guard !Task.isCancelled else { return }
                     self.recapsMade += 1
                     self.lastRecapSeconds = recap.modelSeconds
@@ -410,7 +282,6 @@ final class ConversationIntelligenceController {
             case .cancelWork:
                 workTask?.cancel()
                 workTask = nil
-                Task { [semanticEngine] in await semanticEngine.setPaused(false) }
             case .save(let recap, let isContinuing):
                 self.recap = recap
                 save(recap, status: isContinuing ? .continuing : .completed)
@@ -421,10 +292,8 @@ final class ConversationIntelligenceController {
                 }
                 let new = buffer.utterances(after: since)
                 let earlier = recapTranscript
-                workTask = Task { [recapEngine, semanticEngine] in
-                    await semanticEngine.setPaused(true)
+                workTask = Task { [recapEngine] in
                     let updated = await recapEngine.update(recap, earlierTranscript: earlier, new: new)
-                    await semanticEngine.setPaused(false)
                     guard !Task.isCancelled else { return }
                     if updated != nil {
                         self.updatesMade += 1
@@ -477,7 +346,6 @@ final class ConversationIntelligenceController {
         captions = []
         tentativeCaption = nil
         recapTranscript = ""
-        contextLines.removeAll()
         lastUtteranceIndex.removeAll()
         if phase == .idle { recap = nil }
     }
@@ -570,23 +438,15 @@ final class ConversationIntelligenceController {
         return seconds % 60 == 0 ? "\(seconds / 60) minute\(seconds == 60 ? "" : "s")" : "\(seconds) seconds"
     }
 
-    /// Counts, states and timings. No goal wording, no utterance, no summary.
+    /// Counts, states and timings. No utterance, no summary.
     func reportText() -> String {
-        let statistics = semanticStatistics
-        let calls = statistics.modelCalls + statistics.triageCalls
-        return [
-            "Conversation intelligence (Window 6)",
-            "Semantic attention: \(isSemanticAttentionEnabled ? "on" : "off") · goals \(goals.count(where: \.isEnabled)) of \(goals.count) enabled"
-                + " · language model \(isLanguageModelAvailable ? "available" : "not available")",
-            "Utterances submitted \(statistics.submitted), gated \(statistics.gated), stopped by the first pass \(statistics.triaged), "
-                + "full judgements \(statistics.modelCalls), cache hits \(statistics.cacheHits)",
-            "Accepted \(statistics.accepted), uncertain \(statistics.uncertain), repeated \(statistics.repeated), "
-                + "corrected by the verifier \(statistics.corrected), dropped \(statistics.dropped), "
-                + "model failures \(statistics.modelFailures) (timeouts \(statistics.timeouts)), longest queue \(statistics.maximumQueueLength)",
-            "Model time per call: \(calls > 0 ? Self.seconds(statistics.totalModelTime / Double(calls)) : "–") over \(calls) call(s)",
-            "Recent speech for recaps: \(keepsRecentSpeech ? "on" : "off") · look-back \(Int(lookBack)) s · "
+        [
+            "Conversation summaries (Window 7)",
+            "Continuous semantic relevance inference: not part of this build · language model "
+                + "\(isLanguageModelAvailable ? "available" : "not available") (used only for summaries the user asks for)",
+            "Recent speech for summaries: \(keepsRecentSpeech ? "on" : "off") · look-back \(Int(lookBack)) s · "
                 + "buffered \(captions.count) utterance(s), \(bufferedWordCount) words, expired \(buffer.expiredUtterances)",
-            "Recap phase: \(phase.rawValue) · recaps \(recapsMade) · updates \(updatesMade) · last recap model time "
+            "Phase: \(phase.rawValue) · summary requests \(recapsMade) · updates \(updatesMade) · last summary model time "
                 + "\(lastRecapSeconds.map(Self.seconds) ?? "–") · saved summaries \(history.count)",
         ].joined(separator: "\n")
     }
@@ -596,10 +456,6 @@ final class ConversationIntelligenceController {
 // MARK: - Demo without a microphone
 
 extension ConversationIntelligenceController {
-    private static let demoGoals = ["Tell me anything that could affect my grades.",
-                                    "Let me know if somebody mentions a change to my schedule.",
-                                    "Warn me about clear emergency instructions nearby."]
-
     /// Synthetic sentences, written for this project. Not a real conversation.
     private static let demoFirstPart = [
         "So for the chemistry project, are we still meeting on Thursday?",
@@ -618,22 +474,14 @@ extension ConversationIntelligenceController {
     ]
 
     /// Plays a scripted conversation through the same path as transcribed speech: the buffer,
-    /// the semantic engine and the recap engine run for real (with the on-device language
-    /// model where it exists); only the microphone and the recognizer are replaced. Both
-    /// opt-ins are switched on for this launch only and nothing is stored.
-    func runDemo(onGoalMatch: @escaping (SemanticAttentionSignal) -> Void) {
+    /// the recap engine runs for real (with the on-device language
+    /// model where it exists); only the microphone and the recognizer are replaced. The
+    /// opt-in is switched on for this launch only and nothing is stored.
+    func runDemo() {
         guard Self.isDemoRequested, !isSessionActive else { return }
         log(.lifecycle, "Conversation demo (synthetic sentences, microphone off, nothing stored)")
-        isSemanticAttentionEnabled = true
         keepsRecentSpeech = true
-        if goals.isEmpty { goals = Self.demoGoals.map { AttentionGoal(text: $0) } }
         transcriptionProvider = { true }
-        onSignal = onGoalMatch
-        let goals = goals
-        Task { [semanticEngine] in
-            await semanticEngine.setGoals(goals)
-            await semanticEngine.setEnabled(true)
-        }
         sessionWillStart(isTranscriptionOn: true)
         Task {
             let id = SpeechEventID()

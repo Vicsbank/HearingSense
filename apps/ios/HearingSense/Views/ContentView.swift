@@ -5,9 +5,9 @@ struct ContentView: View {
     @Environment(ListeningController.self) private var controller
     @Environment(\.scenePhase) private var scenePhase
     #if DEBUG
-    /// `--hs-screen conversation|history|summary|goals|privacy|icons`
+    /// `--hs-screen conversation|history|summary|privacy|icons`
     enum DebugScreen: String, Hashable, Identifiable {
-        case conversation, history, summary, goals, privacy, icons
+        case conversation, history, summary, privacy, icons
         var id: String { rawValue }
     }
 
@@ -50,7 +50,6 @@ struct ContentView: View {
                 case .conversation: ConversationLiveView()
                 case .history: ConversationHistoryView()
                 case .summary: NewestConversationRecordView()
-                case .goals: AttentionGoalsView()
                 case .privacy: ConversationPrivacyView()
                 case .icons: SoundIconGalleryView()
                 }
@@ -65,9 +64,7 @@ struct ContentView: View {
             // Checks without a microphone: `--hs-conversation-demo` plays a scripted conversation,
             // `--hs-screen <name>` opens one of the Window 6 screens directly.
             if ConversationIntelligenceController.isDemoRequested {
-                controller.conversation.runDemo { [attention = controller.attention] in
-                    attention.receive($0, isSynthetic: true)
-                }
+                controller.conversation.runDemo()
             }
         }
         #endif

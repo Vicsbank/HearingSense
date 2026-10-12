@@ -1,8 +1,7 @@
 import ConversationUnderstanding
-import SemanticAttention
 import SwiftUI
 
-// Window 6: semantic attention goals, the recap and the live conversation screen, the saved
+// The recap and the live conversation screen, the saved
 // history, and what the app tells the user about speech data.
 
 /// The card on the main screen.
@@ -64,15 +63,6 @@ struct ConversationCard: View {
                     }
                 }
                 NavigationLink {
-                    AttentionGoalsView()
-                } label: {
-                    LabeledContent {
-                        Text(conversation.isSemanticAttentionEnabled ? "\(conversation.goals.count(where: \.isEnabled)) on" : "Off")
-                    } label: {
-                        Label("Attention goals", systemImage: "star.bubble").font(.subheadline)
-                    }
-                }
-                NavigationLink {
                     ConversationPrivacyView()
                 } label: {
                     Label("Speech data and privacy", systemImage: "hand.raised").font(.subheadline)
@@ -89,7 +79,7 @@ struct ConversationCard: View {
 
     private static func explanation(_ conversation: ConversationIntelligenceController, isTranscribing: Bool) -> String {
         if !isTranscribing {
-            return "Speech near you is shown as an icon only. Turn on “Transcribe nearby speech” to use recaps, live captions and attention goals."
+            return "Speech near you is shown as an icon only. Turn on “Transcribe nearby speech” to use summaries and live captions."
         }
         if !conversation.keepsRecentSpeech {
             return "Recaps are off. Turn on “Keep recent speech for recaps” under Speech data and privacy to ask what was just said."
@@ -500,138 +490,6 @@ struct NewestConversationRecordView: View {
 }
 #endif
 
-// MARK: - Attention goals
-
-struct AttentionGoalsView: View {
-    @Environment(ListeningController.self) private var controller
-    @State private var draft = ""
-    @FocusState private var isAdding: Bool
-
-    static let examples = ["Tell me anything that could affect my grades.",
-                           "Let me know if somebody mentions a change to my schedule.",
-                           "Notify me if someone is trying to get my attention.",
-                           "Warn me about clear emergency instructions nearby."]
-
-    var body: some View {
-        let conversation = controller.conversation
-        Form {
-            Section {
-                Toggle("Semantic attention", isOn: Binding(get: { conversation.isSemanticAttentionEnabled },
-                                                           set: { conversation.setSemanticAttentionEnabled($0) }))
-                    .accessibilityHint("When on, what is said nearby is compared with your goals on this iPhone.")
-            } footer: {
-                Text(Self.footer(conversation, isTranscribing: controller.speech.isTranscriptionEnabled))
-            }
-
-            Section {
-                ForEach(conversation.goals) { goal in
-                    Toggle(isOn: Binding(get: { goal.isEnabled }, set: { conversation.setGoal(goal.id, isEnabled: $0) })) {
-                        Text(goal.text)
-                    }
-                }
-                .onDelete { offsets in
-                    conversation.deleteGoals(Set(offsets.map { conversation.goals[$0].id }))
-                }
-                HStack {
-                    TextField("Describe what matters to you", text: $draft, axis: .vertical)
-                        .focused($isAdding)
-                        .submitLabel(.done)
-                        .onSubmit(add)
-                    Button("Add", action: add)
-                        .disabled(AttentionGoal.normalized(draft).isEmpty)
-                }
-            } header: {
-                Text("My goals")
-            } footer: {
-                Text("Write them the way you would say them. No keywords are needed: “anything that could affect my grades” also covers a moved exam or a new deadline.")
-            }
-
-            if conversation.goals.isEmpty {
-                Section("Examples") {
-                    ForEach(Self.examples, id: \.self) { example in
-                        Button {
-                            conversation.addGoal(example)
-                        } label: {
-                            Label(example, systemImage: "plus.circle")
-                        }
-                    }
-                }
-            }
-
-            Section {
-                if conversation.matches.isEmpty {
-                    Text("Nothing has matched your goals in this session.").foregroundStyle(.secondary)
-                }
-                ForEach(conversation.matches) { match in
-                    GoalMatchRow(match: match)
-                }
-            } header: {
-                Text("Recent matches")
-            } footer: {
-                Text("Kept in memory while listening and never saved. “Uncertain” matches are listed here only; they never alert.")
-            }
-        }
-        .navigationTitle("Attention goals")
-        .navigationBarTitleDisplayMode(.inline)
-    }
-
-    private func add() {
-        if controller.conversation.addGoal(draft) { draft = "" }
-        isAdding = false
-    }
-
-    private static func footer(_ conversation: ConversationIntelligenceController, isTranscribing: Bool) -> String {
-        if !conversation.isLanguageModelAvailable {
-            return "The on-device language model is not available on this iPhone right now, so goals cannot be matched."
-        }
-        if conversation.isSemanticAttentionEnabled, !isTranscribing {
-            return "Goals need “Transcribe nearby speech” to be on."
-        }
-        return "Off by default. When on, finished sentences that are transcribed near you are compared with your goals by the language model on this iPhone. Nothing is uploaded, and the sentences are not saved."
-    }
-}
-
-private struct GoalMatchRow: View {
-    let match: ConversationIntelligenceController.GoalMatch
-
-    var body: some View {
-        let decision = match.decision
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Label(Self.verdict(decision), systemImage: decision.isAccepted ? "star.bubble.fill" : "questionmark.bubble")
-                    .font(.subheadline.weight(.semibold))
-                Spacer()
-                Text(match.receivedAt, format: .dateTime.hour().minute().second()).font(.caption).foregroundStyle(.secondary)
-            }
-            if !decision.headline.isEmpty { Text(decision.headline).font(.headline) }
-            if !decision.evidence.isEmpty {
-                Text("“\(decision.evidence)”").font(.body).textSelection(.enabled)
-            }
-            if !decision.reason.isEmpty {
-                Text("Why: \(decision.reason)").font(.footnote).foregroundStyle(.secondary)
-            }
-            if !match.goalText.isEmpty {
-                Text("Goal: \(match.goalText)").font(.footnote).foregroundStyle(.secondary)
-            }
-            if !decision.corrections.isEmpty {
-                Text("Checked: \(decision.corrections.map { $0.replacingOccurrences(of: "_", with: " ") }.joined(separator: ", "))")
-                    .font(.caption).foregroundStyle(.secondary)
-            }
-        }
-        .padding(.vertical, 2)
-        .accessibilityElement(children: .combine)
-    }
-
-    static func verdict(_ decision: SemanticAttentionDecision) -> String {
-        if !decision.isNovel { return "Repeated" }
-        switch decision.verdict {
-        case .relevant: return decision.isPersonalRelevanceUncertain ? "Match (may not concern you)" : "Match"
-        case .uncertain: return "Uncertain"
-        case .irrelevant: return "No match"
-        }
-    }
-}
-
 // MARK: - Privacy
 
 /// What is processed, what is kept for how long, what is saved, and how to turn it off.
@@ -670,16 +528,6 @@ struct ConversationPrivacyView: View {
                 Text("Temporary")
             } footer: {
                 Text("Needed to answer “what was just said?”. Transcribed sentences stay in memory for the look-back time and are then deleted. They are never written to storage, and they are deleted at once when you switch this off, stop listening or stop following a conversation.")
-            }
-
-            Section {
-                Toggle("Semantic attention", isOn: Binding(get: { conversation.isSemanticAttentionEnabled },
-                                                           set: { conversation.setSemanticAttentionEnabled($0) }))
-                LabeledContent("Goals", value: "\(conversation.goals.count)")
-            } header: {
-                Text("Attention goals")
-            } footer: {
-                Text("Your goals are saved on this iPhone. Sentences are compared with them and not kept; recent matches are shown while listening and never saved.")
             }
 
             Section {

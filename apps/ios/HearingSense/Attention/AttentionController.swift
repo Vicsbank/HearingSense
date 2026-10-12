@@ -113,13 +113,6 @@ final class AttentionController {
         process(.speech(result))
     }
 
-    /// Window 6: a statement the semantic engine accepted for one of the user's goals.
-    /// - Parameter isSynthetic: from a debug demo, which runs without a listening session.
-    func receive(_ signal: SemanticAttentionSignal, isSynthetic: Bool = false) {
-        guard isSessionActive || isSynthetic else { return }
-        process(.semantic(signal))
-    }
-
     /// The speech pipeline discarded its events (transcription switched off).
     func speechDataCleared() {
         process(.speechDataCleared(at: .now))
