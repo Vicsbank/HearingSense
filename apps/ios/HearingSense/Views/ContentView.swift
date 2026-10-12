@@ -111,7 +111,7 @@ private struct ListeningButtons: View {
                 .accessibilityHint("Turns on the microphone and starts measuring sound around you.")
 
                 Button {
-                    controller.stop()
+                    Task { await controller.stop() }
                 } label: {
                     Label("Stop Listening", systemImage: "stop.fill")
                         .frame(maxWidth: .infinity)

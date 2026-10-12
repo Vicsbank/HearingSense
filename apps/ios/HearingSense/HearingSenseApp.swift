@@ -1,8 +1,9 @@
+import HearingSenseAudio
 import SwiftUI
 
 @main
 struct HearingSenseApp: App {
-    @State private var controller = ListeningController()
+    @State private var controller = ListeningController.shared
     #if DEBUG
     @State private var exporter: DebugDiagnosticsExporter?
     @State private var probe: BackgroundInferenceProbe?
@@ -35,7 +36,7 @@ struct HearingSenseApp: App {
                         controller.limitListening(to: seconds)
                     }
                     if DebugDiagnosticsExporter.isAutostartRequested {
-                        await controller.start()
+                        await controller.start(source: .automation)
                     }
                     // Presentation check without a microphone; see LiveActivityController.
                     if let scene = LiveActivityController.requestedDemo {

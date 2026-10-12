@@ -20,11 +20,42 @@ import SwiftUI
 /// Window 5 adds the presentation outside the app (owned by `liveActivity`): it gets the same
 /// confirmed sound events for its icon-only channel and the attention engine's intents for the
 /// important one.
+///
+/// Window 7: one listening session at a time, switched by `ListeningSessionMachine`. The buttons
+/// in the app, the "Toggle Hearing Sense" intent (Action Button) and the debug arguments all go
+/// through `start`, `stop` and `toggle`; a request that arrives while a start is in progress is
+/// refused. Whether a session was open is stored after every change, so a relaunch knows that
+/// the previous process ended while listening (it never restarts the microphone by itself).
 @Observable
 final class ListeningController {
     static let historyLength = 120  // about 10 s of level history at ~12 buffers/s
+    private static let sessionRecordKey = "listening.session.v1"
+
+    /// The one controller of the process. App Intents run without a scene and without the SwiftUI
+    /// environment, so the app and its intents share this instance.
+    static let shared = ListeningController()
+
+    /// What a toggle did, for the intent's short answer.
+    enum ToggleOutcome: Equatable {
+        case turnedOn
+        case turnedOff
+        /// A start is still in progress; nothing changed.
+        case busy
+        case failed(String)
+
+        var dialog: String {
+            switch self {
+            case .turnedOn: "Hearing Sense is on."
+            case .turnedOff: "Hearing Sense is off."
+            case .busy: "Hearing Sense is still starting."
+            case .failed(let message): "Hearing Sense could not start. \(message)"
+            }
+        }
+    }
 
     private(set) var state: ListeningState = .idle
+    /// The ON/OFF switch. `state` says what the microphone is doing; this says whether a session is open.
+    private(set) var session = ListeningSessionMachine()
     private(set) var level: AudioLevel = .silence
     private(set) var levelHistory: [Float] = []
     private(set) var captureFormat: CaptureFormat?
@@ -45,9 +76,10 @@ final class ListeningController {
     let conversation = ConversationIntelligenceController()
 
     @ObservationIgnored private var capture = MicrophoneCapture()
-    @ObservationIgnored private let session = AudioSessionController()
+    @ObservationIgnored private let audioSession = AudioSessionController()
     @ObservationIgnored private var sessionObserver: AudioSessionObserver?
     @ObservationIgnored private var isInBackground = false
+    @ObservationIgnored private let defaults: UserDefaults
     /// Hybrid classifier experiment: tells the switching backend which classifier should run.
     /// Unused (and harmless) with a single classifier.
     @ObservationIgnored private let backendSelection = ClassifierBackendSelection()
@@ -59,7 +91,8 @@ final class ListeningController {
     /// its file at once, so the stop can be read from the Mac).
     @ObservationIgnored var onTimeLimitStop: (() -> Void)?
 
-    init() {
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
         route = AudioRouteSnapshot.capture()
         var backendNote: (DiagnosticEventLog.Kind, String)?
         var experimental: (RecognitionController, SpeechIntelligenceController)?
@@ -130,15 +163,96 @@ final class ListeningController {
             Task { @MainActor in self.handle(event) }
         }
         log.append(.lifecycle, "App launched on \(DeviceInfo.summary). Microphone permission: \(MicrophonePermission.current.rawValue)")
+        // A process launched for an intent (Action Button) starts without a scene.
+        isInBackground = UIApplication.shared.applicationState == .background
+        let stored = defaults.data(forKey: Self.sessionRecordKey)
+            .flatMap { try? JSONDecoder().decode(ListeningSessionRecord.self, from: $0) }
+        if let stored { report(.restored(stored, at: .now)) }
     }
 
     var assessment: RouteAssessment { RouteAssessment.evaluate(route) }
 
     // MARK: - User actions
 
-    func start() async {
-        guard state.canStart else { return }
-        guard captureIsAllowed(context: "Start") else { return }
+    /// Turns listening on. Refused (and logged) while a session is open or a start is in progress.
+    func start(source: ListeningRequestSource = .app) async {
+        await request(.start(source, at: .now))
+    }
+
+    /// Turns listening off: the microphone, sound recognition, the temporary speech text, a
+    /// followed conversation and the Live Activity all end. Saved summaries stay.
+    func stop(source: ListeningRequestSource = .app) async {
+        await request(.stop(source, at: .now))
+    }
+
+    /// ON when off, OFF when on (the Action Button's intent). Never anything else.
+    @discardableResult
+    func toggle(source: ListeningRequestSource) async -> ToggleOutcome {
+        let wasOn = session.isOn
+        let effects = await request(.toggle(source, at: .now))
+        if effects.contains(where: { if case .refused = $0 { true } else { false } }) { return .busy }
+        if wasOn { return .turnedOff }
+        switch state {
+        case .listening: return .turnedOn
+        case .permissionDenied: return .failed("Microphone access is off in Settings.")
+        case .failed(let message): return .failed(message)
+        default: return session.isOn ? .turnedOn : .failed("Open the app and try again.")
+        }
+    }
+
+    /// A start would have to show the microphone permission prompt, which iOS only shows while
+    /// the app is on screen.
+    var needsForegroundToStart: Bool { !session.isOn && MicrophonePermission.current == .undetermined }
+
+    @discardableResult
+    private func request(_ input: ListeningSessionMachine.Input) async -> [ListeningSessionMachine.Effect] {
+        let effects = session.process(input)
+        persistSession()
+        for effect in effects {
+            switch effect {
+            case .beginSession(let id):
+                log.append(.lifecycle, "Listening session \(id.uuidString.prefix(8)) requested (\(session.requestedBy?.rawValue ?? "?"))")
+                await startCapture()
+            case .resumeSession:
+                await startCapture()
+            case .endSession(_, let reason):
+                // Any other reason was reported by the code that already switched the microphone off.
+                if reason == .userStopped { stopCapture() }
+            case .refused(let reason):
+                log.append(.lifecycle, "Listening request refused: \(reason.rawValue)")
+            case .previousSessionLost:
+                break
+            }
+        }
+        return effects
+    }
+
+    /// Tells the switch what happened to the microphone. Its effects are not carried out: the
+    /// caller already did what they describe.
+    private func report(_ input: ListeningSessionMachine.Input) {
+        for effect in session.process(input) {
+            if case .previousSessionLost(let record) = effect {
+                let since = record.startedAt.map { " (started \($0.formatted(.iso8601)))" } ?? ""
+                log.append(.lifecycle, "The previous launch ended while a listening session was open\(since). "
+                    + "Nothing was restarted; the microphone is off.")
+            }
+        }
+        persistSession()
+    }
+
+    private func persistSession() {
+        if let data = try? JSONEncoder().encode(session.record) { defaults.set(data, forKey: Self.sessionRecordKey) }
+    }
+
+    private func startCapture() async {
+        guard state.canStart else {
+            report(.captureEnded(.startFailed, at: .now))
+            return
+        }
+        guard captureIsAllowed(context: "Start") else {
+            report(.captureEnded(.timeLimit, at: .now))
+            return
+        }
 
         switch MicrophonePermission.current {
         case .granted:
@@ -146,6 +260,7 @@ final class ListeningController {
         case .denied:
             state = .permissionDenied
             log.append(.permission, "Start refused: microphone permission denied")
+            report(.captureEnded(.startFailed, at: .now))
             return
         case .undetermined:
             state = .requestingPermission
@@ -153,6 +268,7 @@ final class ListeningController {
             log.append(.permission, "Permission prompt answered: \(result.rawValue)")
             guard result == .granted else {
                 state = .permissionDenied
+                report(.captureEnded(.startFailed, at: .now))
                 return
             }
         }
@@ -195,6 +311,7 @@ final class ListeningController {
             endCapture(keepSession: false)
             state = .idle
         }
+        report(.captureEnded(.timeLimit, at: .now))
         log.append(.lifecycle, "Time limit reached (trigger: \(trigger.rawValue), "
             + "\((limit.lateness ?? 0).formatted(.number.precision(.fractionLength(2)))) s after the deadline): "
             + (wasOn ? "listening stopped; microphone released" : "the microphone was already off"))
@@ -210,8 +327,12 @@ final class ListeningController {
         return false
     }
 
-    func stop() {
-        guard state.canStop else { return }
+    private func stopCapture() {
+        guard state.canStop else {
+            // The session was open without a microphone (start failed half-way): nothing to stop.
+            if !state.canStart { state = .idle }
+            return
+        }
         endCapture(keepSession: keepsSessionActiveWhenStopped)
         state = .idle
         log.append(.lifecycle, "Listening stopped; microphone released")
@@ -227,7 +348,7 @@ final class ListeningController {
     /// Prefers a specific input (nil = system default). Applies to the active session.
     func selectInput(uid: String?) {
         do {
-            try session.setPreferredInput(uid: uid)
+            try audioSession.setPreferredInput(uid: uid)
             log.append(.route, "Preferred input set to \(uid ?? "system default")")
         } catch {
             log.append(.error, "Could not set preferred input: \(error.localizedDescription)")
@@ -238,10 +359,10 @@ final class ListeningController {
     func setKeepsSessionActiveWhenStopped(_ value: Bool) {
         keepsSessionActiveWhenStopped = value
         log.append(.session, "Keep session active when stopped: \(value ? "on" : "off")")
-        if !value, !state.isCapturing, session.isActive {
+        if !value, !state.isCapturing, audioSession.isActive {
             do {
-                try session.deactivate()
-                log.append(.session, "Session deactivated (\(session.lastTrace.summary))")
+                try audioSession.deactivate()
+                log.append(.session, "Session deactivated (\(audioSession.lastTrace.summary))")
             } catch {
                 log.append(.error, "Session deactivation failed: \(error.localizedDescription)")
             }
@@ -250,7 +371,7 @@ final class ListeningController {
     }
 
     func refreshRoute() {
-        route = session.snapshot()
+        route = audioSession.snapshot()
     }
 
     #if DEBUG
@@ -297,6 +418,9 @@ final class ListeningController {
             "Device: \(DeviceInfo.summary)",
             "App policy: \(policy.title) [\(policy.id)]",
             "State: \(state.title)",
+            "Listening session: \(session.phase.rawValue) · started \(session.statistics.sessionsStarted), ended "
+                + "\(session.statistics.sessionsEnded), toggles \(session.statistics.toggles), requests refused "
+                + "\(session.statistics.requestsRefused) · last end: \(session.lastEndReason?.rawValue ?? "none")",
             captureFormat.map { "Capture format: \($0.summary)" } ?? "Capture format: not capturing",
             "",
             route.reportText(),
@@ -323,10 +447,10 @@ final class ListeningController {
     @discardableResult
     private func beginCapture() -> Bool {
         do {
-            let input = try session.activate(policy: policy)
+            let input = try audioSession.activate(policy: policy)
             log.append(.session, "Session active (playAndRecord, \(policy.mode.rawValue), "
                 + "\(policy.options.map(\.rawValue).joined(separator: ", "))); preferred input: \(describe(input))")
-            log.append(.session, "Activation steps: \(session.lastTrace.summary)")
+            log.append(.session, "Activation steps: \(audioSession.lastTrace.summary)")
             recognition.sessionWillStart()
             speech.sessionWillStart()
             attention.sessionWillStart()
@@ -336,12 +460,14 @@ final class ListeningController {
             log.append(.capture, "Engine start took \(milliseconds(since: engineStart))")
             captureFormat = format
             state = .listening
+            report(.captureStarted(at: .now))
             log.append(.capture, "Capture running: \(format.summary)")
             refreshRoute()
             return true
         } catch {
             endCapture(keepSession: false)
             state = .failed(error.localizedDescription)
+            report(.captureEnded(.startFailed, at: .now))
             log.append(.error, "Start failed: \(error.localizedDescription)")
             refreshRoute()
             return false
@@ -360,10 +486,10 @@ final class ListeningController {
         liveActivity.sessionDidEnd()
         if keepSession {
             log.append(.session, "Session kept active (microphone off)")
-        } else if session.isActive {
+        } else if audioSession.isActive {
             do {
-                try session.deactivate()
-                log.append(.session, "Session deactivated (\(session.lastTrace.summary))")
+                try audioSession.deactivate()
+                log.append(.session, "Session deactivated (\(audioSession.lastTrace.summary))")
             } catch {
                 log.append(.error, "Session deactivation failed: \(error.localizedDescription)")
             }
@@ -415,16 +541,18 @@ final class ListeningController {
             attention.sessionDidEnd()
             // The session is expected to resume: the activity stays and shows "paused".
             liveActivity.sessionPaused()
-            session.noteDeactivatedBySystem()
+            audioSession.noteDeactivatedBySystem()
             captureFormat = nil
             level = .silence
             state = .interrupted
+            report(.interrupted(at: .now))
             announce("Listening paused by the system")
         case .interruptionEnded(let shouldResume):
             guard state == .interrupted else { break }
             if shouldResume {
                 guard captureIsAllowed(context: "Resume after the interruption") else {
                     state = .idle
+                    report(.captureEnded(.timeLimit, at: .now))
                     break
                 }
                 if beginCapture() {
@@ -447,13 +575,14 @@ final class ListeningController {
             speech.sessionDidEnd()
             attention.sessionDidEnd()
             liveActivity.sessionDidEnd()
-            session.noteDeactivatedBySystem()
+            audioSession.noteDeactivatedBySystem()
             capture = MicrophoneCapture()
             connect(capture)
             captureFormat = nil
             level = .silence
             if wasActive {
                 state = .failed("Audio services were reset by iOS. Tap Start Listening to continue.")
+                report(.captureEnded(.captureFailed, at: .now))
             }
             refreshRoute()
         case .mediaServicesWereLost, .silenceSecondaryAudioHint:
@@ -472,6 +601,7 @@ final class ListeningController {
         } catch {
             endCapture(keepSession: false)
             state = .failed("Capture could not restart after an audio route change: \(error.localizedDescription)")
+            report(.captureEnded(.captureFailed, at: .now))
             log.append(.error, "Restart failed: \(error.localizedDescription)")
         }
         refreshRoute()
