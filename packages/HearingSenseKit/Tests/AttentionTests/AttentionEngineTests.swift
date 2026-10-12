@@ -326,7 +326,11 @@ import Testing
     @Test func partialTranscriptsCauseNoDecisions() {
         var driver = EngineDriver(mode: .sensitive)
         var speech = driver.speech(at: 0)
-        #expect(driver.send(.speech(speech.detected(at: EngineDriver.date(0)))).map(\.action) == [.show])
+        // Speech with nothing to read is not an episode in any mode: one explanation, no intent.
+        let detected = driver.send(.speech(speech.detected(at: EngineDriver.date(0))))
+        #expect(detected.map(\.action) == [.suppress])
+        #expect(detected[0].reasons.contains(.speechWithoutSummary))
+        #expect(detected[0].intent == nil)
         for (index, text) in ["we", "we have", "we have a", "we have a biology", "we have a biology test"].enumerated() {
             #expect(driver.send(.speech(speech.partial(text, at: EngineDriver.date(1 + Double(index) * 0.2)))).isEmpty)
         }
@@ -341,6 +345,9 @@ import Testing
             driver.send(.speech(speech.detected(at: EngineDriver.date(0))))
             driver.send(.speech(speech.final(warning ? "look out" : "nice weather today", at: EngineDriver.date(3),
                                              category: warning ? .warning : .casualConversation)))
+            if !warning {
+                driver.send(.speech(speech.summary("Nice Weather Today", at: EngineDriver.date(4), category: .casualConversation)))
+            }
             driver.advance(to: 10)
             return driver.shows.count
         }
@@ -352,16 +359,62 @@ import Testing
         #expect(alerts(.everything, mode: .quiet, warning: false) == 1)
     }
 
+    /// The student's decision (Window 5), now a rule of the engine: speech without a validated
+    /// summary has nothing to read, so it is an ordinary sound — never an episode — in every mode
+    /// and under every speech setting. A possible spoken warning does not need a summary.
+    @Test func speechWithoutASummaryIsNeverAnEpisode() {
+        for mode in AttentionMode.allCases {
+            for setting in [SpeechAttention.standard, .everything, .importantOnly] {
+                var driver = EngineDriver(preferences: AttentionPreferences(mode: mode, speech: setting))
+                var speech = driver.speech(at: 0)
+                driver.send(.speech(speech.detected(at: EngineDriver.date(0))))
+                driver.advance(to: 4)  // sustained
+                // Transcribed, but the language model gave no validated headline.
+                driver.send(.speech(speech.final("nice weather today", at: EngineDriver.date(5), category: .casualConversation)))
+                driver.send(.speech(speech.final("can you hear me", at: EngineDriver.date(9), category: .question)))
+                driver.advance(to: 30)
+                #expect(driver.shows.isEmpty, "\(mode) \(setting)")
+                #expect(driver.decisions.allSatisfy { $0.intent == nil }, "\(mode) \(setting)")
+                #expect(driver.engine.snapshot.presented.isEmpty)
+            }
+        }
+        var driver = EngineDriver(mode: .quiet)
+        var speech = driver.speech(at: 0)
+        driver.send(.speech(speech.detected(at: EngineDriver.date(0))))
+        let warning = driver.send(.speech(speech.final("watch out", at: EngineDriver.date(1.5), category: .warning)))
+        #expect(warning.last?.action == .show)
+        #expect(warning.last?.event.priority == .high)
+    }
+
+    /// With the summary an ordinary conversation becomes an episode that carries the text.
+    @Test func theSummaryIsWhatMakesOrdinarySpeechAnEpisode() throws {
+        var driver = EngineDriver(mode: .balanced)
+        var speech = driver.speech(at: 0)
+        driver.send(.speech(speech.detected(at: EngineDriver.date(0))))
+        #expect(driver.send(.speech(speech.final("we are out of milk", at: EngineDriver.date(3)))).allSatisfy { $0.intent == nil })
+        let shown = try #require(driver.send(.speech(speech.summary("Out Of Milk", at: EngineDriver.date(5),
+                                                                    category: .casualConversation))).last)
+        #expect(shown.action == .show)
+        #expect(shown.event.priority == .normal)
+        #expect(shown.intent?.action == .present)
+        #expect(shown.intent?.privateDetail == "Out Of Milk")
+    }
+
     @Test func ordinarySpeechHasACooldownButAWarningIgnoresIt() {
         var driver = EngineDriver(mode: .sensitive)  // speech cooldown 90 s × 0.5
         var first = driver.speech(at: 0)
         driver.send(.speech(first.detected(at: EngineDriver.date(0))))
+        driver.send(.speech(first.final("nice weather today", at: EngineDriver.date(2), category: .casualConversation)))
+        driver.send(.speech(first.summary("Nice Weather Today", at: EngineDriver.date(3), category: .casualConversation)))
         driver.send(.speech(first.completed(at: EngineDriver.date(5))))
+        #expect(driver.shows.count == 1)
         driver.advance(to: 20)
         var second = driver.speech(at: 20)
-        let again = driver.send(.speech(second.detected(at: EngineDriver.date(20))))
+        driver.send(.speech(second.detected(at: EngineDriver.date(20))))
+        driver.send(.speech(second.final("see you later", at: EngineDriver.date(21), category: .greeting)))
+        let again = driver.send(.speech(second.summary("Saying Goodbye", at: EngineDriver.date(21.5), category: .greeting)))
         #expect(again.map(\.action) == [.suppress])
-        #expect(again[0].reasons.contains(.cooldownActive))
+        #expect(again.first?.reasons.contains(.cooldownActive) == true)
         // The same conversation turns into a warning: shown although speech is cooling down.
         let warning = driver.send(.speech(second.final("look out", at: EngineDriver.date(22), category: .warning)))
         #expect(warning.last?.action == .show)
@@ -371,7 +424,10 @@ import Testing
     @Test func aWarningAfterThePresentationTimedOutIsANewEpisode() throws {
         var driver = EngineDriver(mode: .sensitive)
         var speech = driver.speech(at: 0)
-        let first = try #require(driver.send(.speech(speech.detected(at: EngineDriver.date(0)))).first)
+        driver.send(.speech(speech.detected(at: EngineDriver.date(0))))
+        driver.send(.speech(speech.final("how was school", at: EngineDriver.date(2), category: .casualConversation)))
+        let first = try #require(driver.send(.speech(speech.summary("Talking About School", at: EngineDriver.date(3),
+                                                                    category: .casualConversation))).last)
         #expect(first.action == .show)
         // A long conversation: keep it alive with new sentences; its presentation lasts 30 s.
         for time in stride(from: 5.0, through: 45, by: 5) {
@@ -395,8 +451,11 @@ import Testing
         #expect(detected.map(\.action) == [.suppress])
         #expect(detected[0].reasons.contains(.musicAmbiguity))
         // The pipeline decides it is someone talking over the music.
-        let spoken = driver.send(.speech(speech.final("dinner is ready", at: EngineDriver.date(13),
-                                                      category: .announcement, relevance: .speechOverMusic)))
+        // Its words alone are not shown; its summary is.
+        let words = driver.send(.speech(speech.final("dinner is ready", at: EngineDriver.date(13),
+                                                     category: .announcement, relevance: .speechOverMusic)))
+        #expect(words.allSatisfy { $0.intent == nil })
+        let spoken = driver.send(.speech(speech.summary("Dinner Is Ready", at: EngineDriver.date(14), category: .announcement)))
         #expect(spoken.map(\.action) == [.show])
         #expect(spoken[0].event.isUncertain)
         #expect(spoken[0].reasons.contains(.musicAmbiguity))
@@ -407,18 +466,18 @@ import Testing
         var driver = EngineDriver(mode: .sensitive)
         var speech = driver.speech(at: 2)
         let alone = driver.send(.speech(speech.detected(at: EngineDriver.date(2))))
-        #expect(alone.map(\.action) == [.show])
+        // Not an episode by itself (nothing to read), but tracked, so the knock can take it in.
+        #expect(alone.map(\.action) == [.suppress])
         let knock = driver.start("door", at: 1).decisions
-        #expect(knock.map(\.action) == [.expire, .show])
-        #expect(knock[0].reasons == [.temporalFusion, .mergedIntoEpisode])
-        #expect(knock[0].intent?.action == .dismiss)
-        #expect(knock[1].event.isFused)
-        #expect(knock[1].event.subtitle == "Nearby speech afterwards")
+        #expect(knock.map(\.action) == [.show])
+        #expect(knock[0].event.isFused)
+        #expect(knock[0].event.subtitle == "Nearby speech afterwards")
+        #expect(driver.engine.statistics.fusions == 1)
         #expect(driver.engine.snapshot.presented.count == 1)
         // The summary that arrives later goes to the merged episode.
         let summary = try #require(driver.send(.speech(speech.summary("Package Arrived", at: EngineDriver.date(6),
                                                                       category: .announcement))).first)
-        #expect(summary.event.id == knock[1].event.id)
+        #expect(summary.event.id == knock[0].event.id)
         #expect(summary.intent?.privateDetail == "Package Arrived")
     }
 
@@ -427,7 +486,9 @@ import Testing
         driver.brief("door", at: 0)
         driver.advance(to: 15)  // more than the 8 s fusion window after the knock was last observed
         var speech = driver.speech(at: 15)
-        let decisions = driver.send(.speech(speech.detected(at: EngineDriver.date(15))))
+        driver.send(.speech(speech.detected(at: EngineDriver.date(15))))
+        driver.send(.speech(speech.final("the bus is late", at: EngineDriver.date(17), category: .announcement)))
+        let decisions = driver.send(.speech(speech.summary("Bus Is Late", at: EngineDriver.date(18), category: .announcement)))
         #expect(decisions.map(\.action) == [.show])
         #expect(!decisions[0].event.isFused)
         #expect(driver.engine.statistics.fusions == 0)

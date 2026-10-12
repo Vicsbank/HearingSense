@@ -25,8 +25,12 @@ final class DebugDiagnosticsExporter {
     static var isExportRequested: Bool { ProcessInfo.processInfo.arguments.contains(exportArgument) }
     static var isAutostartRequested: Bool { ProcessInfo.processInfo.arguments.contains(autostartArgument) }
 
-    /// `--hs-autostop-after <seconds>`: the app itself stops listening (microphone off) after this
-    /// long, so a timed device test ends on time even if the Mac that started it does nothing more.
+    /// `--hs-autostop-after <seconds>`: the app itself stops listening (microphone off) this long
+    /// after launch, so a timed device test ends on time even if the Mac that started it does
+    /// nothing more. Carried out by `ListeningController.limitListening(to:)`: a timer and every
+    /// audio buffer after the deadline both trigger the stop, nothing resumes listening afterwards,
+    /// and the export is written at the moment of the stop ("Time limit reached" in the event log,
+    /// `timeLimit=fired…` in the heartbeat).
     static let autostopArgument = "--hs-autostop-after"
     static var autostopAfter: TimeInterval? {
         let arguments = ProcessInfo.processInfo.arguments
@@ -55,6 +59,11 @@ final class DebugDiagnosticsExporter {
                 try? await Task.sleep(for: Self.interval)
             }
         }
+    }
+
+    /// Writes the file now, outside the 5 s rhythm (an event that must not be missed).
+    func writeNow() {
+        tick()
     }
 
     private func tick() {
@@ -99,6 +108,7 @@ final class DebugDiagnosticsExporter {
             "app=\(appState)",
             "unlocked=\(application.isProtectedDataAvailable)",
             "state=\(controller.state)",
+            "timeLimit=\(controller.timeLimit?.heartbeat(at: .now) ?? "off")",
             "windows=\(sound.results)",
             "segments=\(sound.segments)",
             "classifierFailures=\(sound.failures)",

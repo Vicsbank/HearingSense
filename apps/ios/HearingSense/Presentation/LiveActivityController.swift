@@ -101,6 +101,8 @@ final class LiveActivityController {
     /// When the "protected data will become unavailable" notice last arrived without an
     /// "available" notice (or the app coming to the front) since. While set, the estimate is `locked`.
     @ObservationIgnored private var willLockNoticeAt: Date?
+    /// The lock state the pipeline was last told (it takes speech-derived text out while locked).
+    @ObservationIgnored private var pipelineKnowsLocked = false
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private var deadlineTask: Task<Void, Never>?
     @ObservationIgnored private var stateTask: Task<Void, Never>?
@@ -161,12 +163,25 @@ final class LiveActivityController {
         log(.lifecycle, "Lock signal: protected data will become unavailable (data available right now: "
             + "\(UIApplication.shared.isProtectedDataAvailable))")
         lockEstimate = .locked
+        syncLockWithPipeline()
     }
 
     private func protectedDataBecameAvailable() {
         willLockNoticeAt = nil
         log(.lifecycle, "Lock signal: protected data became available")
         refreshLockEstimate(checkPasscode: false)
+        syncLockWithPipeline()
+    }
+
+    /// Tells the pipeline when the lock estimate changes between "locked" and anything else, so
+    /// that speech-derived text leaves the activity's content while the iPhone is locked (one
+    /// silent update, and only if such text is there). Never called from inside `process`'s
+    /// command loop: `process` calls it at its end.
+    private func syncLockWithPipeline() {
+        let isLocked = lockEstimate == .locked
+        guard isLocked != pipelineKnowsLocked else { return }
+        pipelineKnowsLocked = isLocked
+        process(.deviceLock(isLocked: isLocked, at: .now))
     }
 
     deinit {
@@ -211,10 +226,17 @@ final class LiveActivityController {
         process(.intent(intent))
     }
 
+    /// The user switched transcription off or deleted the speech data: no speech-derived text
+    /// stays in the activity, whether or not a speech episode is presented right now.
+    func speechDataCleared() {
+        process(.speechTextCleared(at: .now))
+    }
+
     func appBecameActive() {
         // On screen means unlocked: a lock notice without its "available" counterpart is over.
         willLockNoticeAt = nil
         refreshLockEstimate(checkPasscode: true)
+        syncLockWithPipeline()
         // An activity can only be requested while the app is on screen.
         if needsStart, pipeline.isLive { jobs.yield(.start) }
     }
@@ -225,6 +247,14 @@ final class LiveActivityController {
         var updated = settings
         change(&updated)
         guard updated != settings else { return }
+        let switches: [(String, KeyPath<IslandSettings, Bool>)] = [
+            ("Show in the Dynamic Island", \.isEnabled), ("Icons for ordinary sounds", \.showsAmbientIcons),
+            ("Expand for important events", \.expandsForImportantEvents), ("Show speech summaries", \.showsSpeechSummaries),
+            ("Play the alert sound", \.playsAlertSound),
+        ]
+        for (name, keyPath) in switches where settings[keyPath: keyPath] != updated[keyPath: keyPath] {
+            SettingsAudit.record(name, from: settings[keyPath: keyPath], to: updated[keyPath: keyPath], defaults: defaults)
+        }
         settings = updated
         if let data = try? JSONEncoder().encode(updated) { defaults.set(data, forKey: Self.settingsKey) }
         log(.lifecycle, "Live Activity settings: activity \(updated.isEnabled ? "on" : "off"), ambient icons "
@@ -252,6 +282,8 @@ final class LiveActivityController {
         statistics = pipeline.statistics
         ambientStatistics = pipeline.ambientStatistics
         scheduleDeadline()
+        // `gate` may have refreshed the estimate while the commands were carried out.
+        syncLockWithPipeline()
     }
 
     /// Lets an expansion request through only when the iPhone is judged unlocked.
@@ -464,6 +496,9 @@ final class LiveActivityController {
             + "(rate-limited \(statistics.alertRequestsRateLimited)): sent to iOS \(alertsSent), silent instead "
             + (blocked.isEmpty ? "0" : blocked.joined(separator: ", ")))
         lines.append("Secondary-only changes not sent: \(statistics.secondaryChangesNotSent)")
+        lines.append("Speech summaries presented \(statistics.summariesPresented) (without an expansion request: "
+            + "\(statistics.summariesWithoutExpansion)); speech episodes without a summary kept as an icon: "
+            + "\(statistics.speechWithoutSummary); speech text withheld right now because locked: \(pipelineKnowsLocked ? "yes" : "no")")
         if let first = updateLog.first, let last = updateLog.last {
             let span = last.date.timeIntervalSince(first.date)
             let gaps = zip(updateLog.dropFirst(), updateLog).map { $0.date.timeIntervalSince($1.date) }

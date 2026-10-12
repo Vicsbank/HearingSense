@@ -409,7 +409,7 @@ import Testing
         // The engine delivers a late summary with "no interruption".
         driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .update,
                                    interruption: PresentationInterruption.none, at: 9, category: .speech,
-                                   summary: "Biology Test Tomorrow")))
+                                   summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
         #expect(driver.alerts.count == 1)
         #expect(driver.alerts[0].title == "Nearby Speech")
         #expect(!driver.alerts[0].body.contains("Biology"))
@@ -421,15 +421,173 @@ import Testing
         var settings = IslandSettings.default
         settings.showsSpeechSummaries = false
         var quiet = IslandDriver(settings: settings)
-        quiet.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech, summary: "Biology Test Tomorrow")))
+        quiet.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech, summary: "Biology Test Tomorrow",
+                                  reasons: [.relevantSpeech])))
         #expect(quiet.alerts.isEmpty)
 
         var policy = IslandPolicy.standard
         policy.alertsOnFirstSummary = false
         var followsEngine = IslandDriver(policy: policy)
         followsEngine.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech,
-                                          summary: "Biology Test Tomorrow")))
+                                          summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
         #expect(followsEngine.alerts.isEmpty)
+    }
+
+    /// "Do not turn every conversation into an alert": the summary of ordinary conversation is
+    /// shown (touch and hold reads it) but does not ask iOS to expand the island.
+    @Test func theSummaryOfOrdinaryConversationIsShownWithoutAnExpansionRequest() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, category: .speech,
+                                   summary: "Talking About Lunch", reasons: [.ordinarySpeech, .conditionMet])))
+        #expect(driver.shown?.mode == .attention)
+        #expect(driver.shown?.headline == "Talking About Lunch")
+        #expect(driver.alerts.isEmpty)
+        #expect(driver.pipeline.statistics.summariesWithoutExpansion == 1)
+        // A possible spoken warning with a summary still asks.
+        driver.send(.intent(intent(2, "Possible Spoken Warning", priority: .high, at: 20, category: .speech,
+                                   summary: "Watch Out", reasons: [.importantSpeech])))
+        #expect(driver.alerts.count == 1)
+    }
+
+    // MARK: - Reading a summary after its episode (touch and hold)
+
+    /// The student's report: the island never showed a conversation summary. One cause was that
+    /// the text existed only while its episode was in front (20–30 s); a touch and hold after
+    /// that found "Listening". The latest summary now stays readable for `summaryRecall`.
+    @Test func theLatestSummaryStaysReadableAfterItsEpisodeIsOver() throws {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, expires: 35, category: .speech,
+                                   summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
+        #expect(driver.shown?.headline == "Biology Test Tomorrow")
+        #expect(driver.shown?.recentSummary == nil)  // not twice
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .dismiss, at: 35, category: .speech)))
+        let after = try #require(driver.shown)
+        #expect(after.mode == .listening)
+        #expect(after.headline == nil)
+        #expect(after.recentSummary == "Biology Test Tomorrow")
+        #expect(after.recentSummaryDate == T.date(5))
+        #expect(after.redactedSummary.contains("Biology") == false)
+        // It does not cost updates while it is readable …
+        let sent = driver.commands.count
+        driver.advance(to: 150)
+        #expect(driver.commands.count == sent)
+        #expect(driver.shown?.recentSummary == "Biology Test Tomorrow")
+        // … and one quiet update removes it when it is stale (120 s after the episode).
+        driver.advance(to: 160)
+        #expect(driver.commands.count == sent + 1)
+        #expect(driver.shown?.recentSummary == nil)
+        #expect(driver.shown?.recentSummaryDate == nil)
+        #expect(driver.alerts.count == 1)  // the first summary only
+    }
+
+    @Test func anOrdinarySoundTakesTheIconAndTheSummaryStaysReadable() throws {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, expires: 60, category: .speech,
+                                   summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
+        // Protected for 20 s, then a newer ordinary sound gets the icon.
+        driver.send(.sound(sound("dog", 1, at: 30).started()))
+        let shown = try #require(driver.shown)
+        #expect(shown.mode == .ambient)
+        #expect(shown.symbolName == "dog.fill" || !shown.symbolName.isEmpty)
+        #expect(shown.headline == nil)
+        #expect(shown.recentSummary == "Biology Test Tomorrow")
+    }
+
+    @Test func aNewerSummaryReplacesTheRecalledOne() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, expires: 20, category: .speech,
+                                   summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .dismiss, at: 20, category: .speech)))
+        driver.send(.intent(intent(2, "Nearby Speech", priority: .normal, at: 40, expires: 60, category: .speech,
+                                   summary: "Bus Leaves At Four", reasons: [.relevantSpeech])))
+        #expect(driver.shown?.headline == "Bus Leaves At Four")
+        driver.send(.intent(intent(2, "Nearby Speech", priority: .normal, action: .dismiss, at: 60, category: .speech)))
+        #expect(driver.shown?.recentSummary == "Bus Leaves At Four")
+        #expect(driver.shown?.recentSummaryDate == T.date(40))
+        #expect(driver.pipeline.statistics.summariesPresented == 2)
+    }
+
+    // MARK: - Privacy of speech-derived text
+
+    @Test func whileTheIPhoneIsLockedNoSpokenWordIsInTheContent() throws {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, expires: 35, category: .speech,
+                                   summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
+        driver.send(.deviceLock(isLocked: true, at: T.date(10)))
+        var shown = try #require(driver.shown)
+        #expect(shown.mode == .attention)
+        #expect(shown.headline == "Nearby Speech")
+        #expect(shown.headlineIsSpeech == false)
+        #expect(!String(decoding: try JSONEncoder().encode(shown), as: UTF8.self).contains("Biology"))
+        // Still locked when the episode ends: nothing is recalled on the Lock Screen either.
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .dismiss, at: 35, category: .speech)))
+        shown = try #require(driver.shown)
+        #expect(shown.recentSummary == nil)
+        #expect(!String(decoding: try JSONEncoder().encode(shown), as: UTF8.self).contains("Biology"))
+        #expect(driver.commands.allSatisfy { T.seconds($0.date) < 10 || $0.content.recentSummary == nil })
+        // Unlocked inside the recall time: readable again.
+        driver.send(.deviceLock(isLocked: false, at: T.date(60)))
+        #expect(driver.shown?.recentSummary == "Biology Test Tomorrow")
+        // No expansion is requested by any of this.
+        #expect(driver.alerts.count == 1)
+    }
+
+    @Test func switchingTranscriptionOffRemovesEverySpokenWordAtOnce() throws {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, expires: 20, category: .speech,
+                                   summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .dismiss, at: 20, category: .speech)))
+        #expect(driver.shown?.recentSummary != nil)
+        driver.send(.speechTextCleared(at: T.date(25)))
+        #expect(driver.shown?.recentSummary == nil)
+        // Also while the episode is still in front.
+        driver.send(.intent(intent(2, "Nearby Speech", priority: .normal, at: 40, expires: 70, category: .speech,
+                                   summary: "Bus Leaves At Four", reasons: [.relevantSpeech])))
+        driver.send(.speechTextCleared(at: T.date(45)))
+        let shown = try #require(driver.shown)
+        #expect(!String(decoding: try JSONEncoder().encode(shown), as: UTF8.self).contains("Bus"))
+        driver.advance(to: 100)
+        #expect(driver.commands.allSatisfy { T.seconds($0.date) < 45 || $0.content.recentSummary == nil })
+    }
+
+    @Test func turningSummariesOffOrEndingTheSessionForgetsTheRecalledSummary() {
+        var settings = IslandSettings.default
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, expires: 20, category: .speech,
+                                   summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
+        driver.send(.intent(intent(1, "Nearby Speech", priority: .normal, action: .dismiss, at: 20, category: .speech)))
+        settings.showsSpeechSummaries = false
+        driver.send(.settings(settings, at: T.date(25)))
+        #expect(driver.shown?.recentSummary == nil)
+        settings.showsSpeechSummaries = true
+        driver.send(.settings(settings, at: T.date(30)))
+        #expect(driver.shown?.recentSummary == nil)  // forgotten, not hidden
+
+        var second = IslandDriver()
+        second.send(.intent(intent(1, "Nearby Speech", priority: .normal, at: 5, expires: 20, category: .speech,
+                                   summary: "Biology Test Tomorrow", reasons: [.relevantSpeech])))
+        second.send(.sessionEnded(at: T.date(10)))
+        second.send(.sessionStarted(at: T.date(15)))
+        #expect(second.shown?.recentSummary == nil)
+        #expect(second.shown?.mode == .listening)
+    }
+
+    /// The real engine and the pipeline together, as the app wires them (synthetic speech
+    /// results): the summary becomes the headline with one expansion request, stays readable
+    /// after the episode, and is gone at the end.
+    @Test func aConversationSummaryTravelsFromTheEngineToTheExpandedIsland() throws {
+        let run = IslandReplayer.run(ScenarioLibrary.lateSummary, tail: 200)
+        #expect(run.violations.isEmpty)
+        let headline = try #require(run.commands.first { $0.content.headline == "Biology Test Tomorrow" })
+        #expect(headline.content.mode == .attention)
+        #expect(headline.content.headlineIsSpeech)
+        #expect(headline.alert != nil)
+        #expect(headline.alert?.title.contains("Biology") == false)
+        #expect(run.alertRequests == 1)
+        #expect(run.commands.contains { $0.content.mode == .listening && $0.content.recentSummary == "Biology Test Tomorrow" })
+        #expect(run.commands.last?.content.recentSummary == nil)
+        // Nothing was presented for the speech before there was something to read.
+        #expect(run.commands.allSatisfy { $0.content.mode != .attention || $0.content.headlineIsSpeech })
     }
 
     @Test func expansionRequestsAreSpacedOutExceptForUrgentEpisodes() {

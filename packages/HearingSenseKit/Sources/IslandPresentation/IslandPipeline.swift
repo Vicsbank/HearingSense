@@ -15,13 +15,22 @@ public enum IslandInput: Hashable, Sendable {
     /// Window 4: the attention engine wants an episode presented, changed or removed.
     case intent(AttentionPresentationIntent)
     case settings(IslandSettings, at: Date)
+    /// The host's estimate of the lock state changed. While locked, speech-derived text is taken
+    /// out of the content (the Lock Screen view never draws it; this keeps it out of what iOS
+    /// stores for the activity as well). "Cannot tell" counts as not locked here: without a
+    /// passcode there is no lock to protect the text.
+    case deviceLock(isLocked: Bool, at: Date)
+    /// Every speech-derived text must go now (the user switched transcription off or deleted the
+    /// speech data), whether or not an episode is presented.
+    case speechTextCleared(at: Date)
     /// Time passed (the host calls this at `IslandPipeline.nextDeadline`).
     case tick(at: Date)
 
     public var date: Date {
         switch self {
-        case .sessionStarted(let date), .sessionPaused(let date), .sessionEnded(let date), .tick(let date): date
-        case .settings(_, let date): date
+        case .sessionStarted(let date), .sessionPaused(let date), .sessionEnded(let date), .tick(let date),
+             .speechTextCleared(let date): date
+        case .settings(_, let date), .deviceLock(_, let date): date
         case .intent(let intent): intent.timestamp
         case .sound(let update): AmbientIconInput.sound(update).date
         }
@@ -73,6 +82,10 @@ public struct IslandPolicy: Hashable, Sendable {
     /// Request an expansion when an episode first shows a speech summary (if the user allows
     /// summaries), although the attention engine suggests no interruption for a late summary.
     public var alertsOnFirstSummary: Bool
+    /// How long the latest presented speech summary stays readable in the expanded island after
+    /// its episode left the front (an ordinary sound took the icon, or the episode ended). After
+    /// that the text is removed with one quiet update. 0 turns the recall off.
+    public var summaryRecall: TimeInterval
     /// Without any change the content is re-sent after this long, so that the activity's stale
     /// date moves on while the app is alive.
     public var keepAliveInterval: TimeInterval
@@ -83,7 +96,8 @@ public struct IslandPolicy: Hashable, Sendable {
 
     public init(ambient: AmbientIconPolicy, minimumUpdateInterval: TimeInterval, attentionMinimumHold: TimeInterval,
                 protectedPriority: AttentionPriority = .high, protectedFor: TimeInterval = 20,
-                speechNeedsSummary: Bool = true, alertMinimumInterval: TimeInterval, alertsOnFirstSummary: Bool, keepAliveInterval: TimeInterval,
+                speechNeedsSummary: Bool = true, alertMinimumInterval: TimeInterval, alertsOnFirstSummary: Bool,
+                summaryRecall: TimeInterval = 120, keepAliveInterval: TimeInterval,
                 staleAfter: TimeInterval, maximumTextLength: Int)
     {
         self.ambient = ambient
@@ -94,6 +108,7 @@ public struct IslandPolicy: Hashable, Sendable {
         self.speechNeedsSummary = speechNeedsSummary
         self.alertMinimumInterval = alertMinimumInterval
         self.alertsOnFirstSummary = alertsOnFirstSummary
+        self.summaryRecall = summaryRecall
         self.keepAliveInterval = keepAliveInterval
         self.staleAfter = staleAfter
         self.maximumTextLength = maximumTextLength
@@ -119,6 +134,11 @@ public struct IslandStatistics: Hashable, Sendable, Codable {
     public var speechWithoutSummary = 0
     public var alertRequests = 0
     public var alertRequestsRateLimited = 0
+    /// Speech summaries that were presented as (part of) an episode.
+    public var summariesPresented = 0
+    /// First summaries that did not ask for an expansion because the speech was ordinary
+    /// conversation (they are readable with a touch and hold).
+    public var summariesWithoutExpansion = 0
 
     public init() {}
 }
@@ -181,6 +201,10 @@ public struct IslandPipeline: Sendable {
     private var hasPendingChange = false
     private var lastAlertAt: Date?
     private var lastEvaluated: Date?
+    private var isDeviceLocked = false
+    /// The latest summary an episode showed: when it first appeared and when its episode was
+    /// last held for presentation.
+    private var recalled: (text: String, since: Date, lastPresented: Date)?
 
     public init(policy: IslandPolicy = .standard, settings: IslandSettings = .default) {
         self.policy = policy
@@ -205,6 +229,7 @@ public struct IslandPipeline: Sendable {
                 sessionStart = now
                 items.removeAll()
                 leadID = nil
+                recalled = nil
             }
             pausedSince = nil
             noteAmbient(ambient.process(.sessionStarted(at: now)))
@@ -213,12 +238,14 @@ public struct IslandPipeline: Sendable {
             pausedSince = now
             items.removeAll()
             leadID = nil
+            recalled = nil
             noteAmbient(ambient.process(.sessionEnded(at: now)))
         case .sessionEnded:
             sessionActive = false
             pausedSince = nil
             items.removeAll()
             leadID = nil
+            recalled = nil
             noteAmbient(ambient.process(.sessionEnded(at: now)))
         case .sound(let update):
             guard sessionActive, pausedSince == nil else { break }
@@ -228,15 +255,25 @@ public struct IslandPipeline: Sendable {
             alertCandidate = apply(intent, at: now)
         case .settings(let updated, _):
             settings = updated
+            if !updated.showsSpeechSummaries { recalled = nil }
+        case .deviceLock(let isLocked, _):
+            isDeviceLocked = isLocked
+        case .speechTextCleared:
+            recalled = nil
+            for (id, item) in items where item.intent.hasPrivateDetail { items[id] = nil }
         case .tick:
             break
         }
 
         if case .sound = input {} else { noteAmbient(ambient.process(.tick(at: now))) }
         for (id, item) in items {
-            if let removeAt = item.removeAt, removeAt <= now { items[id] = nil }
+            if let removeAt = item.removeAt, removeAt <= now {
+                keepRecall(of: item, until: now)
+                items[id] = nil
+            }
         }
         let holdDeadline = selectLead(at: now)
+        noteSummary(at: now)
 
         var commands: [IslandCommand] = []
         let wanted = sessionActive && settings.isEnabled
@@ -281,6 +318,8 @@ public struct IslandPipeline: Sendable {
     {
         switch intent.action {
         case .dismiss:
+            // The user switched transcription off: every speech-derived text goes at once.
+            if intent.reasons.contains(.speechDataCleared) { recalled = nil }
             guard var item = items[intent.id] else { return nil }
             if let expires = intent.expiresAt, expires > now {
                 // Resolved: shown a little longer, and an update may still bring it back.
@@ -288,6 +327,7 @@ public struct IslandPipeline: Sendable {
                 item.isResolved = true
                 items[intent.id] = item
             } else {
+                keepRecall(of: item, until: now)
                 items[intent.id] = nil
             }
             return nil
@@ -326,8 +366,18 @@ public struct IslandPipeline: Sendable {
             // The attention engine lets a late summary appear quietly (`.none`). Its text is only
             // readable in the expanded presentation, so the first summary of an episode the engine
             // presents asks for one expansion; later rewordings do not.
+            // Only for speech the engine rates as relevant or as a possible warning: the summary
+            // of ordinary conversation is readable with a touch and hold but does not ask for
+            // attention ("do not turn every conversation into an alert").
             if policy.alertsOnFirstSummary, settings.showsSpeechSummaries, intent.privateDetail != nil, !item.summaryAlerted {
-                wantsAlert = true
+                if intent.priority >= policy.protectedPriority
+                    || intent.reasons.contains(.relevantSpeech) || intent.reasons.contains(.importantSpeech)
+                {
+                    wantsAlert = true
+                } else {
+                    item.summaryAlerted = true
+                    statistics.summariesWithoutExpansion += 1
+                }
             }
             if wantsAlert {
                 item.alertedPriority = max(item.alertedPriority ?? intent.priority, intent.priority)
@@ -381,12 +431,41 @@ public struct IslandPipeline: Sendable {
         if let change { ambientSince = change.date }
     }
 
+    /// Remembers the summary of the episode in front, for `IslandPolicy.summaryRecall`.
+    private mutating func noteSummary(at now: Date) {
+        if let recalled, recalled.lastPresented.addingTimeInterval(policy.summaryRecall) <= now { self.recalled = nil }
+        guard policy.summaryRecall > 0, settings.showsSpeechSummaries, let leadID, let item = items[leadID],
+              let text = item.intent.privateDetail else { return }
+        if let recalled, recalled.text == text {
+            self.recalled?.lastPresented = now
+        } else {
+            statistics.summariesPresented += 1
+            recalled = (text, now, now)
+        }
+    }
+
+    /// An episode leaves: the recall time of its summary counts from now.
+    private mutating func keepRecall(of item: Item, until now: Date) {
+        if let recalled, recalled.text == item.intent.privateDetail { self.recalled?.lastPresented = now }
+    }
+
+    private var showsSpeechText: Bool { settings.showsSpeechSummaries && !isDeviceLocked }
+
+    /// Content of the icon channel, with the recent summary for the expanded presentation.
+    private func quiet(_ content: IslandContent) -> IslandContent {
+        guard showsSpeechText, let recalled else { return content }
+        var content = content
+        content.recentSummary = clip(recalled.text)
+        content.recentSummaryDate = recalled.since
+        return content
+    }
+
     private func compose(at now: Date) -> IslandContent {
         if let pausedSince { return .paused(since: pausedSince) }
         let ambientIcon = settings.showsAmbientIcons ? ambient.current : nil
         if let leadID, let item = items[leadID] {
             let intent = item.intent
-            let summary = settings.showsSpeechSummaries ? intent.privateDetail : nil
+            let summary = showsSpeechText ? intent.privateDetail : nil
             // Protected: a high-priority event or a speech summary. Anything else the engine
             // presents (a dog, "Nearby Speech" without text) gives way to an ordinary sound that
             // appeared after it, so the icon channel stays live. (On the iPhone, in a room with
@@ -400,8 +479,8 @@ public struct IslandPipeline: Sendable {
             let isProtected = intent.priority >= .urgent
                 || ((intent.priority >= policy.protectedPriority || summary != nil) && isRecent)
             if !isProtected, let ambientIcon, let ambientSince, ambientSince > item.lastChanged {
-                return IslandContent(mode: .ambient, symbolName: ambientIcon.symbolName,
-                                     spokenLabel: ambientIcon.spokenName, since: ambientSince)
+                return quiet(IslandContent(mode: .ambient, symbolName: ambientIcon.symbolName,
+                                           spokenLabel: ambientIcon.spokenName, since: ambientSince))
             }
             let caption: String? = summary == nil ? intent.subtitle
                 : [intent.title, intent.subtitle].compactMap { $0 }.joined(separator: " · ")
@@ -413,10 +492,10 @@ public struct IslandPipeline: Sendable {
                 additionalCount: items.count - 1)
         }
         if let ambientIcon {
-            return IslandContent(mode: .ambient, symbolName: ambientIcon.symbolName, spokenLabel: ambientIcon.spokenName,
-                                 since: ambientSince ?? now)
+            return quiet(IslandContent(mode: .ambient, symbolName: ambientIcon.symbolName, spokenLabel: ambientIcon.spokenName,
+                                       since: ambientSince ?? now))
         }
-        return .listening(since: sessionStart ?? now)
+        return quiet(.listening(since: sessionStart ?? now))
     }
 
     private func clip(_ text: String) -> String {
@@ -480,6 +559,8 @@ public struct IslandPipeline: Sendable {
         // Protection of a high-priority episode runs out: look again.
         deadlines += items.values.map { $0.lastChanged.addingTimeInterval(policy.protectedFor) }
             .filter { $0 > (lastEvaluated ?? .distantPast) }
+        // The recalled summary runs out: one quiet update removes its text.
+        if let recalled { deadlines.append(recalled.lastPresented.addingTimeInterval(policy.summaryRecall)) }
         if isLive, let lastSentAt {
             let quietInterval = shown?.mode == .ambient ? max(policy.minimumUpdateInterval, policy.ambient.minimumDisplay)
                 : policy.minimumUpdateInterval
@@ -496,6 +577,7 @@ extension IslandContent {
         if let priority { parts.append(priority.description) }
         if let headline { parts.append(headlineIsSpeech ? "<speech summary>" : "“\(headline)”") }
         if additionalCount > 0 { parts.append("+\(additionalCount)") }
+        if recentSummary != nil { parts.append("(recent <speech summary>)") }
         return parts.joined(separator: " ")
     }
 }

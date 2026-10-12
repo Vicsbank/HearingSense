@@ -76,6 +76,9 @@ public enum IslandReplayer {
                 if content.mode != .attention, content.headline != nil || content.caption != nil {
                     violations.append("\(scenario.id): text outside an attention episode")
                 }
+                if content.recentSummary != nil, content.mode == .attention || content.mode == .paused {
+                    violations.append("\(scenario.id): a recalled summary beside an attention episode or while paused")
+                }
                 if timed.alert != nil, content.mode != .attention {
                     violations.append("\(scenario.id): alert request without an attention episode")
                 }

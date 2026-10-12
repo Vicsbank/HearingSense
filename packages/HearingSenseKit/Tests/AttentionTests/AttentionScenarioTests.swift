@@ -138,16 +138,22 @@ import Testing
 
     // 8
     @Test(arguments: AttentionMode.allCases)
-    func withTranscriptionOffSpeechIsGeneric(mode: AttentionMode) {
+    func withTranscriptionOffSpeechIsNeverAnEpisode(mode: AttentionMode) {
+        // Changed after the Window 5 device session (was: two generic "Nearby Speech" alerts in
+        // Balanced and Sensitive). Speech with nothing to read is an ordinary sound; the island
+        // shows the classifier's speech event as an icon.
         let result = run(ScenarioLibrary.transcriptionDisabled, mode)
-        #expect(result.alerts.count == (mode == .quiet ? 0 : 2))
+        #expect(result.alerts.isEmpty)
+        #expect(result.intents.isEmpty)
         #expect(result.metrics.duplicatesSuppressed == result.metrics.duplicateSources)
-        for alert in result.alerts {
-            #expect(alert.decision.event.title == "Nearby Speech")
-            #expect(alert.decision.reasons.contains(.transcriptionOff))
-            #expect(alert.decision.event.privateContent == nil)
-            #expect(alert.decision.intent?.hasPrivateDetail == false)
+        let explained = result.decisions.map(\.decision).filter { $0.action == .suppress }
+        #expect(!explained.isEmpty)
+        for decision in explained {
+            #expect(decision.event.title == "Nearby Speech")
+            #expect(decision.event.priority == .ambient)
+            #expect(decision.reasons.contains(.speechWithoutSummary))
         }
+        #expect(explained.contains { $0.reasons.contains(.transcriptionOff) })
         #expect(result.decisions.allSatisfy { $0.decision.event.privateContent == nil })
     }
 
@@ -169,19 +175,24 @@ import Testing
 
     // 10
     @Test(arguments: [AttentionMode.balanced, .sensitive])
-    func lateSummaryUpdatesTheExistingEvent(mode: AttentionMode) throws {
+    func aLateSummaryIsWhatPresentsTheSpeech(mode: AttentionMode) throws {
+        // Changed after the Window 5 device session (was: a text-less "Nearby Speech" shown at
+        // once, the summary added by a quiet update). Nothing is presented until there is
+        // something to read; the episode then starts with its summary.
         let result = run(ScenarioLibrary.lateSummary, mode)
         #expect(result.alerts.count == 1)
         #expect(result.count(.show) == 1)
-        let show = try #require(result.decisions.first { $0.decision.action == .show }?.decision)
-        let update = try #require(result.decisions.first { $0.decision.action == .update }?.decision)
-        #expect(update.event.id == show.event.id)
-        #expect(update.event.revision > show.event.revision)
-        #expect(update.reasons.contains(.summaryAdded))
-        #expect(update.reasons.contains(.mentionsTimeOrNumber))
-        #expect(update.intent?.privateDetail == "Biology Test Tomorrow")
-        #expect(update.intent?.interruption == PresentationInterruption.none)
-        #expect(show.intent?.privateDetail == nil)
+        #expect(result.count(.update) == 0)
+        let shown = try #require(result.decisions.first { $0.decision.action == .show })
+        #expect(result.seconds(shown) == 7.5)
+        let show = shown.decision
+        #expect(show.reasons.contains(.relevantSpeech))
+        #expect(show.reasons.contains(.mentionsTimeOrNumber))
+        #expect(show.intent?.action == .present)
+        #expect(show.intent?.privateDetail == "Biology Test Tomorrow")
+        #expect(show.intent?.interruption == .passive)
+        #expect(result.intents.first?.action == .present)
+        #expect(result.intents.count { $0.action == .present } == 1)
     }
 
     @Test func lateSummaryInQuietStaysBelowTheThreshold() {
@@ -194,27 +205,29 @@ import Testing
     @Test func summaryRevisionsAreComparedByMeaning() throws {
         let result = run(ScenarioLibrary.summaryRevisions, .balanced)
         #expect(result.decisions.map(\.decision.action)
-            == [.defer, .show, .update, .suppress, .update, .defer, .update, .resolve, .expire])
+            == [.suppress, .show, .suppress, .update, .defer, .update, .resolve, .expire])
         #expect(Set(result.decisions.map(\.decision.event.id)).count == 1)
         let decisions = result.decisions.map(\.decision)
-        // First summary.
-        #expect(decisions[2].reasons.contains(.summaryAdded))
-        #expect(decisions[2].reasons.contains(.negatedStatement))
-        #expect(decisions[2].intent?.privateDetail == "Package Has Not Arrived")
+        // Nothing to read yet.
+        #expect(decisions[0].reasons.contains(.speechWithoutSummary))
+        #expect(decisions[0].intent == nil)
+        // First summary: the episode starts with it.
+        #expect(decisions[1].reasons.contains(.negatedStatement))
+        #expect(decisions[1].intent?.privateDetail == "Package Has Not Arrived")
         // Reworded: no update, the shown text stays.
-        #expect(decisions[3].reasons.contains(.cosmeticRevision))
-        #expect(decisions[3].intent == nil)
-        #expect(decisions[3].event.privateContent?.text == "Package Has Not Arrived")
+        #expect(decisions[2].reasons.contains(.cosmeticRevision))
+        #expect(decisions[2].intent == nil)
+        #expect(decisions[2].event.privateContent?.text == "Package Has Not Arrived")
         // Reversed: shown at once, with an interruption.
-        #expect(decisions[4].reasons.contains(.negationChanged))
-        #expect(decisions[4].intent?.privateDetail == "Package Has Now Arrived")
-        #expect(decisions[4].intent?.interruption == .passive)
-        #expect(result.seconds(result.decisions[4]) == 14)
+        #expect(decisions[3].reasons.contains(.negationChanged))
+        #expect(decisions[3].intent?.privateDetail == "Package Has Now Arrived")
+        #expect(decisions[3].intent?.interruption == .passive)
+        #expect(result.seconds(result.decisions[3]) == 14)
         // Extended three seconds later: held back, then applied quietly.
-        #expect(decisions[5].reasons.contains(.updateRateLimited))
-        #expect(decisions[6].intent?.privateDetail == "Package Arrived At Front Door")
-        #expect(decisions[6].intent?.interruption == PresentationInterruption.none)
-        #expect(result.seconds(result.decisions[6]) == 22)
+        #expect(decisions[4].reasons.contains(.updateRateLimited))
+        #expect(decisions[5].intent?.privateDetail == "Package Arrived At Front Door")
+        #expect(decisions[5].intent?.interruption == PresentationInterruption.none)
+        #expect(result.seconds(result.decisions[5]) == 22)
         #expect(result.alerts.count == 2)
     }
 
@@ -363,11 +376,13 @@ import Testing
         #expect(warning.reasons.contains(.urgentPhrase))
         #expect(warning.reasons.contains(.modelUnavailable))
         #expect(warning.event.privateContent == nil)
-        // The classifier's speech event alone still yields a generic speech episode.
+        // The classifier's speech event alone is tracked as speech and explained, not presented.
         let soundOnly = result.decisions(for: result.key(named: "classifier's speech event only"))
         #expect(soundOnly.first?.decision.event.title == "Nearby Speech")
         #expect(soundOnly.first?.decision.event.category == .speech)
-        #expect(result.alerts.count == (mode == .quiet ? 1 : mode == .balanced ? 4 : 5))
+        // Without a summary only the possible warning is an episode, in every mode (changed after
+        // the Window 5 device session; was 1 / 4 / 5 with text-less "Nearby Speech" episodes).
+        #expect(result.alerts.count == 1)
         #expect(result.metrics.finalEpisodes == 0)
     }
 

@@ -125,6 +125,7 @@ struct LiveActivitySettingsView: View {
         Form {
             Section {
                 Toggle("Show in the Dynamic Island", isOn: binding(\.isEnabled))
+                    .accessibilityIdentifier("island.enabled.switch")
             } footer: {
                 Text("While you listen, Hearing Sense stays in the Dynamic Island and on the Lock Screen. iOS ends a "
                     + "Live Activity after about eight hours; open the app to show it again.")
@@ -132,6 +133,7 @@ struct LiveActivitySettingsView: View {
 
             Section {
                 Toggle("Icons for ordinary sounds", isOn: binding(\.showsAmbientIcons))
+                    .accessibilityIdentifier("island.ambientIcons.switch")
             } footer: {
                 Text("Rain, music, a dog, footsteps and other everyday sounds appear as a small icon, without text "
                     + "and without any alert.")
@@ -140,7 +142,9 @@ struct LiveActivitySettingsView: View {
 
             Section {
                 Toggle("Expand for important events", isOn: binding(\.expandsForImportantEvents))
+                    .accessibilityIdentifier("island.expansion.switch")
                 Toggle("Play the alert sound", isOn: binding(\.playsAlertSound))
+                    .accessibilityIdentifier("island.alertSound.switch")
                     .disabled(!live.settings.expandsForImportantEvents)
             } footer: {
                 Text("Off: the island never expands by itself; touch and hold it to read the text. On: Hearing Sense "
@@ -153,9 +157,12 @@ struct LiveActivitySettingsView: View {
 
             Section {
                 Toggle("Show speech summaries", isOn: binding(\.showsSpeechSummaries))
+                    .accessibilityIdentifier("island.speechSummaries.switch")
             } footer: {
                 Text("A short summary of nearby speech in the expanded island, when “Transcribe nearby speech” is on. "
-                    + "The Lock Screen never shows it. Off: speech appears as “Nearby Speech”.")
+                    + "Touch and hold the island to read it; the latest one stays readable for about two minutes. "
+                    + "The Lock Screen never shows it, and it is removed while the iPhone is locked. "
+                    + "Off: speech appears as an icon only.")
             }
             .disabled(!live.settings.isEnabled)
 

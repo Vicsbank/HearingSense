@@ -52,6 +52,12 @@ final class ListeningController {
     /// Unused (and harmless) with a single classifier.
     @ObservationIgnored private let backendSelection = ClassifierBackendSelection()
     @ObservationIgnored private var backgroundCheckpoint: CaptureThroughput.Checkpoint?
+    /// A hard end for this launch's listening (timed device tests): see `limitListening(to:)`.
+    private(set) var timeLimit: SessionTimeLimit?
+    @ObservationIgnored private var timeLimitTask: Task<Void, Never>?
+    /// Called right after the time limit switched the microphone off (the debug export writes
+    /// its file at once, so the stop can be read from the Mac).
+    @ObservationIgnored var onTimeLimitStop: (() -> Void)?
 
     init() {
         route = AudioRouteSnapshot.capture()
@@ -102,9 +108,10 @@ final class ListeningController {
                                  attention.receive($0)
                                  conversation.receive($0)
                              },
-                             cleared: { [attention, conversation] in
+                             cleared: { [attention, conversation, liveActivity] in
                                  attention.speechDataCleared()
                                  conversation.speechDataCleared()
+                                 liveActivity.speechDataCleared()
                              })
         // Window 6: accepted goal matches go through the attention engine like every other
         // event; recap states go to the Live Activity as generic episodes. The conversation
@@ -133,6 +140,7 @@ final class ListeningController {
 
     func start() async {
         guard state.canStart else { return }
+        guard captureIsAllowed(context: "Start") else { return }
 
         switch MicrophonePermission.current {
         case .granted:
@@ -156,6 +164,52 @@ final class ListeningController {
             log.append(.lifecycle, "Listening started with policy “\(policy.title)”")
             announce("Listening started")
         }
+    }
+
+    // MARK: - Time limit (timed tests end by themselves)
+
+    /// From now on this launch listens for at most `seconds`: at the deadline the microphone is
+    /// switched off, and nothing starts or resumes it afterwards (an interruption that ends after
+    /// the deadline does not bring the microphone back). The stop does not depend on one timer:
+    /// every audio buffer that still arrives after the deadline triggers it as well, so the
+    /// microphone cannot keep delivering audio past the limit while the app is running.
+    func limitListening(to seconds: TimeInterval) {
+        let limit = SessionTimeLimit(armedAt: .now, duration: seconds)
+        timeLimit = limit
+        log.append(.lifecycle, "Time limit armed: the microphone is switched off "
+            + "\(limit.duration.formatted(.number.precision(.fractionLength(0)))) s from now, at "
+            + limit.deadline.formatted(.iso8601.time(includingFractionalSeconds: true)))
+        timeLimitTask?.cancel()
+        timeLimitTask = Task { [weak self] in
+            // The continuous clock keeps counting while the app is in the background.
+            try? await Task.sleep(for: .seconds(limit.duration), clock: .continuous)
+            guard !Task.isCancelled, let self else { return }
+            self.enforceTimeLimit(trigger: .timer)
+        }
+    }
+
+    private func enforceTimeLimit(trigger: SessionTimeLimit.Trigger) {
+        guard var limit = timeLimit, limit.isDue(at: .now) else { return }
+        limit.fire(at: .now, trigger: trigger)
+        timeLimit = limit
+        let wasOn = state.canStop
+        if wasOn {
+            endCapture(keepSession: false)
+            state = .idle
+        }
+        log.append(.lifecycle, "Time limit reached (trigger: \(trigger.rawValue), "
+            + "\((limit.lateness ?? 0).formatted(.number.precision(.fractionLength(2)))) s after the deadline): "
+            + (wasOn ? "listening stopped; microphone released" : "the microphone was already off"))
+        if wasOn { announce("Listening stopped") }
+        onTimeLimitStop?()
+    }
+
+    /// False (and logged) once a time limit's deadline has passed.
+    private func captureIsAllowed(context: String) -> Bool {
+        guard let limit = timeLimit, !limit.allowsCapture(at: .now) else { return true }
+        log.append(.lifecycle, "\(context) refused: this launch's listening time limit is over")
+        enforceTimeLimit(trigger: .startRefused)
+        return false
     }
 
     func stop() {
@@ -336,6 +390,11 @@ final class ListeningController {
     }
 
     private func receive(_ tick: CaptureTick) {
+        // Second line of the time limit: audio is still arriving after the deadline.
+        if let timeLimit, timeLimit.isDue(at: .now) {
+            enforceTimeLimit(trigger: .captureTick)
+            return
+        }
         // Buffers keep being counted on the audio thread; skip UI work while not visible.
         guard state.isCapturing, !isInBackground else { return }
         level = tick.level
@@ -366,6 +425,10 @@ final class ListeningController {
         case .interruptionEnded(let shouldResume):
             guard state == .interrupted else { break }
             if shouldResume {
+                guard captureIsAllowed(context: "Resume after the interruption") else {
+                    state = .idle
+                    break
+                }
                 if beginCapture() {
                     log.append(.lifecycle, "Listening resumed after interruption")
                     announce("Listening resumed")
@@ -403,6 +466,7 @@ final class ListeningController {
     private func handleEngineConfigurationChange() {
         log.append(.capture, "AVAudioEngine configuration changed (hardware format or route); engine stopped")
         guard state.isCapturing else { return }
+        guard captureIsAllowed(context: "Capture restart") else { return }
         do {
             let format = try capture.restart()
             captureFormat = format
