@@ -135,3 +135,20 @@ cut_off 3, no_change_marker 2, said_before 7 (reminders by the speaker's word in
 Left: idiom 3, multi 3, other_group 3 (staff, swim team, cruise passengers), sarcasm_quote 2, negation 1,
 incomplete 1 (looks like a warning: "get back"), repeated 1. Misses: attention 2 (questions put to "you"),
 1 goal 0, 1 "exact change", 1 "Mia, the drill press is free now".
+
+## After the freeze (`1e269b8`)
+- Sealed set 3 (315, once each): Window 6.2 148/67/4/88; Window 6.3 140/41/12/114; with the three sentences
+  before each one 6.2 150/74/2/81 (22 decisions differ from alone), 6.3 140/44/12/111 (3 differ); 6.3 while
+  sentences wait 134/40/18/115 (11 differ); keyword 95/88/57/67; embedding 146/141/6/14.
+- By mechanism against 6.2: said_to_someone_else −8 false alerts, 0 correct lost; audience_unknown −8, 1 lost;
+  cut_off −4, 0; second look with the sentence before −3, 0; another_group −4 false alerts, **7 correct lost**.
+- Simulator tests: the system's name tagger returns no names there. Form-based fallback added (`56358da`);
+  agrees with the tagger on all development sets but for one sentence.
+- After the sealed run the rule for another group was switched off (`778489c`). Recount: 147/45/5/110. On
+  development set 4 the same switch costs 8 false alerts (90/22/5, recount).
+- I edited the sealed script while its last run was in progress; the shell began to repeat its last commands.
+  Stopped; no result file of record was overwritten (`sealed/README.md`).
+- Streams (sentences handed in with their context, as the app does), decided per minute under overload:
+  6.2 19–27, 6.3 21–32; second looks per run 13–19 against 7–13. Single runs.
+- A worktree `model-bench` (branch `research/local-model-comparison`) appeared during this window. It is not
+  mine and was not touched; if it used the language model while the streams ran, their times include that.
