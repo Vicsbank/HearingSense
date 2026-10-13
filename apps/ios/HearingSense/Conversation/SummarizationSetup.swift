@@ -6,6 +6,17 @@ import QwenRuntime
 /// as the fallback. Nothing is downloaded here; Qwen is used when its checkpoint is installed
 /// (see `QwenModelLocator` and docs/research/QWEN35_HEARING_SENSE_INTEGRATION.md).
 enum SummarizationSetup {
+    static var routingPolicy: SummarizationCoordinator.Policy {
+        var policy = SummarizationCoordinator.Policy()
+        #if targetEnvironment(simulator)
+        // The Simulator reference backend runs on CPU; device/Mac Metal keeps 40 s.
+        policy.primaryTimeout = 600
+        #endif
+        return policy
+    }
+
+    static var backendDescription: String { QwenSummarizationEngine.executionBackend }
+
     /// Launch arguments for tests (Debug builds): `--hs-engine apple` skips Qwen;
     /// `--hs-engine qwen-missing` points Qwen at a directory that does not exist, to exercise the fallback.
     static var forcedEngine: String? {
@@ -32,6 +43,6 @@ enum SummarizationSetup {
                 ?? URL(fileURLWithPath: "/nonexistent/hearing-sense-qwen")
             primary = QwenSummarizationEngine(modelDirectory: directory)
         }
-        return SummarizationCoordinator(primary: primary, fallback: AppleFoundationSummarizationEngine())
+        return SummarizationCoordinator(primary: primary, fallback: AppleFoundationSummarizationEngine(), policy: routingPolicy)
     }
 }

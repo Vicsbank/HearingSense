@@ -48,24 +48,24 @@ public actor QwenSummarizationEngine: SummarizationEngine {
     public func isAvailable() async -> Bool { await unavailabilityReason() == nil }
 
     public func unavailabilityReason() async -> String? {
-        // MLX's pinned runtime explicitly does not support the Simulator's Metal GPU.
-        // Its C++ assertions abort the process and cannot be caught as Swift errors.
-        // Do this before creating ANY MLX resources, including the allocator/cache.
+        // The pinned local runtime uses its real CPU allocator/ops in Simulator.
+        // Only the adapter's CPU backend is allowed to execute Simulator requests.
         #if targetEnvironment(simulator)
-        return "qwen_simulator_runtime_unsupported"
-        #else
+        guard Device.defaultDevice().deviceType == .cpu else { return "qwen_simulator_backend_misconfigured" }
+        #endif
         if let loadFailure { return loadFailure }
         return QwenModelLocator.problem(with: modelDirectory)
-        #endif
+    }
+
+    public nonisolated static var executionBackend: String {
+        Device.defaultDevice().deviceType == .cpu ? "cpu" : "metal"
     }
 
     public func releaseResources() async {
         loading?.cancel()
         loading = nil
         container = nil
-        #if !targetEnvironment(simulator)
         MLX.Memory.clearCache()
-        #endif
     }
 
     public func prewarm() async {
@@ -155,9 +155,14 @@ public actor QwenSummarizationEngine: SummarizationEngine {
     private func generate(instructions: String, prompt: String, maxTokens: Int) async throws -> String {
         let container = try await ensureLoaded()
         let started = Date()
+        var parameters = GenerateParameters(maxTokens: maxTokens, temperature: 0)
+        #if targetEnvironment(simulator)
+        // Bound a CPU prefill forward so cancellation is checked between smaller chunks.
+        parameters.prefill = PrefillParameters(stepSize: 64)
+        #endif
         let session = ChatSession(
             container, instructions: instructions,
-            generateParameters: GenerateParameters(maxTokens: maxTokens, temperature: 0),
+            generateParameters: parameters,
             additionalContext: ["enable_thinking": false])
         var text = ""
         var metrics = Metrics(loadSeconds: loadSeconds ?? 0)

@@ -5,6 +5,7 @@ import HearingSenseAudio
 import HearingSenseDomain
 import IslandPresentation
 import IslandViews
+import QwenRuntime
 import UIKit
 
 /// `--hs-w9-selftest` (Debug builds): the Window 9 acceptance walk-through in the running app,
@@ -23,7 +24,10 @@ import UIKit
 final class Window9SelfTest {
     static let argument = "--hs-w9-selftest"
     static let fileName = "hearing-sense-w9-selftest.txt"
-    static var isRequested: Bool { ProcessInfo.processInfo.arguments.contains(argument) }
+    static var isRequested: Bool {
+        ProcessInfo.processInfo.arguments.contains(argument)
+            || ProcessInfo.processInfo.arguments.contains("--hs-w9-runtime-probe")
+    }
 
     private let controller: ListeningController
     private var lines: [String] = []
@@ -61,6 +65,10 @@ final class Window9SelfTest {
             write()
             return
         }
+        if ProcessInfo.processInfo.arguments.contains("--hs-w9-runtime-probe") {
+            await runRuntimeProbe()
+            return
+        }
         let conversation = controller.conversation
         let live = controller.liveActivity
         let expectation = Self.argumentValue("--hs-w9-expect") ?? "qwen"
@@ -96,7 +104,9 @@ final class Window9SelfTest {
         _ = try? await SummarizeConversationIntent().perform()
         let sawProgress = await waitFor(seconds: 5) { conversation.phase == .preparing || conversation.phase == .summarizing }
         let islandWhileWorking = live.content?.conversation?.phase
-        await wait(180) { conversation.phase == .summaryAvailable || conversation.phase == .idle }
+        let routing = SummarizationSetup.routingPolicy
+        let requestBudget = routing.primaryTimeout + routing.fallbackTimeout + 15
+        await wait(requestBudget) { conversation.phase == .summaryAvailable || conversation.phase == .idle }
         let toReady = Self.seconds(since: started)
         stopHeartbeat()
         let hasSummary = conversation.phase == .summaryAvailable && conversation.recap?.isSummary == true
@@ -157,7 +167,8 @@ final class Window9SelfTest {
             await pause(1.2)
         }
         startHeartbeat()
-        await wait(150) { conversation.updatesMade >= 1 }
+        // An update may need one guarded full rewrite after the first model request.
+        await wait(requestBudget * 2 + 30) { conversation.updatesMade >= 1 }
         stopHeartbeat()
         let after = (conversation.recap?.fullText ?? "").lowercased()
         let afterSummary = conversation.recap?.summary ?? ""
@@ -218,6 +229,46 @@ final class Window9SelfTest {
     }
 
     // MARK: - Helpers
+
+    /// Small, genuine native inference before the larger application walk-through.
+    /// Only fixed synthetic input; reports counts/identity, never ordinary speech.
+    private func runRuntimeProbe() async {
+        note("Window 9 native runtime probe · \(Date.now.formatted(.iso8601)) · \(DeviceInfo.summary)")
+        note("Microphone off; fixed synthetic English input; backend \(QwenSummarizationEngine.executionBackend).")
+        guard let directory = QwenModelLocator.locate() else {
+            check("1", "cached checkpoint exists", false, "model not installed")
+            write()
+            return
+        }
+        let engine = QwenSummarizationEngine(modelDirectory: directory, maxRecapTokens: 256)
+        note("Model: " + engine.identity.detail)
+        note("Native load and generation in progress.")
+        write()
+        startHeartbeat()
+        let begun = Date()
+        await engine.prewarm()
+        if let load = await engine.loadSeconds {
+            note("Cached native checkpoint loaded in \(load) s; generating the English recap.")
+            write()
+        }
+        do {
+            let draft = try await engine.recap(transcript: "The team meeting is Friday at 7:45. Bring twenty dollars for the tickets.", notes: [])
+            stopHeartbeat()
+            let text = draft.summary.lowercased()
+            check("1", "real native checkpoint loaded", await engine.loadSeconds != nil, "backend \(QwenSummarizationEngine.executionBackend)")
+            check("2", "real English recap parsed", !draft.summary.isEmpty && text.contains("friday") && text.contains("7:45"),
+                  "summary \(draft.summary.count) characters; key points \(draft.keyPoints.count)")
+            check("18", "main actor remains responsive", longestMainStallMs < 750, "longest gap \(Int(longestMainStallMs)) ms")
+            let metrics = await engine.lastMetrics
+            note("Load \(metrics.loadSeconds) s; request \(Date().timeIntervalSince(begun)) s; prompt \(metrics.promptTokens) tokens; generated \(metrics.generatedTokens) tokens; \(metrics.tokensPerSecond) tokens/s; active \(metrics.activeBytes) bytes; peak \(metrics.peakBytes) bytes.")
+        } catch {
+            stopHeartbeat()
+            check("1-2", "native recap", false, "failure \(String(describing: type(of: error))) after \(Date().timeIntervalSince(begun)) s")
+        }
+        await engine.releaseResources()
+        note("RESULT: \(passed) checks passed, \(failed) failed")
+        write()
+    }
 
     private func startHeartbeat() {
         longestMainStallMs = 0

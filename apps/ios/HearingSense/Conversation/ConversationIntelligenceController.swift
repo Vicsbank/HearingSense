@@ -47,6 +47,7 @@ final class ConversationIntelligenceController {
         return isDemoRequested || arguments.contains(sampleHistoryArgument)
             || (arguments.contains("--hs-w7-selftest") && !arguments.contains("--hs-w7-persist"))
             || (arguments.contains("--hs-w9-selftest") && !arguments.contains("--hs-w9-persist"))
+            || arguments.contains("--hs-w9-runtime-probe")
         #else
         false
         #endif
@@ -122,8 +123,11 @@ final class ConversationIntelligenceController {
         // The outer request must allow the coordinator's primary timeout AND fallback.
         // A 25 s outer timeout previously cancelled Qwen before its 40 s fallback threshold.
         var recapPolicy = ConversationRecapEngine.Policy()
-        let routingPolicy = SummarizationCoordinator.Policy()
+        let routingPolicy = SummarizationSetup.routingPolicy
         recapPolicy.timeout = routingPolicy.primaryTimeout + routingPolicy.fallbackTimeout + 1
+        #if targetEnvironment(simulator)
+        recapPolicy.rewriteTimeout = recapPolicy.timeout
+        #endif
         recapEngine = ConversationRecapEngine(summarizer: summarizer, policy: recapPolicy, bufferPolicy: policy)
         var opened: SwiftDataConversationHistory?
         var records: [ConversationRecord] = []
@@ -629,6 +633,7 @@ final class ConversationIntelligenceController {
             engineLines.append("Summary engines (Window 9): " + coordinator.identities.map(\.detail).joined(separator: " → fallback ")
                 + " · last summary by \(lastEngineLabel ?? "–")" + (lastFallbackReason.map { " (fallback: \($0))" } ?? "")
                 + " · model preparation requested: \(isModelResident ? "yes" : "no")")
+            engineLines.append("Qwen execution backend: \(SummarizationSetup.backendDescription)")
         }
         return (engineLines + [
             "Conversation summaries (Window 7)",

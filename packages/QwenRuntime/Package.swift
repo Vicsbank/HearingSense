@@ -20,7 +20,9 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../HearingSenseKit"),
-        .package(url: "https://github.com/ml-explore/mlx-swift-lm", exact: "3.32.3"),
+        // Pinned upstream sources + Simulator CPU adapters, materialized by
+        // tools/prepare_qwen_runtime.py. Metal remains the real-device/Mac backend.
+        .package(path: "../RuntimeDependencies/mlx-swift-lm"),
         .package(url: "https://github.com/huggingface/swift-transformers", from: "1.3.0"),
     ],
     targets: [

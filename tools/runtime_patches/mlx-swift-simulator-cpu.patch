@@ -1,0 +1,195 @@
+--- a/Source/Cmlx/mlx/mlx/backend/metal/allocator.cpp
++++ b/Source/Cmlx/mlx/mlx/backend/metal/allocator.cpp
+@@ -1,3 +1,8 @@
++#include <TargetConditionals.h>
++#if TARGET_OS_SIMULATOR
++// Simulator uses genuine MLX CPU buffers, never a simulated Metal heap.
++#include "../no_gpu/allocator.cpp"
++#else
+ // Copyright © 2023-2024 Apple Inc.
+ #include "mlx/backend/metal/allocator.h"
+ #include "mlx/backend/gpu/device_info.h"
+@@ -277,3 +282,5 @@
+ }
+ 
+ } // namespace mlx::core
++
++#endif
+--- a/Source/Cmlx/mlx/mlx/backend/cpu/gemms/cblas.cpp
++++ b/Source/Cmlx/mlx/mlx/backend/cpu/gemms/cblas.cpp
+@@ -1,5 +1,10 @@
+ // Copyright © 2025 Apple Inc.
+ 
++#include <TargetConditionals.h>
++#if TARGET_OS_SIMULATOR
++#include "mlx/threadpool.h"
++#endif
++
+ #include "mlx/backend/common/utils.h"
+ #include "mlx/backend/cpu/gemm.h"
+ #include "mlx/backend/cpu/lapack.h"
+@@ -29,6 +34,43 @@
+   size_t N = b_shape[ndim - 1];
+   size_t K = a_shape[ndim - 1];
+ 
++#if TARGET_OS_SIMULATOR
++  // Simulator BLAS stays on one worker for these shapes. Partition independent
++  // output columns without changing dot products, strides or the checkpoint.
++  if (N >= 1024 && M * N * K >= (1UL << 20)) {
++    static ThreadPool pool(4);
++    for (size_t i = 0; i < batch_size; ++i) {
++      const float* a_base = a + elem_to_loc(M * K * i, a_shape, a_strides);
++      const float* b_base = b + elem_to_loc(K * N * i, b_shape, b_strides);
++      float* out_base = out + M * N * i;
++      std::vector<std::future<void>> tasks;
++      tasks.reserve(4);
++      try {
++        for (size_t part = 0; part < 4; ++part) {
++          size_t start = N * part / 4;
++          size_t width = N * (part + 1) / 4 - start;
++          tasks.push_back(pool.enqueue([=]() {
++            cblas_sgemm(
++                CblasRowMajor,
++                a_transposed ? CblasTrans : CblasNoTrans,
++                b_transposed ? CblasTrans : CblasNoTrans,
++                M, width, K, alpha, a_base, lda,
++                b_base + (b_transposed ? start * ldb : start), ldb,
++                beta, out_base + start, ldc);
++          }));
++        }
++      } catch (...) {
++        // Keep arrays alive until already queued work completes on enqueue failure.
++        for (auto& task : tasks) { task.wait(); }
++        throw;
++      }
++      for (auto& task : tasks) { task.wait(); }
++      for (auto& task : tasks) { task.get(); }
++    }
++    return;
++  }
++#endif
++
+   for (int i = 0; i < batch_size; ++i) {
+     cblas_sgemm(
+         CblasRowMajor,
+--- a/Package.swift
++++ b/Package.swift
+@@ -305,6 +305,9 @@
+         .headerSearchPath("mlx-generated/cuda"),
+     ],
+     cxxSettings: cxxSettings + [
++        // CPU kernels need optimization even when the iOS application is Debug.
++        // No fast-math: preserve the upstream numerical rules.
++        .unsafeFlags(["-O3"], .when(platforms: [.iOS], configuration: .debug)),
+         .headerSearchPath("mlx"),
+         .headerSearchPath("mlx-c"),
+         .headerSearchPath("json/single_include/nlohmann"),
+--- a/Source/Cmlx/mlx/mlx/backend/cpu/quantized.cpp
++++ b/Source/Cmlx/mlx/mlx/backend/cpu/quantized.cpp
+@@ -10,6 +10,11 @@
+ #include "mlx/fast_primitives.h"
+ #include "mlx/primitives.h"
+ #include "mlx/utils.h"
++#include <TargetConditionals.h>
++#if TARGET_OS_SIMULATOR
++#include "mlx/backend/cpu/hs_affine_q4.h"
++#endif
++
+ 
+ namespace mlx::core {
+ 
+@@ -948,6 +953,12 @@
+                       group_size_ = group_size_,
+                       bits_ = bits_,
+                       transpose_ = transpose_]() mutable {
++#if TARGET_OS_SIMULATOR
++      if (bits_ == 4 && group_size_ == 64 && transpose_ &&
++          hs_try_affine_q4(out, x, w, scales, biases)) {
++        return;
++      }
++#endif
+       _qmm_dispatch(out, x, w, scales, biases, group_size_, bits_, transpose_);
+     });
+   } else {
+--- a/Source/Cmlx/mlx/mlx/backend/metal/fence.cpp
++++ b/Source/Cmlx/mlx/mlx/backend/metal/fence.cpp
+@@ -1,3 +1,8 @@
++#include <TargetConditionals.h>
++#if TARGET_OS_SIMULATOR
++// CPU stream synchronization must not allocate Metal resources.
++#include "../no_gpu/fence.cpp"
++#else
+ // Copyright © 2024 Apple Inc.
+ #include "mlx/fence.h"
+ #include "mlx/backend/metal/device.h"
+@@ -155,3 +160,5 @@
+ }
+ 
+ } // namespace mlx::core
++
++#endif
+--- a/Source/Cmlx/mlx/mlx/backend/metal/event.cpp
++++ b/Source/Cmlx/mlx/mlx/backend/metal/event.cpp
+@@ -1,4 +1,5 @@
+ // Copyright © 2024 Apple Inc.
++#include <TargetConditionals.h>
+ 
+ #include "mlx/backend/metal/event.h"
+ #include "mlx/scheduler.h"
+@@ -35,6 +36,12 @@
+ 
+ } // namespace metal
+ 
++#if TARGET_OS_SIMULATOR
++} // namespace mlx::core
++// Keep Metal EventImpl symbols for unused GPU code, but evaluate with CPU events.
++#include "../no_gpu/event.cpp"
++#else
++
+ ///////////////////////////////////////////////////////////////////////////////
+ // Event implementations
+ ///////////////////////////////////////////////////////////////////////////////
+@@ -81,3 +88,5 @@
+ }
+ 
+ } // namespace mlx::core
++
++#endif
+--- a/Source/Cmlx/mlx/mlx/backend/metal/metal.cpp
++++ b/Source/Cmlx/mlx/mlx/backend/metal/metal.cpp
+@@ -1,5 +1,6 @@
+ // Copyright © 2023-2024 Apple Inc.
+ #include <memory>
++#include <TargetConditionals.h>
+ 
+ #include "mlx/backend/metal/device.h"
+ #include "mlx/backend/metal/metal.h"
+@@ -14,7 +15,11 @@
+ } // namespace
+ 
+ bool is_available() {
++#if TARGET_OS_SIMULATOR
++  return false;
++#else
+   return true;
++#endif
+ }
+ 
+ void start_capture(std::string path, NS::Object* object) {
+--- a/Source/Cmlx/mlx/mlx/backend/metal/device_info.cpp
++++ b/Source/Cmlx/mlx/mlx/backend/metal/device_info.cpp
+@@ -1,3 +1,8 @@
++#include <TargetConditionals.h>
++#if TARGET_OS_SIMULATOR
++// Stream discovery must also avoid constructing a Simulator Metal device.
++#include "../no_gpu/device_info.cpp"
++#else
+ // Copyright © 2026 Apple Inc.
+ 
+ #include <sys/sysctl.h>
+@@ -67,3 +72,5 @@
+ }
+ 
+ } // namespace mlx::core::gpu
++
++#endif
