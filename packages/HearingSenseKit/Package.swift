@@ -63,6 +63,7 @@ let package = Package(
         .library(name: "IslandViews", targets: ["IslandViews"]),
         .library(name: "SemanticAttention", targets: ["SemanticAttention"]),
         .library(name: "ConversationUnderstanding", targets: ["ConversationUnderstanding"]),
+        .library(name: "SummaryPostprocessing", targets: ["SummaryPostprocessing"]),
         .executable(name: "hs-semantic-eval", targets: ["SemanticEvaluationTool"]),
     ],
     targets: [
@@ -88,12 +89,16 @@ let package = Package(
                           dependencies: ["AttentionReplay", "Attention", "HearingSenseDomain", "HearingSenseAudio",
                                          "IslandPresentation", "IslandViews", "SoundEventDetection"]),
         .target(name: "SemanticAttention", dependencies: ["HearingSenseDomain"]),
-        .target(name: "ConversationUnderstanding"),
+        // Window 9: normalization, grounding, privacy copy limits and quality of recap text. Pure
+        // Foundation logic, no model: ConversationUnderstanding calls it, not the other way round.
+        .target(name: "SummaryPostprocessing"),
+        .target(name: "ConversationUnderstanding", dependencies: ["SummaryPostprocessing"]),
         .target(name: "SemanticEvaluation", dependencies: ["SemanticAttention", "ConversationUnderstanding"],
                 resources: [.process("Resources")]),
         .executableTarget(name: "SemanticEvaluationTool",
                           dependencies: ["SemanticEvaluation", "SemanticAttention", "ConversationUnderstanding"]),
         .testTarget(name: "ConversationUnderstandingTests", dependencies: ["ConversationUnderstanding", "SemanticEvaluation"]),
+        .testTarget(name: "SummaryPostprocessingTests", dependencies: ["SummaryPostprocessing"]),
         .testTarget(name: "HearingSenseAudioTests", dependencies: ["HearingSenseAudio"]),
         .testTarget(name: "SemanticAttentionTests",
                     dependencies: ["SemanticAttention", "SemanticEvaluation", "Attention", "HearingSenseDomain"]),

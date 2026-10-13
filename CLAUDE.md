@@ -23,7 +23,7 @@ Each delegation brief must contain: the goal, the exact **Owned files** list (th
 
 ## Concurrency rule (no overlapping edits)
 
-1. One edit-capable subagent at a time; run it in the foreground. No parallel subagents that could edit.
+1. One edit-capable subagent at a time. It may run in the background only while the main agent works on files disjoint from its Owned files (Window 9 overnight run: the subagent owns `Sources/SummaryPostprocessing/**`, `Tests/SummaryPostprocessingTests/**`, `docs/research/W9_POSTPROCESSING_DESIGN.md`). No parallel subagents that could edit.
 2. While the subagent runs on a brief, the main agent does not edit any file in that brief's Owned files. The main agent may work only on disjoint files.
 3. The subagent edits nothing outside Owned files; needs elsewhere come back as requests.
 4. Before delegating, the main agent checks `git status --short` and confirms no Owned file has uncommitted changes of its own; after return, it reviews `git diff` of those files, then builds/tests before accepting.
