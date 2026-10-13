@@ -181,6 +181,31 @@ public struct SummaryPostprocessor: Sendable {
             extraCorrections.append(ReasonCode.replacedOutdatedStatement.rawValue)
         }
 
+        // A shorter digest may omit the topic words that bound an implicit correction. Once
+        // its containing sentence is visibly historical, use that sentence as the topic link
+        // for the digest's corrected slot only. Shared values alone never establish this link.
+        let historicalSources = earlierSummary.filter { mergedSummary.contains(markedSuperseded($0)) }
+        // An accepted addition can explicitly pair venues even when the spoken change was
+        // implicit. This is a history/uncertainty signal only, never replacement evidence.
+        let explicitVenueUpdates = resolver.corrections(in: pass.keptSummary + pass.keptKeyPoints).filter {
+            $0.cue == .fromTo && $0.oldLine == $0.newLine && $0.oldValue?.kinds.contains(.place) == true
+        }
+        for point in earlierPoints where mergedPoints.contains(point) && !SummaryText.isSuperseded(point) {
+            let analyzed = AnalyzedText(point, normalizer: normalizer)
+            guard let match = historicalSources.lazy.compactMap({ source in
+                historicalDigestCorrection(for: analyzed, source: source, corrections: grounder.corrections,
+                                           explicitVenueUpdates: explicitVenueUpdates, transcript: transcript,
+                                           fromLine: newStart, resolver: resolver)
+            }).first else { continue }
+            let marked = markedSuperseded(point)
+            mergedPoints = mergedPoints.map { $0 == point ? marked : $0 }
+            extraUncertain.append(marked)
+            extraReports.append(StatementReport(text: marked, isKeyPoint: true, verdict: .uncertain,
+                                                reason: .earlierOutdatedKept,
+                                                evidenceLines: match.isSpeech ? [match.correction.newLine].compactMap { evidenceMap[$0] } : []))
+            extraCorrections.append(ReasonCode.earlierOutdatedKept.rawValue)
+        }
+
         for statement in mergedSummary + mergedPoints { pass.countVerbatim(statement) }
         var output = pass.output(summary: mergedSummary + newSummary, keyPoints: mergedPoints + newPoints)
         output.reports += extraReports
@@ -197,6 +222,55 @@ public struct SummaryPostprocessor: Sendable {
             output.title = earlierTitle
         }
         return output
+    }
+
+    private func historicalDigestCorrection(for point: AnalyzedText, source: String, corrections: [Correction],
+                                            explicitVenueUpdates: [Correction], transcript: AnalyzedTranscript,
+                                            fromLine: Int, resolver: CorrectionResolver) -> (correction: Correction, isSpeech: Bool)?
+    {
+        guard !SummaryText.isSuperseded(source) else { return nil }
+        let original = AnalyzedText(source, normalizer: normalizer)
+        let digest = SummaryQualityEditor.signature(of: point)
+        let whole = SummaryQualityEditor.signature(of: original)
+        guard digest.isNegative == whole.isNegative,
+              digest.values.allSatisfy({ value in whole.values.contains { $0.isCompatible(with: value) } })
+        else { return nil }
+        let candidates = corrections.filter { $0.newLine >= fromLine } + explicitVenueUpdates
+        for correction in candidates {
+            guard let old = correction.oldValue,
+                  original.values.contains(where: { $0.isCompatible(with: old) }),
+                  point.values.contains(where: { $0.isCompatible(with: old) }) else { continue }
+            var digestStems = digest.stems
+            if old.kinds.contains(.place) {
+                // Generic venue labels identify a role, not a new named event. Any specific
+                // event word ("workshop", for example) still has to belong to this source.
+                digestStems.subtract(["event", "location", "venue"].map(Lexicon.canonicalStem))
+            }
+            guard digestStems.isSubset(of: whole.stems) else { continue }
+            var eventStems = digestStems
+            for reading in old.readings {
+                if case let .place(phrase) = reading {
+                    eventStems.subtract(phrase.split(separator: " ").map { Lexicon.canonicalStem(String($0)) })
+                }
+            }
+            let genericVenue = old.kinds.contains(.place) && eventStems.isEmpty
+                && point.containsWord(in: ["at", "in", "location", "venue", "held", "scheduled"])
+            let explicitUpdate = explicitVenueUpdates.contains(correction)
+            if explicitUpdate || genericVenue {
+                // A generic venue digest cannot distinguish this changed event from another
+                // event still using the building. Keep its text as uncertain history.
+                let current = explicitUpdate ? correction.newValue : resolver.finalValue(of: correction, in: corrections)
+                guard !point.tokens.contains(where: { $0.kind == .word && Lexicon.changeFramingWords.contains($0.text) }),
+                      !point.values.contains(where: { $0.isCompatible(with: current) }) else { continue }
+                return (correction, !explicitUpdate)
+            }
+            var linked = correction
+            linked.newValue = resolver.finalValue(of: correction, in: corrections)
+            linked.topic.formUnion(original.contentStemSet)
+            if resolver.supersededCorrection(for: point, corrections: [linked], transcript: transcript,
+                                             fromLine: fromLine) != nil { return (correction, true) }
+        }
+        return nil
     }
 
     /// A title names the topic in words of its own, so only its values are checked (and its length).

@@ -167,4 +167,61 @@ import Testing
         #expect(result.duplicateCount == 0)
         #expect(result.summaryStatements.first == earlier.summary)
     }
+
+    @Test func aHistoricalBookClubCompoundMarksItsShorterCorrectedDigests() {
+        let compound = "The book club will meet on Thursday at 7:00 at Ana's house, where everyone is expected to read chapters one through five."
+        let dayPoint = "The book club meets on Thursday at 7:00."
+        let venuePoint = "The meeting location is Ana's house."
+        let result = postprocessor.merge(
+            earlier: DraftText(title: "Book club", summary: compound + " Ben has agreed to bring snacks for the gathering.",
+                               keyPoints: [dayPoint, venuePoint, "Attendees must read chapters one to five.", "Ben is bringing snacks."]),
+            addition: DraftText(title: "", summary: "The meeting location has been changed from Ana's house to the library because Ana's home is unavailable. The meeting day has been moved from Thursday to Friday, while the time remains 7:00. The reading assignment has been updated to chapters one through eight instead of just chapters one through five.",
+                                keyPoints: ["Meeting location changed from Ana's house to the library.", "Meeting day changed from Thursday to Friday.", "Reading assignment extended from chapters one to five to chapters one to eight."]),
+            newLines: ["sorry Ana's house is not available so we're moving it to the library", "and it's Friday instead of Thursday same time", "also chapters one to eight now not just five"],
+            earlierLines: ["the book club meets Thursday at seven at Ana's house", "everyone should read chapters one to five", "Ben is bringing the snacks"])
+        #expect(result.summaryStatements.contains("Superseded: " + compound))
+        for point in [dayPoint, venuePoint] {
+            #expect(!result.keyPoints.contains(point))
+            #expect(result.keyPoints.contains("Superseded: " + point))
+            #expect(result.unverifiedStatements.contains("Superseded: " + point))
+        }
+        #expect(result.keyPoints.contains("Ben is bringing snacks."))
+        #expect(result.summary.contains("Friday"))
+        #expect(result.summary.contains("library"))
+    }
+
+    @Test func aHistoricalRecitalVenueDoesNotMakeAnUnchangedTimeHistorical() {
+        let compound = "The recital is scheduled for Saturday at 3:00 in the school auditorium, and tickets are priced at five dollars."
+        let venuePoint = "The event location is the school auditorium."
+        let timePoint = "The recital is on Saturday at 3:00."
+        let result = postprocessor.merge(
+            earlier: DraftText(title: "Recital", summary: compound,
+                               keyPoints: [timePoint, venuePoint, "Tickets are priced at five dollars."]),
+            addition: DraftText(title: "", summary: "The recital location has been changed from the school auditorium to the gym, but then corrected to the cafeteria. Ticket prices have been reduced to free.",
+                                keyPoints: ["Tickets are now free.", "The event location is now the cafeteria.", "The previous location of the auditorium is no longer valid."]),
+            newLines: ["the school says the auditorium is being painted so it's in the gym", "wait no they changed it again it's the cafeteria", "and tickets are free now"],
+            earlierLines: ["the recital is Saturday at three in the school auditorium", "tickets are five dollars"])
+        #expect(result.summaryStatements.contains("Superseded: " + compound))
+        #expect(!result.keyPoints.contains(venuePoint))
+        #expect(result.keyPoints.contains("Superseded: " + venuePoint))
+        #expect(result.unverifiedStatements.contains("Superseded: " + venuePoint))
+        #expect(result.keyPoints.contains(timePoint))
+        #expect(!result.keyPoints.contains("Superseded: " + timePoint))
+    }
+
+    @Test func historicalVenuePropagationPreservesAnotherNamedEventUsingTheSameVenue() {
+        let compound = "The recital is scheduled for Saturday at 3:00 in the school auditorium, and tickets are priced at five dollars."
+        let otherEvent = "The workshop is in the school auditorium."
+        let result = postprocessor.merge(
+            earlier: DraftText(title: "Events", summary: compound + " " + otherEvent,
+                               keyPoints: ["The event location is the school auditorium.", otherEvent]),
+            addition: DraftText(title: "", summary: "The recital is now in the cafeteria. Tickets are free now."),
+            newLines: ["the recital moved from the school auditorium to the cafeteria", "tickets are free now", "the workshop is still in the school auditorium"],
+            earlierLines: ["the recital is Saturday at three in the school auditorium", "tickets are five dollars", "the workshop is in the school auditorium"])
+        #expect(result.summaryStatements.contains("Superseded: " + compound))
+        #expect(result.summaryStatements.contains(otherEvent))
+        #expect(result.keyPoints.contains(otherEvent))
+        #expect(!result.keyPoints.contains("Superseded: " + otherEvent))
+        #expect(!result.keyPoints.contains("The event location is the school auditorium."))
+    }
 }

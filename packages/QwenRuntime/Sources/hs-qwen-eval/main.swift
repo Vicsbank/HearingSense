@@ -47,7 +47,7 @@ func sentences(of text: String) -> [String] {
     var pendingSuperseded = false
     return result.compactMap { text in
         let normalized = normalize(text)
-        if normalized == "superseded" { pendingSuperseded = true; return nil }
+        if normalized == "superseded" || normalized == "superseded:" { pendingSuperseded = true; return nil }
         defer { pendingSuperseded = false }
         return pendingSuperseded ? "superseded " + normalized : normalized
     }
@@ -64,7 +64,7 @@ struct Score {
 func score(_ sentences: [String], facts: [Fact], mustNot: [MustNot]) -> Score {
     var result = Score()
     result.factsTotal = facts.count
-    let current = sentences.filter { !$0.hasPrefix("superseded ") }
+    let current = sentences.filter { !$0.hasPrefix("superseded ") && !$0.hasPrefix("superseded:") }
     for fact in facts {
         if current.contains(where: { matches(fact.all, in: $0) }) { result.factsPresent += 1 } else { result.missed.append(fact.id) }
     }
@@ -251,7 +251,7 @@ case "fresh":
         report.append(entry)
     }
 
-    if !useApple {
+    if !useApple && !arguments.contains("--only-continue") {
         let metrics = await qwen.lastMetrics
         print("Qwen load: \(seconds(await qwen.loadSeconds ?? 0)) s; MLX active \(seconds(Double(metrics.activeBytes) / 1e9)) GB, peak \(seconds(Double(metrics.peakBytes) / 1e9)) GB")
     }
@@ -318,6 +318,10 @@ case "fresh":
         report.append(entry)
     }
 
+    if !useApple && arguments.contains("--only-continue") {
+        let metrics = await qwen.lastMetrics
+        print("Qwen load: \(seconds(await qwen.loadSeconds ?? 0)) s; MLX active \(seconds(Double(metrics.activeBytes) / 1e9)) GB, peak \(seconds(Double(metrics.peakBytes) / 1e9)) GB")
+    }
     print("\n=== Totals (synthetic, small; regression only) ===")
     print("raw model output: facts \(rawTotals.present)/\(rawTotals.total), must-not violations \(rawTotals.violations)")
     for (label, row) in table.sorted(by: { $0.key < $1.key }) {
@@ -351,7 +355,12 @@ case "latency":
     let transcript = ConversationRecapEngine(summarizer: qwen).transcript(of: buf.excerpt(now: now))
     for run in 1 ... runs {
         let begun = Date()
-        _ = try? await qwen.recap(transcript: transcript, notes: [])
+        do {
+            let draft = try await qwen.recap(transcript: transcript, notes: [])
+            guard !draft.summary.isEmpty else { print("run \(run): empty summary"); exit(1) }
+        } catch {
+            print("run \(run): failed (\(String(describing: type(of: error))))"); exit(1)
+        }
         let m = await qwen.lastMetrics
         print("run \(run): \(seconds(Date().timeIntervalSince(begun))) s, prompt \(m.promptTokens) tok, generated \(m.generatedTokens) tok, \(seconds(m.tokensPerSecond)) tok/s, active \(seconds(Double(m.activeBytes) / 1e9)) GB, peak \(seconds(Double(m.peakBytes) / 1e9)) GB")
     }

@@ -208,3 +208,23 @@ support an unrelated detail that also appears inside a historical statement.
 
 Verified after these repairs: 33 focused grounding, normalization and merge tests plus all 13 pipeline
 tests. Explicit spaced speech-recognizer forms "a m"/"p m" establish meridiem like "a.m."/"p.m.".
+
+### Historical digest consistency
+
+When an original summary sentence is retained as visibly superseded in an update, its shorter old
+key points also receive that label if they report a corrected slot and their values, content/relation
+stems and polarity belong to that original. Unchanged slots (such as the recital's Saturday time)
+remain current. Only generic venue-role words (`event`, `location`, `venue`) may be omitted during
+this digest comparison; a named unrelated event sharing the auditorium must still match the original
+event and is preserved otherwise. A generic venue digest that cannot distinguish two events remains
+visible as uncertain history instead of asserting the changed event's old venue as current.
+
+An accepted addition explicitly saying "changed from X to Y" can provide this history/uncertainty
+link for a venue even when the original speech expressed the move implicitly. That generated pair
+does not independently establish a replacement fact, and receives no fabricated transcript evidence
+index. The original containing sentence must already have been marked historical by the merge.
+General semantic entailment, arbitrary event aliases and arbitrary venue names remain outside scope.
+
+Verified: all 15 merge regressions and all 13 scripted Window 9 pipeline tests, including the exact
+synthetic book-club and recital outputs and an unrelated workshop still using the same auditorium.
+No native model run, logging, persistence or additional model call was added by this module change.
