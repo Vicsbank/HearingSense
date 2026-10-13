@@ -114,19 +114,38 @@ public struct IslandConversation: Hashable, Sendable, Codable {
     public var phase: Phase
     /// Generic words, safe on the Lock Screen ("Summary ready").
     public var title: String
-    /// Speech-derived text (the summary). The pipeline removes it while the iPhone is judged
-    /// locked or summaries are not to be shown; views mark it privacy sensitive.
+    /// Speech-derived text: the island's preview of the summary (`IslandSummaryPreview`: one or
+    /// two whole sentences taken from the full summary, which is saved and read in the app). The
+    /// pipeline removes it while the iPhone is judged locked or summaries are not to be shown;
+    /// views mark it privacy sensitive.
     public var detail: String?
+    /// The summary's own title ("Lunch on Friday"). Speech-derived, handled like `detail`.
+    public var heading: String?
     /// A second line in generic words ("Past speech cannot be recovered"). Never speech-derived.
     public var message: String?
+    /// The saved summary this state belongs to: where "Open" leads. An identifier, not text.
+    public var recordID: UUID?
     public var since: Date
 
-    public init(phase: Phase, title: String, detail: String? = nil, message: String? = nil, since: Date) {
+    public init(phase: Phase, title: String, detail: String? = nil, heading: String? = nil, message: String? = nil,
+                recordID: UUID? = nil, since: Date)
+    {
         self.phase = phase
         self.title = title
         self.detail = detail
+        self.heading = heading
         self.message = message
+        self.recordID = recordID
         self.since = since
+    }
+
+    /// Without the speech-derived text: what is shown while the iPhone is judged locked, and
+    /// while "Summary Text in Dynamic Island" is off.
+    public var withoutSpeechText: IslandConversation {
+        var copy = self
+        copy.detail = nil
+        copy.heading = nil
+        return copy
     }
 
     public var symbolName: String {
@@ -197,12 +216,12 @@ public struct IslandSettings: Hashable, Sendable, Codable {
     public static let `default` = IslandSettings()
 
     /// Settings stored before the decision of 2026-10-11 (key `island.settings.v1`), carried
-    /// over once. "Prominent alerts" takes its new default: the stored value was the old
-    /// default (off) or a choice made under the old rule, and the two cannot be told apart. The
-    /// opt-in for the locked iPhone starts off. Everything else is kept.
+    /// over once. Every stored value is the user's and is kept, "Prominent alerts" included: a
+    /// stored "off" stays off (decision of Window 8; the new default, on, is for an install
+    /// without stored settings and for a record that lacks the value). The opt-in for the locked
+    /// iPhone did not exist then and starts off.
     public static func migrated(fromVersion1 data: Data) -> IslandSettings {
         var settings = (try? JSONDecoder().decode(IslandSettings.self, from: data)) ?? .default
-        settings.expandsForImportantEvents = IslandSettings.default.expandsForImportantEvents
         settings.alertsWhileLocked = false
         return settings
     }

@@ -2,6 +2,7 @@ import ConversationUnderstanding
 import HearingSenseAudio
 import HearingSenseDomain
 import IslandPresentation
+import IslandViews
 import Observation
 import SwiftUI
 
@@ -34,12 +35,17 @@ final class ConversationIntelligenceController {
         #endif
     }
 
+    /// `--hs-sample-history` (Debug builds): three invented summaries in a store that exists in
+    /// memory only, for layout checks of History and of a summary's page.
+    static let sampleHistoryArgument = "--hs-sample-history"
+
     /// Nothing is read from or written to storage: the demo, and the Window 7 self-test unless
     /// it is asked to check what is stored (`--hs-w7-persist`).
     static var usesMemoryOnly: Bool {
         #if DEBUG
         let arguments = ProcessInfo.processInfo.arguments
-        return isDemoRequested || (arguments.contains("--hs-w7-selftest") && !arguments.contains("--hs-w7-persist"))
+        return isDemoRequested || arguments.contains(sampleHistoryArgument)
+            || (arguments.contains("--hs-w7-selftest") && !arguments.contains("--hs-w7-persist"))
         #else
         false
         #endif
@@ -69,6 +75,8 @@ final class ConversationIntelligenceController {
     private(set) var storageError: String?
 
     private(set) var isSessionActive = false
+    /// "Continue" was pressed while there was no summary yet: follow as soon as one is ready.
+    @ObservationIgnored private var continuesWhenReady = false
     private(set) var isTranscriptionOn = false
 
     /// Where a requested summary stands, for the Live Activity (its expanded presentation offers
@@ -107,6 +115,11 @@ final class ConversationIntelligenceController {
         do {
             let history = try SwiftDataConversationHistory(inMemory: inMemory)
             try history.completeInterrupted()
+            #if DEBUG
+            if inMemory, ProcessInfo.processInfo.arguments.contains(Self.sampleHistoryArgument) {
+                for record in Self.sampleHistory { try history.save(record) }
+            }
+            #endif
             records = try history.all()
             opened = history
         } catch {
@@ -120,6 +133,31 @@ final class ConversationIntelligenceController {
             self?.isLanguageModelAvailable = isAvailable
         }
     }
+
+    #if DEBUG
+    private static var sampleHistory: [ConversationRecord] {
+        let now = Date.now
+        return [
+            // A fixed identifier, so that a check can open this page by its link
+            // (`hearingsense://summary/00000000-0000-0000-0000-000000000001`).
+            ConversationRecord(id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, title: "Lunch on Friday",
+                               summary: "Maya and Jon agreed to meet for lunch on Friday at 12:30 at the noodle place on Fifth Street. "
+                                   + "Jon will book a table for four and Maya brings the signed forms for the science fair.",
+                               keyPoints: ["Lunch on Friday at 12:30, noodle place on Fifth Street.", "Jon books a table for four.",
+                                           "Maya brings the signed science fair forms."],
+                               caveats: ["The beginning of the conversation may be missing."],
+                               createdAt: now.addingTimeInterval(-900), coveredFrom: now.addingTimeInterval(-1020),
+                               coveredTo: now.addingTimeInterval(-900)),
+            ConversationRecord(title: "Group report",
+                               summary: "The group meets on Saturday at ten in study room 204 of the science building, because the library is closed on weekends. "
+                                   + "The graphs should be finished by Friday night.",
+                               keyPoints: ["Saturday at ten, science building, room 204.", "Graphs due Friday night."],
+                               createdAt: now.addingTimeInterval(-86400 * 2)),
+            ConversationRecord(title: "Bus change", summary: "The 14 bus leaves from the north stop this week because of road work.",
+                               createdAt: now.addingTimeInterval(-86400 * 5)),
+        ]
+    }
+    #endif
 
     deinit {
         workTask?.cancel()
@@ -228,16 +266,32 @@ final class ConversationIntelligenceController {
         switch (before, phase) {
         case (_, .preparing), (_, .summarizing):
             return before == phase ? "A summary is already being written." : "Writing a summary of the last two minutes."
-        case (.continuing, _): return "Following the conversation. Stop it first to ask for a new summary."
+        case (.continuing, _): return "Following the conversation. Its summary is kept up to date."
         default: return unavailableMessage ?? "No summary could be written."
         }
     }
 
+    /// "Continue": keep following the conversation — live captions and a summary that grows.
+    /// Following starts from a summary, so when there is none yet (the button is offered beside
+    /// "Summary" from the start) one is written first and following begins when it is ready.
     func continueUnderstanding() {
-        run(machine.process(.continueSelected(at: .now)))
+        switch phase {
+        case .summaryAvailable:
+            run(machine.process(.continueSelected(at: .now)))
+        case .idle:
+            continuesWhenReady = true
+            summarize()
+            // Nothing could be started (not listening, transcription off).
+            if phase == .idle { continuesWhenReady = false }
+        case .preparing, .summarizing:
+            continuesWhenReady = true
+        case .continuing:
+            break
+        }
     }
 
     func stopUnderstanding() {
+        continuesWhenReady = false
         run(machine.process(.stopSelected(at: .now)))
     }
 
@@ -263,6 +317,11 @@ final class ConversationIntelligenceController {
                         + "\(excerpt.wordCount) words, model \(Self.seconds(recap.modelSeconds)), "
                         + "\(recap.corrections.count) correction(s)" + Self.tally(recap.corrections))
                     self.run(self.machine.process(.recapReady(recap, at: .now)))
+                    // "Continue" was pressed before there was a summary.
+                    if self.continuesWhenReady {
+                        self.continuesWhenReady = false
+                        if self.phase == .summaryAvailable { self.run(self.machine.process(.continueSelected(at: .now))) }
+                    }
                 }
             case .cancelWork:
                 workTask?.cancel()
@@ -371,6 +430,31 @@ final class ConversationIntelligenceController {
     /// Titles and messages are generic and safe on the Lock Screen. The summary's own text is
     /// `detail`: the Live Activity pipeline shows it only in the expanded presentation, only
     /// while "Show speech summaries" is on, and never while the iPhone is judged locked.
+    ///
+    /// The island gets a preview, not the summary: whole sentences chosen from the finished
+    /// summary (`IslandSummaryPreview`), as many as fill three lines of 17-point text; the
+    /// island shows no title of the model's. The full summary stays as it is, in `recap` and in History;
+    /// "Open" leads to it (`recordID`).
+    private func islandPreview(newestFirst: Bool) -> String? {
+        guard let recap else { return nil }
+        guard recap.isSummary else { return recap.summary }
+        let preview = IslandSummaryPreview.body(summary: recap.summary, keyPoints: recap.keyPoints, newestFirst: newestFirst,
+                                                fits: Self.fitsIslandPreview)
+        return preview.isEmpty ? nil : preview
+    }
+
+    /// Whether `text` fills at most the preview's lines in the island's own font (body, at the
+    /// user's text size up to the island's cap) and width.
+    static func fitsIslandPreview(_ text: String) -> Bool {
+        let preferred = UIApplication.shared.preferredContentSizeCategory
+        let category = preferred > .extraLarge ? .extraLarge : preferred
+        let font = UIFont.preferredFont(forTextStyle: .body, compatibleWith: UITraitCollection(preferredContentSizeCategory: category))
+        let bounds = (text as NSString).boundingRect(
+            with: CGSize(width: IslandMetrics.previewWidth, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [.font: font], context: nil)
+        return Int((bounds.height / font.lineHeight).rounded()) <= IslandMetrics.previewLines
+    }
+
     private func publishIslandState() {
         let state: IslandConversation? = switch status {
         case nil:
@@ -378,9 +462,11 @@ final class ConversationIntelligenceController {
         case .preparingRecap, .summarizing:
             IslandConversation(phase: .summarizing, title: "Summarizing", since: statusSince)
         case .summarySaved, .summaryAvailable:
-            IslandConversation(phase: .summaryReady, title: "Summary ready", detail: recap?.summary, since: statusSince)
+            IslandConversation(phase: .summaryReady, title: "Summary Ready", detail: islandPreview(newestFirst: false),
+                               recordID: currentRecordID, since: statusSince)
         case .continuing:
-            IslandConversation(phase: .following, title: "Following the conversation", detail: recap?.summary, since: statusSince)
+            IslandConversation(phase: .following, title: "Following Conversation", detail: islandPreview(newestFirst: true),
+                               recordID: currentRecordID, since: statusSince)
         case .stopped:
             IslandConversation(phase: .notice, title: "Stopped following", message: "The summary is saved. Still listening for sounds.",
                                since: statusSince)

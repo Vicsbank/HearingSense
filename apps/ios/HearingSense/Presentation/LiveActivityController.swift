@@ -70,6 +70,8 @@ final class LiveActivityController {
     private static let legacySettingsKey = "island.settings.v1"
     /// Set once protected data was seen to become unavailable on this installation.
     private static let lockSignalKey = "island.lockSignalObserved.v1"
+    /// One line about the carry-over from `island.settings.v1`, for the diagnostics report.
+    private static let migrationNoteKey = "island.settings.migrationNote"
 
     private(set) var settings: IslandSettings
     /// What the activity shows (or would show) right now.
@@ -135,6 +137,8 @@ final class LiveActivityController {
         case start
         case update(IslandContent, IslandAlertRequest?)
         case end
+        /// Every job queued before this one has been carried out.
+        case barrier(CheckedContinuation<Void, Never>)
     }
 
     init(defaults: UserDefaults = .standard) {
@@ -142,13 +146,13 @@ final class LiveActivityController {
         var stored = defaults.data(forKey: Self.settingsKey)
             .flatMap { try? JSONDecoder().decode(IslandSettings.self, from: $0) }
         if stored == nil, let legacy = defaults.data(forKey: Self.legacySettingsKey) {
-            let before = try? JSONDecoder().decode(IslandSettings.self, from: legacy)
+            // Carried over once, every stored value kept: a stored "Prominent alerts: off" stays off.
             let migrated = IslandSettings.migrated(fromVersion1: legacy)
-            if let before, before.expandsForImportantEvents != migrated.expandsForImportantEvents {
-                SettingsAudit.record("Prominent alerts (new default, set by the app update)", from: before.expandsForImportantEvents,
-                                     to: migrated.expandsForImportantEvents, defaults: defaults)
-            }
             if let data = try? JSONEncoder().encode(migrated) { defaults.set(data, forKey: Self.settingsKey) }
+            defaults.set("\(Date.now.formatted(.iso8601)): settings of the earlier build carried over, every stored value kept "
+                + "(prominent alerts \(migrated.expandsForImportantEvents ? "on" : "off"), ambient icons "
+                + "\(migrated.showsAmbientIcons ? "on" : "off"), alert sound \(migrated.playsAlertSound ? "on" : "off")); "
+                + "“while locked” starts off", forKey: Self.migrationNoteKey)
             stored = migrated
         }
         settings = stored ?? .default
@@ -307,6 +311,25 @@ final class LiveActivityController {
         process(.settings(updated, at: .now))
     }
 
+    /// Whether the Live Activity of the open session exists, after every queued ActivityKit job
+    /// was carried out. An App Intent that switches listening on awaits this before it returns:
+    /// `AudioRecordingIntent` requires a Live Activity for as long as the audio session is
+    /// active, and App Intents ends the process ("AudioRecordingIntent was performed with an
+    /// active audio session but without a Live Activity") when `perform()` returns without one.
+    /// The start itself is a queued job, so without the wait the intent returned first.
+    ///
+    /// The request is the user's (they pressed the Action Button): an activity that iOS ended
+    /// earlier is requested again here.
+    func ensureRunning() async -> Bool {
+        if pipeline.isLive, activity == nil {
+            needsStart = true
+            reachedSystemLimit = false
+            jobs.yield(.start)
+        }
+        await withCheckedContinuation { jobs.yield(.barrier($0)) }
+        return activity != nil
+    }
+
     // MARK: - Pipeline
 
     private func process(_ input: IslandInput) {
@@ -395,6 +418,8 @@ final class LiveActivityController {
 
     private func perform(_ job: Job) async {
         switch job {
+        case .barrier(let continuation):
+            continuation.resume()
         case .cleanUp:
             await endLeftovers()
         case .start:
@@ -543,6 +568,8 @@ final class LiveActivityController {
         lines.append("Settings: activity \(settings.isEnabled ? "on" : "off"), ambient icons "
             + "\(settings.showsAmbientIcons ? "on" : "off"), prominent alerts \(settings.expandsForImportantEvents ? "on" : "off") "
             + "(while locked: \(settings.alertsWhileLocked ? "on" : "off")), speech summaries \(settings.showsSpeechSummaries ? "on" : "off"), alert sound \(settings.playsAlertSound ? "on" : "off")")
+        lines.append("Settings storage: " + (defaults.string(forKey: Self.migrationNoteKey)
+                ?? (defaults.data(forKey: Self.settingsKey) == nil ? "nothing stored (defaults in use)" : "stored by this build's format")))
         if let activityStartedAt {
             lines.append("Activity started \(activityStartedAt.formatted(.iso8601)); iOS ends it at about "
                 + lifetime.expectedEnd(startedAt: activityStartedAt).formatted(.iso8601) + " (it is not replaced)")
@@ -701,6 +728,57 @@ extension LiveActivityController {
             guard !Task.isCancelled, let self else { return }
             self.stopDemo(attention: attention)
         }
+    }
+
+    /// Ends every activity of this app that this controller does not hold (the emergency stop of
+    /// the device test mode: what an earlier process left on the island goes as well).
+    /// `--hs-island-conversation summarizing|ready|ready-short|ready-long|ready-longtitle|following|notice`: a sample conversation state for layout checks of the
+    /// expanded island (synthetic text; nothing was said and nothing is summarized).
+    static var requestedConversationSample: IslandConversation? {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: "--hs-island-conversation"), index + 1 < arguments.count else { return nil }
+        // Each sample is a full summary; the island's preview is made from it as in the product.
+        func summary(_ phase: IslandConversation.Phase, title: String, text: String, points: [String]) -> IslandConversation {
+            IslandConversation(phase: phase, title: phase == .following ? "Following Conversation" : "Summary Ready",
+                               detail: IslandSummaryPreview.body(summary: text, keyPoints: points, newestFirst: phase == .following,
+                                                                 fits: ConversationIntelligenceController.fitsIslandPreview),
+                               // With `--hs-sample-history`: the first sample summary, so that "Open" can be followed.
+                               recordID: arguments.contains("--hs-sample-history")
+                                   ? UUID(uuidString: "00000000-0000-0000-0000-000000000001") : nil,
+                               since: .now)
+        }
+        let medium = "Maya and Jon agreed to meet for lunch on Friday at 12:30 at the noodle place on Fifth Street. "
+            + "Jon will book a table for four and Maya brings the signed forms for the science fair."
+        let long = "The group report is due next Thursday and the group meets on Saturday at ten in study room 204 of the science "
+            + "building, because the library is closed on weekends. The graphs have to be finished by Friday night so that the "
+            + "report can be written on Saturday. The exam was postponed until the Friday after, and the teacher will send the "
+            + "new room by email. Nobody has booked the projector yet."
+        switch arguments[index + 1] {
+        case "summarizing": return IslandConversation(phase: .summarizing, title: "Summarizing", since: .now)
+        case "ready", "ready-medium":
+            return summary(.summaryReady, title: "Lunch on Friday", text: medium,
+                           points: ["Lunch is on Friday at 12:30 at the noodle place on Fifth Street.", "Jon books a table for four."])
+        case "ready-short":
+            return summary(.summaryReady, title: "Bus change", text: "The 14 bus leaves from the north stop this week.", points: [])
+        case "ready-long":
+            return summary(.summaryReady, title: "Group report", text: long,
+                           points: ["The group meets on Saturday at ten in study room 204 of the science building.",
+                                    "The graphs have to be finished by Friday night.", "The exam was postponed until the Friday after."])
+        case "ready-longtitle":
+            return summary(.summaryReady, title: "Meeting with Ms. Wang about the science fair schedule",
+                           text: "The meeting with Ms. Wang is tomorrow at 3 p.m. in room 204. The poster has to be printed before it.",
+                           points: [])
+        case "following":
+            return summary(.following, title: "Lunch on Friday", text: medium,
+                           points: ["Lunch is on Friday at 12:30 at the noodle place on Fifth Street.", "Jon books a table for four."])
+        case "notice": return IslandConversation(phase: .notice, title: "Nothing to Summarize",
+                                                 message: "Open Hearing Sense for details.", since: .now)
+        default: return nil
+        }
+    }
+
+    func endLeftoverActivities() {
+        Task { await endLeftovers() }
     }
 
     func stopDemo(attention: AttentionController) {

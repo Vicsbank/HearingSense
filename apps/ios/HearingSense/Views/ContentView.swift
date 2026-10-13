@@ -2,100 +2,167 @@ import HearingSenseAudio
 import HearingSenseDomain
 import SwiftUI
 
+/// The app's three places: the listening screen, the saved summaries and the settings.
 struct ContentView: View {
     @Environment(ListeningController.self) private var controller
     @Environment(\.scenePhase) private var scenePhase
-    #if DEBUG
-    /// `--hs-screen conversation|history|summary|privacy|icons|island|islandsettings`
-    enum DebugScreen: String, Hashable, Identifiable {
-        case conversation, history, summary, privacy, icons, island, islandsettings
-        var id: String { rawValue }
+    @State private var navigation = ConversationNavigation.shared
+    /// Saved summaries opened on top of History (a summary opened from the Dynamic Island).
+    @State private var historyPath: [UUID] = []
+
+    enum AppTab: Hashable {
+        case listen, history, settings
     }
 
-    @State private var debugScreen: DebugScreen? = {
+    #if DEBUG
+    /// `--hs-screen conversation|history|summary|privacy|icons|island|islandsettings|actionbutton|settings|developer`
+    enum DebugScreen: String, Hashable, Identifiable {
+        case conversation, history, summary, privacy, icons, island, islandsettings, actionbutton, settings, developer
+        var id: String { rawValue }
+
+        var tab: AppTab {
+            switch self {
+            case .history, .summary: .history
+            case .settings, .actionbutton, .privacy, .islandsettings, .developer: .settings
+            default: .listen
+            }
+        }
+    }
+
+    private static let requestedScreen: DebugScreen? = {
         let arguments = ProcessInfo.processInfo.arguments
         guard let index = arguments.firstIndex(of: "--hs-screen"), index + 1 < arguments.count else { return nil }
         return DebugScreen(rawValue: arguments[index + 1])
     }()
+
+    @State private var tab = requestedScreen?.tab ?? .listen
+    @State private var debugScreen = requestedScreen.flatMap { $0 == .history || $0 == .settings ? nil : $0 }
+    #else
+    @State private var tab = AppTab.listen
     #endif
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    BrandHeader()
-                    StatusCard(state: controller.state, format: controller.captureFormat)
-                    ListeningButtons()
-                    SceneRow()
-                    LiveActivityCard()
-                    AttentionCard()
-                    ConversationCard()
-                    RecognitionCard()
-                    SpeechIntelligenceCard()
-                    RecentEventsCard()
-                    LevelMeterView(level: controller.level, history: controller.levelHistory,
-                                   capacity: ListeningController.historyLength,
-                                   isActive: controller.state.isCapturing)
-                    RouteSummaryCard(assessment: controller.assessment, route: controller.route)
-                    PolicyCard()
-                    DiagnosticsLinks()
-                    PrivacyNote()
-                }
-                .padding()
-            }
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle("Hearing Sense")
-            .navigationBarTitleDisplayMode(.inline)
-            #if DEBUG
-            .navigationDestination(item: $debugScreen) { screen in
-                switch screen {
-                case .conversation: ConversationLiveView()
-                case .history: ConversationHistoryView()
-                case .summary: NewestConversationRecordView()
-                case .privacy: ConversationPrivacyView()
-                case .icons: SoundIconGalleryView()
-                case .island: LiveActivityDebugView()
-                case .islandsettings: LiveActivitySettingsView()
+        TabView(selection: $tab) {
+            Tab("Listen", systemImage: "ear", value: AppTab.listen) {
+                NavigationStack {
+                    HomeView { navigation.showsConversation = true }
+                        .navigationDestination(isPresented: $navigation.showsConversation) {
+                            ConversationLiveView()
+                        }
+                        #if DEBUG
+                        .navigationDestination(item: debugBinding(for: .listen)) { debugDestination($0) }
+                        #endif
                 }
             }
-            #endif
+            Tab("History", systemImage: "clock", value: AppTab.history) {
+                NavigationStack(path: $historyPath) {
+                    ConversationHistoryView()
+                        .navigationDestination(for: UUID.self) { ConversationRecordView(id: $0) }
+                        #if DEBUG
+                        .navigationDestination(item: debugBinding(for: .history)) { debugDestination($0) }
+                        #endif
+                }
+            }
+            Tab("Settings", systemImage: "gearshape", value: AppTab.settings) {
+                NavigationStack {
+                    SettingsView()
+                        #if DEBUG
+                        .navigationDestination(item: debugBinding(for: .settings)) { debugDestination($0) }
+                        #endif
+                }
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             controller.scenePhaseChanged(phase)
         }
+        // The summary's two-minute buffer follows the transcription switch.
+        .onChange(of: controller.speech.isTranscriptionEnabled, initial: true) { _, isOn in
+            controller.conversation.transcriptionChanged(isOn: isOn)
+        }
         // A tap on the Live Activity, or its "Open" control.
         .onOpenURL { url in
-            if url == HearingSenseLink.conversation { ConversationNavigation.shared.showsConversation = true }
+            if let id = HearingSenseLink.summaryID(in: url) {
+                // "Open" on a finished summary: that summary's own page, in History.
+                controller.conversation.refreshHistory()
+                if controller.conversation.record(id) != nil {
+                    tab = .history
+                    historyPath = [id]
+                    return
+                }
+            }
+            tab = .listen
+            if url == HearingSenseLink.conversation || HearingSenseLink.summaryID(in: url) != nil {
+                navigation.showsConversation = true
+            }
         }
         #if DEBUG
         .task {
             // Checks without a microphone: `--hs-conversation-demo` plays a scripted conversation,
-            // `--hs-screen <name>` opens one of the Window 6 screens directly.
+            // `--hs-screen <name>` opens one of the screens directly.
             if ConversationIntelligenceController.isDemoRequested {
                 controller.conversation.runDemo()
             }
         }
         #endif
     }
+
+    #if DEBUG
+    private func debugBinding(for tab: AppTab) -> Binding<DebugScreen?> {
+        Binding(get: { debugScreen?.tab == tab ? debugScreen : nil }, set: { debugScreen = $0 })
+    }
+
+    @ViewBuilder
+    private func debugDestination(_ screen: DebugScreen) -> some View {
+        switch screen {
+        case .conversation: ConversationLiveView()
+        case .history: ConversationHistoryView()
+        case .summary: NewestConversationRecordView()
+        case .privacy: ConversationPrivacyView()
+        case .icons: SoundIconGalleryView()
+        case .island: LiveActivityDebugView()
+        case .islandsettings: LiveActivitySettingsView()
+        case .actionbutton: ActionButtonSetupView()
+        case .settings: SettingsView()
+        case .developer: DeveloperView()
+        }
+    }
+    #endif
 }
 
-private struct BrandHeader: View {
+/// Diagnostics and research tools: everything the first screen showed before the redesign.
+/// Reached from Settings in Debug builds only.
+struct DeveloperView: View {
+    @Environment(ListeningController.self) private var controller
+
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "ear.badge.waveform")
-                .font(.largeTitle)
-                .foregroundStyle(.tint)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Hearing Sense")
-                    .font(.title.bold())
-                Text("Ambient awareness for headphone wearers")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+        ScrollView {
+            VStack(alignment: .leading, spacing: HSSpacing.m) {
+                #if DEBUG
+                DeviceTestModeCard()
+                StatusCard(state: controller.state, format: controller.captureFormat, isSynthetic: controller.sessionIsSynthetic)
+                #else
+                StatusCard(state: controller.state, format: controller.captureFormat)
+                #endif
+                ListeningButtons()
+                SceneRow()
+                LiveActivityCard()
+                AttentionCard()
+                ConversationCard()
+                RecognitionCard()
+                SpeechIntelligenceCard()
+                RecentEventsCard()
+                LevelMeterView(level: controller.level, history: controller.levelHistory,
+                               capacity: ListeningController.historyLength,
+                               isActive: controller.state.isCapturing)
+                RouteSummaryCard(assessment: controller.assessment, route: controller.route)
+                PolicyCard()
+                DiagnosticsLinks()
             }
+            .padding()
         }
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isHeader)
+        .background(Color(.systemGroupedBackground))
+        .navigationTitle("Diagnostics")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -117,6 +184,7 @@ private struct ListeningButtons: View {
                 .buttonStyle(.borderedProminent)
                 .disabled(!controller.state.canStart)
                 .accessibilityHint("Turns on the microphone and starts measuring sound around you.")
+                .accessibilityIdentifier("start-listening")
 
                 Button {
                     Task { await controller.stop() }
@@ -127,6 +195,7 @@ private struct ListeningButtons: View {
                 .buttonStyle(.bordered)
                 .disabled(!controller.state.canStop)
                 .accessibilityHint("Turns off the microphone.")
+                .accessibilityIdentifier("stop-listening")
             }
             .controlSize(.large)
 
@@ -263,22 +332,6 @@ private struct DiagnosticsLinks: View {
     }
 }
 
-private struct PrivacyNote: View {
-    var body: some View {
-        Label {
-            Text("Audio is processed on this iPhone, in memory only. Hearing Sense does not record, "
-                + "store or upload audio. Speech is transcribed only while “Transcribe nearby speech” is on; "
-                + "the last two minutes stay in memory for a summary you ask for, and only that summary is saved. "
-                + "While listening, a Live Activity shows icons outside the app. "
-                + "It is not a safety or emergency alert system.")
-        } icon: {
-            Image(systemName: "lock.shield")
-        }
-        .font(.footnote)
-        .foregroundStyle(.secondary)
-    }
-}
-
 /// Rounded container used by the main screen sections.
 struct Card<Content: View>: View {
     @ViewBuilder var content: Content
@@ -287,6 +340,6 @@ struct Card<Content: View>: View {
         content
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: HSRadius.card, style: .continuous))
     }
 }

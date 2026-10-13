@@ -17,6 +17,10 @@
 		<string>audio</string>
 		<string>processing</string>
 	</array>
+	<!-- Which source a build was made from, for the Debug diagnostics export (Window 8):
+	     xcodebuild … HS_SOURCE_REVISION=<commit>. Empty when the setting is not given. -->
+	<key>HSSourceRevision</key>
+	<string>$(HS_SOURCE_REVISION)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>org.hearingsense.HearingSense.experiment.processing</string>

@@ -16,8 +16,12 @@ import HearingSenseAudio
 // recording state: the app may start the microphone while it is not on screen, and must show a
 // Live Activity for as long as it records — which is what a listening session does anyway.
 // `LiveActivityIntent` runs the intent in the app's process and lets it start that activity.
-// Not verified on a physical iPhone yet (see docs/research/DYNAMIC_ISLAND_API_LIMITS.md):
-// starting from the background, from a locked iPhone, and from the Action Button itself.
+//
+// The contract is enforced by App Intents: when `perform()` of an `AudioRecordingIntent` returns
+// with an active audio session and no Live Activity, the framework stops the process with a
+// fatal error (crash reports of 2026-10-11 on the iPhone 18 Pro, PerformActionExecutorTask). The
+// activity is requested by a queued job, so every intent that leaves the microphone on waits
+// for it (`requireLiveActivityForIntent`) and switches listening off again when there is none.
 
 /// ON when off, OFF when on.
 struct ToggleHearingSenseIntent: AudioRecordingIntent, LiveActivityIntent {
@@ -36,6 +40,9 @@ struct ToggleHearingSenseIntent: AudioRecordingIntent, LiveActivityIntent {
             try await continueInForeground("Hearing Sense needs to ask for the microphone once.", alwaysConfirm: false)
         }
         let outcome = await controller.toggle(source: .intent)
+        if let problem = await controller.requireLiveActivityForIntent() {
+            return .result(dialog: IntentDialog(stringLiteral: problem))
+        }
         return .result(dialog: IntentDialog(stringLiteral: outcome.dialog))
     }
 }
@@ -49,11 +56,19 @@ struct StartHearingSenseIntent: AudioRecordingIntent, LiveActivityIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let controller = ListeningController.shared
-        guard !controller.session.isOn else { return .result(dialog: "Hearing Sense is already on.") }
+        guard !controller.session.isOn else {
+            if let problem = await controller.requireLiveActivityForIntent() {
+                return .result(dialog: IntentDialog(stringLiteral: problem))
+            }
+            return .result(dialog: "Hearing Sense is already on.")
+        }
         if controller.needsForegroundToStart {
             try await continueInForeground("Hearing Sense needs to ask for the microphone once.", alwaysConfirm: false)
         }
         await controller.start(source: .intent)
+        if let problem = await controller.requireLiveActivityForIntent() {
+            return .result(dialog: IntentDialog(stringLiteral: problem))
+        }
         let isOn = controller.session.isOn
         return .result(dialog: isOn ? "Hearing Sense is on." : "Hearing Sense could not start. Open the app and try again.")
     }

@@ -1,4 +1,5 @@
 #if DEBUG
+import ConversationUnderstanding
 import Foundation
 import HearingSenseAudio
 import HearingSenseDomain
@@ -6,10 +7,11 @@ import SoundEventDetection
 import SpeechIntelligence
 import UIKit
 
-/// Debug-build test aid for physical-device tests. When the app is launched with
-/// `--hs-export-diagnostics` it rewrites `Documents/hearing-sense-diagnostics.txt` every few
-/// seconds, so a test run can be read from the Mac
-/// (`xcrun devicectl device copy from --domain-type appDataContainer …`) instead of from
+/// Debug-build test aid for physical-device tests. While the device test mode is on (Window 8,
+/// `DeviceTestMode`; stored on the iPhone, so it also holds for a process started by the Action
+/// Button's intent) or when the app is launched with `--hs-export-diagnostics`, it rewrites
+/// `Documents/hearing-sense-diagnostics.txt` every few seconds, so a test run can be read from
+/// the Mac (`xcrun devicectl device copy from --domain-type appDataContainer …`) instead of from
 /// screenshots. `--hs-autostart` starts listening right after launch.
 ///
 /// The file holds metadata only: app and lock state, counters, timings, the diagnostic event log
@@ -108,6 +110,12 @@ final class DebugDiagnosticsExporter {
             "app=\(appState)",
             "unlocked=\(application.isProtectedDataAvailable)",
             "state=\(controller.state)",
+            "session=\(controller.session.phase.rawValue)",
+            controller.microphoneFacts,
+            "transcription=\(controller.speech.isTranscriptionEnabled ? "on" : "off")"
+                + (controller.speech.isTranscriptionLockedOff ? "(locked)" : ""),
+            "testMode=\(DeviceTestMode.summary)",
+            "testSessionEnds=\(controller.testSessionDeadline.map { "in\(max(Int($0.timeIntervalSinceNow.rounded(.up)), 0))s" } ?? "-")",
             "timeLimit=\(controller.timeLimit?.heartbeat(at: .now) ?? "off")",
             "windows=\(sound.results)",
             "segments=\(sound.segments)",
@@ -127,6 +135,9 @@ final class DebugDiagnosticsExporter {
             "backlogMax=\(sound.maxBacklog)",
             controller.attention.heartbeat,
             controller.liveActivity.heartbeat,
+            "scene=\(controller.scene.estimate?.scene.rawValue ?? "-")",
+            "conversation=\(controller.conversation.phase.rawValue)",
+            "summaryRequests=\(controller.conversation.recapsMade)",
         ].joined(separator: " ") + " " + resourceFields().joined(separator: " ") + " " + extraHeartbeat()
     }
 
@@ -134,7 +145,16 @@ final class DebugDiagnosticsExporter {
         var lines = [
             "Hearing Sense debug diagnostics (metadata only: no audio, no transcripts, no summaries)",
             "Device: \(DeviceInfo.summary)",
+            "Build: \(Self.build)",
             "Launched \(Self.time(launchDate)), written \(Self.time(.now))",
+            "Process arguments: \(ProcessInfo.processInfo.arguments.dropFirst().joined(separator: " ").isEmpty ? "none" : ProcessInfo.processInfo.arguments.dropFirst().joined(separator: " "))",
+        ]
+        lines += DeviceTestMode.reportLines()
+        lines += [
+            "Microphone right now: \(controller.microphoneFacts)",
+            "Listening session: \(controller.session.phase.rawValue) · started \(controller.session.statistics.sessionsStarted), ended "
+                + "\(controller.session.statistics.sessionsEnded), toggles \(controller.session.statistics.toggles), requests refused "
+                + "\(controller.session.statistics.requestsRefused) · last end: \(controller.session.lastEndReason?.rawValue ?? "none")",
             "",
             "== Heartbeats (every 5 s) ==",
         ]
@@ -142,9 +162,19 @@ final class DebugDiagnosticsExporter {
         lines += ["", "== Event log =="]
         lines += controller.log.entries.map { "\(Self.time($0.date)) [\($0.kind.rawValue)] \($0.message)" }
         lines += ["", "== Reports ==", controller.recognition.reportText(), "", controller.speech.reportText(), "",
-                  controller.attention.reportText(), "", controller.liveActivity.reportText(), "", extraReport()]
+                  controller.attention.reportText(), "", controller.scene.reportText(), "", controller.liveActivity.reportText(), "",
+                  controller.conversation.reportText(), "", extraReport()]
         return lines.joined(separator: "\n")
     }
+
+    /// Version, build number and when this binary was built (the executable's modification date).
+    private static let build: String = {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let built = (Bundle.main.executableURL.flatMap { try? $0.resourceValues(forKeys: [.contentModificationDateKey]) })?
+            .contentModificationDate.map { $0.formatted(.iso8601) } ?? "unknown"
+        return "\(info["CFBundleShortVersionString"] as? String ?? "?") (\(info["CFBundleVersion"] as? String ?? "?")), "
+            + "Debug, binary of \(built), source \((info["HSSourceRevision"] as? String).flatMap { $0.isEmpty ? nil : $0 } ?? "not recorded")"
+    }()
 
     private static func time(_ date: Date) -> String {
         date.formatted(.iso8601.time(includingFractionalSeconds: true))

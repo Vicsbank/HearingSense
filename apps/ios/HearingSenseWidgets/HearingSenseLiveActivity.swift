@@ -11,8 +11,8 @@ import WidgetKit
 ///
 /// - Compact and minimal: icons only.
 /// - Expanded (the user touches and holds the island): the current sound, the listening status
-///   and the conversation controls (`IslandControls`: Summarize, Continue, Stop). Holding the
-///   island only shows them; nothing is summarized until Summarize is pressed.
+///   and one control (`IslandControls`, `IslandTrailingControl`: Summary, then Open or Stop).
+///   Holding the island only shows it; nothing is summarized until Summary is pressed.
 /// - Lock Screen: icon-focused, whatever the priority; never event text or speech text.
 ///
 /// A tap on the activity opens the app, on the conversation screen while a summary exists.
@@ -27,10 +27,19 @@ struct HearingSenseLiveActivity: Widget {
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
+                    // The centre region lies below the camera; the icon and the timer are moved
+                    // down to its row, so that the three share one centre line.
+                    // (Not in the summary layout: it has no centre region, and its header stays
+                    // beside the camera.)
                     IslandExpandedLeading(context.state, isStale: context.isStale)
+                        .frame(maxHeight: Self.hasHeader(context) ? nil : .infinity, alignment: .bottom)
                 }
-                DynamicIslandExpandedRegion(.trailing) {
-                    IslandExpandedTrailing(context.state, sessionStart: context.attributes.sessionStart)
+                // Priority: the control beside the camera (Open, Stop) keeps its full width; a long
+                // title in the centre is shortened instead.
+                DynamicIslandExpandedRegion(.trailing, priority: 1) {
+                    IslandTrailingControl(content: context.state, sessionStart: context.attributes.sessionStart,
+                                          isStale: context.isStale)
+                        .frame(maxHeight: Self.hasHeader(context) ? nil : .infinity, alignment: .bottom)
                 }
                 DynamicIslandExpandedRegion(.center) {
                     IslandExpandedCenter(context.state, isStale: context.isStale)
@@ -47,12 +56,22 @@ struct HearingSenseLiveActivity: Widget {
             } minimal: {
                 IslandMinimal(context.state, isStale: context.isStale)
             }
+            // The system's defaults leave more room above the header and under the buttons than
+            // beside them. With these the header sits level with the camera, and three lines
+            // of text and the buttons fit below it.
+            .contentMargins(.top, 8, for: .expanded)
+            .contentMargins(.bottom, 8, for: .expanded)
             .keylineTint(context.state.mode == .attention ? IslandStyle.tint(for: context.state) : nil)
             .widgetURL(Self.link(for: context.state))
         }
     }
 
     private static func link(for content: IslandContent) -> URL {
-        content.conversation == nil ? HearingSenseLink.home : HearingSenseLink.conversation
+        HearingSenseLink.destination(for: content)
+    }
+
+    /// The summary layout: a small header beside the camera and one column of text below it.
+    private static func hasHeader(_ context: ActivityViewContext<HearingSenseActivityAttributes>) -> Bool {
+        !context.isStale && context.state.summaryConversation != nil
     }
 }

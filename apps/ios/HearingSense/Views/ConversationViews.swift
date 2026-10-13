@@ -59,12 +59,6 @@ struct ConversationCard: View {
                 }
             }
         }
-        .navigationDestination(isPresented: $navigation.showsConversation) {
-            ConversationLiveView()
-        }
-        .onChange(of: controller.speech.isTranscriptionEnabled, initial: true) { _, isOn in
-            conversation.transcriptionChanged(isOn: isOn)
-        }
     }
 
     private static func explanation(_ conversation: ConversationIntelligenceController, isTranscribing: Bool) -> String {
@@ -98,7 +92,7 @@ struct ConversationButtons: View {
                     conversation.summarize()
                     if conversation.phase != .idle { onSummarize() }
                 } label: {
-                    Label("Summarize Last 2 Minutes", systemImage: "text.bubble").frame(maxWidth: .infinity)
+                    Label("Summary", systemImage: "text.bubble").frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(!conversation.isSessionActive)
@@ -352,29 +346,24 @@ struct ConversationHistoryView: View {
         let conversation = controller.conversation
         let records = conversation.search(query)
         List {
-            if records.isEmpty {
-                ContentUnavailableView(query.isEmpty ? "No saved summaries" : "No results",
-                                       systemImage: query.isEmpty ? "text.bubble" : "magnifyingglass",
-                                       description: Text(query.isEmpty
-                                           ? "Summaries you ask for are saved here, on this iPhone only."
-                                           : "No saved summary contains “\(query)”."))
-            }
             ForEach(records) { record in
                 NavigationLink {
                     ConversationRecordView(id: record.id)
                 } label: {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
+                    VStack(alignment: .leading, spacing: HSSpacing.xxs) {
+                        HStack(spacing: HSSpacing.xs) {
                             Text(record.title).font(.headline)
                             if record.status == .continuing {
-                                Text("Continuing").font(.caption.weight(.semibold)).padding(.horizontal, 6).padding(.vertical, 2)
+                                Text("Continuing").font(.caption.weight(.semibold))
+                                    .padding(.horizontal, HSSpacing.xs).padding(.vertical, 2)
                                     .background(.tint.opacity(0.2), in: Capsule())
                             }
                         }
-                        Text(record.summary).font(.subheadline).foregroundStyle(.secondary).lineLimit(3)
+                        Text(record.summary).font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
                         Text(record.createdAt, format: .dateTime.weekday().day().month().hour().minute())
-                            .font(.caption).foregroundStyle(.secondary)
+                            .font(.footnote).foregroundStyle(.tertiary)
                     }
+                    .padding(.vertical, HSSpacing.xxs)
                     .accessibilityElement(children: .combine)
                 }
             }
@@ -382,13 +371,27 @@ struct ConversationHistoryView: View {
                 conversation.delete(Set(offsets.map { records[$0].id }))
             }
         }
-        .searchable(text: $query, prompt: "Search summaries")
-        .navigationTitle("Saved summaries")
-        .navigationBarTitleDisplayMode(.inline)
+        .overlay {
+            if records.isEmpty {
+                if query.isEmpty {
+                    ContentUnavailableView("No Summaries Yet", systemImage: "text.bubble",
+                                           description: Text("Summaries you ask for are saved here, on this iPhone only."))
+                } else {
+                    ContentUnavailableView.search(text: query)
+                }
+            }
+        }
+        .searchable(text: $query, prompt: "Search")
+        .navigationTitle("History")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Delete All", role: .destructive) { confirmsDeleteAll = true }
-                    .disabled(conversation.history.isEmpty)
+            if !conversation.history.isEmpty {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button("Delete All", systemImage: "trash", role: .destructive) { confirmsDeleteAll = true }
+                    } label: {
+                        Label("More", systemImage: "ellipsis")
+                    }
+                }
             }
         }
         .confirmationDialog("Delete every saved summary?", isPresented: $confirmsDeleteAll, titleVisibility: .visible) {
@@ -419,11 +422,14 @@ struct ConversationRecordView: View {
                         Section("Summary") { TextEditor(text: $summary).frame(minHeight: 220) }
                     } else {
                         Section {
-                            Text(record.title).font(.title3.bold())
-                            Text(record.summary).textSelection(.enabled)
+                            VStack(alignment: .leading, spacing: HSSpacing.xs) {
+                                Text(record.title).font(.title2.bold())
+                                Text(record.summary).font(.body).textSelection(.enabled)
+                            }
+                            .padding(.vertical, HSSpacing.xxs)
                         }
                         if !record.keyPoints.isEmpty {
-                            Section("Key points") {
+                            Section("Key Points") {
                                 ForEach(record.keyPoints, id: \.self) { Text($0).textSelection(.enabled) }
                             }
                         }

@@ -13,6 +13,41 @@ import SwiftUI
 //   controls the widget extension puts into the bottom region (Summarize, Continue, Stop).
 // - Lock Screen: icon-focused for every mode and priority; no event text, no speech text.
 
+/// Sizes of the expanded presentation: one row height for the icon, the text and the timer, so
+/// that their centres line up, and one margin for the bottom region.
+public enum IslandMetrics {
+    public static let rowHeight: CGFloat = 44
+    public static let iconSize: CGFloat = 24
+    public static let margin: CGFloat = 8
+    public static let spacing: CGFloat = 8
+    /// Height of a control in the bottom region.
+    public static let controlHeight: CGFloat = 32
+    /// Height of the header beside the camera in the summary layout: its label and its one
+    /// small control (Open, Stop).
+    public static let headerHeight: CGFloat = 24
+    /// Lines of preview text under the summary's title.
+    public static let previewLines = 3
+    /// Width of the preview's lines on the iPhone 18 Pro's expanded island, a little less than
+    /// measured (320), for the app's choice of sentences.
+    public static let previewWidth: CGFloat = 314
+    /// The summary layout follows the user's text size up to here. Beyond it the island's fixed
+    /// height would cut the text; the full summary in the app follows every size.
+    public static let largestTextSize = DynamicTypeSize.xLarge
+}
+
+extension IslandContent {
+    /// The summary layout applies: a summary is ready or a conversation is followed, and no
+    /// attention episode or pause has the island. Then the expanded presentation is a small
+    /// header beside the camera (what this is, and one small control) and one full-width column
+    /// of text below it — title and preview on one leading edge — instead of icon, text and
+    /// control in three regions that the system sizes independently.
+    public var summaryConversation: IslandConversation? {
+        guard mode != .attention, mode != .paused, let conversation,
+              conversation.phase == .summaryReady || conversation.phase == .following else { return nil }
+        return conversation
+    }
+}
+
 public enum IslandStyle {
     /// Colour by channel and priority. Never the only carrier of meaning: attention episodes
     /// also get a mark (`IslandPriorityMark`) and an accessibility label.
@@ -159,11 +194,27 @@ public struct IslandExpandedLeading: View {
     }
 
     public var body: some View {
-        IslandIcon(content, isStale: isStale)
-            .font(.system(size: 26))
-            .frame(width: 48, height: 48)
-            .background(IslandStyle.tint(for: content).opacity(0.18), in: Circle())
-            .padding(.leading, 4)
+        if !isStale, let conversation = content.summaryConversation {
+            // Summary layout: the sound's icon steps back to a small mark beside the label.
+            HStack(spacing: 6) {
+                IslandIcon(content)
+                    .font(.footnote)
+                Text(conversation.phase == .following ? "Following" : "Summary")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(IslandStyle.conversationTint)
+            }
+            .lineLimit(1)
+            .fixedSize()
+            .dynamicTypeSize(...IslandMetrics.largestTextSize)
+            .frame(height: IslandMetrics.headerHeight)
+            .padding(.leading, IslandMetrics.margin)
+        } else {
+            IslandIcon(content, isStale: isStale)
+                .font(.system(size: IslandMetrics.iconSize))
+                .frame(width: IslandMetrics.rowHeight, height: IslandMetrics.rowHeight)
+                .background(IslandStyle.tint(for: content).opacity(0.18), in: Circle())
+                .padding(.leading, IslandMetrics.margin / 2)
+        }
     }
 }
 
@@ -183,14 +234,14 @@ public struct IslandExpandedTrailing: View {
             }
             // Counts up without any update from the app.
             Text(content.mode == .attention ? content.since : sessionStart, style: .timer)
-                .font(.caption.monospacedDigit())
+                .font(.footnote.weight(.medium).monospacedDigit())
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.trailing)
-                .frame(maxWidth: 48, alignment: .trailing)
+                .frame(maxWidth: 52, alignment: .trailing)
                 .accessibilityHidden(true)
         }
-        .frame(maxHeight: .infinity, alignment: .center)
-        .padding(.trailing, 8)
+        .frame(height: IslandMetrics.rowHeight, alignment: .center)
+        .padding(.trailing, IslandMetrics.margin)
     }
 }
 
@@ -206,32 +257,37 @@ public struct IslandExpandedCenter: View {
     }
 
     public var body: some View {
+        if !isStale, content.summaryConversation != nil {
+            // Summary layout: title and text are in the bottom region, across the full width.
+            EmptyView()
+        } else {
+            text
+        }
+    }
+
+    private var text: some View {
         VStack(alignment: .leading, spacing: 2) {
             if isStale {
-                Text("Not updating").font(.headline)
-                Text("Open Hearing Sense").font(.caption).foregroundStyle(.secondary)
+                Text("Not Updating").font(.headline)
+                secondary("Open Hearing Sense")
             } else if content.mode == .attention, let headline = content.headline {
                 headlineText(headline)
                     .font(.headline)
                     .lineLimit(2)
                     .minimumScaleFactor(0.8)
-                if let caption = content.caption {
-                    Text(caption).font(.caption).foregroundStyle(.secondary).lineLimit(1)
-                }
+                if let caption = content.caption { secondary(caption) }
             } else if content.mode != .paused, let conversation = content.conversation {
-                Text(conversation.title).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
-                if let detail = conversation.detail {
-                    // Speech-derived: hidden by the system wherever content is redacted for privacy.
-                    Text(detail)
-                        .privacySensitive()
-                        .font(.caption)
-                        .lineLimit(3)
-                        .fixedSize(horizontal: false, vertical: true)
-                } else {
-                    Text(conversation.message ?? Self.hint(for: conversation.phase))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
+                switch conversation.phase {
+                case .summarizing:
+                    Text("Summarizing…").font(.headline).lineLimit(1)
+                    secondary("The last two minutes")
+                case .summaryReady, .following:
+                    // Only while an attention episode has the island (see `summaryConversation`),
+                    // and then the branch above is taken; kept for completeness.
+                    Text(conversation.title).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
+                case .notice:
+                    Text(conversation.title).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
+                    if let message = conversation.message { secondary(message, lines: 2) }
                 }
             } else if content.mode != .paused, let recent = content.recentSummary {
                 // The episode is over or gave way to an ordinary sound; its summary stays readable
@@ -248,10 +304,19 @@ public struct IslandExpandedCenter: View {
                     .font(.headline)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
-                Text(statusLine).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                secondary(statusLine)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: IslandMetrics.rowHeight, alignment: .leading)
+    }
+
+    /// The quieter second line. Medium weight: light text is hard to read on the island.
+    private func secondary(_ text: String, lines: Int = 1) -> some View {
+        Text(text)
+            .font(.footnote.weight(.medium))
+            .foregroundStyle(.secondary)
+            .lineLimit(lines)
+            .minimumScaleFactor(0.9)
     }
 
     /// "Listening · Traffic nearby": the status and, when there is one, the acoustic scene.
@@ -259,15 +324,6 @@ public struct IslandExpandedCenter: View {
         if content.mode == .paused { return "Hearing Sense" }
         let status = content.mode == .ambient ? "Listening" : "Hearing Sense"
         return content.sceneTitle.map { "\(status) · \($0)" } ?? status
-    }
-
-    static func hint(for phase: IslandConversation.Phase) -> String {
-        switch phase {
-        case .summarizing: "The last two minutes, on this iPhone"
-        case .summaryReady: "Saved. Open Hearing Sense to read it."
-        case .following: "Captions and a growing summary in Hearing Sense"
-        case .notice: "Hearing Sense"
-        }
     }
 
     /// "Nearby speech · 40 sec ago": the age counts up without an update from the app.
@@ -280,7 +336,7 @@ public struct IslandExpandedCenter: View {
                 Text("Nearby speech, a moment ago")
             }
         }
-        .font(.caption)
+        .font(.footnote.weight(.medium))
         .foregroundStyle(.secondary)
         .lineLimit(1)
     }
@@ -311,17 +367,17 @@ public struct IslandExpandedBottom<Controls: View>: View {
     }
 
     public var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: IslandMetrics.spacing) {
             if content.mode == .attention, content.isUncertain || content.additionalCount > 0 || content.ambientSymbolName != nil {
                 HStack(spacing: 8) {
                     if content.isUncertain {
                         Label("Uncertain", systemImage: "questionmark.circle")
-                            .font(.caption2.weight(.semibold))
+                            .font(.caption.weight(.semibold))
                             .foregroundStyle(.secondary)
                     }
                     if content.additionalCount > 0 {
                         Text("+\(content.additionalCount) more")
-                            .font(.caption2.weight(.semibold))
+                            .font(.caption.weight(.semibold))
                             .foregroundStyle(.secondary)
                             .accessibilityLabel("\(content.additionalCount) more events")
                     }
@@ -334,9 +390,34 @@ public struct IslandExpandedBottom<Controls: View>: View {
                     }
                 }
             }
+            if let conversation = content.summaryConversation {
+                // The preview: whole sentences chosen and measured in the app
+                // (`IslandSummaryPreview`), so nothing here is cut off in the middle. Speech-derived: hidden by the system wherever content is
+                // redacted for privacy. The full summary is one touch away ("Open").
+                Group {
+                    if let preview = conversation.detail {
+                        Text(preview)
+                            .privacySensitive()
+                            .lineLimit(IslandMetrics.previewLines)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                    } else {
+                        Text(conversation.phase == .following ? "Live captions and a growing summary are in Hearing Sense."
+                            : "Saved. Touch here to read it in Hearing Sense.")
+                            .foregroundStyle(.secondary)
+                            .lineLimit(IslandMetrics.previewLines)
+                    }
+                }
+                // Body: 17 points at the default text size. No title of its own and nothing
+                // scaled down: the preview is already made to fit these lines.
+                .font(.body)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .dynamicTypeSize(...IslandMetrics.largestTextSize)
+            }
             controls
         }
-        .padding(.horizontal, 6)
+        .padding(.horizontal, IslandMetrics.margin)
+        .padding(.bottom, IslandMetrics.margin / 2)
     }
 }
 

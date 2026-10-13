@@ -1,6 +1,7 @@
 import Attention
 import HearingSenseAudio
 import HearingSenseDomain
+import IslandPresentation
 import Observation
 import SoundEventDetection
 import SpeechIntelligence
@@ -75,7 +76,7 @@ final class ListeningController {
     /// Window 7: the acoustic scene, from the same confirmed sound events.
     let scene = SceneAwarenessController()
     /// Conversation summaries on request, continued understanding with live captions, saved summaries.
-    let conversation = ConversationIntelligenceController()
+    let conversation: ConversationIntelligenceController
 
     @ObservationIgnored private var capture = MicrophoneCapture()
     @ObservationIgnored private let audioSession = AudioSessionController()
@@ -92,6 +93,20 @@ final class ListeningController {
     /// Called right after the time limit switched the microphone off (the debug export writes
     /// its file at once, so the stop can be read from the Mac).
     @ObservationIgnored var onTimeLimitStop: (() -> Void)?
+    #if DEBUG
+    /// Window 8: the device test mode as the app's screen shows it (`DeviceTestMode` holds it).
+    private(set) var testConfiguration = DeviceTestMode.configuration
+    /// The open session runs without the microphone (see `captureDecision(for:)`).
+    private(set) var sessionIsSynthetic = false
+    /// When the device test mode ends the open session.
+    private(set) var testSessionDeadline: Date?
+    @ObservationIgnored private var testSessionTask: Task<Void, Never>?
+    /// The metadata export; started with the controller, so it also runs in a process that iOS
+    /// launched for an intent.
+    @ObservationIgnored private(set) var diagnosticsExporter: DebugDiagnosticsExporter?
+    @ObservationIgnored private var testSceneTask: Task<Void, Never>?
+    @ObservationIgnored private var testSceneBackgroundTask = UIBackgroundTaskIdentifier.invalid
+    #endif
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -100,7 +115,10 @@ final class ListeningController {
         var experimental: (RecognitionController, SpeechIntelligenceController)?
         #if DEBUG
         // Research switch: a converted third-party classifier on the CPU instead of Apple's.
-        if let choice = ExperimentalClassifier.requested {
+        if let choice = ExperimentalClassifier.requested, DeviceTestMode.configuration.prohibitsModelInference {
+            backendNote = (.lifecycle, "Experimental classifier \(choice.model.rawValue) not loaded: model inference is "
+                + "prohibited by the device test mode")
+        } else if let choice = ExperimentalClassifier.requested {
             do {
                 var factory = try choice.model.factory()
                 var policy = DetectionPolicy.standardAudioSet
@@ -121,6 +139,13 @@ final class ListeningController {
                     + "(\(error.localizedDescription)); using Apple SoundAnalysis")
             }
         }
+        #endif
+        #if DEBUG
+        // While model inference is prohibited the language model is not reachable at all.
+        conversation = DeviceTestMode.configuration.prohibitsModelInference
+            ? ConversationIntelligenceController(summarizer: ProhibitedSummarizer()) : ConversationIntelligenceController()
+        #else
+        conversation = ConversationIntelligenceController()
         #endif
         recognition = experimental?.0 ?? RecognitionController()
         speech = experimental?.1 ?? SpeechIntelligenceController()
@@ -178,6 +203,16 @@ final class ListeningController {
         let stored = defaults.data(forKey: Self.sessionRecordKey)
             .flatMap { try? JSONDecoder().decode(ListeningSessionRecord.self, from: $0) }
         if let stored { report(.restored(stored, at: .now)) }
+        #if DEBUG
+        for line in DeviceTestMode.reportLines() { log.append(.lifecycle, line.trimmingCharacters(in: .whitespaces)) }
+        if testConfiguration.isHalted {
+            // Whatever an earlier process left on the island goes; nothing starts.
+            liveActivity.endLeftoverActivities()
+        }
+        if (testConfiguration.isEnabled && testConfiguration.exportsDiagnostics) || DebugDiagnosticsExporter.isExportRequested {
+            startDiagnosticsExport()
+        }
+        #endif
     }
 
     var assessment: RouteAssessment { RouteAssessment.evaluate(route) }
@@ -195,9 +230,34 @@ final class ListeningController {
         await request(.stop(source, at: .now))
     }
 
+    /// For an intent that may leave the microphone on (`AudioRecordingIntent`): waits for the
+    /// Live Activity and, when there is none, switches listening off again, because App Intents
+    /// ends the process when such an intent returns with an active audio session and no Live
+    /// Activity. Returns what to tell the user, or nil when all is well.
+    func requireLiveActivityForIntent() async -> String? {
+        guard session.isOn || state.isCapturing || audioSession.isActive else { return nil }
+        if await liveActivity.ensureRunning() { return nil }
+        let reason = !liveActivity.settings.isEnabled
+            ? "Turn on “Show in Dynamic Island” in Hearing Sense settings to use this."
+            : liveActivity.status == .notAllowed
+                ? "Allow Live Activities for Hearing Sense in Settings to use this."
+                : "Open Hearing Sense to start listening."
+        log.append(.error, "Intent: no Live Activity for the listening session (\(liveActivity.status)); listening switched off")
+        await stop(source: .intent)
+        return "Hearing Sense could not start. " + reason
+    }
+
     /// ON when off, OFF when on (the Action Button's intent). Never anything else.
     @discardableResult
     func toggle(source: ListeningRequestSource) async -> ToggleOutcome {
+        #if DEBUG
+        // A session whose time was over while the process was suspended: this press ends it.
+        if enforceTestSessionLimit(trigger: "request") { return .turnedOff }
+        if !session.isOn, Self.captureDecision(for: source) == .refused {
+            log.append(.lifecycle, "Listening request refused: the device test mode's emergency stop is set")
+            return .failed("The test mode's emergency stop is set.")
+        }
+        #endif
         let wasOn = session.isOn
         let effects = await request(.toggle(source, at: .now))
         if effects.contains(where: { if case .refused = $0 { true } else { false } }) { return .busy }
@@ -225,7 +285,7 @@ final class ListeningController {
     /// the app is on screen.
     var needsForegroundToStart: Bool {
         #if DEBUG
-        if Self.usesSyntheticCapture { return false }
+        if Self.captureDecision(for: .intent) != .microphone { return false }
         #endif
         return !session.isOn && MicrophonePermission.current == .undetermined
     }
@@ -237,9 +297,17 @@ final class ListeningController {
     /// synthetic events. For checks on the Mac and in the Simulator, where the microphone would
     /// pick up real speech in the room.
     static let syntheticCaptureArgument = "--hs-synthetic-capture"
-    static var usesSyntheticCapture: Bool {
+    static var launchRequestsSyntheticCapture: Bool {
         let arguments = ProcessInfo.processInfo.arguments
         return arguments.contains(syntheticCaptureArgument) || arguments.contains("--hs-w7-selftest")
+    }
+
+    /// What a start asked for by `source` gets: the device test mode decides first (stored on
+    /// the device, so it also holds for an intent's launch); the launch argument can only take
+    /// the microphone away, never give it.
+    static func captureDecision(for source: ListeningRequestSource) -> DeviceTestConfiguration.CaptureDecision {
+        let decision = DeviceTestMode.configuration.capture(for: source)
+        return decision == .microphone && launchRequestsSyntheticCapture ? .synthetic : decision
     }
     #endif
 
@@ -295,7 +363,14 @@ final class ListeningController {
 
         var permission = MicrophonePermission.current
         #if DEBUG
-        if Self.usesSyntheticCapture { permission = .granted }
+        let decision = Self.captureDecision(for: session.requestedBy ?? .automation)
+        guard decision != .refused else {
+            log.append(.lifecycle, "Start refused: the device test mode's emergency stop is set")
+            report(.captureEnded(.startFailed, at: .now))
+            return
+        }
+        sessionIsSynthetic = decision == .synthetic
+        if sessionIsSynthetic { permission = .granted }
         #endif
         switch permission {
         case .granted:
@@ -447,6 +522,9 @@ final class ListeningController {
             recognition.becameActive()
             liveActivity.appBecameActive()
             refreshRoute()
+            #if DEBUG
+            enforceTestSessionLimit(trigger: "app became active")
+            #endif
         case .inactive:
             break
         @unknown default:
@@ -461,6 +539,7 @@ final class ListeningController {
             "Device: \(DeviceInfo.summary)",
             "App policy: \(policy.title) [\(policy.id)]",
             "State: \(state.title)",
+            testModeReport,
             "Listening session: \(session.phase.rawValue) · started \(session.statistics.sessionsStarted), ended "
                 + "\(session.statistics.sessionsEnded), toggles \(session.statistics.toggles), requests refused "
                 + "\(session.statistics.requestsRefused) · last end: \(session.lastEndReason?.rawValue ?? "none")",
@@ -492,7 +571,7 @@ final class ListeningController {
     @discardableResult
     private func beginCapture() -> Bool {
         #if DEBUG
-        if Self.usesSyntheticCapture {
+        if sessionIsSynthetic {
             log.append(.session, "Synthetic capture: the microphone stays off and the audio session is not activated")
             recognition.sessionWillStart()
             speech.sessionWillStart()
@@ -501,7 +580,15 @@ final class ListeningController {
             liveActivity.sessionWillStart()
             state = .listening
             report(.captureStarted(at: .now))
+            armTestSessionLimit()
             return true
+        }
+        // Second line: whatever led here, a prohibited microphone is not started.
+        guard !DeviceTestMode.configuration.prohibitsMicrophone else {
+            state = .failed("The microphone is prohibited by the device test mode.")
+            report(.captureEnded(.startFailed, at: .now))
+            log.append(.error, "Start refused: the microphone is prohibited by the device test mode")
+            return false
         }
         #endif
         do {
@@ -520,6 +607,9 @@ final class ListeningController {
             captureFormat = format
             state = .listening
             report(.captureStarted(at: .now))
+            #if DEBUG
+            armTestSessionLimit()
+            #endif
             log.append(.capture, "Capture running: \(format.summary)")
             refreshRoute()
             return true
@@ -536,6 +626,11 @@ final class ListeningController {
     /// Stops capture (microphone off) and, unless `keepSession`, deactivates the session so
     /// other apps can resume normally.
     private func endCapture(keepSession: Bool) {
+        #if DEBUG
+        testSessionTask?.cancel()
+        testSessionTask = nil
+        testSessionDeadline = nil
+        #endif
         let engineStop = ContinuousClock.now
         capture.stop()
         log.append(.capture, "Engine stop took \(milliseconds(since: engineStop))")
@@ -579,6 +674,9 @@ final class ListeningController {
             enforceTimeLimit(trigger: .captureTick)
             return
         }
+        #if DEBUG
+        if enforceTestSessionLimit(trigger: "capture tick") { return }
+        #endif
         // Buffers keep being counted on the audio thread; skip UI work while not visible.
         guard state.isCapturing, !isInBackground else { return }
         level = tick.level
@@ -655,6 +753,13 @@ final class ListeningController {
     private func handleEngineConfigurationChange() {
         log.append(.capture, "AVAudioEngine configuration changed (hardware format or route); engine stopped")
         guard state.isCapturing else { return }
+        #if DEBUG
+        // A synthetic session has no engine to bring back, and a prohibited microphone stays off.
+        guard !sessionIsSynthetic, !DeviceTestMode.configuration.prohibitsMicrophone else {
+            log.append(.capture, "Capture not restarted: this session runs without the microphone")
+            return
+        }
+        #endif
         guard captureIsAllowed(context: "Capture restart") else { return }
         do {
             let format = try capture.restart()
@@ -679,6 +784,126 @@ final class ListeningController {
             + "captured \(interval.capturedSeconds.formatted(seconds)) s of audio in \(interval.buffers) buffers "
             + "(coverage \(interval.coverage.formatted(.percent.precision(.fractionLength(0)))))")
     }
+
+    // MARK: - Device test mode (Debug builds, Window 8)
+
+    /// The device test mode and what the microphone is doing, for the shared report. Release
+    /// builds have no test mode.
+    private var testModeReport: String {
+        #if DEBUG
+        (DeviceTestMode.reportLines() + ["Microphone right now: \(microphoneFacts)"]).joined(separator: "\n")
+        #else
+        "Device test mode: not part of this build"
+        #endif
+    }
+
+    #if DEBUG
+    /// What the microphone is doing, from the objects that would run it: this session's kind,
+    /// whether this app activated its audio session, whether the audio engine is running.
+    var microphoneFacts: String {
+        "capture=\(state.isCapturing ? (sessionIsSynthetic ? "synthetic" : "microphone") : "none") "
+            + "audioSession=\(audioSession.isActive ? "active" : "inactive") engine=\(capture.isRunning ? "running" : "stopped") "
+            + "micPermission=\(MicrophonePermission.current.rawValue)"
+    }
+
+    @discardableResult
+    func startDiagnosticsExport() -> DebugDiagnosticsExporter {
+        if let diagnosticsExporter { return diagnosticsExporter }
+        let exporter = DebugDiagnosticsExporter(controller: self)
+        exporter.start()
+        diagnosticsExporter = exporter
+        // The stop of a timed test is in the file the moment it happens.
+        onTimeLimitStop = { [exporter] in exporter.writeNow() }
+        return exporter
+    }
+
+    /// Every session of the device test mode ends by itself: a timer, every audio buffer after
+    /// the deadline, the next request and the app's return to the screen all carry it out. (A
+    /// process that iOS suspended runs no timer; a synthetic session then ends when the process
+    /// next runs. A session with the microphone is not suspended.)
+    private func armTestSessionLimit() {
+        guard testSessionDeadline == nil, let seconds = DeviceTestMode.configuration.effectiveSessionLimit else { return }
+        let deadline = Date.now.addingTimeInterval(seconds)
+        testSessionDeadline = deadline
+        log.append(.lifecycle, "Device test mode: this session ends by itself in \(Int(seconds)) s, at "
+            + deadline.formatted(.iso8601.time(includingFractionalSeconds: true)))
+        testSessionTask?.cancel()
+        testSessionTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(seconds), clock: .continuous)
+            guard !Task.isCancelled, let self else { return }
+            self.enforceTestSessionLimit(trigger: "timer")
+        }
+    }
+
+    /// Ends the open session if its test deadline has passed. Returns whether it did.
+    @discardableResult
+    private func enforceTestSessionLimit(trigger: String) -> Bool {
+        guard let deadline = testSessionDeadline, Date.now >= deadline else { return false }
+        let late = Date.now.timeIntervalSince(deadline)
+        endCapture(keepSession: false)
+        state = .idle
+        report(.captureEnded(.timeLimit, at: .now))
+        log.append(.lifecycle, "Device test mode: session ended automatically (trigger: \(trigger), "
+            + "\(late.formatted(.number.precision(.fractionLength(1)))) s after its deadline); \(microphoneFacts)")
+        announce("Listening stopped")
+        diagnosticsExporter?.writeNow()
+        return true
+    }
+
+    /// Emergency stop: everything off now, and nothing starts again until it is cleared. Does
+    /// not go through the switch, which refuses a stop while a start is in progress.
+    func emergencyStop(reason: String) {
+        DeviceTestMode.halt()
+        testConfiguration = DeviceTestMode.configuration
+        testSceneTask?.cancel()
+        attention.stopInjection()
+        liveActivity.stopDemo(attention: attention)
+        let wasOpen = session.isOn || state.canStop
+        endCapture(keepSession: false)
+        state = .idle
+        report(.captureEnded(.userStopped, at: .now))
+        liveActivity.endLeftoverActivities()
+        log.append(.lifecycle, "EMERGENCY STOP (\(reason)): " + (wasOpen ? "session ended" : "no session was open")
+            + "; nothing starts until it is cleared; \(microphoneFacts)")
+        announce("Emergency stop")
+        diagnosticsExporter?.writeNow()
+    }
+
+    func clearEmergencyStop() {
+        DeviceTestMode.resume()
+        testConfiguration = DeviceTestMode.configuration
+        log.append(.lifecycle, "Emergency stop cleared. \(DeviceTestMode.summary)")
+        diagnosticsExporter?.writeNow()
+    }
+
+    /// Plays a synthetic scene into the open session (`--hs-island-demo` together with a session):
+    /// the events take the path real ones take, to the attention engine, the scene and the Live
+    /// Activity. With `afterBackground` the scene starts when the app leaves the screen, which is
+    /// when the island shows the activity; a background task keeps the process running for it
+    /// (about 30 s; without the microphone iOS suspends the app after that).
+    func playTestScene(_ demo: LiveActivityController.DemoScene, keyAt: TimeInterval, afterBackground: Bool) {
+        testSceneTask?.cancel()
+        let scenario = demo.scenario(keyAt: keyAt)
+        log.append(.lifecycle, "Test scene “\(demo.title)” armed (synthetic events; main event at \(keyAt.formatted()) s"
+            + (afterBackground ? " after the app leaves the screen)" : ")"))
+        testSceneTask = Task { [weak self] in
+            if afterBackground {
+                let entered = NotificationCenter.default.notifications(named: UIApplication.didEnterBackgroundNotification)
+                    .map { _ in () }
+                for await _ in entered { break }
+            }
+            guard !Task.isCancelled, let self, self.session.isOn else { return }
+            self.testSceneBackgroundTask = UIApplication.shared.beginBackgroundTask(withName: "test-scene") { [weak self] in
+                guard let self else { return }
+                self.log.append(.lifecycle, "Test scene: background time is over; iOS suspends the app now")
+                self.diagnosticsExporter?.writeNow()
+                UIApplication.shared.endBackgroundTask(self.testSceneBackgroundTask)
+                self.testSceneBackgroundTask = .invalid
+            }
+            self.attention.inject(scenario)
+        }
+    }
+    #endif
 
     private func describe(_ result: AudioSessionController.PreferredInputResult) -> String {
         switch result {

@@ -278,16 +278,22 @@ import Testing
         #expect(AlertGate.evaluate(settings: settings, lock: .unlocked, appIsActive: true) == .blocked(.appInForeground))
     }
 
-    @Test func settingsStoredBeforeTheDecisionTakeTheNewDefaultOnce() throws {
+    @Test func settingsStoredBeforeTheDecisionAreKept() throws {
         let stored = Data(#"{"isEnabled":true,"showsAmbientIcons":false,"expandsForImportantEvents":false,"showsSpeechSummaries":false,"playsAlertSound":true,"expandsForSummaries":false}"#.utf8)
         let migrated = IslandSettings.migrated(fromVersion1: stored)
-        #expect(migrated.expandsForImportantEvents)
+        // A stored "off" is the user's and is not overwritten by the new default.
+        #expect(!migrated.expandsForImportantEvents)
         #expect(!migrated.alertsWhileLocked)
-        // Everything else is the user's and is kept.
         #expect(!migrated.showsAmbientIcons)
         #expect(!migrated.showsSpeechSummaries)
         #expect(migrated.playsAlertSound)
         #expect(!migrated.expandsForSummaries)
+        // A stored "on" stays on; the opt-in for the locked iPhone starts off whatever was stored.
+        let on = IslandSettings.migrated(fromVersion1: Data(#"{"expandsForImportantEvents":true,"alertsWhileLocked":true}"#.utf8))
+        #expect(on.expandsForImportantEvents)
+        #expect(!on.alertsWhileLocked)
+        // A record without the value: the new default.
+        #expect(IslandSettings.migrated(fromVersion1: Data(#"{"showsAmbientIcons":false}"#.utf8)).expandsForImportantEvents)
         // Unreadable data: the defaults.
         #expect(IslandSettings.migrated(fromVersion1: Data("x".utf8)) == .default)
         // Once stored under the new key, a choice survives encoding and decoding.

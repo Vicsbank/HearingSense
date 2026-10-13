@@ -64,7 +64,12 @@ final class SpeechIntelligenceController {
     init(defaults: UserDefaults = .standard, taxonomy: SoundTaxonomy = .appleV1, vocalMusicLabels: Set<SoundLabel>? = nil) {
         self.defaults = defaults
         let stored = defaults.bool(forKey: Self.enabledKey)
-        let lockedOff = ProcessInfo.processInfo.arguments.contains(Self.lockedOffArgument)
+        var lockedOff = ProcessInfo.processInfo.arguments.contains(Self.lockedOffArgument)
+        #if DEBUG
+        // Window 8: the device test mode is stored on the iPhone, so it also holds for a process
+        // that an intent started. The stored switch is not changed here either.
+        if DeviceTestMode.configuration.prohibitsTranscription { lockedOff = true }
+        #endif
         isTranscriptionLockedOff = lockedOff
         storedTranscriptionSetting = stored
         let isEnabled = stored && !lockedOff
@@ -77,6 +82,7 @@ final class SpeechIntelligenceController {
         // the user asks for.
         #if DEBUG
         configuration.summary.writesHeadlines = defaults.bool(forKey: "speech.automaticHeadlines")
+            && !DeviceTestMode.configuration.prohibitsModelInference
         #else
         configuration.summary.writesHeadlines = false
         #endif
@@ -139,7 +145,10 @@ final class SpeechIntelligenceController {
 
     func setTranscriptionEnabled(_ isEnabled: Bool) {
         if isTranscriptionLockedOff {
-            if isEnabled { log(.recognition, "Speech transcription stays off: locked off for this launch (\(Self.lockedOffArgument))") }
+            if isEnabled {
+                log(.recognition, "Speech transcription stays off: locked off for this launch "
+                    + "(\(Self.lockedOffArgument) or the device test mode)")
+            }
             return
         }
         guard isEnabled != isTranscriptionEnabled else { return }
@@ -169,6 +178,12 @@ final class SpeechIntelligenceController {
     /// Downloads the on-device speech model from Apple. Only on the user's request.
     func installSpeechModel() {
         guard modelInstall != .installing else { return }
+        #if DEBUG
+        guard !DeviceTestMode.configuration.prohibitsTranscription else {
+            log(.recognition, "Speech model download refused: prohibited by the device test mode")
+            return
+        }
+        #endif
         modelInstall = .installing
         log(.recognition, "Speech model download requested by the user")
         Task {

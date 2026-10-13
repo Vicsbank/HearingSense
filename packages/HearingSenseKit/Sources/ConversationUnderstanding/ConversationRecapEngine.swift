@@ -1,4 +1,5 @@
 import Foundation
+import NaturalLanguage
 
 /// A recap as the language model wrote it, before checking. Untrusted.
 public struct RecapDraft: Hashable, Sendable {
@@ -15,6 +16,13 @@ public struct RecapDraft: Hashable, Sendable {
 
 /// A language model that writes recaps. Production: `FoundationModelRecapSummarizer`.
 public protocol ConversationSummarizing: Sendable {
+    /// Whether the transcript says what `statement` says (Window 8): the reading check that the
+    /// lexical checks cannot make. nil: this summarizer cannot judge, and the statement is kept.
+    /// The transcript is given in memory, like for the recap itself; nothing of it is kept.
+    func isGrounded(_ statement: String, in transcript: String) async throws -> Bool?
+    /// Window 8: for each statement, the lines of the transcript that say it (indices into
+    /// `lines`) and the model's own verdict, in one request. nil: this summarizer cannot do it.
+    func evidence(for statements: [String], in lines: [String]) async throws -> [StatementEvidence]?
     func isAvailable() async -> Bool
     func prewarm() async
     /// A recap of the excerpt.
@@ -33,6 +41,35 @@ extension ConversationSummarizing {
 }
 
 /// A checked recap, ready to show and to save.
+extension ConversationSummarizing {
+    public func isGrounded(_ statement: String, in transcript: String) async throws -> Bool? { nil }
+    public func evidence(for statements: [String], in lines: [String]) async throws -> [StatementEvidence]? { nil }
+}
+
+/// Where the transcript says what a statement of a recap says, according to the model.
+public struct StatementEvidence: Hashable, Sendable {
+    /// Indices of transcript lines. Empty: the model found no line that says it.
+    public var lines: [Int]
+    /// The model's own reading: the cited lines say what the statement says.
+    public var isSupported: Bool
+
+    public init(lines: [Int], isSupported: Bool) {
+        self.lines = lines
+        self.isSupported = isSupported
+    }
+}
+
+extension RecapValidator {
+    /// Window 8: the model read the statement against the transcript. It stands when the model
+    /// calls it supported and can name a line of the transcript that says it. (Holding the
+    /// statement against the cited line word by word as well was measured and dropped: it
+    /// rejected true statements whose line says "she" for a name or "call us" for "by phone".)
+    public func groundingProblem(_ statement: String, evidence: StatementEvidence, lines: [String]) -> String? {
+        guard evidence.isSupported, evidence.lines.contains(where: lines.indices.contains) else { return "ungrounded_statement" }
+        return nil
+    }
+}
+
 public struct ConversationRecap: Hashable, Sendable {
     public enum Source: String, Hashable, Sendable, Codable {
         /// Written by the on-device language model and checked.
@@ -113,10 +150,34 @@ public struct RecapValidator: Hashable, Sendable {
     public var restatementExtraWords: Int
     /// Share of the original's content words a restatement must keep.
     public var restatementKeeps: Double
+    /// Window 8 (approved by the student on 2026-10-12: completeness and accuracy come first,
+    /// and a summary the user asked for may hold a short exact quotation): a statement that
+    /// repeats a spoken sentence of at most this many words stays as it is — "The lot reopens on
+    /// Friday." is the fact, and rewording it only to avoid the match risks changing it. Words
+    /// are counted by `RecapText.words`, which also segments Chinese and other text written
+    /// without spaces. 0: the rule of Window 7 (restate, or leave out).
+    ///
+    /// What still keeps a saved summary from becoming a saved transcript: a longer copy is
+    /// restated or left out as before; no two kept copies stand next to each other
+    /// and at most `maximumKeptCopies` are kept in one recap; and the summary as a whole may
+    /// not be mostly transcript (`ConversationRecapEngine.Policy.maximumVerbatimShare`).
+    public var keptCopyMaximumWords: Int
+    /// Short copies kept in one recap (summary and key points together, each sentence once).
+    public var maximumKeptCopies: Int
+    /// 2026-10-11: the supporting words of a statement have to stand near each other in the
+    /// transcript, within this many words. A sentence put together from words that were said
+    /// minutes apart ("Vic", "student", "family") reads like a fact and is none; every word of
+    /// it passes the ordinary support test. The window is wide (about half a minute of speech),
+    /// so a sentence that sums up one exchange is never affected.
+    public var proximityWindow: Int
 
     public init(minimumSupport: Double = 0.5, copiedMinimumWords: Int = 5, verbatimRun: Int = 6,
-                restatementExtraWords: Int = 10, restatementKeeps: Double = 0.75)
+                restatementExtraWords: Int = 10, restatementKeeps: Double = 0.75, proximityWindow: Int = 80,
+                keptCopyMaximumWords: Int = 12, maximumKeptCopies: Int = 3)
     {
+        self.proximityWindow = proximityWindow
+        self.keptCopyMaximumWords = keptCopyMaximumWords
+        self.maximumKeptCopies = maximumKeptCopies
         self.minimumSupport = minimumSupport
         self.copiedMinimumWords = copiedMinimumWords
         self.verbatimRun = verbatimRun
@@ -143,6 +204,8 @@ public struct RecapValidator: Hashable, Sendable {
 
     /// The name of the correction recorded when a copied statement was replaced by a restatement.
     public static let restatedCorrection = "restated_copy"
+    /// A short copied statement that was kept as it was said (`keptCopyMaximumWords`).
+    public static let keptCopyCorrection = "kept_short_copy"
 
     /// How much of `text` repeats the transcript word for word: the share of its words that lie
     /// in a run of at least `verbatimRun` consecutive words of one utterance. A summary of plain
@@ -217,13 +280,27 @@ public struct RecapValidator: Hashable, Sendable {
             for sentence in RecapText.sentences(in: String(line)) { spoken.insert(RecapText.words(in: sentence)) }
         }
 
+        // Overlapping stretches of the source, for the proximity test. A source shorter than
+        // the window is one stretch, and the test then adds nothing.
+        let stems = RecapText.words(in: source).map(RecapText.stem)
+        var stretches: [Set<String>] = []
+        if proximityWindow > 0, stems.count > proximityWindow {
+            let step = max(proximityWindow / 4, 1)
+            var start = 0
+            while start < stems.count {
+                stretches.append(Set(stems[start ..< min(start + proximityWindow, stems.count)]))
+                if start + proximityWindow >= stems.count { break }
+                start += step
+            }
+        }
+
         func isCopy(_ statement: String) -> Bool {
             let words = RecapText.words(in: statement)
             return words.count >= copiedMinimumWords && spoken.contains(words)
         }
 
-        func problem(in statement: String) -> String? {
-            if isCopy(statement) { return "copied_from_transcript" }
+        func problem(in statement: String, allowsCopy: Bool = false) -> String? {
+            if !allowsCopy, isCopy(statement) { return "copied_from_transcript" }
             let quantities = RecapText.quantities(in: statement)
             if !quantities.isSubset(of: sourceQuantities) { return "unsupported_number_or_time" }
             if !RecapText.names(in: statement).isSubset(of: sourceNames) { return "unsupported_name" }
@@ -231,6 +308,10 @@ public struct RecapValidator: Hashable, Sendable {
             if content.count >= 3 {
                 let supported = content.count(where: sourceStems.contains)
                 if Double(supported) / Double(content.count) < minimumSupport { return "unsupported_statement" }
+                if !stretches.isEmpty {
+                    let together = stretches.map { stretch in content.count(where: stretch.contains) }.max() ?? 0
+                    if Double(together) / Double(content.count) < minimumSupport { return "unsupported_combination" }
+                }
             }
             return nil
         }
@@ -238,10 +319,22 @@ public struct RecapValidator: Hashable, Sendable {
         var copied: [String] = []
         var restated = 0
 
-        /// The statement as it may be kept: itself, a checked restatement of a copy, or nil.
-        func resolved(_ statement: String) -> String? {
+        // Short copies that stay as they were said (each sentence once, however often it occurs).
+        var keptCopies: Set<String> = []
+
+        /// The statement as it may be kept: itself, a short copy as it was said, a checked
+        /// restatement of a copy, or nil. `afterKeptCopy`: the statement before it in the same
+        /// list is a kept copy — two in a row would be a piece of transcript.
+        func resolved(_ statement: String, afterKeptCopy: Bool) -> String? {
             statements += 1
             if isCopy(statement) {
+                if RecapText.words(in: statement).count <= keptCopyMaximumWords, !afterKeptCopy,
+                   keptCopies.contains(statement) || keptCopies.count < maximumKeptCopies,
+                   problem(in: statement, allowsCopy: true) == nil
+                {
+                    if keptCopies.insert(statement).inserted { corrections.append(Self.keptCopyCorrection) }
+                    return statement
+                }
                 if !copied.contains(statement) { copied.append(statement) }
                 if let candidate = restatements[statement]?.trimmingCharacters(in: .whitespacesAndNewlines),
                    restatementProblem(candidate, of: statement) == nil, problem(in: candidate) == nil
@@ -261,11 +354,15 @@ public struct RecapValidator: Hashable, Sendable {
 
         var kept: [String] = []
         for sentence in RecapText.sentences(in: draft.summary) {
-            if let statement = resolved(sentence) { kept.append(statement) }
+            if let statement = resolved(sentence, afterKeptCopy: kept.last.map(keptCopies.contains) ?? false) { kept.append(statement) }
         }
         var points: [String] = []
         for point in draft.keyPoints.map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) }) where !point.isEmpty {
-            if let statement = resolved(point), !points.contains(statement) { points.append(statement) }
+            if let statement = resolved(point, afterKeptCopy: points.last.map(keptCopies.contains) ?? false),
+               !points.contains(statement)
+            {
+                points.append(statement)
+            }
         }
         var title = draft.title.trimmingCharacters(in: .whitespacesAndNewlines)
         // A title names the topic in words of its own ("Medication instructions"), so only its
@@ -301,6 +398,13 @@ public struct ConversationRecapEngine: Sendable {
         /// summary and is not shown or saved as one. Chosen on the development scenes, whose
         /// summaries measure 0.13–0.44 (`docs/testing/WINDOW7_ACCEPTANCE_REPORT.md`, section 4).
         public var maximumVerbatimShare = 0.65
+        /// Window 8: after the lexical checks the model reads every statement against the
+        /// transcript (`ConversationSummarizing.evidence`); what it cannot find there is left
+        /// out. One request per recap, with this much time; no answer in time: nothing is removed.
+        public var groundingTimeout: TimeInterval = 10
+        /// A reading that rejects this share of the statements or more is not believed (the
+        /// model answered beside the point); the statements then stay as the other checks left them.
+        public var groundingDistrustShare = 0.67
 
         public init() {}
     }
@@ -361,7 +465,7 @@ public struct ConversationRecapEngine: Sendable {
             return unavailable(excerpt, caveats: caveats, seconds: Date().timeIntervalSince(started))
         }
         var rejected: [String] = []
-        let result = await validated(draft, transcript: text, earlierText: "")
+        let result = await grounded(await validated(draft, transcript: text, earlierText: ""), transcript: text, known: [])
         if let recap = checked(result, excerpt: excerpt, caveats: caveats, seconds: Date().timeIntervalSince(started),
                                rejected: &rejected)
         {
@@ -385,7 +489,10 @@ public struct ConversationRecapEngine: Sendable {
             try await summarizer.update(previous: earlier, newTranscript: fresh)
         }) else { return nil }
         // Earlier text counts as support: the update may restate what the first recap said.
-        let result = await validated(draft, transcript: fresh + "\n" + earlierTranscript, earlierText: previous.fullText)
+        // Only what the update added is read against the transcript; the earlier recap was.
+        let known = Set(RecapText.sentences(in: previous.summary) + previous.keyPoints)
+        let result = await grounded(await validated(draft, transcript: fresh + "\n" + earlierTranscript, earlierText: previous.fullText),
+                                    transcript: fresh + "\n" + earlierTranscript, known: known)
         guard !result.summary.isEmpty,
               result.statements == 0 || Double(result.removed) / Double(result.statements) <= policy.maximumRemovedShare,
               result.verbatimShare <= policy.maximumVerbatimShare
@@ -412,6 +519,11 @@ public struct ConversationRecapEngine: Sendable {
     /// given back to the model to be restated, and the draft is checked again with the answers.
     /// All of this happens in memory: nothing is shown or stored before the checks have passed.
     private func validated(_ draft: RecapDraft, transcript: String, earlierText: String) async -> RecapValidator.Result {
+        // Before any check: the narration ("Someone said …") and the stutters of speech
+        // ("tomorrow, tomorrow") are taken out, so that what is checked is what is kept.
+        let draft = RecapDraft(title: draft.title,
+                               summary: RecapText.sentences(in: draft.summary).map(RecapText.tidied).joined(separator: " "),
+                               keyPoints: draft.keyPoints.map(RecapText.tidied))
         let first = validator.validate(draft, transcript: transcript, earlierText: earlierText)
         guard !first.copied.isEmpty, policy.maximumRestatements > 0 else { return first }
         var restatements: [String: String] = [:]
@@ -420,11 +532,57 @@ public struct ConversationRecapEngine: Sendable {
             let remaining = deadline.timeIntervalSinceNow
             guard remaining > 0.5, !Task.isCancelled else { break }
             if let restated = try? await withTimeout(seconds: remaining, { [summarizer] in try await summarizer.restate(statement) }) {
-                restatements[statement] = restated
+                // Tidied like the draft, unless that would turn it back into the spoken sentence:
+                // then the narrated form stays, because a saved summary never repeats a sentence
+                // as it was said.
+                let tidy = RecapText.tidied(restated)
+                if !RecapText.isRun(RecapText.words(in: tidy), in: RecapText.words(in: statement)) {
+                    restatements[statement] = tidy
+                } else if RecapText.words(in: statement).count > validator.keptCopyMaximumWords {
+                    // A long sentence is not kept as it was said: the narrated form stands in.
+                    restatements[statement] = restated
+                }
+                // (A short one is kept as it is by the validator: no "Someone said that …".)
             }
         }
         guard !restatements.isEmpty else { return first }
         return validator.validate(draft, transcript: transcript, earlierText: earlierText, restatements: restatements)
+    }
+
+    /// Window 8: the reading check. The lexical checks cannot tell a statement that was said
+    /// from one whose words were said ("Vic is a student in their family."); here the model is
+    /// asked, in one request, which line of the transcript says each statement, and a statement
+    /// it finds nowhere is left out. In memory, like the recap itself.
+    private func grounded(_ result: RecapValidator.Result, transcript: String, known: Set<String>) async -> RecapValidator.Result {
+        let sentences = RecapText.sentences(in: result.summary)
+        var unique: [String] = []
+        for statement in sentences + result.keyPoints where !known.contains(statement) && !unique.contains(statement) {
+            unique.append(statement)
+        }
+        let statements = unique
+        let lines = transcript.split(whereSeparator: \.isNewline).map(String.init)
+        guard !statements.isEmpty, !lines.isEmpty, policy.groundingTimeout > 0,
+              let evidence = try? await withTimeout(seconds: policy.groundingTimeout, { [summarizer] in
+                  try await summarizer.evidence(for: statements, in: lines)
+              }), evidence.count == statements.count
+        else { return result }
+        var problems: [String: String] = [:]
+        for (statement, item) in zip(statements, evidence) {
+            if let problem = validator.groundingProblem(statement, evidence: item, lines: lines) { problems[statement] = problem }
+        }
+        guard !problems.isEmpty else { return result }
+        var result = result
+        guard Double(problems.count) / Double(statements.count) < policy.groundingDistrustShare else {
+            result.corrections.append("grounding_not_believed")
+            return result
+        }
+        result.summary = sentences.filter { problems[$0] == nil }.joined(separator: " ")
+        result.keyPoints = result.keyPoints.filter { problems[$0] == nil }
+        result.removed += problems.count
+        result.corrections += problems.values.sorted()
+        result.verbatimShare = validator.verbatimShare(of: (RecapText.sentences(in: result.summary) + result.keyPoints).joined(separator: "\n"),
+                                                       transcript: transcript)
+        return result
     }
 
     private func checked(_ result: RecapValidator.Result, excerpt: ConversationExcerpt, caveats: [String],
@@ -495,11 +653,90 @@ public struct ConversationRecapEngine: Sendable {
 
 /// Text helpers of the recap checks.
 enum RecapText {
+    /// A statement of a draft without the two habits that make a recap read like a transcript:
+    ///
+    /// - narration: "Someone said that the lot reopens on Friday." → "The lot reopens on Friday."
+    ///   Only openers that name no one ("someone", "a person", "the speaker"); "Maya said" and
+    ///   "It was announced that" stay.
+    /// - a word said twice in a row: "tomorrow, tomorrow, they meet" → "tomorrow, they meet".
+    ///   Never numbers ("five five" can be part of a phone number), and without a comma only
+    ///   ordinary lower-case words of four letters or more, so that "Walla Walla" and
+    ///   "had had" stay as they are.
+    ///
+    /// Nothing else is changed, and no word is added.
+    static func tidied(_ statement: String) -> String {
+        var text = statement.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let match = text.range(of: narrationOpener, options: [.regularExpression, .caseInsensitive]),
+           match.lowerBound == text.startIndex
+        {
+            let rest = text[match.upperBound...]
+            if rest.split(separator: " ").count >= 3, let first = rest.first {
+                // "Someone said X and that Y" → "X and Y".
+                text = (first.uppercased() + rest.dropFirst()).replacingOccurrences(of: " and that ", with: " and ")
+            }
+        }
+        for _ in 0 ..< 4 {
+            var changed = false
+            for (pattern, minimum) in [(#"\b([A-Za-z']+),\s+\1\b"#, 2), (#"\b([a-z']+)\s+\1\b"#, 4)] {
+                guard let expression = try? NSRegularExpression(pattern: pattern, options: pattern.contains("A-Z") ? [.caseInsensitive] : [])
+                else { continue }
+                let whole = NSRange(text.startIndex..., in: text)
+                for match in expression.matches(in: text, range: whole).reversed() {
+                    guard let range = Range(match.range, in: text), let wordRange = Range(match.range(at: 1), in: text) else { continue }
+                    let word = String(text[wordRange])
+                    let lowered = word.lowercased()
+                    guard word.count >= minimum, numberWords[lowered] == nil, lowered != "one", !keptDoubles.contains(lowered) else { continue }
+                    text.replaceSubrange(range, with: word)
+                    changed = true
+                }
+            }
+            if !changed { break }
+        }
+        return text
+    }
+
+    /// `words` occur in `other` one after the other, without a gap.
+    static func isRun(_ words: [String], in other: [String]) -> Bool {
+        guard !words.isEmpty, words.count <= other.count else { return false }
+        return (0...(other.count - words.count)).contains { Array(other[$0 ..< $0 + words.count]) == words }
+    }
+
+    private static let narrationOpener =
+        #"^(someone|somebody|a person|one person|a speaker|one speaker|the speakers?|one of the speakers)\s+(also\s+)?"#
+        + #"(said|says|mentioned|mentions|stated|states|noted|added|explained)\s+(that\s+)?"#
+
+    /// Words that are doubled on purpose.
+    private static let keptDoubles: Set<String> = ["that", "very", "really", "much", "many", "long", "more", "knock", "bye"]
+
+    /// The words of a text, lower-cased. Text written without spaces between words (Chinese,
+    /// Japanese, Thai …) is segmented by the system's tokenizer, so that "12 words", "a run of 6
+    /// words" and "a sentence of 5 words" mean about the same in every language, also where a
+    /// sentence mixes them ("明天和 Ms. Wang 开会").
     static func words(in text: String) -> [String] {
         text.lowercased().replacingOccurrences(of: "\u{2019}", with: "'")
             .split { !($0.isLetter || $0.isNumber || $0 == "'") }
             .map { String($0).trimmingCharacters(in: CharacterSet(charactersIn: "'")) }
             .filter { !$0.isEmpty }
+            .flatMap { $0.unicodeScalars.contains(where: isUnspaced) ? segmented($0) : [$0] }
+    }
+
+    /// Scripts that are written without spaces between words.
+    static func isUnspaced(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.value {
+        case 0x2E80 ... 0x9FFF, 0xF900 ... 0xFAFF, 0x20000 ... 0x2FA1F,  // Han, Kana, CJK symbols and radicals
+             0xAC00 ... 0xD7AF,  // Hangul syllables
+             0x0E00 ... 0x0EFF:  // Thai, Lao
+            true
+        default:
+            false
+        }
+    }
+
+    private static func segmented(_ run: String) -> [String] {
+        let tokenizer = NLTokenizer(unit: .word)
+        tokenizer.string = run
+        let tokens = tokenizer.tokens(for: run.startIndex ..< run.endIndex).map { String(run[$0]) }
+        return tokens.isEmpty ? [run] : tokens
     }
 
     static func contentWords(in text: String) -> [String] { words(in: text).filter { !stopWords.contains($0) } }
@@ -518,19 +755,51 @@ enum RecapText {
         var sentences: [String] = []
         text.enumerateSubstrings(in: text.startIndex..., options: .bySentences) { substring, _, _, _ in
             if let sentence = substring?.trimmingCharacters(in: .whitespacesAndNewlines), !sentence.isEmpty {
-                sentences.append(sentence)
+                // The system ends a sentence after "Ms." ("… the meeting with Ms." | "Wang takes
+                // place …"); the two halves would be checked, and could be removed, separately.
+                if let last = sentences.last, endsWithTitle(last) {
+                    sentences[sentences.count - 1] = last + " " + sentence
+                } else {
+                    sentences.append(sentence)
+                }
             }
         }
         return sentences
     }
 
+    private static func endsWithTitle(_ text: String) -> Bool {
+        guard let word = text.split(separator: " ").last else { return false }
+        return titles.contains(word.lowercased())
+    }
+
+    private static let titles: Set<String> = ["mr.", "mrs.", "ms.", "dr.", "prof.", "st.", "mt.", "vs.", "jr.", "sr."]
+
     /// Numbers (digits or words), days and times of day, normalized so "3" and "three" agree.
     static func quantities(in text: String) -> Set<String> {
         Set(words(in: text).compactMap { word in
             if let value = numberWords[word] { return String(value) }
-            if word.contains(where: \.isNumber) { return word.filter { $0.isNumber || $0 == "." } }
+            if word.contains(where: \.isNumber) {
+                let digits = word.filter { $0.isNumber || $0 == "." }
+                // "三点" and "3点", "十二" and "12" are the same number.
+                return hanNumber(digits).map(String.init) ?? digits
+            }
             return quantityWords.contains(word) ? word : nil
         })
+    }
+
+    /// A number written with Chinese numerals, up to 99; nil for anything else.
+    static func hanNumber(_ text: String) -> Int? {
+        let digits: [Character: Int] = ["〇": 0, "零": 0, "一": 1, "二": 2, "两": 2, "兩": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7,
+                                        "八": 8, "九": 9]
+        let characters = Array(text)
+        guard !characters.isEmpty, characters.allSatisfy({ digits[$0] != nil || $0 == "十" }) else { return nil }
+        guard let ten = characters.firstIndex(of: "十") else {
+            return characters.count == 1 ? digits[characters[0]] : nil
+        }
+        guard characters.filter({ $0 == "十" }).count == 1, ten <= 1, characters.count - ten <= 2 else { return nil }
+        let tens = ten == 0 ? 1 : (digits[characters[0]] ?? 1)
+        let ones = ten + 1 < characters.count ? (digits[characters[ten + 1]] ?? 0) : 0
+        return tens * 10 + ones
     }
 
     /// Capitalized words that are not at the start of a sentence and not ordinary words: a
@@ -551,7 +820,10 @@ enum RecapText {
 
     /// How many denying words the text has.
     static func negations(in text: String) -> Int {
-        words(in: text).count { negationWords.contains($0) || $0.hasSuffix("n't") }
+        words(in: text).count { word in
+            negationWords.contains(word) || word.hasSuffix("n't")
+                || (word.unicodeScalars.contains(where: isUnspaced) && word.contains(where: { "不没沒未别別无無非".contains($0) }))
+        }
     }
 
     /// Every capitalized word, wherever it stands (lowercased).
@@ -575,6 +847,9 @@ enum RecapText {
         "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "today", "tonight", "tomorrow",
         "yesterday", "noon", "midnight", "half", "twice", "double", "january", "february", "march", "april", "june",
         "july", "august", "september", "october", "november", "december",
+        "今天", "明天", "后天", "後天", "昨天", "今晚", "明晚", "上午", "下午", "中午", "晚上", "早上", "周一", "周二", "周三", "周四", "周五",
+        "周六", "周日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日", "星期天", "礼拜一", "礼拜二", "礼拜三", "礼拜四",
+        "礼拜五", "礼拜六", "礼拜天",
     ]
 
     static let stopWords: Set<String> = [

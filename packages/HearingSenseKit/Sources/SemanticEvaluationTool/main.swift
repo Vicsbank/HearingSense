@@ -198,6 +198,52 @@ case "recap":
         print("Wrote \(path)")
     }
 
+case "ground":
+    // Window 8: the reading check of recap statements (`isGrounded`) on statements whose truth
+    // is known: true ones must be kept, planted false ones should be caught. Synthetic text.
+    let summarizer = FoundationModelRecapSummarizer()
+    guard await summarizer.isAvailable() else {
+        print("Language model not available on this system.")
+        exit(1)
+    }
+    // `--single`: one request per statement (the model's verdict alone). Default: one request
+    // per scene (cited lines + verdict), then the check against the cited lines, as in the app.
+    let single = arguments.contains("--single")
+    var kept = 0, truths = 0, caught = 0, falsehoods = 0
+    var seconds: [Double] = []
+    for scene in GroundingProbe.scenes {
+        print("\n[\(scene.name)]")
+        let lines = scene.transcript.split(whereSeparator: \.isNewline).map { $0.trimmingCharacters(in: .whitespaces) }
+        var verdicts: [(Bool?, String)] = []
+        let started = Date()
+        if single {
+            for (statement, _) in scene.statements {
+                let begun = Date()
+                let verdict = (try? await summarizer.isGrounded(statement, in: scene.transcript)).flatMap { $0 }
+                seconds.append(Date().timeIntervalSince(begun))
+                verdicts.append((verdict, ""))
+            }
+        } else {
+            let evidence = (try? await summarizer.evidence(for: scene.statements.map(\.0), in: lines)).flatMap { $0 }
+            seconds.append(Date().timeIntervalSince(started))
+            for (index, (statement, _)) in scene.statements.enumerated() {
+                guard let item = evidence?[index] else { verdicts.append((nil, "")); continue }
+                let problem = RecapValidator().groundingProblem(statement, evidence: item, lines: lines)
+                verdicts.append((problem == nil, "lines \(item.lines.map { $0 + 1 }) model:\(item.isSupported ? "yes" : "no") \(problem ?? "")"))
+            }
+        }
+        for (index, (statement, isTrue)) in scene.statements.enumerated() {
+            let (judged, note) = verdicts[index]
+            if isTrue { truths += 1; if judged != false { kept += 1 } } else { falsehoods += 1; if judged == false { caught += 1 } }
+            let mark = judged == nil ? "?  " : (judged == isTrue ? "ok " : "BAD")
+            print("  \(mark) \(isTrue ? "true " : "false") \(statement)  [\(note)]")
+        }
+    }
+    seconds.sort()
+    print("\ntrue statements kept \(kept)/\(truths); false statements caught \(caught)/\(falsehoods); "
+        + "time per request median \(seconds[seconds.count / 2].formatted(.number.precision(.fractionLength(2)))) s, "
+        + "max \((seconds.last ?? 0).formatted(.number.precision(.fractionLength(2)))) s")
+
 case "timing":
     // How long one judgement takes with and without a prepared session (a session is prepared
     // while nothing is being said; the evaluation loop gives it no such pause).
@@ -249,4 +295,76 @@ case "triage":
 default:
     print("Commands: run, recap, availability, judge, timing, triage")
     exit(2)
+}
+
+
+/// Statements with a known answer for `ground`. Invented conversations.
+enum GroundingProbe {
+    struct Scene {
+        var name: String
+        var transcript: String
+        var statements: [(String, Bool)]
+    }
+
+    static let scenes: [Scene] = [
+        Scene(name: "casual", transcript: """
+            Vic, are you coming down for dinner?
+            Yeah, in a minute, I am still on the call.
+            They are playing the new game right now, probably.
+            My family is visiting on Sunday, so I have to clean the room.
+            Tomorrow, tomorrow we have the meeting with Ms. Wang at three.
+            Don't forget she wants the signed form before the meeting.
+            The other student in my group has not answered yet.
+            Okay, I will remind him tonight.
+            """, statements: [
+                ("The meeting with Ms. Wang is tomorrow at three.", true),
+                ("Ms. Wang wants the signed form before the meeting.", true),
+                ("The family is visiting on Sunday.", true),
+                ("A student in the group has not answered yet.", true),
+                ("They are probably playing the new game right now.", true),
+                ("Vic is a student in their family.", false),
+                ("Vic had a boring day.", false),
+                ("The meeting with Ms. Wang is on Sunday.", false),
+                ("Ms. Wang is visiting the family on Sunday.", false),
+                ("The signed form is not needed before the meeting.", false),
+                ("Vic is angry because the room is not clean.", false),
+            ]),
+        Scene(name: "project", transcript: """
+            So for the chemistry project, are we still meeting on Thursday?
+            No, Thursday doesn't work, the library closes at five that day.
+            What about Saturday morning then, around ten?
+            Saturday at ten works, but not at the library, it's closed on weekends.
+            We could use the study room in the science building, room 204.
+            I have the data on my laptop, but the graphs are not finished.
+            Then please finish the graphs by Friday night so we can write the report on Saturday.
+            """, statements: [
+                ("The meeting is on Saturday at ten in room 204 of the science building.", true),
+                ("Thursday does not work because the library closes at five.", true),
+                ("The graphs are not finished yet.", true),
+                ("The graphs should be finished by Friday night.", true),
+                ("The library is closed on weekends.", true),
+                ("The meeting is on Thursday at five in the library.", false),
+                ("The graphs are finished.", false),
+                ("The report is due on Friday night.", false),
+                ("The teacher asked for the report by Saturday.", false),
+                ("They will meet at the library on Saturday.", false),
+            ]),
+        Scene(name: "pharmacy", transcript: """
+            Take one tablet twice a day with food, morning and evening.
+            Don't take it with grapefruit juice.
+            Keep taking it for ten days, even if you feel better after three.
+            If you get a rash, stop and call the doctor.
+            You don't need an appointment for the refill, but it is not automatic, you have to call us.
+            """, statements: [
+                ("One tablet is taken twice a day with food.", true),
+                ("It should not be taken with grapefruit juice.", true),
+                ("The tablets are taken for ten days.", true),
+                ("With a rash, the tablets are stopped and the doctor is called.", true),
+                ("The refill is not automatic and has to be requested by phone.", true),
+                ("The tablets are taken for three days.", false),
+                ("An appointment is needed for the refill.", false),
+                ("It should be taken with grapefruit juice.", false),
+                ("The doctor prescribed the tablets because of a rash.", false),
+            ]),
+    ]
 }
