@@ -1,0 +1,33 @@
+Production implementation c7726ac3e88aab9da1db4f991087ff3ef952f606. Synthetic/seen regression corpus; not held out.
+  apple/neutral: supported units 278, removed 0.0%, dropped as repeat/filler 0.4%, flagged 38.8% | units with unsupported claims 61, removed 4.9%, flagged 63.9%, caught 68.9%, dropped as repeat/filler 1.6%
+  apple/prod: supported units 537, removed 0.4%, dropped as repeat/filler 13.6%, flagged 21.2% | units with unsupported claims 102, removed 2.9%, flagged 44.1%, caught 47.1%, dropped as repeat/filler 19.6%
+  lfm25-2.6b/neutral: supported units 212, removed 0.5%, dropped as repeat/filler 0.9%, flagged 36.3% | units with unsupported claims 53, removed 18.9%, flagged 56.6%, caught 75.5%, dropped as repeat/filler 0.0%
+  lfm25-2.6b/prod: supported units 457, removed 0.2%, dropped as repeat/filler 5.3%, flagged 22.1% | units with unsupported claims 87, removed 19.5%, flagged 29.9%, caught 49.4%, dropped as repeat/filler 8.0%
+  qwen35-4b/neutral: supported units 177, removed 1.7%, dropped as repeat/filler 0.0%, flagged 61.6% | units with unsupported claims 43, removed 7.0%, flagged 62.8%, caught 69.8%, dropped as repeat/filler 0.0%
+  qwen35-4b/prod: supported units 398, removed 1.0%, dropped as repeat/filler 0.5%, flagged 32.7% | units with unsupported claims 77, removed 9.1%, flagged 48.1%, caught 57.1%, dropped as repeat/filler 1.3%
+  all: supported units 2059, removed 0.5%, dropped as repeat/filler 5.0%, flagged 31.0% | units with unsupported claims 423, removed 10.2%, flagged 48.2%, caught 58.4%, dropped as repeat/filler 6.9%
+  removal reasons on supported units: invented_value=7, negation_flip=1, value_mismatch=3
+  supported units removed: fin-en-005/qwen35-4b/neutral/a4 fin-en-005/qwen35-4b/prod/a4 fin-en-009/qwen35-4b/prod/k1 fin-en-009/qwen35-4b/neutral/a1 fin-en-023/lfm25-2.6b/neutral/a4 fin-en-024/qwen35-4b/neutral/a6 fin-en-025/lfm25-2.6b/prod/k1 fin-en-025/apple/prod/k1 fin-en-025/qwen35-4b/prod/a2 fin-en-025/qwen35-4b/prod/k1 fin-en-043/apple/prod/a1
+✔ Test run with 98 tests in 11 suites passed after 11.604 seconds.
+➜ Test aCancelledUtteranceDeliversNothingMore() skipped.
+➜ Test transcribesAnUtteranceOnTheSessionAudioClock() skipped.
+✔ Test run with 27 tests in 4 suites passed after 0.333 seconds.
+✔ Test run with 42 tests in 3 suites passed after 0.885 seconds.
+➜ Test readsTheModelContractFromItsMetadata() skipped.
+➜ Test classifiesAStreamOnTheCPUWithCorrectWindowTiming() skipped.
+➜ Test realSpeechRecordingProducesASpeechEventThroughTheUnchangedDetector() skipped.
+➜ Test theRealHybridKeepsRecognizingSpeechAcrossTheSwitch() skipped.
+➜ Test aShortAnalysisWindowIsRepeatedIntoTheModelInput() skipped.
+➜ Test realSpeechRecordingProducesASpeechEvent() skipped.
+✔ Test run with 67 tests in 14 suites passed after 0.570 seconds.
+➜ Test realModelSummariesKeepNegations() skipped.
+✔ Test run with 37 tests in 5 suites passed after 0.064 seconds.
+✔ Test run with 41 tests in 5 suites passed after 0.521 seconds.
+✔ Test run with 120 tests in 10 suites passed after 1.002 seconds.
+✔ Test run with 50 tests in 8 suites passed after 0.013 seconds.
+✔ Test run with 120 tests in 19 suites passed after 0.331 seconds.
+✔ Test run with 67 tests in 7 suites passed after 0.432 seconds.
+Final Mac total: 660 passed, 9 skipped, 0 failures (669 registered).
+Final changed Simulator targets: 215 passed, 0 skipped, 0 failures.
+Debug app, Release app, native evaluator: BUILD SUCCEEDED.
+Qwen locator Mac tests (earlier unchanged code): 2 passed.

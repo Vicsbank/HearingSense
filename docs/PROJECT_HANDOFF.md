@@ -1,6 +1,33 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-11, **Window 8 preflight** (physical device validation). The
+Last updated: 2026-10-13, **Window 9 native Qwen and postprocessing integration**.
+
+Window 9 worktree `.claude/worktrees/window9`, branch `feature/window9-summary-postprocessing`,
+continues Claude's `09db91f` from the preserved Window 8 snapshot. Qwen is the configured primary
+engine and real native Swift Qwen inference works on the Mac. **Native Qwen inference in iOS
+Simulator remains blocked by the pinned MLX runtime's Metal requirements**; Simulator uses the
+real Apple on-device fallback with the recorded reason `qwen_simulator_runtime_unsupported`.
+Do not call Window 9 complete against its original Simulator-Qwen criterion.
+
+Read `docs/research/QWEN35_HEARING_SENSE_INTEGRATION.md`,
+`docs/testing/QWEN35_SIMULATOR_VALIDATION.md` and `docs/research/W9_POSTPROCESSING_DESIGN.md`
+for the code, reproducible configuration, measured outcomes and limits. The new default pipeline
+normalizes English values, resolves slot-specific corrections, separates privacy/quality/grounding,
+and preserves full History summaries independently of previews. Optional verification is off by
+default. Continue performs additions with a guarded full rewrite only for unresolved corrections.
+Implementation milestones: `c791d4a`, `7f6c4d3` and `c7726ac3e88aab9da1db4f991087ff3ef952f606`.
+Final Mac: 660 tests pass, 9 optional skips; final changed Simulator targets: 215 pass;
+real Apple fallback app acceptance: 27/27. Native
+recap comparison: legacy 17/44 important facts versus Window 9 42/44 on seen regression data.
+Final native Continue: 8/9 strict sentence-level facts, zero enumerated stale-plan hazards; old
+day/venue digests are visibly superseded. The remaining expected plan is expressed across sentences.
+Generic model commentary and unsupported relations remain risks; these are seen regression cases,
+not independent validation. Do not promote this branch as production-ready from these scores.
+No physical iPhone access, model training, new weights download, merge or push occurred.
+
+The historical handoffs below describe earlier states and are retained for context.
+
+Last updated in the previous handoff: 2026-10-11, **Window 8 preflight**. The
 paragraphs below it describe the earlier windows as they were written at the time.
 
 **Window 8 status: branch `feature/window8-device-validation`, worktree

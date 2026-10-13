@@ -1,0 +1,248 @@
+engine: qwen: mlx-community/Qwen3.5-4B-MLX-4bit @ 32f3e8ecf654 · 4-bit affine, group 64 · mlx-swift-lm 3.32.3 / mlx-swift 0.32.3 / swift-transformers ≥1.3
+
+[w9-correction-1] Thursday corrected to Friday  raw: facts 3/4 violations 0 (8.05 s)
+  RAW: The team meeting was originally scheduled for Thursday at 2:00 PM, but it was changed to Friday at 2:00 PM in the main conference room because this time works better for Dana. The organizer plans to send the invitation tonight to confirm the new date and time.
+   • The team meeting was moved from Thursday to Friday.
+   • The time remains 2:00 PM.
+   • The location is the main conference room.
+   • The change was made to accommodate Dana's schedule.
+   • The invitation will be sent tonight.
+   • No other details or names were mentioned in the transcript.
+  legacy: NO SUMMARY (unavailable) facts 0/4 violations 0 verbatim 0.00 post 1.37 s corrections summary_failed_checks,unsupported_number_or_time,unsupported_statement,unsupported_number_or_time,unsupported_name,unsupported_statement,unsupported_statement missed ["f1", "f2", "f3", "f4"]
+  FINAL(legacy): A summary could not be written on this device right now. 4 utterances (about 33 words) were heard; they are shown below while the temporary transcript lasts.
+  window9: summary facts 3/4 violations 0 verbatim 0.00 post 0.01 s corrections  missed ["f4"]
+  FINAL(window9): The team meeting was originally scheduled for Thursday at 2:00 PM, but it was changed to Friday at 2:00 PM in the main conference room because this time works better for Dana. The organizer plans to send the invitation tonight to confirm the new date and time.
+   • The team meeting was moved from Thursday to Friday.
+   • The time remains 2:00 PM.
+   • The location is the main conference room.
+   • The change was made to accommodate Dana's schedule.
+   • The invitation will be sent tonight.
+   • No other details or names were mentioned in the transcript.
+
+[w9-correction-2] multiple corrections of one schedule  raw: facts 2/2 violations 0 (2.48 s)
+  RAW: The pickup time was initially set for 4:30 but changed to 5:15 due to traffic. The location was corrected from the north gate to the south gate. The final plan is a pickup at 5:15 PM at the south gate.
+   • The pickup time was changed from 4:30 to 5:15 because of traffic.
+   • The pickup location was corrected from the north gate to the south gate.
+   • The final plan is a pickup at 5:15 at the south gate.
+  legacy: summary facts 2/2 violations 0 verbatim 0.00 post 1.64 s corrections unsupported_statement,unsupported_name,unsupported_statement
+  FINAL(legacy): The location was corrected from the north gate to the south gate.
+   • The pickup location was corrected from the north gate to the south gate.
+   • The final plan is a pickup at 5:15 at the south gate.
+  window9: summary facts 2/2 violations 0 verbatim 0.00 post 0.01 s corrections
+  FINAL(window9): The pickup time was initially set for 4:30 but changed to 5:15 due to traffic. The location was corrected from the north gate to the south gate. The final plan is a pickup at 5:15 PM at the south gate.
+   • The pickup time was changed from 4:30 to 5:15 because of traffic.
+   • The pickup location was corrected from the north gate to the south gate.
+   • The final plan is a pickup at 5:15 at the south gate.
+
+[w9-unrelated-topics] unrelated people and topics must not be merged  raw: facts 5/5 violations 0 (2.44 s)
+  RAW: Maria's flight was cancelled, so she needs to rebook for Tuesday morning. The party bakery order requires 24 cupcakes delivered by noon on Saturday, with vanilla and lemon flavors requested. Additionally, Maria mentioned that the hotel costs $85 per night.
+   • Maria's flight was cancelled and needs rebooking for Tuesday morning.
+   • The party requires 24 cupcakes delivered by noon on Saturday.
+   • The requested cupcake flavors are vanilla and lemon.
+   • The hotel rate is $85 per night.
+  legacy: NO SUMMARY (unavailable) facts 0/5 violations 0 verbatim 0.00 post 1.64 s corrections summary_failed_checks,unsupported_number_or_time,unsupported_number_or_time,unsupported_number_or_time,unsupported_number_or_time missed ["f1", "f2", "f3", "f4", "f5"]
+  FINAL(legacy): A summary could not be written on this device right now. 6 utterances (about 54 words) were heard; they are shown below while the temporary transcript lasts.
+  window9: summary facts 5/5 violations 0 verbatim 0.00 post 0.01 s corrections
+  FINAL(window9): Maria's flight was cancelled, so she needs to rebook for Tuesday morning. The party bakery order requires 24 cupcakes delivered by noon on Saturday, with vanilla and lemon flavors requested. Additionally, Maria mentioned that the hotel costs $85 per night.
+   • Maria's flight was cancelled and needs rebooking for Tuesday morning.
+   • The party requires 24 cupcakes delivered by noon on Saturday.
+   • The requested cupcake flavors are vanilla and lemon.
+   • The hotel rate is $85 per night.
+
+[w9-number-words] English spoken numbers vs digits  raw: facts 6/6 violations 0 (2.80 s)
+  RAW: The field trip fee is $18, due by October 28, with an additional $12 required for lunch. The bus departs at 7:45 from the front entrance, and the group should return around 3:30 PM. Participants need to sign up at room 212.
+   • The field trip fee is $18 and is due by October 28.
+   • An additional $12 must be brought for lunch.
+   • The bus leaves at 7:45 from the front entrance.
+   • The group should return around 3:30 PM.
+   • Sign-up sheets are located in room 212.
+  legacy: NO SUMMARY (unavailable) facts 0/6 violations 0 verbatim 0.00 post 0.00 s corrections summary_failed_checks,unsupported_number_or_time,unsupported_number_or_time,unsupported_number_or_time,unsupported_number_or_time,unsupported_statement,unsupported_number_or_time,unsupported_name,unsupported_number_or_time missed ["f1", "f2", "f3", "f4", "f5", "f6"]
+  FINAL(legacy): A summary could not be written on this device right now. 5 utterances (about 48 words) were heard; they are shown below while the temporary transcript lasts.
+  window9: summary facts 6/6 violations 0 verbatim 0.00 post 0.01 s corrections
+  FINAL(window9): The field trip fee is $18, due by October 28, with an additional $12 required for lunch. The bus departs at 7:45 from the front entrance, and the group should return around 3:30 PM. Participants need to sign up at room 212.
+   • The field trip fee is $18 and is due by October 28.
+   • An additional $12 must be brought for lunch.
+   • The bus leaves at 7:45 from the front entrance.
+   • The group should return around 3:30 PM.
+   • Sign-up sheets are located in room 212.
+
+[w9-ambiguous] uncertainty must stay uncertain  raw: facts 3/3 violations 0 (2.30 s)
+  RAW: The delivery is scheduled for Wednesday afternoon, likely around 3:00 PM, though the speakers noted that deliveries are often late. It remains unclear whether the blue or grey sofa will arrive first. The exact time was estimated to be around three, but the specific sofa color order is uncertain.
+   • Delivery is scheduled for Wednesday afternoon.
+   • Estimated time is around 3:00 PM.
+   • Deliveries are usually late.
+   • Uncertain if blue or grey sofa arrives first.
+  legacy: NO SUMMARY (unavailable) facts 1/3 violations 0 verbatim 0.00 post 1.93 s corrections summary_failed_checks,unsupported_number_or_time,unsupported_statement,unsupported_number_or_time,ungrounded_statement missed ["f1", "f3"]
+  FINAL(legacy): A summary could not be written on this device right now. 3 utterances (about 34 words) were heard; they are shown below while the temporary transcript lasts.
+  window9: summary facts 3/3 violations 0 verbatim 0.00 post 0.01 s corrections
+  FINAL(window9): The delivery is scheduled for Wednesday afternoon, likely around 3:00 PM, though the speakers noted that deliveries are often late. It remains unclear whether the blue or grey sofa will arrive first. The exact time was estimated to be around three, but the specific sofa color order is uncertain.
+   • Delivery is scheduled for Wednesday afternoon.
+   • Estimated time is around 3:00 PM.
+   • Deliveries are usually late.
+   • Uncertain if blue or grey sofa arrives first.
+
+[w9-short-exact-fact] a short exact sentence that is the fact  raw: facts 3/3 violations 0 (2.67 s)
+  RAW: The North Parking Lot is closed tomorrow for repaving and will reopen on Friday. During this closure, drivers are asked to use the South Parking Lot or Elm Street instead. The announcement was made to inform the public of the temporary roadwork and alternative parking options.
+   • The North Parking Lot is closed tomorrow for repaving.
+   • The lot will reopen on Friday.
+   • Drivers should use the South Parking Lot or Elm Street in the meantime.
+   • No specific date or time was given for the reopening.
+   • The announcement did not mention any alternative dates or times.
+   • The speakers did not provide any additional details about the repaving work.
+  legacy: NO SUMMARY (unavailable) facts 0/3 violations 0 verbatim 0.00 post 0.65 s corrections summary_failed_checks,unsupported_name,unsupported_name,unsupported_statement,unsupported_name,unsupported_name,unsupported_statement,unsupported_statement,unsupported_statement missed ["f1", "f2", "f3"]
+  FINAL(legacy): A summary could not be written on this device right now. 3 utterances (about 27 words) were heard; they are shown below while the temporary transcript lasts.
+  window9: summary facts 3/3 violations 0 verbatim 0.24 post 0.01 s corrections
+  FINAL(window9): The North Parking Lot is closed tomorrow for repaving and will reopen on Friday. During this closure, drivers are asked to use the South Parking Lot or Elm Street instead. The announcement was made to inform the public of the temporary roadwork and alternative parking options.
+   • The North Parking Lot is closed tomorrow for repaving.
+   • The lot will reopen on Friday.
+   • Drivers should use the South Parking Lot or Elm Street in the meantime.
+   • No specific date or time was given for the reopening.
+   • The announcement did not mention any alternative dates or times.
+   • The speakers did not provide any additional details about the repaving work.
+
+[w9-negation] negations must survive  raw: facts 3/3 violations 0 (2.75 s)
+  RAW: The pharmacist instructed that blue pills should not be taken with grapefruit juice, while white pills can be taken with food but not on an empty stomach. Since no refills remain, the patient must call the doctor on Monday. The pharmacist did not specify a time or phone number for the call.
+   • Blue pills must not be taken with grapefruit juice.
+   • White pills can be taken with food but not on an empty stomach.
+   • No refills are available for the medication.
+   • The patient needs to call the doctor on Monday.
+   • No specific time or phone number was provided for the call.
+   • The pharmacist did not mention any other medications or conditions.
+  legacy: NO SUMMARY (unavailable) facts 0/3 violations 0 verbatim 0.00 post 2.36 s corrections summary_failed_checks,unsupported_statement,unsupported_statement,unsupported_statement,unsupported_statement,ungrounded_statement,ungrounded_statement missed ["f1", "f2", "f3"]
+  FINAL(legacy): A summary could not be written on this device right now. 3 utterances (about 36 words) were heard; they are shown below while the temporary transcript lasts.
+  window9: summary facts 3/3 violations 0 verbatim 0.14 post 0.01 s corrections
+  FINAL(window9): The pharmacist instructed that blue pills should not be taken with grapefruit juice, while white pills can be taken with food but not on an empty stomach. Since no refills remain, the patient must call the doctor on Monday. The pharmacist did not specify a time or phone number for the call.
+   • Blue pills must not be taken with grapefruit juice.
+   • White pills can be taken with food but not on an empty stomach.
+   • No refills are available for the medication.
+   • The patient needs to call the doctor on Monday.
+   • No specific time or phone number was provided for the call.
+   • The pharmacist did not mention any other medications or conditions.
+
+[w9-dense-two-minutes] two-minute conversation with many separate facts  raw: facts 11/12 violations 0 (4.93 s)
+  RAW: The week's schedule includes science fair posters due Monday at 9 AM in the gym, picture day on Tuesday requiring a blue shirt, and an early library closure at noon Wednesday for a book sale where books cost $2 individually or $3 for five. Thursday features a fire drill at 10:15, while Friday's bake sale runs from 1 PM to 4 PM with Mrs. Patel needing six volunteers to sign up outside room 107. Next Tuesday, the bus to the museum departs at 8:30, and the permission slip is due this Friday, with a reminder to check the lost and found box before the end of the month. Finally, the principal emphasized that no phones are allowed during the fire drill.
+   • Science fair posters are due Monday at 9 AM in the gym.
+   • Tuesday is picture day, and students must wear a blue shirt.
+   • The library closes at noon Wednesday for a book sale.
+   • Books cost $2 each or $3 for five.
+   • The fire drill is scheduled for Thursday at 10:15.
+   • The bake sale on Friday runs from 1 PM to 4 PM.
+   • Mrs. Patel needs six volunteers for the bake sale.
+   • Volunteers sign up outside room 107.
+   • The bus to the museum leaves next Tuesday at 8:30.
+   • The permission slip is due this Friday.
+   • The lost and found box is located by the front office.
+   • No phones are allowed during the fire drill.
+  legacy: summary facts 9/12 violations 0 verbatim 0.23 post 5.29 s corrections unsupported_number_or_time,unsupported_number_or_time,kept_short_copy,unsupported_number_or_time,kept_short_copy missed ["f4", "f6", "f8"]
+  FINAL(legacy): The week's schedule includes science fair posters due Monday at 9 AM in the gym, picture day on Tuesday requiring a blue shirt, and an early library closure at noon Wednesday for a book sale where books cost $2 individually or $3 for five. Next Tuesday, the bus to the museum departs at 8:30, and the permission slip is due this Friday, with a reminder to check the lost and found box before the end of the month. Finally, the principal emphasized that no phones are allowed during the fire drill.
+   • Science fair posters are due Monday at 9 AM in the gym.
+   • Tuesday is picture day, and students must wear a blue shirt.
+   • The library closes at noon Wednesday for a book sale.
+   • Books cost $2 each or $3 for five.
+   • The fire drill is scheduled for Thursday at 10:15.
+   • Mrs. Patel needs six volunteers for the bake sale.
+   • The bus to the museum leaves next Tuesday at 8:30.
+   • The permission slip is due this Friday.
+   • The lost and found box is located by the front office.
+   • No phones are allowed during the fire drill.
+  window9: summary facts 10/12 violations 0 verbatim 0.23 post 0.03 s corrections invented_value,invented_value,kept_short_copy,kept_short_copy missed ["f4", "f6"]
+  FINAL(window9): The week's schedule includes science fair posters due Monday at 9 AM in the gym, picture day on Tuesday requiring a blue shirt, and an early library closure at noon Wednesday for a book sale where books cost $2 individually or $3 for five. Next Tuesday, the bus to the museum departs at 8:30, and the permission slip is due this Friday, with a reminder to check the lost and found box before the end of the month. Finally, the principal emphasized that no phones are allowed during the fire drill.
+   • Science fair posters are due Monday at 9 AM in the gym.
+   • Tuesday is picture day, and students must wear a blue shirt.
+   • The library closes at noon Wednesday for a book sale.
+   • Books cost $2 each or $3 for five.
+   • The fire drill is scheduled for Thursday at 10:15.
+   • Mrs. Patel needs six volunteers for the bake sale.
+   • Volunteers sign up outside room 107.
+   • The bus to the museum leaves next Tuesday at 8:30.
+   • The permission slip is due this Friday.
+   • The lost and found box is located by the front office.
+   • No phones are allowed during the fire drill.
+
+[w9-who-said-what] no invented relationships or decisions  raw: facts 2/2 violations 0 (2.46 s)
+  RAW: The original plan to pick up the kids at 5:00 was changed because the speaker could not make it at that time. Instead, the speaker offered to pick them up at 4:30, which was accepted. The speaker then agreed to take the children to practice, which is scheduled for 6:00 at Lincoln Field.
+   • The pickup time was changed from 5:00 to 4:30.
+   • The speaker agreed to take the kids to practice.
+   • Practice is at 6:00 at Lincoln Field.
+  legacy: NO SUMMARY (unavailable) facts 0/2 violations 0 verbatim 0.00 post 0.65 s corrections summary_failed_checks,unsupported_number_or_time,unsupported_statement,unsupported_number_or_time,unsupported_number_or_time,unsupported_number_or_time missed ["f1", "f2"]
+  FINAL(legacy): A summary could not be written on this device right now. 4 utterances (about 31 words) were heard; they are shown below while the temporary transcript lasts.
+  window9: summary facts 2/2 violations 0 verbatim 0.00 post 0.01 s corrections
+  FINAL(window9): The original plan to pick up the kids at 5:00 was changed because the speaker could not make it at that time. Instead, the speaker offered to pick them up at 4:30, which was accepted. The speaker then agreed to take the children to practice, which is scheduled for 6:00 at Lincoln Field.
+   • The pickup time was changed from 5:00 to 4:30.
+   • The speaker agreed to take the kids to practice.
+   • Practice is at 6:00 at Lincoln Field.
+
+[w9-price-quote] numbers and a conditional  raw: facts 4/4 violations 0 (2.48 s)
+  RAW: The screen repair costs $250, and adding a battery replacement brings the total to $349. A 10% discount is available if a decision is made by Thursday, after which the discount expires. The repair process is estimated to take approximately three days.
+   • Screen repair costs $250.
+   • Battery replacement adds $99 to the total.
+   • The final cost is $349.
+   • A 10% discount is lost if no decision is made by Thursday.
+   • The repair will take about three days.
+  legacy: NO SUMMARY (unavailable) facts 0/4 violations 0 verbatim 0.00 post 0.91 s corrections summary_failed_checks,unsupported_number_or_time,unsupported_statement,unsupported_number_or_time,unsupported_number_or_time,unsupported_number_or_time,unsupported_statement missed ["f1", "f2", "f3", "f4"]
+  FINAL(legacy): A summary could not be written on this device right now. 4 utterances (about 41 words) were heard; they are shown below while the temporary transcript lasts.
+  window9: summary facts 4/4 violations 0 verbatim 0.00 post 0.01 s corrections invented_value,invented_value
+  FINAL(window9): A 10% discount is available if a decision is made by Thursday, after which the discount expires. The repair process is estimated to take approximately three days.
+   • Screen repair costs $250.
+   • Battery replacement adds $99 to the total.
+   • A 10% discount is lost if no decision is made by Thursday.
+   • The repair will take about three days.
+
+[w9-cont-correction] continue: a plan changes after the first summary
+  legacy: first recap rejected
+  window9: update applied facts 3/3 violations 1 update model 2.56 s VIOLATED ["still at Ana\'s house on Thursday"]
+  AFTER: The book club will meet on Thursday at 7:00 at Ana's house, where Ben is bringing snacks. The reading requirement has been updated, now requiring members to read chapters one through eight instead of just the first five. The plan remains unchanged with no other modifications mentioned. The book club meeting has been moved from Ana's house to the library, and the date has been changed from Thursday to Friday while keeping the 7:00 time.
+   • The book club meets on Thursday at 7:00.
+   • The meeting location is Ana's house.
+   • Ben is bringing snacks for the group.
+   • Everyone must read chapters one to five.
+   • No other changes or additions were made to the plan.
+   • The schedule and requirements are confirmed as stated.
+   • Meeting location changed from Ana's house to the library.
+   • Meeting date changed from Thursday to Friday at 7:00.
+  ADDITION RAW: The book club meeting has been moved from Ana's house to the library, and the date has been changed from Thursday to Friday while keeping the 7:00 time. The reading requirement has been updated, now requiring members to read chapters one through eight instead of just the first five. outdated=["The book club will meet on Thursday at 7:00 at Ana\'s house, where Ben is bringing snacks.", "Members are required to read chapters one through five before the meeting.", "The plan remains unchanged with no other modifications mentioned."]
+
+[w9-cont-add] continue: new facts, no duplication
+  legacy: first recap rejected
+  window9: update applied facts 2/3 violations 0 update model 1.63 s missed ["f3"]
+  AFTER: The plumber is scheduled to arrive on Tuesday between 8:00 and 10:00. The area under the kitchen sink needs to be cleared before they arrive. This arrangement was confirmed during the conversation. The plumber's service is estimated to cost approximately $180. He requires someone to be present to sign the necessary form.
+   • The plumber is coming on Tuesday.
+   • The visit is scheduled between 8:00 and 10:00.
+   • The area under the kitchen sink must be cleared.
+   • No other dates, times, or names were mentioned.
+   • The estimated cost for the plumbing work is about $180.
+   • A signature on the form is required from someone present.
+  ADDITION RAW: The plumber's service is estimated to cost approximately $180. He requires someone to be present to sign the necessary form. outdated=[]
+
+[w9-cont-nothing-new] continue: only chatter after the summary
+  legacy: update NOTHING/REJECTED facts 1/1 violations 0 update model 0.84 s
+  AFTER: The dentist appointment is scheduled for the ninth at 11:30, and the patient needs to bring their insurance card.
+   • The appointment is on the ninth at 11:30.
+   • The patient must bring their insurance card.
+  ADDITION RAW:  outdated=[]
+  window9: update NOTHING/REJECTED facts 1/1 violations 0 update model 0.84 s
+  AFTER: The dentist appointment is scheduled for the ninth at 11:30, and the patient needs to bring their insurance card.
+   • The appointment is on the ninth at 11:30.
+   • The patient must bring their insurance card.
+  ADDITION RAW:  outdated=[]
+
+[w9-cont-double-correction] continue: corrected twice
+  legacy: first recap rejected
+  window9: update applied facts 2/2 violations 1 update model 1.79 s VIOLATED ["tickets cost five dollars now"]
+  AFTER: The recital is scheduled for Saturday at 3:00 PM in the school auditorium, and tickets are priced at five dollars. The recital location has been changed from the school auditorium to the cafeteria, and ticket prices have been reduced to free.
+   • The recital is on Saturday at 3:00 PM.
+   • The event location is the school auditorium.
+   • Tickets cost five dollars.
+   • The venue is now the cafeteria instead of the auditorium.
+   • Tickets are now free.
+   • The school mentioned the auditorium is being painted.
+  ADDITION RAW: The recital location has been changed from the school auditorium to the cafeteria, and ticket prices have been reduced to free. outdated=["The recital is scheduled for Saturday at 3:00 PM in the school auditorium, and tickets are priced at five dollars."]
+
+=== Totals (synthetic, small; regression only) ===
+raw model output: facts 42/44, must-not violations 0
+continue-legacy: facts 1/1, must-not violations 0, no-summary 1
+continue-window9: facts 8/9, must-not violations 2, no-summary 1
+legacy: facts 12/44, must-not violations 0, no-summary 8
+window9: facts 41/44, must-not violations 0, no-summary 0
+model time per recap (warm after first): median 2.67 s, max 8.05 s
+wrote results/window9/fresh_run1.json
