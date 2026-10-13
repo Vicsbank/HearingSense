@@ -54,8 +54,15 @@ public struct SummaryPostprocessor: Sendable {
     public func merge(earlier: DraftText, addition: DraftText, newLines: [String], earlierLines: [String],
                       restatements: [String: String] = [:]) -> PostprocessingOutput
     {
-        let earlierSummary = SummaryText.sentences(in: earlier.summary)
-        let earlierPoints = earlier.keyPoints.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
+        let savedSummary = SummaryText.sentences(in: earlier.summary)
+        let savedPoints = earlier.keyPoints.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
+        let isCommentary = { (text: String) in
+            !SummaryText.isSuperseded(text) && SummaryQualityEditor.isSourceCommentary(AnalyzedText(text, normalizer: self.normalizer))
+        }
+        // Generic source status from an earlier recap becomes misleading after new speech.
+        // Remove only that narrowly classified commentary before it can seed merge evidence.
+        let earlierSummary = savedSummary.filter { !isCommentary($0) }
+        let earlierPoints = savedPoints.filter { !isCommentary($0) }
         var earlierStatements: [String] = []
         for statement in earlierSummary + earlierPoints where !earlierStatements.contains(statement) { earlierStatements.append(statement) }
 
@@ -74,6 +81,11 @@ public struct SummaryPostprocessor: Sendable {
         let spokenLines = earlierLines + newLines
         var pass = Pass(configuration: configuration, normalizer: normalizer, grounder: grounder, spokenLines: spokenLines,
                         restatements: restatements, evidenceMap: evidenceMap)
+        for (statements, isKeyPoint) in [(savedSummary, false), (savedPoints, true)] {
+            for statement in statements where isCommentary(statement) {
+                pass.reports.append(StatementReport(text: statement, isKeyPoint: isKeyPoint, verdict: .filler, reason: .emptyFiller))
+            }
+        }
         for statement in earlierSummary { pass.seed(statement, isKeyPoint: false) }
         for statement in earlierPoints { pass.seed(statement, isKeyPoint: true) }
         let added = SummaryText.statements(summary: addition.summary, keyPoints: addition.keyPoints)

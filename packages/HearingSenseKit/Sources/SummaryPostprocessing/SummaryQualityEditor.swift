@@ -65,17 +65,7 @@ public enum SummaryQualityEditor {
         guard statement.values.isEmpty else { return false }
         let words = statement.tokens.filter { $0.kind == .word }
         guard !words.isEmpty else { return true }
-        let speechCommentary: Set<String> = ["transcript", "conversation", "mentioned", "provided", "stated", "given"]
-        let commentaryVocabulary: Set<String> = [
-            "specific", "detail", "details", "name", "names", "time", "times", "date", "dates", "task", "tasks",
-            "information", "additional", "provided", "mentioned", "stated", "given", "transcript", "conversation",
-            "remain", "remains", "unchanged", "confirmed", "confirmation", "plan", "plans", "modification", "modifications",
-            "change", "changes", "addition", "additions", "no", "nothing", "none",
-        ]
-        if words.contains(where: { speechCommentary.contains($0.text) }),
-           words.allSatisfy({ Lexicon.stopWords.contains($0.text) || commentaryVocabulary.contains($0.text) }) {
-            return true
-        }
+        if isSourceCommentary(statement) { return true }
         for token in words {
             if token.isCapitalized, !token.startsSentence, !Lexicon.stopWords.contains(token.text) { return false }
             if Lexicon.stopWords.contains(token.text) { continue }
@@ -83,6 +73,35 @@ public enum SummaryQualityEditor {
             if !Lexicon.fillerVocabulary.contains(token.text), !Lexicon.fillerVocabulary.contains(stem) { return false }
         }
         return true
+    }
+
+    /// Content-free status about what the source mentioned or how the discussion closed.
+    /// Requires a source/reporting structure and a bounded generic vocabulary, not merely
+    /// negation or a no-change predicate: actual decisions and unresolved facts must survive.
+    static func isSourceCommentary(_ statement: AnalyzedText) -> Bool {
+        guard statement.values.isEmpty else { return false }
+        let words = statement.tokens.filter { $0.kind == .word }
+        guard !words.isEmpty,
+              !words.contains(where: { $0.isCapitalized && !$0.startsSentence && !Lexicon.stopWords.contains($0.text) })
+        else { return false }
+        let reporting: Set<String> = ["mentioned", "provided", "stated", "given"]
+        let sourceSubjects: Set<String> = ["conversation", "discussion", "dialogue", "chat", "exchange"]
+        let closing: Set<String> = ["ended", "concluded", "finished", "closed"]
+        let commentaryVocabulary: Set<String> = [
+            "specific", "detail", "details", "name", "names", "time", "times", "date", "dates", "task", "tasks",
+            "information", "additional", "provided", "mentioned", "stated", "given", "transcript", "conversation",
+            "remain", "remains", "unchanged", "confirmed", "confirmation", "plan", "plans", "modification", "modifications",
+            "change", "changes", "addition", "additions", "no", "nothing", "none",
+            "uncertainty", "uncertainties", "question", "questions", "clarification", "clarifications", "further",
+            "discussion", "dialogue", "chat", "exchange", "ended", "concluded", "finished", "closed",
+        ]
+        let meaningfulModality: Set<String> = ["may", "might", "could", "can", "must", "should", "will", "would",
+                                              "if", "whether", "maybe", "perhaps", "probably"]
+        guard !words.contains(where: { meaningfulModality.contains($0.text) }),
+              words.allSatisfy({ Lexicon.stopWords.contains($0.text) || commentaryVocabulary.contains($0.text) })
+        else { return false }
+        return words.contains { reporting.contains($0.text) }
+            || (words.contains { sourceSubjects.contains($0.text) } && words.contains { closing.contains($0.text) })
     }
 
     /// An unfinished statement: fewer than two words, or one that stops on a word that cannot

@@ -228,3 +228,22 @@ General semantic entailment, arbitrary event aliases and arbitrary venue names r
 Verified: all 15 merge regressions and all 13 scripted Window 9 pipeline tests, including the exact
 synthetic book-club and recital outputs and an unrelated workshop still using the same auditorium.
 No native model run, logging, persistence or additional model call was added by this module change.
+
+### Source-status commentary during Continue
+
+Quality cleanup recognizes content-free source status structurally: a generic reporting predicate
+("mentioned/provided/stated/given") or a source subject (conversation/discussion/dialogue/chat/exchange)
+with a closing predicate, and only bounded generic status vocabulary. This covers empty statements
+about further changes, questions, clarifications or uncertainties. Values, names, concrete subject
+matter and meaningful modality prevent this classification; actual no-change decisions, prohibitions,
+unresolved permits, specific unanswered questions and missing-speech caveats remain substantive.
+
+Merge applies this same narrow classification to inherited summary sentences and key points before
+they become current recap evidence. Generic old status cannot misleadingly survive new speech merely
+because it was already saved. Cleanup reports `filler` / `empty_filler`; the existing addition-only
+statement and filler counts remain unchanged. Historical `Superseded:` statements remain visible.
+
+Synthetic regressions cover the observed generic forms, new structural variants, inherited Continue
+cleanup, meaningful negative and uncertain decisions, missing speech, and necessary short quotes.
+Scope remains bounded English lexical structure: arbitrary paraphrases of narration may remain, and
+no absence or uncertain substantive claim is deleted solely for being negative or uncertain.

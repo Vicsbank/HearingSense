@@ -69,6 +69,72 @@ import Testing
         #expect(!SummaryQualityEditor.isIncompleteFragment("Ask Priya what the slides are for."))
     }
 
+    @Test func sourceStatusCommentaryUsesGenericStructureRatherThanSpecificSentences() {
+        let commentary = ["No other changes or uncertainties were mentioned.",
+                          "The conversation ended without further changes or questions.",
+                          "The discussion concluded without additional clarifications.",
+                          "The exchange finished with no further modifications.",
+                          "No additional questions or details were provided."]
+        for text in commentary {
+            #expect(SummaryQualityEditor.isSourceCommentary(analyzed(text)))
+            #expect(SummaryQualityEditor.isFiller(analyzed(text)))
+        }
+        let output = SummaryPostprocessor().process(
+            DraftText(title: "", summary: "The delivery uses the side entrance. " + commentary.joined(separator: " ")),
+            transcriptLines: ["the delivery uses the side entrance"])
+        #expect(output.summaryStatements == ["The delivery uses the side entrance."])
+        #expect(output.fillerCount == commentary.count)
+    }
+
+    @Test func actualNoChangeDecisionsUncertaintyAndMissingSpeechRemainSubstantive() {
+        let substantive = ["We agreed not to change the plan.", "No changes to the delivery route are allowed.",
+                           "The route may change.", "The permit remains uncertain.",
+                           "No further changes to the delivery route were mentioned.",
+                           "The conversation ended without Nora approving the permit.",
+                           "Nora stated that no changes are allowed.", "Some speech could not be transcribed.",
+                           "No further questions about the permit were answered.", "The discussion concluded at 3:00."]
+        for text in substantive {
+            #expect(!SummaryQualityEditor.isSourceCommentary(analyzed(text)))
+            #expect(!SummaryQualityEditor.isFiller(analyzed(text)))
+        }
+        // A prohibition and a genuinely unresolved decision survive cleanup. Grounding and
+        // the minimum length for copy classification still decide their report verdicts.
+        for text in ["Do not change the route.", "The route may change."] {
+            let output = SummaryPostprocessor().process(DraftText(title: "", summary: text), transcriptLines: [text])
+            #expect(output.summaryStatements == [text])
+        }
+        // This necessary value claim is grounded, at least five words and within the approved
+        // twelve-word allowance; commentary cleanup must preserve its short-copy treatment.
+        let quote = "The bus leaves at 7:45 on Friday."
+        let copied = SummaryPostprocessor().process(DraftText(title: "", summary: quote), transcriptLines: [quote])
+        #expect(copied.summaryStatements == [quote])
+        #expect(copied.reports.contains { $0.verdict == .keptShortCopy && $0.reason == ReasonCode.keptShortCopy.rawValue })
+    }
+
+    @Test func continueRemovesInheritedGenericStatusButKeepsActualEarlierDecisions() {
+        let firstStatus = "No other changes or uncertainties were mentioned."
+        let secondStatus = "The conversation ended without further changes or questions."
+        let decision = "We agreed not to change the route."
+        let uncertainty = "The permit remains uncertain."
+        let missing = "Some speech could not be transcribed."
+        let output = SummaryPostprocessor().merge(
+            earlier: DraftText(title: "Delivery", summary: decision + " " + secondStatus,
+                               keyPoints: [firstStatus, decision, uncertainty, missing]),
+            addition: DraftText(title: "", summary: "The delivery uses the side entrance."),
+            newLines: ["the delivery uses the side entrance"],
+            earlierLines: ["we agreed not to change the route", "the permit remains uncertain"])
+        #expect(!output.summaryStatements.contains(secondStatus))
+        #expect(!output.keyPoints.contains(firstStatus))
+        #expect(output.summaryStatements.contains(decision))
+        #expect(output.keyPoints.contains(decision))
+        #expect(output.keyPoints.contains(uncertainty))
+        #expect(output.keyPoints.contains(missing))
+        #expect(output.reports.filter { $0.verdict == .filler && $0.reason == ReasonCode.emptyFiller.rawValue }.count == 2)
+        // Addition counts keep their existing definition; inherited cleanup is reported only.
+        #expect(output.statementCount == 1)
+        #expect(output.fillerCount == 0)
+    }
+
     @Test func aStatementThatAddsNothingIsCoveredAndOneThatSaysMoreIsNot() {
         let full = SummaryQualityEditor.signature(of: analyzed("They are almost out of milk and eggs, and the twenty-pound dog food is needed."))
         #expect(SummaryQualityEditor.isCovered(SummaryQualityEditor.signature(of: analyzed("The dog food is twenty pounds.")), by: full))
