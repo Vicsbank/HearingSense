@@ -8,4 +8,4 @@ dd="${1:?derived data directory}"
 shift
 xcodebuild build -project "$root/apps/ios/HearingSense.xcodeproj" -scheme HearingSense \
     -destination 'generic/platform=iOS Simulator' -derivedDataPath "$dd" -jobs 4 ARCHS=arm64 "$@" 2>&1 \
-    | grep -E "^/.*(error|warning):|BUILD (SUCCEEDED|FAILED)" | sed "s|$root/||" | sort -u
+    | grep -E "^/.*(error|warning):|BUILD (SUCCEEDED|FAILED)" | grep -v -E "SourcePackages/checkouts|/\.build/" | sed "s|$root/||" | sort -u

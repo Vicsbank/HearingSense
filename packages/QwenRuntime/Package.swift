@@ -16,6 +16,7 @@ let package = Package(
     products: [
         .library(name: "QwenRuntime", targets: ["QwenRuntime"]),
         .executable(name: "hs-qwen-probe", targets: ["QwenProbe"]),
+        .executable(name: "hs-qwen-eval", targets: ["QwenEval"]),
     ],
     dependencies: [
         .package(path: "../HearingSenseKit"),
@@ -34,6 +35,11 @@ let package = Package(
         .executableTarget(
             name: "QwenProbe", dependencies: ["QwenRuntime", .product(name: "ConversationUnderstanding", package: "HearingSenseKit")],
             path: "Sources/hs-qwen-probe"),
+        .executableTarget(
+            name: "QwenEval",
+            dependencies: ["QwenRuntime", .product(name: "ConversationUnderstanding", package: "HearingSenseKit"),
+                           .product(name: "SemanticEvaluation", package: "HearingSenseKit")],
+            path: "Sources/hs-qwen-eval"),
         .testTarget(name: "QwenRuntimeTests", dependencies: ["QwenRuntime"]),
     ]
 )

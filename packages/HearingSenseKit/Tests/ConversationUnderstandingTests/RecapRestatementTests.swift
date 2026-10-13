@@ -294,9 +294,17 @@ private let modelDraft = RecapDraft(
         summary: "The meeting with Ms. Wang takes place tomorrow at three. Vic is a student in their family. A visit of the family is planned for Sunday.",
         keyPoints: ["Ms. Wang is met tomorrow at three."])
 
+    /// Window 9: the Window 7/8 checks stay available as `.legacy` (to measure before/after); these
+    /// tests describe that pipeline. The default pipeline is tested in `Window9PipelineTests`.
+    private var legacy: ConversationRecapEngine.Policy {
+        var policy = ConversationRecapEngine.Policy()
+        policy.postprocessing = .legacy
+        return policy
+    }
+
     @Test func aStatementTheModelCannotFindInTheTranscriptIsLeftOut() async {
         let summarizer = ScriptedSummarizer(recap: draft, ungrounded: ["Vic is a student in their family."])
-        let recap = await ConversationRecapEngine(summarizer: summarizer).recap(excerpt(of: lines))
+        let recap = await ConversationRecapEngine(summarizer: summarizer, policy: legacy).recap(excerpt(of: lines))
         #expect(recap.isSummary)
         #expect(!recap.fullText.contains("student in their family"))
         #expect(recap.summary.contains("tomorrow at three") && recap.summary.contains("Sunday"))
@@ -313,7 +321,8 @@ private let modelDraft = RecapDraft(
 
     @Test func aReadingThatRejectsNearlyEverythingIsNotBelieved() async {
         let all = RecapText.sentences(in: draft.summary) + draft.keyPoints
-        let recap = await ConversationRecapEngine(summarizer: ScriptedSummarizer(recap: draft, ungrounded: Set(all.dropLast()))).recap(excerpt(of: lines))
+        let recap = await ConversationRecapEngine(summarizer: ScriptedSummarizer(recap: draft, ungrounded: Set(all.dropLast())), policy: legacy)
+            .recap(excerpt(of: lines))
         #expect(recap.isSummary)
         #expect(recap.corrections.contains("grounding_not_believed"))
         #expect(RecapText.sentences(in: recap.summary).count == 3)

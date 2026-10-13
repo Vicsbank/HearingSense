@@ -46,6 +46,7 @@ final class ConversationIntelligenceController {
         let arguments = ProcessInfo.processInfo.arguments
         return isDemoRequested || arguments.contains(sampleHistoryArgument)
             || (arguments.contains("--hs-w7-selftest") && !arguments.contains("--hs-w7-persist"))
+            || arguments.contains("--hs-w9-selftest")
         #else
         false
         #endif
@@ -69,6 +70,9 @@ final class ConversationIntelligenceController {
     /// Summaries the last check before storage refused (they repeated the speech word for word).
     private(set) var summariesNotSaved = 0
     private(set) var lastRecapSeconds: TimeInterval?
+    /// Window 9: which engine wrote the latest summary (a name), and why Qwen was not used if it was not.
+    private(set) var lastEngineLabel: String?
+    private(set) var lastFallbackReason: String?
 
     // History
     private(set) var history: [ConversationRecord] = []
@@ -88,6 +92,11 @@ final class ConversationIntelligenceController {
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private let store: SwiftDataConversationHistory?
     @ObservationIgnored private let recapEngine: ConversationRecapEngine
+    /// Window 9: Qwen first, Apple's model as the fallback (nil for test summarizers).
+    @ObservationIgnored private let coordinator: SummarizationCoordinator?
+    /// The model is loaded for use soon (speech is buffered) and freed after a quiet time.
+    @ObservationIgnored private var residencyTask: Task<Void, Never>?
+    @ObservationIgnored private var isModelResident = false
     @ObservationIgnored private var buffer: RollingConversationBuffer
     @ObservationIgnored private var machine = ConversationSessionMachine(policy: .product)
     @ObservationIgnored private var islandState: IslandConversation?
@@ -103,9 +112,10 @@ final class ConversationIntelligenceController {
 
     /// - Parameter inMemory: no files are read or written (UI checks, previews).
     init(defaults: UserDefaults = .standard, inMemory: Bool = ConversationIntelligenceController.usesMemoryOnly,
-         summarizer: any ConversationSummarizing = FoundationModelRecapSummarizer())
+         summarizer: any ConversationSummarizing = SummarizationSetup.makeCoordinator())
     {
         self.defaults = defaults
+        coordinator = summarizer as? SummarizationCoordinator
         let policy = ConversationBufferPolicy.standard
         buffer = RollingConversationBuffer(policy: policy)
         recapEngine = ConversationRecapEngine(summarizer: summarizer, bufferPolicy: policy)
@@ -235,8 +245,41 @@ final class ConversationIntelligenceController {
             buffer.prune(now: now)
             captions = buffer.utterances
             scheduleDeadline()
+            prepareModelIfUseful()
         }
     }
+
+    // MARK: - Model residency (Window 9)
+
+    /// Speech is being buffered, so a summary may be asked for soon: load the model now, so that
+    /// the first request does not wait for it. Loading starts only when enough was said for a
+    /// summary, never without transcription, and the model is freed again after a quiet time
+    /// (`scheduleModelRelease`).
+    private func prepareModelIfUseful() {
+        guard let coordinator, !isModelResident, isTranscriptionOn, bufferedWordCount >= ConversationBufferPolicy.standard.minimumWords
+        else { return }
+        isModelResident = true
+        Task { await coordinator.prewarm() }
+        scheduleModelRelease()
+    }
+
+    /// Frees the model's memory when no summary was asked for and no conversation is followed
+    /// for a while (the next request reloads it).
+    private func scheduleModelRelease() {
+        residencyTask?.cancel()
+        guard let coordinator, isModelResident else { return }
+        residencyTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(Self.modelIdleSeconds))
+            guard !Task.isCancelled, let self else { return }
+            guard self.phase == .idle else { self.scheduleModelRelease(); return }
+            await coordinator.releaseResources()
+            self.isModelResident = false
+            self.log(.recognition, "Summary model released after \(Int(Self.modelIdleSeconds)) s without a request")
+        }
+    }
+
+    /// How long the model stays in memory without a request.
+    static let modelIdleSeconds: TimeInterval = 180
 
     // MARK: - Settings
 
@@ -313,7 +356,12 @@ final class ConversationIntelligenceController {
                     guard !Task.isCancelled else { return }
                     self.recapsMade += 1
                     self.lastRecapSeconds = recap.modelSeconds
-                    self.log(.recognition, "Recap: \(recap.source.rawValue), \(excerpt.utterances.count) utterance(s), "
+                    self.lastEngineLabel = recap.engineLabel
+                    self.lastFallbackReason = recap.fallbackReason
+                    if recap.engines.contains(where: { $0.kind == .qwen }) { self.isModelResident = true }
+                    self.scheduleModelRelease()
+                    self.log(.recognition, "Recap: \(recap.source.rawValue), engine \(recap.engineLabel ?? "none")"
+                        + "\(recap.fallbackReason.map { " (fallback: \($0))" } ?? ""), \(excerpt.utterances.count) utterance(s), "
                         + "\(excerpt.wordCount) words, model \(Self.seconds(recap.modelSeconds)), "
                         + "\(recap.corrections.count) correction(s)" + Self.tally(recap.corrections))
                     self.run(self.machine.process(.recapReady(recap, at: .now)))
@@ -339,8 +387,13 @@ final class ConversationIntelligenceController {
                 workTask = Task { [recapEngine] in
                     let updated = await recapEngine.update(recap, earlierTranscript: earlier, new: new)
                     guard !Task.isCancelled else { return }
-                    if updated != nil {
+                    if let updated {
                         self.updatesMade += 1
+                        self.lastEngineLabel = updated.engineLabel
+                        self.lastFallbackReason = updated.fallbackReason ?? self.lastFallbackReason
+                    }
+                    self.scheduleModelRelease()
+                    if updated != nil {
                         // Kept only as long as the session is followed; bounded.
                         self.recapTranscript = String((earlier + "\n" + new.map(\.text).joined(separator: "\n")).suffix(8000))
                     }
@@ -542,7 +595,13 @@ final class ConversationIntelligenceController {
 
     /// Counts, states and timings. No utterance, no summary.
     func reportText() -> String {
-        [
+        var engineLines: [String] = []
+        if let coordinator {
+            engineLines.append("Summary engines (Window 9): " + coordinator.identities.map(\.detail).joined(separator: " → fallback ")
+                + " · last summary by \(lastEngineLabel ?? "–")" + (lastFallbackReason.map { " (fallback: \($0))" } ?? "")
+                + " · model resident: \(isModelResident ? "yes" : "no")")
+        }
+        return (engineLines + [
             "Conversation summaries (Window 7)",
             "Continuous semantic relevance inference: not part of this build · language model "
                 + "\(isLanguageModelAvailable ? "available" : "not available") (used only for summaries the user asks for)",
@@ -550,7 +609,7 @@ final class ConversationIntelligenceController {
                 + "buffered \(captions.count) utterance(s), \(bufferedWordCount) words, expired \(buffer.expiredUtterances)",
             "Phase: \(phase.rawValue) · summary requests \(recapsMade) · updates \(updatesMade) · refused before storage \(summariesNotSaved) · last summary model time "
                 + "\(lastRecapSeconds.map(Self.seconds) ?? "–") · saved summaries \(history.count)",
-        ].joined(separator: "\n")
+        ]).joined(separator: "\n")
     }
 }
 

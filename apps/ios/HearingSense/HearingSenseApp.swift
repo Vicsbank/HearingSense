@@ -49,6 +49,10 @@ struct HearingSenseApp: App {
                     if Window7SelfTest.isRequested {
                         await Window7SelfTest(controller: controller).run()
                     }
+                    // The Window 9 engine and postprocessing walk-through, microphone off; see Window9SelfTest.
+                    if Window9SelfTest.isRequested {
+                        await Window9SelfTest(controller: controller).run()
+                    }
                     // Presentation check without a microphone; see LiveActivityController.
                     if let scene = LiveActivityController.requestedDemo, controller.session.isOn {
                         // Into the open (synthetic) session, like real events.

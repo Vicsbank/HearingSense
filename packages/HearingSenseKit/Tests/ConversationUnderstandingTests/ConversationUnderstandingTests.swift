@@ -12,6 +12,9 @@ private func said(_ text: String, _ start: TimeInterval, _ end: TimeInterval, lo
 actor ScriptedSummarizer: ConversationSummarizing {
     var recapDraft: RecapDraft?
     var updateDraft: RecapDraft?
+    /// Window 9: the answer to "rewrite the whole recap"; nil: cannot rewrite.
+    var rewriteDraft: RecapDraft?
+    private(set) var rewriteRequests = 0
     var available = true
     private(set) var recapRequests: [String] = []
     private(set) var updateRequests: [String] = []
@@ -32,6 +35,12 @@ actor ScriptedSummarizer: ConversationSummarizing {
         updateDraft = update
         self.available = available
         self.restatements = restatements
+    }
+
+    func rewrite(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft {
+        rewriteRequests += 1
+        guard let rewriteDraft else { throw RecapError.restatementUnsupported }
+        return rewriteDraft
     }
 
     func restate(_ statement: String) async throws -> String {

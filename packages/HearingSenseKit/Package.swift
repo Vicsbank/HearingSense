@@ -64,6 +64,7 @@ let package = Package(
         .library(name: "SemanticAttention", targets: ["SemanticAttention"]),
         .library(name: "ConversationUnderstanding", targets: ["ConversationUnderstanding"]),
         .library(name: "SummaryPostprocessing", targets: ["SummaryPostprocessing"]),
+        .library(name: "SemanticEvaluation", targets: ["SemanticEvaluation"]),
         .executable(name: "hs-semantic-eval", targets: ["SemanticEvaluationTool"]),
     ],
     targets: [

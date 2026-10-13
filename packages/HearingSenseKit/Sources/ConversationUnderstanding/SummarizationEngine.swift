@@ -130,6 +130,10 @@ public actor SummarizationCoordinator: ConversationSummarizing {
         try await run { engine in try await engine.update(previous: previous, newTranscript: newTranscript) }
     }
 
+    public func rewrite(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft {
+        try await run { engine in try await engine.rewrite(previous: previous, newTranscript: newTranscript) }
+    }
+
     public func restate(_ statement: String) async throws -> String {
         // Same engine as the draft when possible; failures here are not worth a second engine.
         let engine: any SummarizationEngine = (await primaryUsable()) ? primary ?? fallback : fallback

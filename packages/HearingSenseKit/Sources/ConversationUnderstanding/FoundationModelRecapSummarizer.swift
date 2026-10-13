@@ -172,8 +172,8 @@ public struct FoundationModelRecapSummarizer: SummarizationEngine {
                 to: prompt, generating: GeneratedAddition.self,
                 options: GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 250)).content
             let added = addition.summary.trimmingCharacters(in: .whitespacesAndNewlines)
-            return RecapDraft(title: previous.title, summary: added.isEmpty ? previous.summary : previous.summary + " " + added,
-                              keyPoints: addition.keyPoints)
+            // Window 9: the addition only; `ConversationRecapEngine` merges it with the earlier recap.
+            return RecapDraft(title: previous.title, summary: added, keyPoints: addition.keyPoints)
         } catch is CancellationError {
             throw CancellationError()
         } catch {

@@ -1,5 +1,6 @@
 import Foundation
 import NaturalLanguage
+import SummaryPostprocessing
 
 /// A recap as the language model wrote it, before checking. Untrusted.
 public struct RecapDraft: Hashable, Sendable {
@@ -46,11 +47,17 @@ public protocol ConversationSummarizing: Sendable {
     /// the same facts. Used when a draft repeats a spoken sentence word for word; the result is
     /// checked like every other statement.
     func restate(_ statement: String) async throws -> String
+    /// Window 9: the complete updated recap (earlier details that are still true, what is new,
+    /// and corrections applied: an outdated value is not stated as current). Used only when the
+    /// new speech changed something the earlier recap says; the result is checked like a first recap.
+    func rewrite(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft
 }
 
 extension ConversationSummarizing {
     /// A summarizer that cannot restate: the copied sentence is then left out.
     public func restate(_ statement: String) async throws -> String { throw RecapError.restatementUnsupported }
+    /// A summarizer that cannot rewrite: the merged addition stands, the outdated statement stays marked.
+    public func rewrite(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft { throw RecapError.restatementUnsupported }
 }
 
 /// A checked recap, ready to show and to save.
@@ -114,6 +121,9 @@ public struct ConversationRecap: Hashable, Sendable {
     public var engines: [SummarizationEngineIdentity] = []
     /// Window 9: why the preferred engine was not used for this recap (a code), if it was not.
     public var fallbackReason: String?
+    /// Window 9: statements kept although the checks could not confirm them (and no model
+    /// verification confirmed them either). A count, for diagnostics.
+    public var unverifiedStatements = 0
 
     public init(title: String, summary: String, keyPoints: [String] = [], source: Source, caveats: [String] = [],
                 corrections: [String] = [], coveredFrom: Date? = nil, coveredTo: Date? = nil, utteranceCount: Int = 0,
@@ -407,6 +417,22 @@ public struct RecapValidator: Hashable, Sendable {
 /// Writes recaps of the recent conversation and extends them while the user keeps following.
 public struct ConversationRecapEngine: Sendable {
     public struct Policy: Hashable, Sendable {
+        /// Which postprocessing checks a draft goes through. `.window9` (default): normalization,
+        /// claim-level grounding, privacy copy limits and quality editing (`SummaryPostprocessing`).
+        /// `.legacy`: the Window 7/8 lexical validator, kept only to measure before/after.
+        public enum Postprocessing: String, Hashable, Sendable { case legacy, window9 }
+        public var postprocessing = Postprocessing.window9
+        /// Window 9: what happens to statements the deterministic grounding cannot decide
+        /// (`uncertain`: paraphrases, claims of absence). `.off`: they stay, listed as unverified.
+        /// `.uncertainOnly`: one request to the model that wrote the draft covers just those
+        /// statements; what it calls unsupported is removed, what it does not answer in time stays
+        /// unverified (never reported as verified).
+        public enum Verification: String, Hashable, Sendable { case off, uncertainOnly }
+        public var verification = Verification.off
+        public var verificationTimeout: TimeInterval = 8
+        /// Window 9: when the new speech changed something the earlier recap still states as
+        /// current, one request asks the model for the complete updated recap. 0 turns it off.
+        public var rewriteTimeout: TimeInterval = 30
         public var timeout: TimeInterval = 25
         /// A recap from which the checks removed more than this share is not shown as a summary.
         public var maximumRemovedShare = 0.5
@@ -490,6 +516,20 @@ public struct ConversationRecapEngine: Sendable {
             return unavailable(excerpt, caveats: caveats, seconds: Date().timeIntervalSince(started))
         }
         var rejected: [String] = []
+        if policy.postprocessing == .window9 {
+            let output = await postprocessed(draft, lines: text.split(whereSeparator: \.isNewline).map(String.init))
+            if let recap = checked(output, draft: draft, excerpt: excerpt, caveats: caveats,
+                                   seconds: Date().timeIntervalSince(started), rejected: &rejected)
+            {
+                return recap
+            }
+            var note = unavailable(excerpt, caveats: caveats, seconds: Date().timeIntervalSince(started),
+                                   correction: "summary_failed_checks")
+            note.corrections += rejected
+            note.engines = draft.engine.map { [$0] } ?? []
+            note.fallbackReason = draft.fallbackReason
+            return note
+        }
         let result = await grounded(await validated(draft, transcript: text, earlierText: ""), transcript: text, known: [])
         if let recap = checked(result, excerpt: excerpt, caveats: caveats, seconds: Date().timeIntervalSince(started),
                                rejected: &rejected)
@@ -510,9 +550,18 @@ public struct ConversationRecapEngine: Sendable {
         guard previous.isSummary, fresh.split(whereSeparator: \.isWhitespace).count >= 4 else { return nil }
         let started = Date()
         let earlier = RecapDraft(title: previous.title, summary: previous.summary, keyPoints: previous.keyPoints)
-        guard await summarizer.isAvailable(), let draft = try? await withTimeout({ [summarizer] in
+        guard await summarizer.isAvailable(), let written = try? await withTimeout({ [summarizer] in
             try await summarizer.update(previous: earlier, newTranscript: fresh)
         }) else { return nil }
+        var draft = written
+        if policy.postprocessing == .legacy, !draft.summary.hasPrefix(previous.summary) {
+            // The Window 7/8 checks expect the whole recap: the earlier text, then the addition.
+            draft.summary = draft.summary.isEmpty ? previous.summary : previous.summary + " " + draft.summary
+        }
+        if policy.postprocessing == .window9 {
+            return await mergedUpdate(previous, addition: draft, newUtterances: utterances, earlierTranscript: earlierTranscript,
+                                      started: started)
+        }
         // Earlier text counts as support: the update may restate what the first recap said.
         // Only what the update added is read against the transcript; the earlier recap was.
         let known = Set(RecapText.sentences(in: previous.summary) + previous.keyPoints)
@@ -537,6 +586,164 @@ public struct ConversationRecapEngine: Sendable {
         updated.utteranceCount += utterances.count
         updated.modelSeconds = Date().timeIntervalSince(started)
         updated.verbatimShare = result.verbatimShare
+        return updated
+    }
+
+    // MARK: - Window 9 postprocessing
+
+    private var processor: SummaryPostprocessor {
+        var configuration = PostprocessingConfiguration.standard
+        configuration.keptCopyMaximumWords = validator.keptCopyMaximumWords
+        configuration.maximumKeptCopies = validator.maximumKeptCopies
+        configuration.copiedMinimumWords = validator.copiedMinimumWords
+        configuration.verbatimRun = validator.verbatimRun
+        configuration.maximumVerbatimShare = policy.maximumVerbatimShare
+        return SummaryPostprocessor(configuration: configuration)
+    }
+
+    /// The draft after the Window 9 checks (normalization, claim-level grounding, copy limits,
+    /// quality editing), with the restating of copied statements and the optional verification
+    /// of the statements the checks could not decide. In memory; nothing is stored here.
+    private func postprocessed(_ draft: RecapDraft, lines: [String]) async -> PostprocessingOutput {
+        let text = DraftText(title: draft.title, summary: draft.summary, keyPoints: draft.keyPoints)
+        var output = processor.process(text, transcriptLines: lines)
+        output = await restating(output) { restatements in processor.process(text, transcriptLines: lines, restatements: restatements) }
+        return await verified(output, lines: lines)
+    }
+
+    /// Copies longer than the kept limit are restated by the model (a few, within a time limit)
+    /// and the draft is checked again with the answers.
+    private func restating(_ first: PostprocessingOutput, recheck: ([String: String]) -> PostprocessingOutput) async
+        -> PostprocessingOutput
+    {
+        guard !first.copiedNeedingRestatement.isEmpty, policy.maximumRestatements > 0 else { return first }
+        var restatements: [String: String] = [:]
+        let deadline = Date().addingTimeInterval(policy.restateTimeout)
+        for statement in first.copiedNeedingRestatement.prefix(policy.maximumRestatements) {
+            let remaining = deadline.timeIntervalSinceNow
+            guard remaining > 0.5, !Task.isCancelled else { break }
+            if let restated = try? await withTimeout(seconds: remaining, { [summarizer] in try await summarizer.restate(statement) }) {
+                restatements[statement] = restated
+            }
+        }
+        return restatements.isEmpty ? first : recheck(restatements)
+    }
+
+    /// One model request for the statements the deterministic grounding left `uncertain`
+    /// (when the policy asks for it). Statements without an answer stay unverified.
+    private func verified(_ output: PostprocessingOutput, lines: [String]) async -> PostprocessingOutput {
+        guard policy.verification == .uncertainOnly, !output.uncertainStatements.isEmpty, !lines.isEmpty else { return output }
+        let statements = output.uncertainStatements
+        guard let evidence = try? await withTimeout(seconds: policy.verificationTimeout, { [summarizer] in
+            try await summarizer.evidence(for: statements, in: lines)
+        }), evidence.count == statements.count else { return output }
+        // A reading that rejects most statements is not believed (the model answered beside the point).
+        var verdicts: [String: Bool] = [:]
+        for (statement, item) in zip(statements, evidence) { verdicts[statement] = item.isSupported && item.lines.contains(where: lines.indices.contains) }
+        let rejected = verdicts.values.count { !$0 }
+        guard statements.count < 3 || Double(rejected) / Double(statements.count) < policy.groundingDistrustShare else { return output }
+        return output.applying(verifierVerdicts: verdicts)
+    }
+
+    private func checked(_ output: PostprocessingOutput, draft: RecapDraft, excerpt: ConversationExcerpt, caveats: [String],
+                         seconds: TimeInterval, rejected: inout [String]) -> ConversationRecap?
+    {
+        guard !output.exceedsVerbatimShare else {
+            rejected = output.corrections + ["too_much_verbatim"]
+            return nil
+        }
+        let judged = output.statementCount - output.duplicateCount - output.fillerCount
+        guard !output.summary.isEmpty,
+              judged <= 0 || Double(output.removedCount) / Double(judged) <= policy.maximumRemovedShare
+        else {
+            rejected = output.corrections
+            return nil
+        }
+        var recap = ConversationRecap(title: output.title.isEmpty ? Self.untitled : output.title, summary: output.summary,
+                                      keyPoints: output.keyPoints, source: .languageModel, caveats: caveats,
+                                      corrections: output.corrections, coveredFrom: excerpt.start, coveredTo: excerpt.end,
+                                      utteranceCount: excerpt.utterances.count, modelSeconds: seconds)
+        recap.verbatimShare = output.verbatimShare
+        recap.engines = draft.engine.map { [$0] } ?? []
+        recap.fallbackReason = draft.fallbackReason
+        recap.unverifiedStatements = output.unverifiedStatements.count
+        return recap
+    }
+
+    /// The model's complete updated recap, checked like a first recap against all the speech held,
+    /// accepted only when it keeps what the earlier recap said (a value may disappear only where the
+    /// new speech gave another value of the same kind).
+    private func rewritten(_ previous: ConversationRecap, newLines: [String], earlierLines: [String]) async
+        -> (output: PostprocessingOutput, engine: SummarizationEngineIdentity?)?
+    {
+        let earlier = RecapDraft(title: previous.title, summary: previous.summary, keyPoints: previous.keyPoints)
+        let fresh = newLines.joined(separator: "\n")
+        guard let draft = try? await withTimeout(seconds: policy.rewriteTimeout, { [summarizer] in
+            try await summarizer.rewrite(previous: earlier, newTranscript: fresh)
+        }) else { return nil }
+        let lines = earlierLines + newLines
+        var output = processor.process(DraftText(title: previous.title, summary: draft.summary, keyPoints: draft.keyPoints), transcriptLines: lines)
+        let judged = output.statementCount - output.duplicateCount - output.fillerCount
+        guard !output.summary.isEmpty, !output.exceedsVerbatimShare,
+              judged <= 0 || Double(output.removedCount) / Double(judged) <= policy.maximumRemovedShare
+        else { return nil }
+        let normalizer = EnglishNormalizer()
+        let before = normalizer.values(in: previous.fullText)
+        let after = normalizer.values(in: output.summary + " " + output.keyPoints.joined(separator: " "))
+        let changed = normalizer.values(in: fresh)
+        let lost = before.filter { value in
+            !after.contains { $0.isCompatible(with: value) } && !changed.contains { $0.sharesKind(with: value) && !$0.isCompatible(with: value) }
+        }
+        guard Double(lost.count) <= max(Double(before.count) * 0.15, 0) else { return nil }
+        output.title = previous.title
+        return (output, draft.engine)
+    }
+
+    /// An update under Window 9: the model wrote only the addition; the postprocessor checks it
+    /// against the new speech and merges it with the earlier recap (duplicates dropped, a value
+    /// the new speech changed replaced, earlier facts never lost silently).
+    private func mergedUpdate(_ previous: ConversationRecap, addition: RecapDraft, newUtterances: [BufferedUtterance],
+                              earlierTranscript: String, started: Date) async -> ConversationRecap?
+    {
+        let newLines = newUtterances.map(\.text)
+        let earlierLines = earlierTranscript.split(whereSeparator: \.isNewline).map(String.init)
+        // Drafts of engines that still return the whole recap (earlier text first) are cut back to the addition.
+        var addedSummary = addition.summary
+        if addedSummary.hasPrefix(previous.summary) { addedSummary = String(addedSummary.dropFirst(previous.summary.count)) }
+        let earlier = DraftText(title: previous.title, summary: previous.summary, keyPoints: previous.keyPoints)
+        let added = DraftText(title: previous.title, summary: addedSummary.trimmingCharacters(in: .whitespacesAndNewlines),
+                              keyPoints: addition.keyPoints)
+        let processor = self.processor
+        var output = processor.merge(earlier: earlier, addition: added, newLines: newLines, earlierLines: earlierLines)
+        output = await restating(output) { restatements in
+            processor.merge(earlier: earlier, addition: added, newLines: newLines, earlierLines: earlierLines, restatements: restatements)
+        }
+        var rewrittenBy: SummarizationEngineIdentity?
+        if policy.rewriteTimeout > 0,
+           output.corrections.contains(ReasonCode.earlierOutdatedKept.rawValue) || output.corrections.contains(ReasonCode.outdatedByNewSpeech.rawValue),
+           let rewrite = await rewritten(previous, newLines: newLines, earlierLines: earlierLines)
+        {
+            output = rewrite.output
+            output.corrections.append("rewritten_for_correction")
+            rewrittenBy = rewrite.engine
+        }
+        guard !output.summary.isEmpty, !output.exceedsVerbatimShare else { return nil }
+        let judged = output.statementCount - output.duplicateCount - output.fillerCount
+        guard judged <= 0 || Double(output.removedCount) / Double(judged) <= policy.maximumRemovedShare else { return nil }
+        // Nothing new was added: the earlier recap stays and the new utterances are offered again.
+        guard output.summary != previous.summary || output.keyPoints != previous.keyPoints else { return nil }
+        var updated = previous
+        updated.summary = output.summary
+        updated.keyPoints = output.keyPoints
+        if !output.title.isEmpty { updated.title = output.title }
+        updated.corrections += output.corrections
+        updated.coveredTo = newUtterances.last?.end ?? previous.coveredTo
+        updated.utteranceCount += newUtterances.count
+        updated.modelSeconds = Date().timeIntervalSince(started)
+        updated.verbatimShare = output.verbatimShare
+        updated.unverifiedStatements = output.unverifiedStatements.count
+        for engine in [addition.engine, rewrittenBy].compactMap(\.self) where !updated.engines.contains(engine) { updated.engines.append(engine) }
+        if updated.fallbackReason == nil { updated.fallbackReason = addition.fallbackReason }
         return updated
     }
 

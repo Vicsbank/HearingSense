@@ -300,6 +300,7 @@ final class ListeningController {
     static var launchRequestsSyntheticCapture: Bool {
         let arguments = ProcessInfo.processInfo.arguments
         return arguments.contains(syntheticCaptureArgument) || arguments.contains("--hs-w7-selftest")
+            || arguments.contains("--hs-w9-selftest")
     }
 
     /// What a start asked for by `source` gets: the device test mode decides first (stored on

@@ -112,6 +112,17 @@ public actor QwenSummarizationEngine: SummarizationEngine {
         return parsed.draft
     }
 
+    public func rewrite(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft {
+        let answer = try await generate(instructions: OpenModelRecapProtocol.rewriteInstructions,
+                                        prompt: OpenModelRecapProtocol.rewriteMessage(previous: previous, newTranscript: newTranscript),
+                                        maxTokens: maxRecapTokens)
+        guard var parsed = OpenModelRecapProtocol.parseRecap(answer, fallbackTitle: previous.title) else {
+            throw RecapError.modelFailure("qwen_unreadable_answer")
+        }
+        parsed.draft.title = previous.title
+        return parsed.draft
+    }
+
     public func restate(_ statement: String) async throws -> String {
         let answer = try await generate(instructions: OpenModelRecapProtocol.restateInstructions,
                                         prompt: "Sentence:\n" + statement, maxTokens: 90)
