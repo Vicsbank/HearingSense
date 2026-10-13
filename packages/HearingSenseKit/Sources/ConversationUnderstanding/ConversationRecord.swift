@@ -25,6 +25,12 @@ public struct ConversationRecord: Identifiable, Hashable, Sendable, Codable {
     public var coveredTo: Date?
     /// False when no summary could be written (too little speech, or no language model).
     public var isSummary: Bool
+    /// Window 9: the engine(s) that wrote the summary ("Qwen (Qwen3.5-4B-MLX-4bit)", "Apple on-device model");
+    /// nil for records saved before engines were recorded. A name only.
+    public var engineLabel: String?
+    /// Window 9: why the preferred engine (Qwen) was not used for this summary — a code such as
+    /// "qwen_model_not_installed" or "timeout"; nil when it was used.
+    public var fallbackReason: String?
 
     public init(id: UUID = UUID(), title: String, summary: String, keyPoints: [String] = [], caveats: [String] = [],
                 createdAt: Date, updatedAt: Date? = nil, status: Status = .completed, isUserEdited: Bool = false,
@@ -48,6 +54,8 @@ public struct ConversationRecord: Identifiable, Hashable, Sendable, Codable {
         self.init(id: id, title: recap.title, summary: recap.summary, keyPoints: recap.keyPoints, caveats: recap.caveats,
                   createdAt: date, status: status, coveredFrom: recap.coveredFrom, coveredTo: recap.coveredTo,
                   isSummary: recap.isSummary)
+        engineLabel = recap.engineLabel
+        fallbackReason = recap.fallbackReason
     }
 
     /// Takes over a newer recap of the same session. Once the user has edited the record, their
@@ -62,6 +70,8 @@ public struct ConversationRecord: Identifiable, Hashable, Sendable, Codable {
             isSummary = recap.isSummary
         }
         caveats = recap.caveats
+        if let label = recap.engineLabel { engineLabel = label }
+        if recap.fallbackReason != nil { fallbackReason = recap.fallbackReason }
         coveredFrom = coveredFrom ?? recap.coveredFrom
         coveredTo = recap.coveredTo ?? coveredTo
         updatedAt = date

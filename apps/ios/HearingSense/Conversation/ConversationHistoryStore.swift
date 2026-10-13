@@ -20,6 +20,10 @@ final class StoredConversation {
     var coveredFrom: Date?
     var coveredTo: Date?
     var isSummary: Bool
+    /// Window 9: which engine(s) wrote it, e.g. "Qwen (Qwen3.5-4B-MLX-4bit)"; nil for older records.
+    var engineLabel: String?
+    /// Window 9: why the preferred engine was not used (a code), if it was not.
+    var fallbackReason: String?
     /// Folded text of the record, so that a search does not have to rebuild it.
     var searchText: String
 
@@ -36,6 +40,8 @@ final class StoredConversation {
         coveredFrom = record.coveredFrom
         coveredTo = record.coveredTo
         isSummary = record.isSummary
+        engineLabel = record.engineLabel
+        fallbackReason = record.fallbackReason
         searchText = record.searchText
     }
 
@@ -50,13 +56,18 @@ final class StoredConversation {
         coveredFrom = record.coveredFrom
         coveredTo = record.coveredTo
         isSummary = record.isSummary
+        engineLabel = record.engineLabel
+        fallbackReason = record.fallbackReason
         searchText = record.searchText
     }
 
     var record: ConversationRecord {
-        ConversationRecord(id: id, title: title, summary: summary, keyPoints: keyPoints, caveats: caveats,
-                           createdAt: createdAt, updatedAt: updatedAt, status: isContinuing ? .continuing : .completed,
-                           isUserEdited: isUserEdited, coveredFrom: coveredFrom, coveredTo: coveredTo, isSummary: isSummary)
+        var record = ConversationRecord(id: id, title: title, summary: summary, keyPoints: keyPoints, caveats: caveats,
+                                        createdAt: createdAt, updatedAt: updatedAt, status: isContinuing ? .continuing : .completed,
+                                        isUserEdited: isUserEdited, coveredFrom: coveredFrom, coveredTo: coveredTo, isSummary: isSummary)
+        record.engineLabel = engineLabel
+        record.fallbackReason = fallbackReason
+        return record
     }
 }
 

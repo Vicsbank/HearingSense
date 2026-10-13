@@ -6,11 +6,24 @@ public struct RecapDraft: Hashable, Sendable {
     public var title: String
     public var summary: String
     public var keyPoints: [String]
+    /// Window 9: the engine that wrote it (set by `SummarizationCoordinator`). nil: not known.
+    public var engine: SummarizationEngineIdentity?
+    /// Window 9: why the preferred engine was not used (a code), when this draft is the fallback's.
+    public var fallbackReason: String?
+    /// Window 9, updates only: sentences of the earlier recap that the model says the new speech
+    /// made wrong (copied from the earlier recap). Checked against the earlier recap and the new
+    /// transcript before anything is replaced.
+    public var outdated: [String]
 
-    public init(title: String, summary: String, keyPoints: [String] = []) {
+    public init(title: String, summary: String, keyPoints: [String] = [], engine: SummarizationEngineIdentity? = nil,
+                fallbackReason: String? = nil, outdated: [String] = [])
+    {
+        self.outdated = outdated
         self.title = title
         self.summary = summary
         self.keyPoints = keyPoints
+        self.engine = engine
+        self.fallbackReason = fallbackReason
     }
 }
 
@@ -96,6 +109,11 @@ public struct ConversationRecap: Hashable, Sendable {
     /// Share of the text that repeats an utterance word for word (`RecapValidator.verbatimShare`),
     /// measured when it was checked. A number only; for diagnostics and the evaluation.
     public var verbatimShare = 0.0
+    /// Window 9: the engines that wrote this recap, first the one that wrote the first version;
+    /// later updates by a different engine add theirs. Empty: unknown (older records).
+    public var engines: [SummarizationEngineIdentity] = []
+    /// Window 9: why the preferred engine was not used for this recap (a code), if it was not.
+    public var fallbackReason: String?
 
     public init(title: String, summary: String, keyPoints: [String] = [], source: Source, caveats: [String] = [],
                 corrections: [String] = [], coveredFrom: Date? = nil, coveredTo: Date? = nil, utteranceCount: Int = 0,
@@ -114,6 +132,13 @@ public struct ConversationRecap: Hashable, Sendable {
     }
 
     public var isSummary: Bool { source == .languageModel }
+
+    /// The engines' names, joined ("Qwen (Qwen3.5-4B-MLX-4bit)"); nil when unknown.
+    public var engineLabel: String? {
+        var labels: [String] = []
+        for engine in engines where !labels.contains(engine.label) { labels.append(engine.label) }
+        return labels.isEmpty ? nil : labels.joined(separator: " + ")
+    }
 
     /// Title, summary, key points and caveats as one text (for copying and for search).
     public var fullText: String {

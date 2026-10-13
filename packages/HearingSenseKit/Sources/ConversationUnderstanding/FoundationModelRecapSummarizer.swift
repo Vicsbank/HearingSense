@@ -3,7 +3,16 @@ import FoundationModels
 
 /// Writes recaps with Apple's on-device language model (`SystemLanguageModel.default`; never
 /// `PrivateCloudComputeLanguageModel`). A fresh session per request; greedy sampling.
-public struct FoundationModelRecapSummarizer: ConversationSummarizing {
+public struct FoundationModelRecapSummarizer: SummarizationEngine {
+    public var identity: SummarizationEngineIdentity { .appleFoundationModels }
+
+    public func unavailabilityReason() async -> String? {
+        switch SystemLanguageModel.default.availability {
+        case .available: nil
+        case .unavailable(let reason): "apple_" + String(describing: reason)
+        }
+    }
+
     public static let instructions = """
     You write a recap for a person who could not hear a conversation that just took place near them. You get the \
     transcript from a speech recognizer, one utterance per line. It has no speaker names and may contain recognition \
@@ -257,3 +266,6 @@ struct GeneratedEvidenceItem {
     var line: Int
     var verdict: GroundingVerdict
 }
+
+/// The Apple Foundation Models engine under its Window 9 name.
+public typealias AppleFoundationSummarizationEngine = FoundationModelRecapSummarizer
