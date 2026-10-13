@@ -14,7 +14,7 @@ private struct MockEngine: SummarizationEngine {
     func prewarm() async {}
     func recap(transcript: String, notes: [String]) async throws -> RecapDraft { try await run() }
     func update(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft { try await run() }
-    func restate(_ statement: String) async throws -> String { statement }
+    func restate(_ statement: String) async throws -> String { identity.label + ": " + statement }
 
     private func run() async throws -> RecapDraft {
         switch behavior {
@@ -70,6 +70,23 @@ struct Window9EngineRoutingTests {
         let draft = try await coordinator(.fail).recap(transcript: "a", notes: [])
         #expect(draft.engine?.kind == .appleFoundationModels)
         #expect(draft.fallbackReason == "failure_mock")
+    }
+
+    @Test func restatementUsesTheEngineThatWroteTheFallbackDraft() async throws {
+        let engines = coordinator(.fail)
+        _ = try await engines.recap(transcript: "a", notes: [])
+        let restated = try await engines.restate("The lot reopens on Friday.")
+        #expect(restated.hasPrefix("Apple on-device model:"))
+    }
+
+    @Test func anAlreadyCancelledRequestNeverStartsEitherEngine() async {
+        let engines = coordinator(.succeed("qwen text"))
+        let task = Task {
+            withUnsafeCurrentTask { $0?.cancel() }
+            return try await engines.recap(transcript: "a", notes: [])
+        }
+        await #expect(throws: CancellationError.self) { try await task.value }
+        #expect(await engines.lastAttempts.isEmpty)
     }
 
     @Test func slowQwenTimesOutAndFallsBack() async throws {
@@ -162,6 +179,8 @@ struct OpenModelProtocolTests {
         #expect(items[0].isSupported && items[0].lines == [2])
         #expect(!items[1].isSupported && items[1].lines.isEmpty)
         #expect(OpenModelRecapProtocol.parseVerdicts(#"{"items": [{"statement": 1, "line": 1, "verdict": "supported"}]}"#, count: 2) == nil)
+        #expect(OpenModelRecapProtocol.parseVerdicts(#"{"items": [{"statement": 1, "line": 0, "verdict": "uncertain"}]}"#, count: 1) == nil)
+        #expect(OpenModelRecapProtocol.parseVerdicts(#"{"items": [{"statement": 1, "line": 1, "verdict": "supported"}, {"statement": 1, "line": 0, "verdict": "unsupported"}]}"#, count: 1) == nil)
     }
 
     @Test func promptsHaveNoExampleValues() {

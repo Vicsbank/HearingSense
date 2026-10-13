@@ -41,7 +41,7 @@ public struct SummarizationEngineIdentity: Hashable, Sendable, Codable {
 
     /// Everything, for the diagnostics report. Model and runtime names only: nothing of any speech.
     public var detail: String {
-        "\(kind.rawValue): \(modelID) @ \(revision.prefix(12)) · \(quantization) · \(runtime)"
+        "\(kind.rawValue): \(modelID) @ \(revision) · \(quantization) · \(runtime)"
     }
 }
 
@@ -136,7 +136,7 @@ public actor SummarizationCoordinator: ConversationSummarizing {
 
     public func restate(_ statement: String) async throws -> String {
         // Same engine as the draft when possible; failures here are not worth a second engine.
-        let engine: any SummarizationEngine = (await primaryUsable()) ? primary ?? fallback : fallback
+        let engine: any SummarizationEngine = lastEngine?.kind == .qwen ? (primary ?? fallback) : fallback
         return try await engine.restate(statement)
     }
 
@@ -170,7 +170,9 @@ public actor SummarizationCoordinator: ConversationSummarizing {
     }
 
     private func run(_ operation: @escaping @Sendable (any SummarizationEngine) async throws -> RecapDraft) async throws -> RecapDraft {
+        try Task.checkCancellation()
         lastAttempts = []
+        lastEngine = nil
         if let primary, await primaryUsable() {
             let started = Date()
             do {
@@ -192,6 +194,7 @@ public actor SummarizationCoordinator: ConversationSummarizing {
                                         failure: (await primary.unavailabilityReason()) ?? "skipped_after_failures"))
         }
         // The fallback.
+        try Task.checkCancellation()
         let fallback = self.fallback
         guard await fallback.isAvailable() else { throw RecapError.modelFailure("no_engine_available") }
         let started = Date()

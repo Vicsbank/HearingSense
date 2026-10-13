@@ -56,11 +56,12 @@ struct Score {
 func score(_ sentences: [String], facts: [Fact], mustNot: [MustNot]) -> Score {
     var result = Score()
     result.factsTotal = facts.count
+    let current = sentences.filter { !$0.hasPrefix("superseded ") }
     for fact in facts {
-        if sentences.contains(where: { matches(fact.all, in: $0) }) { result.factsPresent += 1 } else { result.missed.append(fact.id) }
+        if current.contains(where: { matches(fact.all, in: $0) }) { result.factsPresent += 1 } else { result.missed.append(fact.id) }
     }
     for item in mustNot {
-        let hit = sentences.contains { sentence in
+        let hit = current.contains { sentence in
             matches(item.all, in: sentence) && !(item.unless ?? []).contains { sentence.contains(normalize($0)) }
         }
         if hit { result.violations += 1; result.violated.append(item.text) }
@@ -86,6 +87,9 @@ struct ReplaySummarizer: ConversationSummarizing {
         return try await base.update(previous: previous, newTranscript: newTranscript)
     }
     func restate(_ statement: String) async throws -> String { try await base.restate(statement) }
+    func rewrite(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft {
+        try await base.rewrite(previous: previous, newTranscript: newTranscript)
+    }
     func evidence(for statements: [String], in lines: [String]) async throws -> [StatementEvidence]? {
         try await base.evidence(for: statements, in: lines)
     }
@@ -106,7 +110,9 @@ func buffer(_ lines: [String], from start: Double) -> (RollingConversationBuffer
 }
 
 func draftSentences(_ draft: RecapDraft) -> [String] { sentences(of: draft.summary) + draft.keyPoints.map(normalize) }
-func recapSentences(_ recap: ConversationRecap) -> [String] { sentences(of: recap.summary) + recap.keyPoints.map(normalize) }
+func recapSentences(_ recap: ConversationRecap) -> [String] {
+    recap.isSummary ? sentences(of: recap.summary) + recap.keyPoints.map(normalize) : []
+}
 
 // MARK: - Main
 
@@ -119,10 +125,11 @@ func option(_ name: String) -> String? {
 
 func seconds(_ value: Double) -> String { value.formatted(.number.precision(.fractionLength(2))) }
 
-guard let directory = QwenModelLocator.locate() else { print("no complete Qwen checkpoint found"); exit(2) }
-let qwen = QwenSummarizationEngine(modelDirectory: directory)
-let apple = AppleFoundationSummarizationEngine()
 let useApple = option("--engine") == "apple"
+let directory = QwenModelLocator.locate()
+guard useApple || directory != nil else { print("no complete Qwen checkpoint found"); exit(2) }
+let qwen = QwenSummarizationEngine(modelDirectory: directory ?? URL(fileURLWithPath: "/nonexistent/qwen"))
+let apple = AppleFoundationSummarizationEngine()
 let engine: any ConversationSummarizing = useApple ? apple : qwen
 print("engine:", useApple ? "Apple on-device model" : qwen.identity.detail)
 
@@ -133,6 +140,9 @@ case "fresh":
         print("cannot read cases at \(path)"); exit(2)
     }
     let modes = (option("--modes") ?? "window9").split(separator: ",").map(String.init)
+    guard modes.allSatisfy({ ["legacy", "window9", "window9_verified"].contains($0) }) else {
+        print("unknown mode; choose legacy, window9, window9_verified"); exit(2)
+    }
     let showTexts = arguments.contains("--texts")
     var table: [String: (present: Int, total: Int, violations: Int, removed: Int, statements: Int, none: Int)] = [:]
     var rawTotals = (present: 0, total: 0, violations: 0)
@@ -152,7 +162,13 @@ case "fresh":
         let probe = ConversationRecapEngine(summarizer: engine)
         let transcript = probe.transcript(of: excerpt)
         let started = Date()
-        guard let draft = try? await engine.recap(transcript: transcript, notes: []) else { print("[\(item.id)] model failed"); continue }
+        guard let draft = try? await engine.recap(transcript: transcript, notes: []) else {
+            print("[\(item.id)] model failed")
+            rawTotals.total += item.facts.count
+            for mode in modes { accumulate(mode, score([], facts: item.facts, mustNot: item.must_not), none: true) }
+            report.append(["id": item.id, "model_failed": true, "total": item.facts.count])
+            continue
+        }
         modelSeconds.append(Date().timeIntervalSince(started))
         let rawScore = score(draftSentences(draft), facts: item.facts, mustNot: item.must_not)
         rawTotals.present += rawScore.factsPresent; rawTotals.total += rawScore.factsTotal; rawTotals.violations += rawScore.violations
@@ -164,6 +180,7 @@ case "fresh":
         for mode in modes {
             var policy = ConversationRecapEngine.Policy()
             policy.postprocessing = mode == "legacy" ? .legacy : .window9
+            if mode == "window9_verified" { policy.verification = .uncertainOnly }
             let finalEngine = ConversationRecapEngine(summarizer: ReplaySummarizer(recapDraft: draft, updateDraft: nil, base: engine), policy: policy)
             let begun = Date()
             let recap = await finalEngine.recap(excerpt)
@@ -175,16 +192,23 @@ case "fresh":
                 + (finalScore.missed.isEmpty ? "" : " missed \(finalScore.missed)") + (finalScore.violated.isEmpty ? "" : " VIOLATED \(finalScore.violated)"))
             if showTexts { print("  FINAL(\(mode)): \(recap.summary)"); for point in recap.keyPoints { print("   • \(point)") } }
             entry[mode + "_facts"] = finalScore.factsPresent
+            entry[mode + "_is_summary"] = recap.isSummary
             entry[mode + "_violations"] = finalScore.violations
             entry[mode + "_summary"] = recap.summary
             entry[mode + "_keyPoints"] = recap.keyPoints
             entry[mode + "_corrections"] = recap.corrections
             entry[mode + "_missed"] = finalScore.missed
             entry[mode + "_post_seconds"] = postSeconds
+            entry[mode + "_total_seconds"] = (modelSeconds.last ?? 0) + postSeconds
         }
         entry["raw_summary"] = draft.summary
         entry["raw_keyPoints"] = draft.keyPoints
         report.append(entry)
+    }
+
+    if !useApple {
+        let metrics = await qwen.lastMetrics
+        print("Qwen load: \(seconds(await qwen.loadSeconds ?? 0)) s; MLX active \(seconds(Double(metrics.activeBytes) / 1e9)) GB, peak \(seconds(Double(metrics.peakBytes) / 1e9)) GB")
     }
 
     // Continue cases: first recap, then an update with the later speech.
@@ -193,7 +217,12 @@ case "fresh":
         let excerpt = buf.excerpt(now: now)
         let probe = ConversationRecapEngine(summarizer: engine)
         let transcript = probe.transcript(of: excerpt)
-        guard let firstDraft = try? await engine.recap(transcript: transcript, notes: []) else { print("[\(item.id)] model failed"); continue }
+        guard let firstDraft = try? await engine.recap(transcript: transcript, notes: []) else {
+            print("[\(item.id)] model failed")
+            for mode in modes { accumulate("continue-" + mode, score([], facts: item.facts, mustNot: item.must_not), none: true) }
+            report.append(["id": item.id, "model_failed": true, "total": item.facts.count])
+            continue
+        }
         let laterUtterances = item.later.enumerated().map { index, text in
             BufferedUtterance(text: text, start: now.addingTimeInterval(Double(index) * 3.5 + 1), end: now.addingTimeInterval(Double(index + 1) * 3.5 + 1))
         }
@@ -203,24 +232,43 @@ case "fresh":
         for mode in modes {
             var policy = ConversationRecapEngine.Policy()
             policy.postprocessing = mode == "legacy" ? .legacy : .window9
+            if mode == "window9_verified" { policy.verification = .uncertainOnly }
             let firstEngine = ConversationRecapEngine(summarizer: ReplaySummarizer(recapDraft: firstDraft, updateDraft: nil, base: engine), policy: policy)
             let first = await firstEngine.recap(excerpt)
-            guard first.isSummary else { print("  \(mode): first recap rejected"); continue }
+            guard first.isSummary else {
+                print("  \(mode): first recap rejected")
+                accumulate("continue-" + mode, score([], facts: item.facts, mustNot: item.must_not), none: true)
+                entry[mode + "_first_rejected"] = true
+                continue
+            }
             let previous = RecapDraft(title: first.title, summary: first.summary, keyPoints: first.keyPoints)
             let started = Date()
-            guard let addition = try? await engine.update(previous: previous, newTranscript: fresh) else { print("  \(mode): update failed"); continue }
+            guard let addition = try? await engine.update(previous: previous, newTranscript: fresh) else {
+                print("  \(mode): update failed")
+                accumulate("continue-" + mode, score(recapSentences(first), facts: item.facts, mustNot: item.must_not), none: true)
+                entry[mode + "_update_failed"] = true
+                continue
+            }
             let updateSeconds = Date().timeIntervalSince(started)
             let updater = ConversationRecapEngine(summarizer: ReplaySummarizer(recapDraft: firstDraft, updateDraft: addition, base: engine), policy: policy)
+            let postStarted = Date()
             let updated = await updater.update(first, earlierTranscript: transcript, new: laterUtterances)
+            let postSeconds = Date().timeIntervalSince(postStarted)
             let result = updated ?? first
             let s = score(recapSentences(result), facts: item.facts, mustNot: item.must_not)
             accumulate("continue-" + mode, s, none: updated == nil)
             print("  \(mode): update \(updated == nil ? "NOTHING/REJECTED" : "applied") facts \(s.factsPresent)/\(s.factsTotal) violations \(s.violations)"
-                + " update model \(seconds(updateSeconds)) s" + (s.missed.isEmpty ? "" : " missed \(s.missed)") + (s.violated.isEmpty ? "" : " VIOLATED \(s.violated)"))
+                + " update model \(seconds(updateSeconds)) s, total \(seconds(updateSeconds + postSeconds)) s" + (s.missed.isEmpty ? "" : " missed \(s.missed)") + (s.violated.isEmpty ? "" : " VIOLATED \(s.violated)"))
             if showTexts { print("  AFTER: \(result.summary)"); for point in result.keyPoints { print("   • \(point)") }; print("  ADDITION RAW: \(addition.summary) outdated=\(addition.outdated)") }
             entry[mode + "_facts"] = s.factsPresent
             entry[mode + "_violations"] = s.violations
             entry[mode + "_summary"] = result.summary
+            entry[mode + "_keyPoints"] = result.keyPoints
+            entry[mode + "_missed"] = s.missed
+            entry[mode + "_violated"] = s.violated
+            entry[mode + "_model_seconds"] = updateSeconds
+            entry[mode + "_post_seconds"] = postSeconds
+            entry[mode + "_total_seconds"] = updateSeconds + postSeconds
         }
         report.append(entry)
     }
@@ -248,7 +296,9 @@ case "dev":
     print(RecapEvaluator.report(results))
 
 case "latency":
+    guard !useApple else { print("latency command measures Qwen only"); exit(2) }
     let runs = Int(option("--runs") ?? "5") ?? 5
+    guard (1...10).contains(runs) else { print("choose 1–10 runs"); exit(2) }
     let started = Date()
     await qwen.prewarm()
     print("cold load: \(seconds(Date().timeIntervalSince(started))) s")

@@ -157,28 +157,24 @@ public struct FoundationModelRecapSummarizer: SummarizationEngine {
     }
 
     public func recap(transcript: String, notes: [String]) async throws -> RecapDraft {
-        let session = LanguageModelSession(model: SystemLanguageModel.default, instructions: Self.instructions)
-        var prompt = "Transcript:\n" + transcript
-        if !notes.isEmpty { prompt += "\n\nKnown limits of this transcript: " + notes.joined(separator: " ") }
-        return try await generate(session, prompt: prompt)
+        try await jsonDraft(instructions: OpenModelRecapProtocol.recapInstructions,
+                            prompt: OpenModelRecapProtocol.recapMessage(transcript: transcript, notes: notes))
     }
 
     public func update(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft {
-        let session = LanguageModelSession(model: SystemLanguageModel.default, instructions: Self.updateInstructions)
-        let prompt = "Earlier recap (context only, do not repeat it):\n" + previous.summary
-            + "\n\nSaid since then:\n" + newTranscript
-        do {
-            let addition = try await session.respond(
-                to: prompt, generating: GeneratedAddition.self,
-                options: GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 250)).content
-            let added = addition.summary.trimmingCharacters(in: .whitespacesAndNewlines)
-            // Window 9: the addition only; `ConversationRecapEngine` merges it with the earlier recap.
-            return RecapDraft(title: previous.title, summary: added, keyPoints: addition.keyPoints)
-        } catch is CancellationError {
-            throw CancellationError()
-        } catch {
-            throw RecapError.modelFailure(String(describing: type(of: error)))
-        }
+        var draft = try await jsonDraft(instructions: OpenModelRecapProtocol.updateInstructions,
+                                       prompt: OpenModelRecapProtocol.updateMessage(previous: previous, newTranscript: newTranscript),
+                                       fallbackTitle: previous.title, maxTokens: 350)
+        draft.title = previous.title
+        return draft
+    }
+
+    public func rewrite(previous: RecapDraft, newTranscript: String) async throws -> RecapDraft {
+        var draft = try await jsonDraft(instructions: OpenModelRecapProtocol.rewriteInstructions,
+                                       prompt: OpenModelRecapProtocol.rewriteMessage(previous: previous, newTranscript: newTranscript),
+                                       fallbackTitle: previous.title)
+        draft.title = previous.title
+        return draft
     }
 
     public func restate(_ statement: String) async throws -> String {
@@ -194,15 +190,24 @@ public struct FoundationModelRecapSummarizer: SummarizationEngine {
         }
     }
 
-    private func generate(_ session: LanguageModelSession, prompt: String) async throws -> RecapDraft {
+    /// The same text protocol as Qwen. The OS 27 Simulator's schema-constrained recap
+    /// generation threw ParsingError; plain JSON avoids that framework parser while
+    /// retaining the production grounding and privacy checks on every statement.
+    private func jsonDraft(instructions: String, prompt: String, fallbackTitle: String = "", maxTokens: Int = 700) async throws -> RecapDraft {
+        let session = LanguageModelSession(model: SystemLanguageModel.default, instructions: instructions)
         do {
-            let content = try await session.respond(
-                to: prompt, generating: GeneratedRecap.self,
-                options: GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 500)).content
-            return RecapDraft(title: content.title, summary: content.summary, keyPoints: content.keyPoints)
+            let answer = try await session.respond(to: prompt,
+                options: GenerationOptions(samplingMode: .greedy, maximumResponseTokens: maxTokens)).content
+            guard let parsed = OpenModelRecapProtocol.parseRecap(answer, fallbackTitle: fallbackTitle) else {
+                throw RecapError.modelFailure("apple_unreadable_answer")
+            }
+            var draft = parsed.draft
+            draft.outdated = parsed.outdated
+            return draft
         } catch is CancellationError {
             throw CancellationError()
         } catch {
+            if let known = error as? RecapError { throw known }
             // The kind only: model errors can quote the prompt, which holds the transcript.
             throw RecapError.modelFailure(String(describing: type(of: error)))
         }

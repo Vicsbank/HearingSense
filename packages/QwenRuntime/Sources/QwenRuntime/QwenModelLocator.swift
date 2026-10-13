@@ -6,7 +6,7 @@ public enum QwenModelLocator {
     public static let modelID = "mlx-community/Qwen3.5-4B-MLX-4bit"
     /// The snapshot that was benchmarked and validated (Hugging Face commit).
     public static let validatedRevision = "32f3e8ecf65426fc3306969496342d504bfa13f3"
-    public static let runtimeDescription = "mlx-swift-lm 3.32.3 / mlx-swift 0.32.3 / swift-transformers ≥1.3"
+    public static let runtimeDescription = "mlx-swift-lm 3.32.3 / mlx-swift 0.32.3 / swift-transformers 1.3.5"
 
     /// Files that must exist for the model to load.
     static let requiredFiles = ["config.json", "tokenizer.json", "tokenizer_config.json", "model.safetensors.index.json"]

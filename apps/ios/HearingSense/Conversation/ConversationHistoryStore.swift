@@ -84,7 +84,13 @@ enum ConversationStorage {
     static func folder() throws -> URL {
         let base = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil,
                                                create: true)
-        var folder = base.appendingPathComponent(folderName, isDirectory: true)
+        var name = folderName
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--hs-w9-persist") {
+            name = "Window9SyntheticHistory"
+        }
+        #endif
+        var folder = base.appendingPathComponent(name, isDirectory: true)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true, attributes: [
             .protectionKey: FileProtectionType.completeUntilFirstUserAuthentication,
         ])

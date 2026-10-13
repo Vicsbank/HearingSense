@@ -66,6 +66,7 @@ final class Window9SelfTest {
         let expectation = Self.argumentValue("--hs-w9-expect") ?? "qwen"
         note("Hearing Sense Window 9 self-test · \(Date.now.formatted(.iso8601)) · \(DeviceInfo.summary)")
         note("Microphone: off (synthetic capture). Speech is synthetic text. Expected engine: \(expectation).")
+        note("History store: \(ConversationIntelligenceController.usesMemoryOnly ? "memory only" : "isolated synthetic disk store").")
         await wait(8) { conversation.isLanguageModelAvailable }
         note("Some engine available: \(conversation.isLanguageModelAvailable)")
         note("")
@@ -99,6 +100,9 @@ final class Window9SelfTest {
         let toReady = Self.seconds(since: started)
         stopHeartbeat()
         let hasSummary = conversation.phase == .summaryAvailable && conversation.recap?.isSummary == true
+        for attempt in await conversation.summarizationAttempts() {
+            note("Engine attempt: \(attempt.engine.label), \(attempt.seconds.formatted()) s, \(attempt.failure ?? "success")")
+        }
         check("7", "a complete summary was written", hasSummary,
               hasSummary ? "tap to ready \(toReady) s, model \(ConversationIntelligenceController.seconds(conversation.lastRecapSeconds ?? 0))"
                   : "no summary: \(conversation.unavailableMessage ?? "unknown")")
@@ -106,6 +110,12 @@ final class Window9SelfTest {
               "phase seen: \(sawProgress), island \(islandWhileWorking?.rawValue ?? "none")")
         check("18", "the main actor was never blocked for long during inference", longestMainStallMs < 750,
               "longest gap \(Int(longestMainStallMs)) ms")
+        guard hasSummary else {
+            await controller.stop(source: .automation)
+            note("RESULT: \(passed) checks passed, \(failed) failed; dependent summary checks not run")
+            write()
+            return
+        }
         let label = conversation.lastEngineLabel ?? "none"
         let reason = conversation.lastFallbackReason
         switch expectation {
@@ -141,6 +151,7 @@ final class Window9SelfTest {
         // Continue with a correction.
         _ = try? await ContinueConversationIntent().perform()
         check("11", "Continue starts following", conversation.phase == .continuing, "phase \(conversation.phase.rawValue)")
+        let updateStarted = ContinuousClock.now
         for line in Self.laterPart {
             say(line)
             await pause(1.2)
@@ -152,10 +163,16 @@ final class Window9SelfTest {
         let afterSummary = conversation.recap?.summary ?? ""
         check("11", "the update added the new facts (Saturday, parking, Dana)",
               conversation.updatesMade >= 1 && after.contains("saturday") && (after.contains("parking") || after.contains("library")) && after.contains("dana"),
-              "updates \(conversation.updatesMade)")
+              "updates \(conversation.updatesMade), Saturday \(after.contains("saturday")), parking/library \(after.contains("parking") || after.contains("library")), Dana \(after.contains("dana")), speech to update \(Self.seconds(since: updateStarted)) s")
         check("12", "the new correction replaced the outdated day (Friday no longer current for the meeting)",
-              !Self.statesAsCurrent("friday", in: afterSummary.replacingOccurrences(of: "The lot reopens on Friday", with: "")),
-              "Friday current: \(Self.statesAsCurrent("friday", in: afterSummary))")
+              !Self.statesAsCurrent("friday", about: "meeting", in: conversation.recap?.fullText ?? ""),
+              "meeting Friday current: \(Self.statesAsCurrent("friday", about: "meeting", in: conversation.recap?.fullText ?? ""))")
+        check("11", "Continue kept unrelated facts across summary and key points",
+              after.contains("maria") && after.contains("tuesday") && after.contains("3:30") && after.contains("24"),
+              "flight, bus time and cupcake count present")
+        check("12", "free tickets supersede the payment instruction in summary and key points",
+              after.contains("free") && !Self.statesAsCurrent("$20", about: "ticket", in: conversation.recap?.fullText ?? ""),
+              "old payment current: \(Self.statesAsCurrent("$20", about: "ticket", in: conversation.recap?.fullText ?? ""))")
         check("11", "the update did not duplicate earlier statements", Self.duplicateSentences(in: afterSummary) == 0,
               "duplicate sentences \(Self.duplicateSentences(in: afterSummary))")
         check("11", "the engine of the update is named", (conversation.recap?.engineLabel ?? "") != "", "engine \(conversation.recap?.engineLabel ?? "none")")
@@ -168,6 +185,13 @@ final class Window9SelfTest {
               "state \(controller.state.title)")
         check("15", "the full summary is in History, unabridged", conversation.history.first?.summary.count == afterSummary.count,
               "stored \(conversation.history.first?.summary.count ?? 0) characters")
+        if !ConversationIntelligenceController.usesMemoryOnly, let saved = conversation.history.first {
+            let reopened = try? SwiftDataConversationHistory(inMemory: false).record(saved.id)
+            check("15", "a fresh disk store reads the completed full summary and engine",
+                  reopened?.summary == saved.summary && reopened?.keyPoints == saved.keyPoints
+                    && reopened?.engineLabel == saved.engineLabel && reopened?.status == .completed,
+                  "reopened synthetic store")
+        }
         check("17", "the temporary transcript is gone", conversation.captions.isEmpty, "\(conversation.captions.count) captions")
         let longest = Self.longestSharedRun(between: conversation.history.map(\.fullText).joined(separator: "\n"),
                                             and: (Self.firstPart + Self.laterPart))
@@ -219,10 +243,22 @@ final class Window9SelfTest {
     /// The word is stated as the current value: it appears in a sentence that does not frame it as
     /// changed, former or cancelled.
     static func statesAsCurrent(_ word: String, in text: String) -> Bool {
-        let framing = ["moved", "instead", "changed", "from", "originally", "rather", "not", "no longer", "was", "former", "previously", "rescheduled"]
+        let framing = ["moved", "instead", "changed", "from", "originally", "rather", "not", "no longer", "was", "former", "previously", "rescheduled", "superseded"]
         var sentences: [String] = []
         text.enumerateSubstrings(in: text.startIndex..., options: .bySentences) { s, _, _, _ in if let s { sentences.append(s.lowercased()) } }
         return sentences.contains { sentence in sentence.contains(word) && !framing.contains { sentence.contains($0) } }
+    }
+
+    static func statesAsCurrent(_ word: String, about topic: String, in text: String) -> Bool {
+        // Key points may have no punctuation: inspect each line as well as its sentences.
+        text.split(separator: "\n").contains { line in
+            var candidates: [String] = []
+            let value = String(line)
+            value.enumerateSubstrings(in: value.startIndex..., options: .bySentences) { s, _, _, _ in
+                if let s { candidates.append(s) }
+            }
+            return candidates.contains { $0.lowercased().contains(topic) && statesAsCurrent(word, in: $0) }
+        }
     }
 
     static func duplicateSentences(in text: String) -> Int {

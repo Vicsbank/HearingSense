@@ -687,14 +687,36 @@ public struct ConversationRecapEngine: Sendable {
         guard !output.summary.isEmpty, !output.exceedsVerbatimShare,
               judged <= 0 || Double(output.removedCount) / Double(judged) <= policy.maximumRemovedShare
         else { return nil }
-        let normalizer = EnglishNormalizer()
-        let before = normalizer.values(in: previous.fullText)
-        let after = normalizer.values(in: output.summary + " " + output.keyPoints.joined(separator: " "))
-        let changed = normalizer.values(in: fresh)
-        let lost = before.filter { value in
-            !after.contains { $0.isCompatible(with: value) } && !changed.contains { $0.sharesKind(with: value) && !$0.isCompatible(with: value) }
+        // Check each earlier statement's own slot and content. A new weekday elsewhere
+        // cannot authorize dropping an unrelated deadline, person, location or task.
+        let resolver = CorrectionResolver()
+        let transcript = AnalyzedTranscript(lines: lines)
+        let corrections = resolver.corrections(in: transcript)
+        let after = (SummaryText.sentences(in: output.summary) + output.keyPoints).map { AnalyzedText($0) }
+        for statement in SummaryText.sentences(in: previous.summary) + previous.keyPoints {
+            let before = AnalyzedText(statement)
+            let changed = resolver.supersededCorrection(for: before, corrections: corrections,
+                                                       transcript: transcript, fromLine: earlierLines.count)
+            let requiredValues = before.values.filter { value in
+                guard let changed, let old = changed.oldValue else { return true }
+                return !value.isCompatible(with: old)
+            }
+            let required = SummaryQualityEditor.signature(of: before)
+            // Related rewritten statements may distribute the earlier facts, but words
+            // from unrelated topics never provide retention evidence.
+            let related = after.filter {
+                !$0.contentStemSet.isDisjoint(with: before.contentStemSet)
+                    && SummaryQualityEditor.signature(of: $0).isNegative == required.isNegative
+            }
+            let keptStems = related.reduce(into: Set<String>()) { $0.formUnion(SummaryQualityEditor.signature(of: $1).stems) }
+            guard required.stems.isSubset(of: keptStems),
+                  requiredValues.allSatisfy({ value in related.contains { $0.values.contains { $0.isCompatible(with: value) } } })
+            else { return nil }
+            if let changed {
+                let current = resolver.finalValue(of: changed, in: corrections)
+                guard related.contains(where: { $0.values.contains { $0.isCompatible(with: current) } }) else { return nil }
+            }
         }
-        guard Double(lost.count) <= max(Double(before.count) * 0.15, 0) else { return nil }
         output.title = previous.title
         return (output, draft.engine)
     }
@@ -727,6 +749,7 @@ public struct ConversationRecapEngine: Sendable {
             output.corrections.append("rewritten_for_correction")
             rewrittenBy = rewrite.engine
         }
+        output = await verified(output, lines: earlierLines + newLines)
         guard !output.summary.isEmpty, !output.exceedsVerbatimShare else { return nil }
         let judged = output.statementCount - output.duplicateCount - output.fillerCount
         guard judged <= 0 || Double(output.removedCount) / Double(judged) <= policy.maximumRemovedShare else { return nil }

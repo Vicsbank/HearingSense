@@ -48,15 +48,24 @@ public actor QwenSummarizationEngine: SummarizationEngine {
     public func isAvailable() async -> Bool { await unavailabilityReason() == nil }
 
     public func unavailabilityReason() async -> String? {
+        // MLX's pinned runtime explicitly does not support the Simulator's Metal GPU.
+        // Its C++ assertions abort the process and cannot be caught as Swift errors.
+        // Do this before creating ANY MLX resources, including the allocator/cache.
+        #if targetEnvironment(simulator)
+        return "qwen_simulator_runtime_unsupported"
+        #else
         if let loadFailure { return loadFailure }
         return QwenModelLocator.problem(with: modelDirectory)
+        #endif
     }
 
     public func releaseResources() async {
         loading?.cancel()
         loading = nil
         container = nil
+        #if !targetEnvironment(simulator)
         MLX.Memory.clearCache()
+        #endif
     }
 
     public func prewarm() async {
@@ -68,7 +77,7 @@ public actor QwenSummarizationEngine: SummarizationEngine {
     func ensureLoaded() async throws -> ModelContainer {
         if let container { return container }
         if let loading { return try await loading.value }
-        if let problem = QwenModelLocator.problem(with: modelDirectory) { throw RecapError.modelFailure(problem) }
+        if let problem = await unavailabilityReason() { throw RecapError.modelFailure(problem) }
         let directory = modelDirectory
         let task = Task<ModelContainer, Error> {
             try await loadModelContainer(from: directory, using: HubTokenizerLoader())
@@ -77,12 +86,15 @@ public actor QwenSummarizationEngine: SummarizationEngine {
         let started = Date()
         do {
             let loaded = try await task.value
+            try Task.checkCancellation()
+            guard !task.isCancelled else { throw CancellationError() }
             container = loaded
             loading = nil
             loadSeconds = Date().timeIntervalSince(started)
             return loaded
         } catch {
             loading = nil
+            if error is CancellationError { throw CancellationError() }
             // Remembered: an engine that cannot load is not asked again until the app restarts.
             loadFailure = "qwen_load_failed_" + String(describing: type(of: error))
             throw RecapError.modelFailure(loadFailure ?? "qwen_load_failed")

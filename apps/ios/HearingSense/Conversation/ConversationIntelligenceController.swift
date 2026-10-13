@@ -46,7 +46,7 @@ final class ConversationIntelligenceController {
         let arguments = ProcessInfo.processInfo.arguments
         return isDemoRequested || arguments.contains(sampleHistoryArgument)
             || (arguments.contains("--hs-w7-selftest") && !arguments.contains("--hs-w7-persist"))
-            || arguments.contains("--hs-w9-selftest")
+            || (arguments.contains("--hs-w9-selftest") && !arguments.contains("--hs-w9-persist"))
         #else
         false
         #endif
@@ -96,6 +96,7 @@ final class ConversationIntelligenceController {
     @ObservationIgnored private let coordinator: SummarizationCoordinator?
     /// The model is loaded for use soon (speech is buffered) and freed after a quiet time.
     @ObservationIgnored private var residencyTask: Task<Void, Never>?
+    @ObservationIgnored private var modelPreparationTask: Task<Void, Never>?
     @ObservationIgnored private var isModelResident = false
     @ObservationIgnored private var buffer: RollingConversationBuffer
     @ObservationIgnored private var machine = ConversationSessionMachine(policy: .product)
@@ -118,7 +119,12 @@ final class ConversationIntelligenceController {
         coordinator = summarizer as? SummarizationCoordinator
         let policy = ConversationBufferPolicy.standard
         buffer = RollingConversationBuffer(policy: policy)
-        recapEngine = ConversationRecapEngine(summarizer: summarizer, bufferPolicy: policy)
+        // The outer request must allow the coordinator's primary timeout AND fallback.
+        // A 25 s outer timeout previously cancelled Qwen before its 40 s fallback threshold.
+        var recapPolicy = ConversationRecapEngine.Policy()
+        let routingPolicy = SummarizationCoordinator.Policy()
+        recapPolicy.timeout = routingPolicy.primaryTimeout + routingPolicy.fallbackTimeout + 1
+        recapEngine = ConversationRecapEngine(summarizer: summarizer, policy: recapPolicy, bufferPolicy: policy)
         var opened: SwiftDataConversationHistory?
         var records: [ConversationRecord] = []
         var problem: String?
@@ -172,6 +178,8 @@ final class ConversationIntelligenceController {
     deinit {
         workTask?.cancel()
         deadlineTask?.cancel()
+        residencyTask?.cancel()
+        modelPreparationTask?.cancel()
     }
 
     func setLogger(_ logger: @escaping (DiagnosticEventLog.Kind, String) -> Void) {
@@ -195,6 +203,7 @@ final class ConversationIntelligenceController {
         isSessionActive = false
         run(machine.process(.listeningStopped(at: .now)))
         clearTemporaryText()
+        releaseModel()
         log(.recognition, "Conversation: \(recapsMade) summary request(s), \(updatesMade) update(s) this launch")
     }
 
@@ -203,6 +212,7 @@ final class ConversationIntelligenceController {
         guard isOn != isTranscriptionOn else { return }
         isTranscriptionOn = isOn
         applyContextPermission()
+        if !isOn { releaseModel() }
     }
 
     /// The speech pipeline discarded its events (transcription off, or "Clear speech data").
@@ -259,7 +269,10 @@ final class ConversationIntelligenceController {
         guard let coordinator, !isModelResident, isTranscriptionOn, bufferedWordCount >= ConversationBufferPolicy.standard.minimumWords
         else { return }
         isModelResident = true
-        Task { await coordinator.prewarm() }
+        modelPreparationTask = Task {
+            guard !Task.isCancelled else { return }
+            await coordinator.prewarm()
+        }
         scheduleModelRelease()
     }
 
@@ -280,6 +293,22 @@ final class ConversationIntelligenceController {
 
     /// How long the model stays in memory without a request.
     static let modelIdleSeconds: TimeInterval = 180
+
+    private func releaseModel() {
+        modelPreparationTask?.cancel()
+        modelPreparationTask = nil
+        residencyTask?.cancel()
+        residencyTask = nil
+        isModelResident = false
+        if let coordinator { Task { await coordinator.releaseResources() } }
+    }
+
+    #if DEBUG
+    /// Engine metadata only; never a prompt or response.
+    func summarizationAttempts() async -> [SummarizationCoordinator.Attempt] {
+        await coordinator?.lastAttempts ?? []
+    }
+    #endif
 
     // MARK: - Settings
 
@@ -599,7 +628,7 @@ final class ConversationIntelligenceController {
         if let coordinator {
             engineLines.append("Summary engines (Window 9): " + coordinator.identities.map(\.detail).joined(separator: " → fallback ")
                 + " · last summary by \(lastEngineLabel ?? "–")" + (lastFallbackReason.map { " (fallback: \($0))" } ?? "")
-                + " · model resident: \(isModelResident ? "yes" : "no")")
+                + " · model preparation requested: \(isModelResident ? "yes" : "no")")
         }
         return (engineLines + [
             "Conversation summaries (Window 7)",

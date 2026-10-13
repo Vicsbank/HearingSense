@@ -139,6 +139,52 @@ struct Window9PipelineTests {
         let updated = await engine.update(recap, earlierTranscript: engine.transcript(of: excerpt), new: later)
         #expect(updated == nil)
     }
+
+    @Test func aRewriteCannotDropAnUnrelatedTask() async {
+        let previous = ConversationRecap(title: "T", summary: "The team meeting is on Friday at 7:45. Dana brings the programs.", source: .languageModel)
+        let lines = ["the team meeting is Friday at seven forty five", "Dana brings the programs"]
+        let later = [BufferedUtterance(text: "move the team meeting to Saturday", start: at(40), end: at(44))]
+        let summarizer = ScriptedSummarizer(update: RecapDraft(title: "T", summary: "The team meeting moved to Saturday."))
+        await summarizer.setRewrite(RecapDraft(title: "T", summary: "The team meeting moved to Saturday at 7:45."))
+        let updated = await ConversationRecapEngine(summarizer: summarizer).update(previous, earlierTranscript: lines.joined(separator: "\n"), new: later)
+        #expect(updated?.summary.contains("Dana brings the programs.") == true)
+        #expect(updated?.corrections.contains("rewritten_for_correction") == false)
+    }
+
+    @Test func aRewriteCannotDropAnotherSlotsWeekday() async {
+        let previous = ConversationRecap(title: "T", summary: "The team meeting is on Friday at 7:45. The dentist appointment is Friday at 9:00 AM.", source: .languageModel)
+        let lines = ["the team meeting is Friday at seven forty five", "the dentist appointment is Friday at nine a m"]
+        let later = [BufferedUtterance(text: "move the team meeting to Saturday", start: at(40), end: at(44))]
+        let summarizer = ScriptedSummarizer(update: RecapDraft(title: "T", summary: "The team meeting moved to Saturday."))
+        await summarizer.setRewrite(RecapDraft(title: "T", summary: "The team meeting moved to Saturday at 7:45. The dentist appointment is at 9:00 AM."))
+        let updated = await ConversationRecapEngine(summarizer: summarizer).update(previous, earlierTranscript: lines.joined(separator: "\n"), new: later)
+        #expect(updated?.summary.contains("dentist appointment is Friday") == true)
+        #expect(updated?.corrections.contains("rewritten_for_correction") == false)
+    }
+
+    @Test func optionalVerificationAlsoChecksUpdates() async {
+        let previous = ConversationRecap(title: "T", summary: "The team meeting is on Friday.", source: .languageModel)
+        let uncertain = "Dana's schedule is easier that way."
+        let summarizer = ScriptedSummarizer(update: RecapDraft(title: "T", summary: "The meeting moved to Saturday. " + uncertain), ungrounded: [uncertain])
+        var policy = ConversationRecapEngine.Policy()
+        policy.verification = .uncertainOnly
+        policy.rewriteTimeout = 0
+        let later = [BufferedUtterance(text: "the meeting moved to Saturday for Dana", start: at(40), end: at(44))]
+        let updated = await ConversationRecapEngine(summarizer: summarizer, policy: policy).update(previous, earlierTranscript: "the team meeting is Friday", new: later)
+        #expect(await summarizer.evidenceRequests == 1)
+        #expect(updated?.summary.contains(uncertain) == false)
+    }
+
+    @Test func aRewriteCannotReverseAnEarlierProhibitionWhenItsSourceExpired() async {
+        let previous = ConversationRecap(title: "T", summary: "The team meeting is Friday at 7:45. Dana must not bring the programs.", source: .languageModel)
+        let later = [BufferedUtterance(text: "move the team meeting to Saturday", start: at(40), end: at(44))]
+        let summarizer = ScriptedSummarizer(update: RecapDraft(title: "T", summary: "The team meeting moved to Saturday."))
+        await summarizer.setRewrite(RecapDraft(title: "T", summary: "The team meeting moved to Saturday at 7:45. Dana must bring the programs."))
+        // The bounded earlier transcript no longer includes the prohibition; its saved fact still matters.
+        let updated = await ConversationRecapEngine(summarizer: summarizer).update(previous, earlierTranscript: "the team meeting is Friday at seven forty five", new: later)
+        #expect(updated?.summary.contains("Dana must not bring the programs.") == true)
+        #expect(updated?.corrections.contains("rewritten_for_correction") == false)
+    }
 }
 
 extension ScriptedSummarizer {
