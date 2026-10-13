@@ -4,6 +4,13 @@ import NaturalLanguage
 /// Splitting a recap into statements and words, as the Window 7/8 checks did (`RecapText`), so
 /// that the privacy limits keep meaning exactly what they meant before.
 public enum SummaryText {
+    /// Reserved system framing for retained historical claims, never current recap evidence.
+    static let supersededPrefix = "Superseded: "
+
+    static func isSuperseded(_ text: String) -> Bool {
+        text.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix(supersededPrefix)
+    }
+
     /// The sentences of a text. Line breaks always end a sentence. A sentence the system ends after
     /// a title ("… the meeting with Ms." | "Wang takes place …") is joined to the next one.
     public static func sentences(in text: String) -> [String] {

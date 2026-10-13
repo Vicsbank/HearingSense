@@ -60,6 +60,21 @@ let schoolLines = [
         #expect(dropped.reason == .hedgeDropped)
     }
 
+    @Test func anUnstatedMeridiemIsUncertainWithoutRejectingTheClockTime() {
+        let grounder = ClaimGrounder(lines: ["the pickup is at five fifteen"])
+        let qualified = grounder.ground("The pickup is at 5:15 PM.")
+        #expect(qualified.verdict == .uncertain)
+        #expect(qualified.reason == .timeQualifierAdded)
+        #expect(grounder.ground("The pickup is at 5:15.").verdict == .supported)
+        #expect(EnglishNormalizer().areEquivalent("five fifteen", "5:15 PM"))
+        let output = SummaryPostprocessor().process(DraftText(title: "", summary: "The pickup is at 5:15 PM."),
+                                                   transcriptLines: ["the pickup is at five fifteen"])
+        #expect(output.summary == "The pickup is at 5:15 PM.")
+        #expect(output.unverifiedStatements == ["The pickup is at 5:15 PM."])
+        #expect(output.removedCount == 0)
+        #expect(ClaimGrounder(lines: ["the pickup is at five fifteen p m"]).ground("The pickup is at 5:15 PM.").verdict == .supported)
+    }
+
     @Test func aSentenceJoiningTwoMattersIsNotSupported() {
         let errands = ClaimGrounder(lines: [
             "Maya has a dentist appointment on Tuesday at nine",

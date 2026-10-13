@@ -120,6 +120,8 @@ public enum ReasonCode: String, Hashable, Sendable, CaseIterable {
     case valueNotLocal = "value_not_local"
     case hedgeDropped = "hedge_dropped"
     case certaintyUnclear = "certainty_unclear"
+    /// The clock time is compatible, but its AM/PM half was not established by local evidence.
+    case timeQualifierAdded = "time_qualifier_added"
     case nameNotLocal = "name_not_local"
     case attributionUnclear = "attribution_unclear"
     case absenceClaim = "absence_claim"

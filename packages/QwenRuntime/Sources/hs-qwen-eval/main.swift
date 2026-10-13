@@ -42,7 +42,15 @@ func sentences(of text: String) -> [String] {
     text.enumerateSubstrings(in: text.startIndex..., options: .bySentences) { substring, _, _, _ in
         if let s = substring?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty { result.append(s) }
     }
-    return result.map(normalize)
+    // Foundation can split the label "Superseded:" into its own sentence. Carry it
+    // onto the next sentence so historical text cannot score as a current claim.
+    var pendingSuperseded = false
+    return result.compactMap { text in
+        let normalized = normalize(text)
+        if normalized == "superseded" { pendingSuperseded = true; return nil }
+        defer { pendingSuperseded = false }
+        return pendingSuperseded ? "superseded " + normalized : normalized
+    }
 }
 
 func matches(_ groups: [[String]], in sentence: String) -> Bool {
@@ -127,13 +135,50 @@ func seconds(_ value: Double) -> String { value.formatted(.number.precision(.fra
 
 let useApple = option("--engine") == "apple"
 let directory = QwenModelLocator.locate()
-guard useApple || directory != nil else { print("no complete Qwen checkpoint found"); exit(2) }
+guard command == "rescore" || useApple || directory != nil else { print("no complete Qwen checkpoint found"); exit(2) }
 let qwen = QwenSummarizationEngine(modelDirectory: directory ?? URL(fileURLWithPath: "/nonexistent/qwen"))
 let apple = AppleFoundationSummarizationEngine()
 let engine: any ConversationSummarizing = useApple ? apple : qwen
-print("engine:", useApple ? "Apple on-device model" : qwen.identity.detail)
+if command != "rescore" { print("engine:", useApple ? "Apple on-device model" : qwen.identity.detail) }
 
 switch command {
+case "rescore":
+    // Re-score saved synthetic native outputs without loading weights or making model calls.
+    let path = option("--data") ?? "data/summary_regression/en_fresh_w9.json"
+    guard let input = option("--input"), let saved = FileManager.default.contents(atPath: input),
+          var report = try? JSONSerialization.jsonObject(with: saved) as? [[String: Any]],
+          let data = FileManager.default.contents(atPath: path),
+          let cases = try? JSONDecoder().decode(CaseFile.self, from: data) else { print("cannot read report/cases"); exit(2) }
+    let modes = (option("--modes") ?? "legacy,window9,window9_verified").split(separator: ",").map(String.init)
+    var totals: [String: (present: Int, total: Int, violations: Int)] = [:]
+    for index in report.indices {
+        let id = report[index]["id"] as? String ?? ""
+        let recap = cases.recaps.first { $0.id == id }
+        let continuation = cases.continues.first { $0.id == id }
+        guard let facts = recap?.facts ?? continuation?.facts, let forbidden = recap?.must_not ?? continuation?.must_not else { continue }
+        for label in modes + (recap == nil ? [] : ["raw"]) {
+            let isSummary = label == "raw" || recap == nil || report[index][label + "_is_summary"] as? Bool == true
+            let text = isSummary ? report[index][label + "_summary"] as? String ?? "" : ""
+            let points = isSummary ? report[index][label + "_keyPoints"] as? [String] ?? [] : []
+            let result = score(sentences(of: text) + points.map(normalize), facts: facts, mustNot: forbidden)
+            report[index][label + "_facts"] = result.factsPresent
+            report[index][label + "_violations"] = result.violations
+            report[index][label + "_missed"] = result.missed
+            report[index][label + "_violated"] = result.violated
+            let key = (recap == nil ? "continue-" : "") + label
+            var row = totals[key] ?? (0, 0, 0)
+            row.present += result.factsPresent; row.total += result.factsTotal; row.violations += result.violations
+            totals[key] = row
+        }
+    }
+    print("Re-scored saved native outputs; NO new model execution. Source: \(input)")
+    for (key, row) in totals.sorted(by: { $0.key < $1.key }) {
+        print("\(key): facts \(row.present)/\(row.total), must-not violations \(row.violations)")
+    }
+    if let output = option("--json") {
+        try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
+            .write(to: URL(fileURLWithPath: output))
+    }
 case "fresh":
     let path = option("--data") ?? "data/summary_regression/en_fresh_w9.json"
     guard let data = FileManager.default.contents(atPath: path), let cases = try? JSONDecoder().decode(CaseFile.self, from: data) else {
@@ -156,7 +201,7 @@ case "fresh":
         table[label] = row
     }
 
-    for item in cases.recaps {
+    for item in arguments.contains("--only-continue") ? [] : cases.recaps {
         let (buf, now) = buffer(item.lines, from: 0)
         let excerpt = buf.excerpt(now: now)
         let probe = ConversationRecapEngine(summarizer: engine)

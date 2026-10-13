@@ -141,4 +141,30 @@ import Testing
         #expect(result.summary.contains("cafeteria"))
         #expect(result.summary.contains("Tickets are free now"))
     }
+
+    @Test func markedHistoryCannotGroundALaterCurrentClaimAfterTheSpeechExpires() {
+        let history = "Superseded: The meeting is Friday at 7:45 and Priya brings slides."
+        let oldPoint = "Superseded: The meeting is Friday at 7:45"
+        let earlier = DraftText(title: "Meeting", summary: history + " The meeting is Saturday at 7:45.", keyPoints: [oldPoint])
+        let result = postprocessor.merge(earlier: earlier,
+                                         addition: DraftText(title: "", summary: "The meeting will be on Friday at 7:45. Parking is behind the library."),
+                                         newLines: ["parking is behind the library"], earlierLines: [])
+        #expect(result.summaryStatements.contains(history))
+        #expect(result.keyPoints.contains(oldPoint))
+        #expect(result.summary.contains("Saturday at 7:45"))
+        #expect(!result.summary.contains("will be on Friday"))
+        #expect(result.reports.contains { $0.text == "The meeting will be on Friday at 7:45." && $0.verdict == .unsupported })
+        #expect(result.summary.contains("Parking is behind the library"))
+        #expect(!result.summary.contains("Superseded: Superseded:"))
+    }
+
+    @Test func markedHistoryDoesNotProvideStrongDuplicateCoverageForNewSpeech() {
+        let earlier = DraftText(title: "", summary: "Superseded: The meeting is Friday at 7:45 and Priya brings slides.")
+        let result = postprocessor.merge(earlier: earlier,
+                                         addition: DraftText(title: "", summary: "Priya brings slides."),
+                                         newLines: ["Priya brings slides"], earlierLines: [])
+        #expect(result.summaryStatements.contains("Priya brings slides."))
+        #expect(result.duplicateCount == 0)
+        #expect(result.summaryStatements.first == earlier.summary)
+    }
 }

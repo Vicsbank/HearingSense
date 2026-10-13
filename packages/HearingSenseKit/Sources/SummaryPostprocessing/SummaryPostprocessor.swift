@@ -59,10 +59,11 @@ public struct SummaryPostprocessor: Sendable {
         var earlierStatements: [String] = []
         for statement in earlierSummary + earlierPoints where !earlierStatements.contains(statement) { earlierStatements.append(statement) }
 
-        // The earlier recap stands between the earlier speech and the new speech: it supports what
-        // the addition repeats of it, and a correction in the new speech can refer to it.
-        let timeline = earlierLines + earlierStatements + newLines
-        let recapStart = earlierLines.count, newStart = earlierLines.count + earlierStatements.count
+        // Only current earlier claims stand as recap evidence. Marked history stays visible in
+        // the output, but cannot support a new assertion or become a current correction slot.
+        let currentEarlierStatements = earlierStatements.filter { !SummaryText.isSuperseded($0) }
+        let timeline = earlierLines + currentEarlierStatements + newLines
+        let recapStart = earlierLines.count, newStart = earlierLines.count + currentEarlierStatements.count
         let transcript = AnalyzedTranscript(lines: timeline, normalizer: normalizer)
         let grounder = ClaimGrounder(transcript: transcript, configuration: configuration, normalizer: normalizer)
         let evidenceMap: [Int?] = timeline.indices.map { index in
@@ -76,7 +77,7 @@ public struct SummaryPostprocessor: Sendable {
         for statement in earlierSummary { pass.seed(statement, isKeyPoint: false) }
         for statement in earlierPoints { pass.seed(statement, isKeyPoint: true) }
         let added = SummaryText.statements(summary: addition.summary, keyPoints: addition.keyPoints)
-        let names = draftNames(earlierStatements + added.summary + added.keyPoints)
+        let names = draftNames(currentEarlierStatements + added.summary + added.keyPoints)
         pass.run(summary: added.summary, keyPoints: added.keyPoints, draftNames: names)
 
         // Earlier statements the new speech made outdated.
@@ -88,10 +89,10 @@ public struct SummaryPostprocessor: Sendable {
         var extraUncertain: [String] = []
         var extraCorrections: [String] = []
         func markedSuperseded(_ statement: String) -> String {
-            statement.hasPrefix("Superseded: ") ? statement : "Superseded: " + statement
+            SummaryText.isSuperseded(statement) ? statement : SummaryText.supersededPrefix + statement
         }
         let resolver = CorrectionResolver(lookback: configuration.correctionLookback)
-        for statement in earlierStatements {
+        for statement in currentEarlierStatements {
             let analyzed = AnalyzedText(statement, normalizer: normalizer)
             guard let correction = resolver.supersededCorrection(for: analyzed, corrections: grounder.corrections, transcript: transcript,
                                                                  fromLine: newStart),
@@ -268,7 +269,9 @@ struct Pass {
     /// decides whether the next kept copy would stand next to a copy.
     mutating func seed(_ statement: String, isKeyPoint: Bool) {
         let analyzed = AnalyzedText(statement, normalizer: normalizer)
-        covers.append(Cover(signature: SummaryQualityEditor.signature(of: analyzed), isStrong: true, isKeyPoint: isKeyPoint))
+        if !SummaryText.isSuperseded(statement) {
+            covers.append(Cover(signature: SummaryQualityEditor.signature(of: analyzed), isStrong: true, isKeyPoint: isKeyPoint))
+        }
         let isCopy = filter.isCopy(statement, spoken: spoken)
         if isCopy, filter.isShortCopy(statement) { _ = ledger.record(statement) }
         if isKeyPoint { lastKeyPointIsCopy = isCopy } else { lastSummaryIsCopy = isCopy }

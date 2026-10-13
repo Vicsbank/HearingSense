@@ -317,6 +317,22 @@ public struct ClaimGrounder: Sendable {
             }
         }
 
+        // Compatibility deliberately accepts a spoken clock time without AM/PM. Claim support
+        // is narrower: adding the half of the day needs a matching qualified time in the local
+        // evidence, otherwise keep the hour/minute fact explicitly unverified.
+        for value in values {
+            for reading in value.readings {
+                guard case let .time(hour, minute, meridiem?) = reading else { continue }
+                let established = bestWindow.values.contains { source in
+                    source.readings.contains { evidenceReading in
+                        guard case let .time(sourceHour, sourceMinute, sourceMeridiem?) = evidenceReading else { return false }
+                        return hour == sourceHour && minute == sourceMinute && meridiem == sourceMeridiem
+                    }
+                }
+                if !established, uncertain == nil { uncertain = .timeQualifierAdded }
+            }
+        }
+
         // Hedges: a value said only with "around" / "maybe" must not become exact.
         for value in values {
             let occurrences = lines.flatMap { line in line.values.filter { $0.isCompatible(with: value) } }

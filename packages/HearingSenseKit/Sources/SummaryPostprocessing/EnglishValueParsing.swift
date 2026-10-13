@@ -677,7 +677,9 @@ extension EnglishNormalizer {
         }
         var result = value
         let next: NormalizedToken? = end < tokens.count ? tokens[end] : nil
-        let nextWord = word(tokens, end)
+        let rawNextWord = word(tokens, end)
+        let spacedMeridiem = (rawNextWord == "a" || rawNextWord == "p") && word(tokens, end + 1) == "m"
+        let nextWord = spacedMeridiem ? rawNextWord.map { $0 + "m" } : rawNextWord
 
         // Dates: "the twelfth of October", "28 October".
         if let day = ordinal ?? amount.flatMap({ $0 % 100 == 0 ? $0 / 100 : nil }), (1 ... 31).contains(day) {
@@ -727,7 +729,7 @@ extension EnglishNormalizer {
             } else {
                 return (result, end)
             }
-            return (result, end + 1)
+            return (result, end + (spacedMeridiem ? 2 : 1))
         case "oclock":
             if pairHour == nil, amount % 100 == 0, (1 ... 12).contains(amount / 100) {
                 result.readings = [.time(amount / 100, 0, nil)]

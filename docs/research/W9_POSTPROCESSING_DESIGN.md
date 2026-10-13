@@ -44,6 +44,8 @@ Shared: `Lexicon.swift` (word lists, a deterministic suffix stemmer, a small syn
 3. **Equivalent forms are equal.** Same type and value, with every reading of an ambiguous form kept
    ("two twelve" = 2:12 or 212; a bare spoken hour 1–12 can be that hour). Cardinal ≠ ordinal, number ≠
    percent, days ≠ hours, "next Friday" ≠ "this Friday".
+   Compatible hour/minute spellings remain equivalent when AM/PM is unspecified; claim grounding
+   separately flags an added half of the day as `time_qualifier_added` unless local evidence establishes it.
 4. **No transcript text in diagnostics.** `StatementReport.reason` and `corrections` are `ReasonCode` raw
    values only; `reasonCounts` is safe to log. `reports[].text`, `copiedNeedingRestatement` and
    `uncertainStatements` are speech-derived: in memory only, never logged or persisted.
@@ -191,3 +193,18 @@ caveats are preserved.
 Latest focused validation: 35 correction, merge and quality tests plus all 13 scripted pipeline tests,
 including polarity retention when earlier speech has expired. No native model rerun was performed by
 the module agent; integration builds and evaluation remain with the coordinating agent.
+
+### Qualifier specificity and historical evidence
+
+Adding AM/PM to a compatible bare clock time now produces an uncertain claim, retained and listed as
+unverified, rather than a supported claim. Explicit local AM/PM evidence (or an unambiguous normalized
+24-hour time) establishes the qualifier. Normalized clock equality remains compatible; genuine numeric
+or negation contradictions still fail their existing checks.
+
+Reserved `Superseded:` statements stay visible on later updates but are excluded from current earlier
+recap evidence, draft-name support, correction candidates and strong duplicate coverage. They cannot
+reestablish an old value after the original correction speech has expired. New speech may still independently
+support an unrelated detail that also appears inside a historical statement.
+
+Verified after these repairs: 33 focused grounding, normalization and merge tests plus all 13 pipeline
+tests. Explicit spaced speech-recognizer forms "a m"/"p m" establish meridiem like "a.m."/"p.m.".
