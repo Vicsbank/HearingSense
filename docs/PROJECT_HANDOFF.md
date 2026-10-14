@@ -1,13 +1,14 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-13, **Window 9 native Qwen and postprocessing integration**.
+Last updated: 2026-10-14, **Window 9 native Qwen CPU runtime and postprocessing integration**.
 
 Window 9 worktree `.claude/worktrees/window9`, branch `feature/window9-summary-postprocessing`,
 continues Claude's `09db91f` from the preserved Window 8 snapshot. Qwen is the configured primary
-engine and real native Swift Qwen inference works on the Mac. **Native Qwen inference in iOS
-Simulator remains blocked by the pinned MLX runtime's Metal requirements**; Simulator uses the
-real Apple on-device fallback with the recorded reason `qwen_simulator_runtime_unsupported`.
-Do not call Window 9 complete against its original Simulator-Qwen criterion.
+engine. **Real native Qwen inference now works inside the iOS Simulator app**, using a maintained
+CPU adapter around the exact pinned Swift MLX sources and existing 4-bit checkpoint. Mac/device
+targets retain Metal. No Python/hosted inference or invented Qwen responses are used.
+The current Apple fallback revalidation is blocked by the changed host's eligibility/catalog
+state; do not call all original acceptance criteria green in this environment.
 
 Read `docs/research/QWEN35_HEARING_SENSE_INTEGRATION.md`,
 `docs/testing/QWEN35_SIMULATOR_VALIDATION.md` and `docs/research/W9_POSTPROCESSING_DESIGN.md`
@@ -15,13 +16,27 @@ for the code, reproducible configuration, measured outcomes and limits. The new 
 normalizes English values, resolves slot-specific corrections, separates privacy/quality/grounding,
 and preserves full History summaries independently of previews. Optional verification is off by
 default. Continue performs additions with a guarded full rewrite only for unresolved corrections.
-Implementation milestones: `c791d4a`, `7f6c4d3` and `c7726ac3e88aab9da1db4f991087ff3ef952f606`.
-Final Mac: 660 tests pass, 9 optional skips; final changed Simulator targets: 215 pass;
-real Apple fallback app acceptance: 27/27. Native
+Implementation milestones: `c791d4a`, `7f6c4d3`, `c7726ac`, `eb52d5b` (commentary cleanup),
+`171b124` (native Simulator CPU), `02f3b9c` (typed-number/payment acceptance assertions).
+Final acceptance/audit source: `ef379390b3adcc8242b8ef04efacd419043bfd22`.
+Latest Mac core: 663 tests pass, 9 optional skips; changed Simulator targets: 218 pass;
+native CPU runtime: 8 pass. Clean native CPU probe: 3/3 pass, cold load 4.0 s, request 116.5 s,
+main-actor gap 251 ms, MLX active 2.44 GB/peak 3.03 GB (native temporary vectors excluded).
+Actual Qwen default workflow: 27/28 checks, sole assertion false positive repaired; the same
+saved genuine output then passes a 5/5 in-app assertion audit (not fresh inference). Initial
+recap 212.9 s, main-actor gap 84 ms; final History summary 827 characters/ten key points.
+Latest Continue wall time includes host sleep and is not a normal performance measurement;
+the earlier awake CPU workflow measured 383.4 s. Debug and universal ARM64/x86_64 Release
+builds pass; Release bundle 105 MiB, no Qwen weights embedded.
+Earlier real Apple fallback app acceptance: 27/27. On October 14 the native Mac API reports
+`deviceNotEligible`, and Simulator Apple generation fails with missing model-catalog assets;
+Qwen-missing routing attempts Apple once and then shows an unavailable state. Only iOS 27.0
+is installed; the Mac is now 27.2 build `26B5112a`, previously `26B5101f`. No new model or OS
+download or Apple Intelligence preference change was performed to hide this failure. Native
 recap comparison: legacy 17/44 important facts versus Window 9 42/44 on seen regression data.
-Final native Continue: 8/9 strict sentence-level facts, zero enumerated stale-plan hazards; old
-day/venue digests are visibly superseded. The remaining expected plan is expressed across sentences.
-Generic model commentary and unsupported relations remain risks; these are seen regression cases,
+Latest native Mac Continue: 9/9 enumerated facts, zero enumerated stale-plan hazards; old
+day/venue digests are visibly superseded, bounded generic source commentary is removed.
+Unsupported relations and general semantic entailment remain risks; these are seen regression cases,
 not independent validation. Do not promote this branch as production-ready from these scores.
 No physical iPhone access, model training, new weights download, merge or push occurred.
 

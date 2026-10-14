@@ -1,0 +1,20 @@
+Window 9 regression observations, 2026-10-13
+English synthetic fixtures; Mac and iOS Simulator only; no physical iPhone.
+
+HearingSenseKit source: eb52d5b (unchanged in runtime commit 171b124).
+Complete Mac suite: 672 registered, 663 passed, 9 optional skipped, 0 failures.
+Changed Simulator targets: 218 passed, 0 failures.
+  SummaryPostprocessingTests: 101
+  ConversationUnderstandingTests: 117
+
+QwenRuntime source: 171b12408bc9ea26cd6ca6c80f8a28a92cb0bb37.
+Simulator QwenRuntimeTests: 8 passed, 0 failures (0.020 seconds).
+Two model-locator checks, native CPU allocation/stream/fence evaluation, normal
+missing-checkpoint availability, affine 4-bit bfloat16 output, mixed-dtype packed
+decode with uneven row partitions, independent unpacked affine references for
+prefill/decode, and parallel matmul with transposed/contiguous inputs.
+
+These counts were read from the completed tool runs, not inferred from source.
+The temporary Xcode/Swift logs were removed by system temporary-directory cleanup
+before the October 14 continuation. Prior committed regression artifacts remain
+historical evidence; they are not relabeled as this run.

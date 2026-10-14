@@ -1,0 +1,18 @@
+Window 9 final source: ef379390b3adcc8242b8ef04efacd419043bfd22
+Runtime source/pins: runtime_cpu_provenance.json (native CPU adapter unchanged).
+Date: 2026-10-14. Mac/Simulator only; no physical iPhone.
+
+Project: apps/ios/HearingSense.xcodeproj
+Scheme: HearingSense
+Destination: platform=iOS Simulator,id=7BD3EAF0-49F4-4924-A51F-F51AA44E16A7
+Toolchain: org.hearingsense.toolchain.metalswift
+Derived data: /private/tmp/hs-w9-cpu-app
+Flags: -disableAutomaticPackageResolution CODE_SIGNING_ALLOWED=NO
+
+Debug: BUILD SUCCEEDED. ARM64 Simulator. Bundle: 88 MiB.
+Release: BUILD SUCCEEDED. lipo -archs: x86_64 arm64. Bundle: 105 MiB.
+Includes existing audio, conversation, and Live Activity/widget targets.
+No checkpoint is embedded in either bundle.
+
+Actual inference was exercised in the Debug running-app harness. Release execution
+on physical iPhone and physical-device behavior/performance were not tested.

@@ -12,7 +12,7 @@ Pinned sources:
 Run from the Window 9 worktree before resolving or building the app/Qwen package:
 
 ```sh
-python3 tools/prepare_qwen_runtime.py --checkouts /private/tmp/hs-w9-app/SourcePackages/checkouts
+python3 tools/prepare_qwen_runtime.py --checkouts /Users/vicwei/Library/Developer/Xcode/DerivedData/HearingSense-atnppvsqqyobzydcyysiplnfhywb/SourcePackages/checkouts
 ```
 
 `--checkouts` must contain existing repositories at those revisions, including their initialized

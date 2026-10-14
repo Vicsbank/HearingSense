@@ -1,0 +1,15 @@
+Hearing Sense Window 9 self-test · 2026-10-14T17:07:10Z · Simulator (iPhone19,3), iOS 27.0
+Microphone: off (synthetic capture). Speech is synthetic text. Expected engine: fallback.
+History store: isolated synthetic disk store.
+[PASS] 9    ticket-payment assertion covers spellings and clause-bound cancellation — five synthetic assertion counterexamples
+Some engine available: true
+
+[PASS] A    Hearing Sense ON — state Listening
+[PASS] 6    normal speech does not start a summary — phase idle, summaries 0
+[PASS] 5    only the last two minutes are buffered — 9 utterances buffered
+Engine attempt: Qwen (Qwen3.5-4B-MLX-4bit), 0 s, qwen_model_not_installed
+Engine attempt: Apple on-device model, 1.262031 s, failure_NSError
+[FAIL] 7    a complete summary was written — no summary: A summary could not be written on this device right now. 9 utterances (about 88 words) were heard; they are shown below while the temporary transcript lasts.
+[PASS] 18   progress is shown while the model works — phase seen: true, island summarizing
+[PASS] 18   the main actor was never blocked for long during inference — longest gap 3 ms
+RESULT: 6 checks passed, 1 failed; dependent summary checks not run

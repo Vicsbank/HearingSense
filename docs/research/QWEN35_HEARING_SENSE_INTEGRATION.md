@@ -1,17 +1,25 @@
 # Window 9 — native Qwen integration
 
-2026-10-13. Branch `feature/window9-summary-postprocessing`, worktree `.claude/worktrees/window9`.
+2026-10-13/14. Branch `feature/window9-summary-postprocessing`, worktree `.claude/worktrees/window9`.
 Continued from Claude's `09db91f`; the `03f5802` snapshot already includes Window 8 UI work.
 Other worktrees were left alone. Nothing was merged, pushed, installed on, or run on a physical iPhone.
 
 ## Status
 
-Qwen is the configured primary engine. Real Qwen summaries run through the native Swift MLX
-implementation on the Mac. **They do not run in iOS Simulator**: the pinned MLX runtime requires
-Metal features that Simulator does not provide. The app detects this before MLX initialization
-and uses Apple's on-device model with `qwen_simulator_runtime_unsupported` recorded as the fallback reason.
-The user's native-Qwen-in-Simulator completion criterion remains blocked; this is not a completed
-Qwen simulator deployment. The Mac executable is an evaluation tool, never an inference service for the app.
+Qwen is the configured primary engine. Real Qwen summaries run through native Swift MLX on
+the Mac (Metal) and in the iOS Simulator app (CPU). The previous Simulator Metal initialization
+and shared-heap aborts are bypassed by a project-maintained CPU compatibility adapter, using
+the exact same cached checkpoint. This is real in-process inference, not a hosted Mac service or
+simulated response. The Mac executable remains an evaluation tool only. The running-app
+acceptance results, performance and limits are recorded in the validation report.
+
+Apple fallback remains implemented and previously passed a real 27-check Simulator walk-through.
+Current October 14 revalidation is blocked by the changed host environment: native Mac
+`SystemLanguageModel.default` reports `deviceNotEligible`; the Simulator claims availability
+but generation fails with missing model-catalog assets. The coordinator attempts Apple once,
+records its failure and shows the unavailable state. This is not a current successful Apple
+generation. Restoring an eligible Apple Intelligence host/compatible Simulator environment
+remains necessary before declaring every original Window 9 acceptance criterion complete.
 
 ## Verified checkpoint and runtime
 
@@ -24,7 +32,7 @@ Qwen simulator deployment. The Mac executable is an evaluation tool, never an in
 | License | Apache 2.0, as declared in the cached model card |
 | Chat template | Cached tokenizer/template; `enable_thinking: false`, greedy temperature 0 |
 | Runtime | mlx-swift-lm **3.32.3**, mlx-swift **0.32.3**, swift-transformers **1.3.5** |
-| Dependencies | App and Qwen package `Package.resolved` committed; no Python inference in the app |
+| Dependencies | MLX local exports pinned by `tools/prepare_qwen_runtime.py`; other dependencies in committed `Package.resolved`; no Python inference in the app |
 
 `MLXLLM/LLMModelFactory.swift` registers `qwen3_5` and `qwen3_5_text`.
 `MLXLLM/Models/Qwen35.swift` implements the text model and strips vision tensors from this
@@ -41,11 +49,13 @@ identity are available in diagnostics, including the full cached revision. A man
 folder whose name is not a snapshot hash reports revision `unknown`; it does not pretend to be verified.
 
 `SummarizationCoordinator` prefers Qwen and tries Apple once after an unavailable engine or a
-recoverable Swift initialization/inference error or timeout. Primary/fallback limits are 40/25 s;
+recoverable Swift initialization/inference error or timeout. Device primary/fallback limits are 40/25 s;
 after two primary failures, a five-minute cooldown prevents repeated initialization failures.
-The app's outer initial request limit allows both attempts (66 s). Timeouts use cooperative
+Simulator CPU development uses a 600 s primary budget and the same 25 s fallback budget;
+the app's outer initial request limit allows both attempts (626 s Simulator, 66 s device).
+Simulator guarded rewrite uses that same outer budget. Timeouts use cooperative
 cancellation: an uncooperative native call can delay return. Fatal C++ assertions and process OOM
-cannot be recovered by a Swift `catch`; Simulator is guarded specifically to prevent its known abort.
+cannot be recovered by a Swift `catch`; Simulator rejects a misconfigured GPU backend before loading.
 There is no claim of validated physical-device resource-exhaustion behavior.
 
 Drafts carry their actual engine and fallback reason. Saved records have optional `engineLabel`
@@ -57,6 +67,16 @@ The model is prepared when sufficient speech is buffered, without generating a s
 across requested summaries, and released after 180 s of idle time or when listening is switched off.
 Normal speech does not initiate a recap. Actor execution and async model streaming keep the main
 actor free; simulator heartbeat results are in the validation report.
+
+The adapter selects upstream CPU allocation, events and fences, disables GPU discovery in
+Simulator, and sends Qwen's gated delta calculation through its existing operations implementation.
+For the model's affine 4-bit/group-64 matrices, a native helper unpacks each prefill matrix once
+into temporary float32 storage and reads packed weights directly during single-token decode.
+Float32 accumulation avoids the extremely slow scalar bfloat16 CPU path; output keeps its
+promoted dtype. Large prefill GEMMs use four native workers. Expanded weights are never retained
+as another model or written to disk. MLX's memory counter excludes those temporary native vectors.
+Simulator prefill is chunked at 64 tokens for cooperative cancellation. Mac/device execution
+remains the upstream Metal path. Debug C++ kernels use `-O3` without fast-math.
 
 Apple recap/update/rewrite now use the shared plain JSON protocol. Schema-constrained recap
 generation threw `ParsingError` in this OS 27 Simulator; plain JSON succeeded. Every parsed answer
@@ -97,6 +117,9 @@ Real benefit and cost are measured in the validation report rather than inferred
 From this worktree:
 
 ```sh
+# Export the exact cached Swift runtime commits, recursively including submodules.
+# Supply another existing Xcode checkout directory if this development cache moved.
+python3 tools/prepare_qwen_runtime.py --checkouts /Users/vicwei/Library/Developer/Xcode/DerivedData/HearingSense-atnppvsqqyobzydcyysiplnfhywb/SourcePackages/checkouts
 swift test --package-path packages/HearingSenseKit
 cd packages/QwenRuntime
 xcodebuild build -scheme hs-qwen-eval -configuration Release \
@@ -118,8 +141,11 @@ The installed local toolchain is `~/Library/Developer/Toolchains/HSMetalSwift.xc
 the system default `xcrun metal` still needs the explicit toolchain. The setup script is preserved
 as provenance; do not rerun a toolchain download when the installed toolchain suffices.
 `QwenModelLocator` checks the explicit `--hs-qwen-model-dir` / `HS_QWEN_MODEL_DIR`, app Application
-Support, then the exact host Hugging Face snapshot on Mac/Simulator. This host cache strategy does
-not overcome MLX's Simulator GPU limitation.
+Support, then the exact host Hugging Face snapshot on Mac/Simulator. Simulator CPU compatibility
+is supplied separately by the maintained native adapters in
+[`tools/runtime_patches/README.md`](../../tools/runtime_patches/README.md), not by the host cache.
+The generated Swift source dependencies are ignored by Git and hold no model weights. Preparation
+verifies source-tree hashes; `--refresh` applies an adapter change only to a verified export.
 
 ## Eventual iPhone requirements
 
