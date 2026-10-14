@@ -48,6 +48,7 @@ final class ConversationIntelligenceController {
             || (arguments.contains("--hs-w7-selftest") && !arguments.contains("--hs-w7-persist"))
             || (arguments.contains("--hs-w9-selftest") && !arguments.contains("--hs-w9-persist"))
             || arguments.contains("--hs-w9-runtime-probe")
+            || arguments.contains("--hs-w9-audit-synthetic-history")
         #else
         false
         #endif

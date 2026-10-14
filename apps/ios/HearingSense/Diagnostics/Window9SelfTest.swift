@@ -28,6 +28,7 @@ final class Window9SelfTest {
     static var isRequested: Bool {
         ProcessInfo.processInfo.arguments.contains(argument)
             || ProcessInfo.processInfo.arguments.contains("--hs-w9-runtime-probe")
+            || ProcessInfo.processInfo.arguments.contains("--hs-w9-audit-synthetic-history")
     }
 
     private let controller: ListeningController
@@ -66,6 +67,10 @@ final class Window9SelfTest {
             write()
             return
         }
+        if ProcessInfo.processInfo.arguments.contains("--hs-w9-audit-synthetic-history") {
+            runStoredSyntheticAudit()
+            return
+        }
         if ProcessInfo.processInfo.arguments.contains("--hs-w9-runtime-probe") {
             await runRuntimeProbe()
             return
@@ -77,12 +82,7 @@ final class Window9SelfTest {
         note("Microphone: off (synthetic capture). Speech is synthetic text. Expected engine: \(expectation).")
         note("History store: \(ConversationIntelligenceController.usesMemoryOnly ? "memory only" : "isolated synthetic disk store").")
         check("9", "ticket-payment assertion covers spellings and clause-bound cancellation",
-              Self.hasCurrentFixtureTicketPayment(in: "Tickets cost $20.")
-                && Self.hasCurrentFixtureTicketPayment(in: "Tickets cost twenty dollars.")
-                && Self.hasCurrentFixtureTicketPayment(in: "The bus is cancelled, and tickets cost twenty dollars.")
-                && !Self.hasCurrentFixtureTicketPayment(in: "Superseded: Attendees need to bring twenty dollars for tickets, while the bus departs at 3:30 PM.")
-                && !Self.hasCurrentFixtureTicketPayment(in: "The tickets are now free, so the requirement to bring twenty dollars is cancelled."),
-              "five synthetic assertion counterexamples")
+              Self.paymentAssertionControlsPass, "seven synthetic assertion counterexamples")
         await wait(8) { conversation.isLanguageModelAvailable }
         note("Some engine available: \(conversation.isLanguageModelAvailable)")
         note("")
@@ -189,9 +189,10 @@ final class Window9SelfTest {
         check("11", "Continue kept unrelated facts across summary and key points",
               after.contains("maria") && after.contains("tuesday") && after.contains("3:30") && Self.hasCardinal(24, in: after),
               "flight, bus time and cupcake count present")
+        let paymentStatements = ([afterSummary] + (conversation.recap?.keyPoints ?? [])).joined(separator: "\n")
         check("12", "free tickets supersede the payment instruction in summary and key points",
-              after.contains("free") && !Self.hasCurrentFixtureTicketPayment(in: conversation.recap?.fullText ?? ""),
-              "old payment current: \(Self.hasCurrentFixtureTicketPayment(in: conversation.recap?.fullText ?? ""))")
+              after.contains("free") && !Self.hasCurrentFixtureTicketPayment(in: paymentStatements),
+              "old payment current: \(Self.hasCurrentFixtureTicketPayment(in: paymentStatements))")
         check("11", "the update did not duplicate earlier statements", Self.duplicateSentences(in: afterSummary) == 0,
               "duplicate sentences \(Self.duplicateSentences(in: afterSummary))")
         check("11", "the engine of the update is named", (conversation.recap?.engineLabel ?? "") != "", "engine \(conversation.recap?.engineLabel ?? "none")")
@@ -238,6 +239,49 @@ final class Window9SelfTest {
 
     // MARK: - Helpers
 
+    /// Replays only changed assertions on the actual saved synthetic Qwen result. Never
+    /// opens the ordinary History store and never describes this audit as model inference.
+    private func runStoredSyntheticAudit() {
+        note("Window 9 saved synthetic output assertion audit · \(Date.now.formatted(.iso8601))")
+        note("No model inference; microphone off; only the isolated Window9SyntheticHistory store.")
+        guard ProcessInfo.processInfo.arguments.contains("--hs-w9-persist") else {
+            check("store", "isolated synthetic store required", false, "launch with --hs-w9-persist")
+            return
+        }
+        check("control", "payment assertion rejects current prices and accepts bound cancellations",
+              Self.paymentAssertionControlsPass, "seven synthetic counterexamples")
+        do {
+            let store = try SwiftDataConversationHistory(inMemory: false)
+            guard let record = try store.all().first else {
+                check("record", "saved synthetic record exists", false, "store empty")
+                return
+            }
+            check("engine", "saved record identifies Qwen", record.engineLabel?.contains("Qwen") == true
+                && !record.isUserEdited, "stored engine \(record.engineLabel ?? "none")")
+            check("history", "completed full summary and key points preserved", record.status == .completed
+                && !record.summary.isEmpty && !record.keyPoints.isEmpty,
+                  "summary \(record.summary.count) characters; key points \(record.keyPoints.count)")
+            check("number", "24 retained regardless of spelling", Self.hasCardinal(24, in: record.fullText), "typed cardinal checked")
+            let paymentStatements = ([record.summary] + record.keyPoints).joined(separator: "\n")
+            check("payment", "no current twenty-dollar instruction", !Self.hasCurrentFixtureTicketPayment(in: paymentStatements)
+                && record.fullText.lowercased().contains("free"), "summary and all key points checked")
+        } catch {
+            check("store", "synthetic store reopened", false, "failure \(String(describing: type(of: error)))")
+        }
+        note("RESULT: \(passed) checks passed, \(failed) failed (saved-output assertion audit, not new inference)")
+        write()
+    }
+
+    private static var paymentAssertionControlsPass: Bool {
+        hasCurrentFixtureTicketPayment(in: "Tickets cost $20.")
+            && hasCurrentFixtureTicketPayment(in: "Tickets cost twenty dollars.")
+            && hasCurrentFixtureTicketPayment(in: "The bus is cancelled, and tickets cost twenty dollars.")
+            && hasCurrentFixtureTicketPayment(in: "The tickets are free, but bring twenty dollars.")
+            && !hasCurrentFixtureTicketPayment(in: "Superseded: Attendees need to bring twenty dollars for tickets, while the bus departs at 3:30 PM.")
+            && !hasCurrentFixtureTicketPayment(in: "The tickets are now free, so the requirement to bring twenty dollars is cancelled.")
+            && !hasCurrentFixtureTicketPayment(in: "The tickets are now free, cancelling the need to bring twenty dollars.")
+    }
+
     /// Inspect the typed cardinal rather than its spelling (e.g. twenty-four / 24).
     /// This checks presence only; grounding and added time qualifiers are separate checks.
     private static func hasCardinal(_ number: Int, in text: String) -> Bool {
@@ -274,7 +318,11 @@ final class Window9SelfTest {
                     let predicate = Array(after.dropLast())
                     let cancelledRequirement = before == ["requirement", "to", "bring"]
                         && cancelled && [["is"], ["was"], ["has", "been"]].contains(predicate)
-                    if !cancelledRequirement { return true }
+                    let cancellingRequirement = after.isEmpty && [
+                        ["cancelling", "the", "need", "to", "bring"],
+                        ["canceling", "the", "need", "to", "bring"],
+                    ].contains(before)
+                    if !cancelledRequirement && !cancellingRequirement { return true }
                 }
             }
         }
