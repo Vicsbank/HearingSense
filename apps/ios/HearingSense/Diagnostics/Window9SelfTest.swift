@@ -6,6 +6,7 @@ import HearingSenseDomain
 import IslandPresentation
 import IslandViews
 import QwenRuntime
+import SummaryPostprocessing
 import UIKit
 
 /// `--hs-w9-selftest` (Debug builds): the Window 9 acceptance walk-through in the running app,
@@ -75,6 +76,13 @@ final class Window9SelfTest {
         note("Hearing Sense Window 9 self-test · \(Date.now.formatted(.iso8601)) · \(DeviceInfo.summary)")
         note("Microphone: off (synthetic capture). Speech is synthetic text. Expected engine: \(expectation).")
         note("History store: \(ConversationIntelligenceController.usesMemoryOnly ? "memory only" : "isolated synthetic disk store").")
+        check("9", "ticket-payment assertion covers spellings and clause-bound cancellation",
+              Self.hasCurrentFixtureTicketPayment(in: "Tickets cost $20.")
+                && Self.hasCurrentFixtureTicketPayment(in: "Tickets cost twenty dollars.")
+                && Self.hasCurrentFixtureTicketPayment(in: "The bus is cancelled, and tickets cost twenty dollars.")
+                && !Self.hasCurrentFixtureTicketPayment(in: "Superseded: Attendees need to bring twenty dollars for tickets, while the bus departs at 3:30 PM.")
+                && !Self.hasCurrentFixtureTicketPayment(in: "The tickets are now free, so the requirement to bring twenty dollars is cancelled."),
+              "five synthetic assertion counterexamples")
         await wait(8) { conversation.isLanguageModelAvailable }
         note("Some engine available: \(conversation.isLanguageModelAvailable)")
         note("")
@@ -144,7 +152,7 @@ final class Window9SelfTest {
               text.contains("friday") && (text.contains("7:45") || text.contains("seven forty")) && (text.contains("$20") || text.contains("twenty dollars") || text.contains("20 dollars"))
                   && text.contains("maria"), "checked four facts")
         check("9", "written and spoken numbers agree: nothing deleted for its spelling",
-              (text.contains("3:30") || text.contains("three thirty")) && (text.contains("24") || text.contains("twenty four")),
+              (text.contains("3:30") || text.contains("three thirty")) && Self.hasCardinal(24, in: text),
               "bus time and cupcake count present")
         check("10", "unsupported additions are absent (invented sofa decision, old sentence)",
               !text.contains("zebra") && !(text.contains("blue sofa") && text.contains("arrives first") && !text.contains("not sure") && !text.contains("unsure")
@@ -179,11 +187,11 @@ final class Window9SelfTest {
               !Self.statesAsCurrent("friday", about: "meeting", in: conversation.recap?.fullText ?? ""),
               "meeting Friday current: \(Self.statesAsCurrent("friday", about: "meeting", in: conversation.recap?.fullText ?? ""))")
         check("11", "Continue kept unrelated facts across summary and key points",
-              after.contains("maria") && after.contains("tuesday") && after.contains("3:30") && after.contains("24"),
+              after.contains("maria") && after.contains("tuesday") && after.contains("3:30") && Self.hasCardinal(24, in: after),
               "flight, bus time and cupcake count present")
         check("12", "free tickets supersede the payment instruction in summary and key points",
-              after.contains("free") && !Self.statesAsCurrent("$20", about: "ticket", in: conversation.recap?.fullText ?? ""),
-              "old payment current: \(Self.statesAsCurrent("$20", about: "ticket", in: conversation.recap?.fullText ?? ""))")
+              after.contains("free") && !Self.hasCurrentFixtureTicketPayment(in: conversation.recap?.fullText ?? ""),
+              "old payment current: \(Self.hasCurrentFixtureTicketPayment(in: conversation.recap?.fullText ?? ""))")
         check("11", "the update did not duplicate earlier statements", Self.duplicateSentences(in: afterSummary) == 0,
               "duplicate sentences \(Self.duplicateSentences(in: afterSummary))")
         check("11", "the engine of the update is named", (conversation.recap?.engineLabel ?? "") != "", "engine \(conversation.recap?.engineLabel ?? "none")")
@@ -229,6 +237,49 @@ final class Window9SelfTest {
     }
 
     // MARK: - Helpers
+
+    /// Inspect the typed cardinal rather than its spelling (e.g. twenty-four / 24).
+    /// This checks presence only; grounding and added time qualifiers are separate checks.
+    private static func hasCardinal(_ number: Int, in text: String) -> Bool {
+        EnglishNormalizer().values(in: text).contains { $0.readings.contains(.number(number * 100)) }
+    }
+
+    /// This fixed fixture has only one $20 payment. Conservatively reject every unmarked
+    /// occurrence unless its own clause explicitly cancels that requirement. This is an
+    /// acceptance assertion, not a general grounding or correction implementation.
+    private static func hasCurrentFixtureTicketPayment(in text: String) -> Bool {
+        let normalizer = EnglishNormalizer()
+        // Protect the reserved history label from Foundation's colon sentence splitting.
+        let framed = text.replacingOccurrences(of: "Superseded: ", with: "SupersededHistory ")
+        for raw in SummaryText.sentences(in: framed) {
+            let sentence = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            if sentence.hasPrefix("supersededhistory ") { continue }
+            let clauses = sentence.replacingOccurrences(
+                of: #"\b(?:and|but|while|so)\b|[,;]"#, with: "\n", options: .regularExpression
+            ).split(whereSeparator: \.isNewline)
+            for part in clauses {
+                let tokens = normalizer.tokens(in: String(part))
+                for value in normalizer.values(in: tokens) {
+                    guard value.readings.contains(where: {
+                        if case let .money(cents, _) = $0 { return cents == 2000 }
+                        return false
+                    }) else { continue }
+                    var before = tokens[..<value.tokenRange.lowerBound]
+                        .filter { $0.kind != .punctuation }.map(\.text)
+                    var after = tokens[value.tokenRange.upperBound...]
+                        .filter { $0.kind != .punctuation }.map(\.text)
+                    if before.first == "the" { before.removeFirst() }
+                    if ["dollar", "dollars", "buck", "bucks"].contains(after.first ?? "") { after.removeFirst() }
+                    let cancelled = ["cancelled", "canceled", "revoked"].contains(after.last ?? "")
+                    let predicate = Array(after.dropLast())
+                    let cancelledRequirement = before == ["requirement", "to", "bring"]
+                        && cancelled && [["is"], ["was"], ["has", "been"]].contains(predicate)
+                    if !cancelledRequirement { return true }
+                }
+            }
+        }
+        return false
+    }
 
     /// Small, genuine native inference before the larger application walk-through.
     /// Only fixed synthetic input; reports counts/identity, never ordinary speech.
