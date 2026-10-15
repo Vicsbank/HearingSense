@@ -26,8 +26,8 @@ private func excerpt(of lines: [String]) -> ConversationExcerpt {
 
 private let modelDraft = RecapDraft(
     title: "Parking lot closure",
-    summary: "Someone said the north parking lot will be closed tomorrow from six a.m. for repaving and that cars left "
-        + "after six will be towed at the owner's expense. People were asked to use the south lot or Elm Street instead. "
+    summary: "The north parking lot will close tomorrow from six a.m. for repaving. Cars left after six in the north lot "
+        + "will be towed at the owner's expense. Use the south lot or Elm Street for parking instead. "
         + "The lot reopens on Friday.",
     keyPoints: ["The north lot is closed tomorrow from six for repaving.", "The lot reopens on Friday."])
 
@@ -153,8 +153,8 @@ private let modelDraft = RecapDraft(
         #expect(share < ConversationRecapEngine.Policy().maximumVerbatimShare)
     }
 
-    /// Whole utterances glued together are no spoken sentence each, so the sentence check passes
-    /// them; the share does not.
+    /// The legacy whole-sentence rule misses glued utterances; Window 9 can reject their
+    /// embedded long copies before the aggregate-share guard is reached.
     @Test func aTranscriptGluedIntoSentencesIsNotASummary() async {
         let glued = "Someone said attention please, the north parking lot will be closed tomorrow from six a.m. for repaving, "
             + "and please park in the south lot or on Elm Street. They said cars left in the north lot after six will be "
@@ -166,7 +166,7 @@ private let modelDraft = RecapDraft(
         let engine = ConversationRecapEngine(summarizer: ScriptedSummarizer(recap: RecapDraft(title: "Parking", summary: glued, keyPoints: [])))
         let recap = await engine.recap(excerpt(of: announcement))
         #expect(!recap.isSummary)
-        #expect(recap.corrections.contains("too_much_verbatim"))
+        #expect(recap.corrections.contains("too_much_verbatim") || recap.corrections.contains("copied_from_transcript"))
         #expect(!recap.summary.contains("Elm Street"))
     }
 

@@ -6,7 +6,14 @@ public enum QwenModelLocator {
     public static let modelID = "mlx-community/Qwen3.5-4B-MLX-4bit"
     /// The snapshot that was benchmarked and validated (Hugging Face commit).
     public static let validatedRevision = "32f3e8ecf65426fc3306969496342d504bfa13f3"
-    public static let runtimeDescription = "mlx-swift-lm 3.32.3 / mlx-swift 0.32.3 / swift-transformers 1.3.5 + hearing-sense simulator-cpu-v1 adapter"
+    public static let runtimeDescription: String = {
+        let version = "mlx-swift-lm 3.32.3 / mlx-swift 0.32.3 / swift-transformers 1.3.5"
+        #if targetEnvironment(simulator)
+        return version + " + hearing-sense simulator-cpu-v1 adapter"
+        #else
+        return version + " / native Metal backend"
+        #endif
+    }()
 
     /// Files that must exist for the model to load.
     static let requiredFiles = ["config.json", "tokenizer.json", "tokenizer_config.json", "model.safetensors.index.json"]
@@ -27,7 +34,9 @@ public enum QwenModelLocator {
         if let support = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil,
                                                       create: false)
         {
-            urls.append(support.appendingPathComponent("Models/Qwen3.5-4B-MLX-4bit", isDirectory: true))
+            let root = support.appendingPathComponent("Models/Qwen3.5-4B-MLX-4bit", isDirectory: true)
+            urls.append(root.appendingPathComponent(validatedRevision, isDirectory: true))
+            urls.append(root) // compatibility with an earlier flat installation
         }
         #if targetEnvironment(simulator) || os(macOS)
         let home = environment["SIMULATOR_HOST_HOME"] ?? NSHomeDirectory()

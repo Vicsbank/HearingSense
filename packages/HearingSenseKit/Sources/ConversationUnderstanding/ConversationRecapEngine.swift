@@ -648,7 +648,7 @@ public struct ConversationRecapEngine: Sendable {
     private func checked(_ output: PostprocessingOutput, draft: RecapDraft, excerpt: ConversationExcerpt, caveats: [String],
                          seconds: TimeInterval, rejected: inout [String]) -> ConversationRecap?
     {
-        guard !output.exceedsVerbatimShare else {
+        guard !output.exceedsPrivacyLimits else {
             rejected = output.corrections + ["too_much_verbatim"]
             return nil
         }
@@ -682,9 +682,13 @@ public struct ConversationRecapEngine: Sendable {
             try await summarizer.rewrite(previous: earlier, newTranscript: fresh)
         }) else { return nil }
         let lines = earlierLines + newLines
-        var output = processor.process(DraftText(title: previous.title, summary: draft.summary, keyPoints: draft.keyPoints), transcriptLines: lines)
+        let rewrittenText = DraftText(title: previous.title, summary: draft.summary, keyPoints: draft.keyPoints)
+        var output = processor.process(rewrittenText, transcriptLines: lines)
+        output = await restating(output) { restatements in
+            processor.process(rewrittenText, transcriptLines: lines, restatements: restatements)
+        }
         let judged = output.statementCount - output.duplicateCount - output.fillerCount
-        guard !output.summary.isEmpty, !output.exceedsVerbatimShare,
+        guard !output.summary.isEmpty, !output.exceedsPrivacyLimits,
               judged <= 0 || Double(output.removedCount) / Double(judged) <= policy.maximumRemovedShare
         else { return nil }
         // Check each earlier statement's own slot and content. A new weekday elsewhere
@@ -750,7 +754,7 @@ public struct ConversationRecapEngine: Sendable {
             rewrittenBy = rewrite.engine
         }
         output = await verified(output, lines: earlierLines + newLines)
-        guard !output.summary.isEmpty, !output.exceedsVerbatimShare else { return nil }
+        guard !output.summary.isEmpty, !output.exceedsPrivacyLimits else { return nil }
         let judged = output.statementCount - output.duplicateCount - output.fillerCount
         guard judged <= 0 || Double(output.removedCount) / Double(judged) <= policy.maximumRemovedShare else { return nil }
         // Nothing new was added: the earlier recap stays and the new utterances are offered again.
@@ -867,8 +871,10 @@ public struct ConversationRecapEngine: Sendable {
     public func maySave(_ recap: ConversationRecap, transcript: String) -> Bool {
         guard recap.isSummary else { return false }
         guard !transcript.isEmpty else { return true }
-        return validator.verbatimShare(of: recap.summary + "\n" + recap.keyPoints.joined(separator: "\n"),
-                                       transcript: transcript) <= policy.maximumVerbatimShare
+        let text = recap.summary + "\n" + recap.keyPoints.joined(separator: "\n")
+        let lines = transcript.split(whereSeparator: \.isNewline).map(String.init)
+        return validator.verbatimShare(of: text, transcript: transcript) <= policy.maximumVerbatimShare
+            && !PrivacyCopyFilter().hasOverlongSourceRun(in: text, transcriptLines: lines)
     }
 
     /// No summary could be written. The raw transcript is deliberately not put in its place:

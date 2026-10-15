@@ -4,6 +4,9 @@ import MLX
 import MLXLLM
 import MLXLMCommon
 import Tokenizers
+#if os(iOS) && !targetEnvironment(simulator)
+import os
+#endif
 
 /// Qwen3.5-4B (MLX, 4-bit) as a summarization engine (Window 9). Runs fully on the device through
 /// mlx-swift-lm; nothing is sent anywhere. The weights are read from a local directory (see
@@ -54,6 +57,14 @@ public actor QwenSummarizationEngine: SummarizationEngine {
         guard Device.defaultDevice().deviceType == .cpu else { return "qwen_simulator_backend_misconfigured" }
         #endif
         if let loadFailure { return loadFailure }
+        #if os(iOS) && !targetEnvironment(simulator)
+        // A jetsam kill cannot be caught for fallback. Refuse a fresh load when iOS says
+        // the app lacks headroom for the measured 3.03 GB MLX peak plus process overhead.
+        // Do not apply the cold-load budget to an already resident/shared load.
+        if container == nil, loading == nil, os_proc_available_memory() < 3_600_000_000 {
+            return "qwen_insufficient_memory_budget"
+        }
+        #endif
         return QwenModelLocator.problem(with: modelDirectory)
     }
 
@@ -78,6 +89,12 @@ public actor QwenSummarizationEngine: SummarizationEngine {
         if let container { return container }
         if let loading { return try await loading.value }
         if let problem = await unavailabilityReason() { throw RecapError.modelFailure(problem) }
+        #if os(iOS) && !targetEnvironment(simulator)
+        // Retaining the default multi-GB allocator cache exceeds iPhone process budgets.
+        // Bound reusable buffers; active model tensors remain governed by MLX/iOS.
+        MLX.Memory.cacheLimit = 64 * 1024 * 1024
+        MLX.Memory.clearCache()
+        #endif
         let directory = modelDirectory
         let task = Task<ModelContainer, Error> {
             try await loadModelContainer(from: directory, using: HubTokenizerLoader())

@@ -10,7 +10,8 @@ import Foundation
 ///    restated (the engine's restatement, checked) or left out.
 ///
 /// Invariants: no text is produced that was not in the input (statements, or restatements the
-/// caller passes in) apart from deletions; only clearly unsupported statements are removed;
+/// caller passes in) apart from deletions, reserved history labels and checked cardinal digit
+/// spellings; only clearly unsupported statements are removed;
 /// equivalent spellings of a value are equal; reports and corrections hold reason codes and
 /// counts, never transcript text; the result depends only on the input.
 public struct SummaryPostprocessor: Sendable {
@@ -218,11 +219,17 @@ public struct SummaryPostprocessor: Sendable {
             extraCorrections.append(ReasonCode.earlierOutdatedKept.rawValue)
         }
 
+        // Previously saved text is not exempt from the hard consecutive-copy limit. Keep an
+        // unresolved earlier claim pending rather than silently lose its facts; the caller must
+        // restate it or reject this output via exceedsPrivacyLimits.
+        mergedSummary = mergedSummary.map { pass.privacyCheckedEarlier($0, isKeyPoint: false, draftNames: names) }
+        mergedPoints = mergedPoints.map { pass.privacyCheckedEarlier($0, isKeyPoint: true, draftNames: names) }
         for statement in mergedSummary + mergedPoints { pass.countVerbatim(statement) }
         var output = pass.output(summary: mergedSummary + newSummary, keyPoints: mergedPoints + newPoints)
         output.reports += extraReports
         output.corrections += extraCorrections
-        for statement in extraUncertain where !output.uncertainStatements.contains(statement) { output.uncertainStatements.append(statement) }
+        for statement in extraUncertain where (output.summaryStatements + output.keyPoints).contains(statement)
+            && !output.uncertainStatements.contains(statement) { output.uncertainStatements.append(statement) }
         output.unverifiedStatements = output.uncertainStatements
         let earlierTitle = earlier.title.trimmingCharacters(in: .whitespacesAndNewlines)
         if earlierTitle.isEmpty {
@@ -317,6 +324,7 @@ struct Pass {
     let filter: PrivacyCopyFilter
     let spoken: Set<[String]>
     let runs: Set<[String]>
+    let longRuns: Set<[String]>
     let restatements: [String: String]
     /// Grounder line index → index reported to the caller (nil: a line of the earlier recap).
     let evidenceMap: [Int?]
@@ -347,6 +355,7 @@ struct Pass {
         filter = PrivacyCopyFilter(configuration: configuration)
         spoken = PrivacyCopyFilter.spokenSentences(lines: spokenLines)
         runs = PrivacyCopyFilter.spokenRuns(lines: spokenLines, run: max(configuration.verbatimRun, 2))
+        longRuns = PrivacyCopyFilter.spokenRuns(lines: spokenLines, run: PrivacyCopyFilter.maximumConsecutiveSourceWords + 1)
         self.restatements = restatements
         self.evidenceMap = evidenceMap
     }
@@ -370,6 +379,43 @@ struct Pass {
 
     mutating func countVerbatim(_ statement: String) {
         verbatimCounts[statement] = filter.verbatimCount(of: statement, runs: runs)
+    }
+
+    mutating func privacyCheckedEarlier(_ statement: String, isKeyPoint: Bool, draftNames: Set<String>) -> String {
+        guard filter.hasOverlongSourceRun(in: statement, runs: longRuns) else { return statement }
+        let historical = SummaryText.isSuperseded(statement)
+        for (candidate, reason) in restatementCandidates(for: statement) {
+            guard !candidate.isEmpty, SummaryText.isSuperseded(candidate) == historical,
+                  filter.restatementProblem(candidate, of: statement, normalizer: normalizer) == nil,
+                  !filter.isCopy(candidate, spoken: spoken), !filter.hasOverlongSourceRun(in: candidate, runs: longRuns)
+            else { continue }
+            let check = grounder.ground(candidate, draftNames: draftNames)
+            if historical || check.verdict != .unsupported {
+                if reason == .restatedCopy, !copied.contains(statement) { copied.append(statement) }
+                restated += 1
+                corrections.append(reason.rawValue)
+                if historical || check.verdict == .uncertain { appendUncertain(candidate) }
+                reports.append(StatementReport(text: candidate, isKeyPoint: isKeyPoint, verdict: .restated,
+                                               reason: reason, evidenceLines: historical ? [] : mapped(check.evidenceLines)))
+                return candidate
+            }
+        }
+        if !copied.contains(statement) { copied.append(statement) }
+        reports.append(StatementReport(text: statement, isKeyPoint: isKeyPoint, verdict: .copied, reason: .copiedFromTranscript))
+        return statement
+    }
+
+    private func restatementCandidates(for text: String) -> [(String, ReasonCode)] {
+        // This spelling fallback repairs long-copy retention only. Short copies rejected by
+        // the count/adjacency rule still require the caller's ordinary model restatement.
+        var candidates: [(String, ReasonCode)] = []
+        if filter.hasOverlongSourceRun(in: text, runs: longRuns) {
+            candidates = CardinalFormatRestatement.candidates(for: text, normalizer: normalizer).map { ($0, .formattedCardinal) }
+        }
+        if let restated = restatements[text]?.trimmingCharacters(in: .whitespacesAndNewlines), !restated.isEmpty {
+            candidates.append((restated, .restatedCopy))
+        }
+        return candidates
     }
 
     private func mapped(_ lines: [Int]) -> [Int] {
@@ -405,9 +451,11 @@ struct Pass {
             return
         }
 
-        if filter.isCopy(text, spoken: spoken) {
+        let wholeCopy = filter.isCopy(text, spoken: spoken)
+        let overlongRun = filter.hasOverlongSourceRun(in: text, runs: longRuns)
+        if wholeCopy || overlongRun {
             let afterCopy = isKeyPoint ? lastKeyPointIsCopy : lastSummaryIsCopy
-            if configuration.keptCopyMaximumWords > 0, filter.isShortCopy(text), !afterCopy,
+            if wholeCopy, !overlongRun, configuration.keptCopyMaximumWords > 0, filter.isShortCopy(text), !afterCopy,
                ledger.mayKeep(text, maximum: configuration.maximumKeptCopies), grounding.verdict != .unsupported
             {
                 if ledger.record(text) { corrections.append(ReasonCode.keptShortCopy.rawValue) }
@@ -421,23 +469,25 @@ struct Pass {
                 remove(text, isKeyPoint: isKeyPoint, reason: grounding.reason, evidence: evidence)
                 return
             }
-            if !copied.contains(text) { copied.append(text) }
-            if let candidate = restatements[text]?.trimmingCharacters(in: .whitespacesAndNewlines), !candidate.isEmpty,
-               filter.restatementProblem(candidate, of: text, normalizer: normalizer) == nil, !filter.isCopy(candidate, spoken: spoken)
-            {
+            for (candidate, reason) in restatementCandidates(for: text) {
+                guard !candidate.isEmpty, filter.restatementProblem(candidate, of: text, normalizer: normalizer) == nil,
+                      !filter.isCopy(candidate, spoken: spoken), !filter.hasOverlongSourceRun(in: candidate, runs: longRuns)
+                else { continue }
                 let restatedText = AnalyzedText(candidate, normalizer: normalizer)
                 let check = grounder.ground(restatedText, draftNames: draftNames)
                 if check.verdict != .unsupported {
+                    if reason == .restatedCopy, !copied.contains(text) { copied.append(text) }
                     restated += 1
-                    corrections.append(ReasonCode.restatedCopy.rawValue)
+                    corrections.append(reason.rawValue)
                     keep(candidate, isKeyPoint: isKeyPoint, isCopy: false, signature: SummaryQualityEditor.signature(of: restatedText),
                          isStrong: check.verdict == .supported)
                     if check.verdict == .uncertain { appendUncertain(candidate) }
-                    reports.append(StatementReport(text: candidate, isKeyPoint: isKeyPoint, verdict: .restated, reason: .restatedCopy,
+                    reports.append(StatementReport(text: candidate, isKeyPoint: isKeyPoint, verdict: .restated, reason: reason,
                                                    evidenceLines: mapped(check.evidenceLines)))
                     return
                 }
             }
+            if !copied.contains(text) { copied.append(text) }
             removed += 1
             corrections.append(ReasonCode.copiedFromTranscript.rawValue)
             reports.append(StatementReport(text: text, isKeyPoint: isKeyPoint, verdict: .copied, reason: .copiedFromTranscript))
@@ -510,6 +560,8 @@ struct Pass {
         output.verbatimCounts = verbatimCounts
         output.verbatimLimit = configuration.maximumVerbatimShare
         output.verbatimShare = output.recomputedVerbatimShare()
+        output.sourceLongRuns = longRuns
+        output.hasOverlongSourceRun = filter.hasOverlongSourceRun(in: (summary + keyPoints).joined(separator: "\n"), runs: longRuns)
         return output
     }
 }

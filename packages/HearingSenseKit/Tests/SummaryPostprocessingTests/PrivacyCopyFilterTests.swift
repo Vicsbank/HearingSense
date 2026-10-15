@@ -76,8 +76,12 @@ let parkingAnnouncement = [
         let glued = "Someone said attention please, the north parking lot will be closed tomorrow from six a.m. for repaving, "
             + "and please park in the south lot or on Elm Street."
         let output = SummaryPostprocessor().process(DraftText(title: "", summary: glued), transcriptLines: parkingAnnouncement)
-        #expect(output.verbatimShare > 0.65)
-        #expect(output.exceedsVerbatimShare)
+        #expect(filter.verbatimShare(of: glued, transcriptLines: parkingAnnouncement) > 0.65)
+        // The aggregate measure is unchanged, but an embedded overlong run can no longer
+        // remain in the saved output while waiting for that aggregate rejection.
+        #expect(output.summary.isEmpty)
+        #expect(output.copiedNeedingRestatement == [SummaryQualityEditor.tidied(glued)])
+        #expect(output.reports.first?.verdict == .copied)
     }
 
     @Test func aRestatementMustCarryTheSameFactsAndNothingElse() {

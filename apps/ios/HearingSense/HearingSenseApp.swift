@@ -50,6 +50,7 @@ struct HearingSenseApp: App {
                         await Window7SelfTest(controller: controller).run()
                     }
                     // The Window 9 engine and postprocessing walk-through, microphone off; see Window9SelfTest.
+                    if QwenModelInstall.isRequested { await QwenModelInstall.run() }
                     if Window9SelfTest.isRequested {
                         await Window9SelfTest(controller: controller).run()
                     }

@@ -15,8 +15,7 @@ public enum SummaryText {
     /// a title ("… the meeting with Ms." | "Wang takes place …") is joined to the next one.
     public static func sentences(in text: String) -> [String] {
         var sentences: [String] = []
-        for paragraph in text.split(whereSeparator: \.isNewline) {
-            let paragraph = String(paragraph)
+        for paragraph in text.split(whereSeparator: \.isNewline).flatMap({ explicitStops(in: String($0)) }) {
             var current: [String] = []
             paragraph.enumerateSubstrings(in: paragraph.startIndex..., options: .bySentences) { substring, _, _, _ in
                 if let sentence = substring?.trimmingCharacters(in: .whitespacesAndNewlines), !sentence.isEmpty {
@@ -30,6 +29,27 @@ public enum SummaryText {
             sentences += current
         }
         return sentences
+    }
+
+    /// Foundation may treat a full stop followed by a lowercase word as an abbreviation.
+    /// Model drafts often use lowercase sentence starts throughout; explicit stops still bound
+    /// their claims. Keep titles, clock meridiems, common abbreviations and initials intact.
+    private static func explicitStops(in text: String) -> [String] {
+        guard let expression = try? NSRegularExpression(pattern: #"[.!?]\s+(?=[A-Za-z])"#) else { return [text] }
+        let abbreviations = titleAbbreviations.union(["a.m.", "p.m.", "e.g.", "i.e.", "etc.", "u.s.", "u.k."])
+        var result: [String] = []
+        var start = text.startIndex
+        for match in expression.matches(in: text, range: NSRange(text.startIndex..., in: text)) {
+            guard let range = Range(match.range, in: text) else { continue }
+            let stop = text.index(after: range.lowerBound)
+            let last = text[..<stop].split(whereSeparator: \.isWhitespace).last.map(String.init)?.lowercased() ?? ""
+            let initial = last.count == 2 && last.last == "." && last.first?.isLetter == true
+            if text[range.lowerBound] == ".", abbreviations.contains(last) || initial { continue }
+            result.append(String(text[start ..< stop]))
+            start = range.upperBound
+        }
+        if start < text.endIndex { result.append(String(text[start...])) }
+        return result
     }
 
     /// The statements of a draft in order: the summary's sentences, then the key points (trimmed,

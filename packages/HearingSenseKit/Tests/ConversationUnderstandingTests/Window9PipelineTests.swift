@@ -22,6 +22,19 @@ private let qwen = SummarizationEngineIdentity(kind: .qwen, modelID: "mlx-commun
 
 @Suite("Window 9 pipeline (scripted summarizers)")
 struct Window9PipelineTests {
+    @Test func finalSaveRejectsEmbeddedCopyEvenBelowAggregateLimit() {
+        let source = "The cupcake order for the party is twenty four, delivered by noon on Saturday."
+        let independent = "Maria rebooks for Tuesday morning because her flight was cancelled. The bus departs at 3:30 from the entrance. Dana brings programs and parking is behind the library."
+        let engine = ConversationRecapEngine(summarizer: ScriptedSummarizer())
+        let recap = ConversationRecap(title: "Plans", summary: independent,
+                                      keyPoints: ["Someone said that " + source.lowercased()], source: .languageModel)
+        #expect(RecapValidator().verbatimShare(of: recap.summary + recap.keyPoints.joined(), transcript: source) < 0.65)
+        #expect(!engine.maySave(recap, transcript: source))
+        var restated = recap
+        restated.keyPoints = ["The cupcake order for the party is 24, delivered by noon on Saturday."]
+        #expect(engine.maySave(restated, transcript: source))
+    }
+
     private let meeting = [
         "the team meeting is Thursday at seven forty five",
         "actually move it to Friday the same time works better for Dana",

@@ -28,6 +28,7 @@ final class Window9SelfTest {
     static var isRequested: Bool {
         ProcessInfo.processInfo.arguments.contains(argument)
             || ProcessInfo.processInfo.arguments.contains("--hs-w9-runtime-probe")
+            || ProcessInfo.processInfo.arguments.contains("--hs-w9-apple-draft-probe")
             || ProcessInfo.processInfo.arguments.contains("--hs-w9-audit-synthetic-history")
     }
 
@@ -62,8 +63,13 @@ final class Window9SelfTest {
     private static let oldSentence = "The zebra exhibit at the museum opens in March."
 
     func run() async {
+        // Metal inference is foreground-only. Keep this explicit synthetic walkthrough
+        // awake, restoring the user's normal auto-lock behavior when it finishes.
+        let idleTimerWasDisabled = UIApplication.shared.isIdleTimerDisabled
+        UIApplication.shared.isIdleTimerDisabled = true
+        defer { UIApplication.shared.isIdleTimerDisabled = idleTimerWasDisabled }
         guard !DeviceTestMode.configuration.prohibitsModelInference else {
-            note("Window 9 self-test NOT RUN: model inference is prohibited by the device test mode. Launch with --hs-test-mode off.")
+            note("Window 9 self-test NOT RUN: model inference is prohibited by the device test mode. Use --hs-test-mode locked --hs-test-allow model for synthetic testing.")
             write()
             return
         }
@@ -75,6 +81,10 @@ final class Window9SelfTest {
             await runRuntimeProbe()
             return
         }
+        if ProcessInfo.processInfo.arguments.contains("--hs-w9-apple-draft-probe") {
+            await runSyntheticAppleDraftProbe()
+            return
+        }
         let conversation = controller.conversation
         let live = controller.liveActivity
         let expectation = Self.argumentValue("--hs-w9-expect") ?? "qwen"
@@ -82,7 +92,7 @@ final class Window9SelfTest {
         note("Microphone: off (synthetic capture). Speech is synthetic text. Expected engine: \(expectation).")
         note("History store: \(ConversationIntelligenceController.usesMemoryOnly ? "memory only" : "isolated synthetic disk store").")
         check("9", "ticket-payment assertion covers spellings and clause-bound cancellation",
-              Self.paymentAssertionControlsPass, "seven synthetic assertion counterexamples")
+              Self.paymentAssertionControlsPass, "synthetic assertion counterexamples")
         await wait(8) { conversation.isLanguageModelAvailable }
         note("Some engine available: \(conversation.isLanguageModelAvailable)")
         note("")
@@ -94,6 +104,7 @@ final class Window9SelfTest {
         // Speech alone never summarizes; old speech is not kept.
         conversation.transcriptionProvider = { true }
         let historyBefore = conversation.history.count
+        let historyIDsBefore = Set(conversation.history.map(\.id))
         say(Self.oldSentence, secondsAgo: 200)
         for line in Self.firstPart {
             say(line)
@@ -213,9 +224,13 @@ final class Window9SelfTest {
                   "reopened synthetic store")
         }
         check("17", "the temporary transcript is gone", conversation.captions.isEmpty, "\(conversation.captions.count) captions")
-        let longest = Self.longestSharedRun(between: conversation.history.map(\.fullText).joined(separator: "\n"),
+        // Earlier synthetic runs deliberately preserve failure evidence. Judge the record
+        // created by this run, rather than inheriting an older run's privacy failure.
+        let savedThisRun = conversation.history.first.flatMap { historyIDsBefore.contains($0.id) ? nil : $0 }
+        let longest = Self.longestSharedRun(between: savedThisRun?.fullText ?? "",
                                             and: (Self.firstPart + Self.laterPart))
-        check("17", "no stored text repeats more than 12 words of the speech in a row", longest <= 12, "longest shared run \(longest) words")
+        check("17", "no newly stored text repeats more than 12 words of the speech in a row",
+              savedThisRun != nil && longest <= 12, "this run's completed record; longest shared run \(longest) words")
 
         // Cancellation: switching OFF while a summary is being written.
         for line in Self.firstPart.prefix(6) {
@@ -232,12 +247,67 @@ final class Window9SelfTest {
               "phase \(conversation.phase.rawValue), session \(controller.session.phase.rawValue)")
         note("")
         note("Engines: " + (conversation.reportText().split(separator: "\n").first { $0.contains("Summary engines") }.map(String.init) ?? "–"))
-        note("Memory footprint at end: \(ProcessResourceUsage.sample().memoryFootprintMB.map { String(Int($0)) } ?? "–") MB (Simulator, Mac hardware; not an iPhone figure)")
+        #if targetEnvironment(simulator)
+        let memoryContext = "Simulator on Mac hardware"
+        #else
+        let memoryContext = "physical iPhone process"
+        #endif
+        note("Memory footprint at end: \(ProcessResourceUsage.sample().memoryFootprintMB.map { String(Int($0)) } ?? "–") MB (\(memoryContext))")
         note("RESULT: \(passed) checks passed, \(failed) failed")
         write()
     }
 
     // MARK: - Helpers
+
+    /// Explicit Debug diagnostic of the hardcoded fixture only. Never reads captions,
+    /// History or supplied text; ordinary speech cannot enter the exported JSON.
+    private func runSyntheticAppleDraftProbe() async {
+        guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let url = documents.appendingPathComponent("hearing-sense-w9-apple-draft-synthetic.json")
+        let model = FoundationModelRecapSummarizer()
+        var report: [String: Any] = ["synthetic_only": true, "fixture": "Window9SelfTest.firstPart", "status": "running"]
+        func writeProbe() {
+            if let data = try? JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]) {
+                try? data.write(to: url, options: .atomic)
+            }
+        }
+        writeProbe()
+        do {
+            let draft = try await model.recap(transcript: Self.firstPart.joined(separator: "\n"),
+                                               notes: ["Listening began during this conversation; its beginning is missing."])
+            let text = DraftText(title: draft.title, summary: draft.summary, keyPoints: draft.keyPoints)
+            let processor = SummaryPostprocessor()
+            let first = processor.process(text, transcriptLines: Self.firstPart)
+            report["rawSummary"] = draft.summary
+            report["rawKeyPoints"] = draft.keyPoints
+            report["copiedNeedingRestatement"] = first.copiedNeedingRestatement
+            var answers: [String: String] = [:]
+            var gates: [[String: Any]] = []
+            for statement in first.copiedNeedingRestatement.prefix(3) {
+                do {
+                    let candidate = try await model.restate(statement)
+                    answers[statement] = candidate
+                    let filter = PrivacyCopyFilter()
+                    let grounded = ClaimGrounder(lines: Self.firstPart).ground(candidate)
+                    gates.append(["input": statement, "candidate": candidate,
+                                  "restatementProblem": filter.restatementProblem(candidate, of: statement)?.rawValue ?? "none",
+                                  "wholeCopy": filter.isCopy(candidate, spoken: PrivacyCopyFilter.spokenSentences(lines: Self.firstPart)),
+                                  "overlongRun": filter.hasOverlongSourceRun(in: candidate, transcriptLines: Self.firstPart),
+                                  "grounding": String(describing: grounded.verdict), "reason": grounded.reason.rawValue])
+                }
+                catch { answers[statement] = "ERROR: " + String(describing: type(of: error)) }
+                report["restatements"] = answers
+                report["candidateGates"] = gates
+                writeProbe()
+            }
+            let output = processor.process(text, transcriptLines: Self.firstPart, restatements: answers)
+            report["finalSummary"] = output.summary
+            report["finalKeyPoints"] = output.keyPoints
+            report["reasons"] = output.reports.map { ["text": $0.text, "reason": $0.reason] }
+            report["status"] = "complete"
+        } catch { report["status"] = "failure_" + String(describing: type(of: error)) }
+        writeProbe()
+    }
 
     /// Replays only changed assertions on the actual saved synthetic Qwen result. Never
     /// opens the ordinary History store and never describes this audit as model inference.
@@ -249,7 +319,7 @@ final class Window9SelfTest {
             return
         }
         check("control", "payment assertion rejects current prices and accepts bound cancellations",
-              Self.paymentAssertionControlsPass, "seven synthetic counterexamples")
+              Self.paymentAssertionControlsPass, "synthetic counterexamples")
         do {
             let store = try SwiftDataConversationHistory(inMemory: false)
             guard let record = try store.all().first else {
@@ -280,6 +350,11 @@ final class Window9SelfTest {
             && !hasCurrentFixtureTicketPayment(in: "Superseded: Attendees need to bring twenty dollars for tickets, while the bus departs at 3:30 PM.")
             && !hasCurrentFixtureTicketPayment(in: "The tickets are now free, so the requirement to bring twenty dollars is cancelled.")
             && !hasCurrentFixtureTicketPayment(in: "The tickets are now free, cancelling the need to bring twenty dollars.")
+            && !hasCurrentFixtureTicketPayment(in: "Tickets are free now so no need for twenty dollars the bus leaves at 3:30.")
+            && !hasCurrentFixtureTicketPayment(in: "Tickets are free now, so no need for the twenty dollars.")
+            && hasCurrentFixtureTicketPayment(in: "No need for bus travel, tickets cost twenty dollars.")
+            && hasCurrentFixtureTicketPayment(in: "No need for twenty dollars if Dana pays.")
+            && hasCurrentFixtureTicketPayment(in: "It is not no need for twenty dollars.")
     }
 
     /// Inspect the typed cardinal rather than its spelling (e.g. twenty-four / 24).
@@ -322,7 +397,12 @@ final class Window9SelfTest {
                         ["cancelling", "the", "need", "to", "bring"],
                         ["canceling", "the", "need", "to", "bring"],
                     ].contains(before)
-                    if !cancelledRequirement && !cancellingRequirement { return true }
+                    // Actual Apple output can omit punctuation before the next topic.
+                    // Only an entire, unconditional `no need for [the] AMOUNT` clause
+                    // cancels this fixture's payment; every other amount is still checked.
+                    let noNeed = [["no", "need", "for"], ["no", "need", "for", "the"]].contains(before)
+                        && !after.contains { ["if", "unless", "until", "except", "when"].contains($0) }
+                    if !cancelledRequirement && !cancellingRequirement && !noNeed { return true }
                 }
             }
         }

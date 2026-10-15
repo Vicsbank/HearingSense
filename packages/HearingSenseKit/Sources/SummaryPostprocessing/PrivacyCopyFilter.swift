@@ -11,7 +11,10 @@ import Foundation
 ///   `maximumKeptCopies` of them per recap (each sentence once), never two next to each other;
 /// - every other copy is restated by the model (in memory) or left out;
 /// - the whole text may repeat the transcript word for word up to `maximumVerbatimShare`.
+/// Independently, no kept text may contain more than twelve consecutive source words, even
+/// inside a longer paraphrase, narration wrapper, or several adjacent statements.
 public struct PrivacyCopyFilter: Hashable, Sendable {
+    public static let maximumConsecutiveSourceWords = 12
     public var configuration: PostprocessingConfiguration
 
     public init(configuration: PostprocessingConfiguration = .standard) {
@@ -48,6 +51,20 @@ public struct PrivacyCopyFilter: Hashable, Sendable {
     /// A copy short enough to be kept as it was said (before the count and adjacency limits).
     public func isShortCopy(_ statement: String) -> Bool {
         SummaryText.words(in: statement).count <= configuration.keptCopyMaximumWords
+    }
+
+    /// Hard consecutive-word limit, independent of the aggregate share and whole-copy rule.
+    /// Runs may span output sentence boundaries, but never separate source utterances.
+    public func hasOverlongSourceRun(in text: String, transcriptLines: [String]) -> Bool {
+        hasOverlongSourceRun(in: text, runs: Self.spokenRuns(lines: transcriptLines,
+                                                          run: Self.maximumConsecutiveSourceWords + 1))
+    }
+
+    func hasOverlongSourceRun(in text: String, runs: Set<[String]>) -> Bool {
+        let words = SummaryText.words(in: text)
+        let length = Self.maximumConsecutiveSourceWords + 1
+        guard words.count >= length else { return false }
+        return (0 ... words.count - length).contains { runs.contains(Array(words[$0 ..< $0 + length])) }
     }
 
     /// Words of one statement, and how many lie in a run of `verbatimRun` words of one utterance.

@@ -102,6 +102,8 @@ public enum ReasonCode: String, Hashable, Sendable, CaseIterable {
     case locallySupported = "locally_supported"
     case keptShortCopy = "kept_short_copy"
     case restatedCopy = "restated_copy"
+    /// A checked, deterministic cardinal spelling change; no model restatement was needed.
+    case formattedCardinal = "formatted_cardinal"
     case earlierRecap = "earlier_recap"
     case missingSpeechMarker = "missing_speech_marker"
     case verifierConfirmed = "verifier_confirmed"
@@ -205,12 +207,19 @@ public struct PostprocessingOutput: Hashable, Sendable {
     /// The limit `verbatimShare` is held against (from the configuration).
     public var verbatimLimit = 0.65
 
+    /// Hard twelve-word limit, including embedded copies and output-boundary joins.
+    public var hasOverlongSourceRun = false
+
     var verbatimCounts: [String: VerbatimCount] = [:]
+    /// Speech-derived runs in memory only, for rechecking joins after verifier deletions.
+    var sourceLongRuns: Set<[String]> = []
 
     public init() {}
 
     /// More of the text repeats the transcript than a summary may: not to be shown or saved as one.
     public var exceedsVerbatimShare: Bool { verbatimShare > verbatimLimit }
+
+    public var exceedsPrivacyLimits: Bool { exceedsVerbatimShare || hasOverlongSourceRun }
 
     /// How many statements ended with each reason (codes and counts only: safe to log).
     public var reasonCounts: [String: Int] {
@@ -258,6 +267,8 @@ public struct PostprocessingOutput: Hashable, Sendable {
         output.uncertainStatements = open
         output.unverifiedStatements = open
         output.verbatimShare = output.recomputedVerbatimShare()
+        output.hasOverlongSourceRun = PrivacyCopyFilter().hasOverlongSourceRun(
+            in: (output.summaryStatements + output.keyPoints).joined(separator: "\n"), runs: output.sourceLongRuns)
         return output
     }
 
