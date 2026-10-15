@@ -1,6 +1,39 @@
 # Project Handoff — Hearing Sense iOS 2.0
 
-Last updated: 2026-10-14, **Window 9 native Qwen CPU runtime and postprocessing integration**.
+Last updated: 2026-10-14, **Window 9 authorized iPhone repair and installation**.
+
+Validated source `c33804a04c71ca6e0ec05bef388e6aaafe31dd69` on
+`feature/window9-summary-postprocessing`, worktree `.claude/worktrees/window9`. The student's later
+instruction explicitly authorized repair and installation on the connected iPhone, superseding the
+original Simulator-only scope for this phase. Other worktrees remain untouched; no merge or push.
+
+The final Release build is installed and launches on iPhone 18 Pro (`iPhone19,2`, iOS 27.2).
+The exact existing Qwen revision is checksum-verified and atomically installed outside the 54-MiB
+app bundle. Native Metal Qwen and actual Apple fallback each pass **28/28 fresh synthetic app
+checks in the final Debug binary**. Qwen is the real default: recap 8.6 s; Continue 33.9 s including
+20 s cadence; UI gap 6 ms. Apple fallback: recap 3.9 s; Continue 24.7 s; UI gap 3 ms. Final saved
+summaries are 828/575 characters; maximum source-word runs 9/12. History/disk reopen, corrected
+dates/payment, quantity retention, preview separation, Stop and cancellation pass. Core: 676 pass,
+9 optional skips, zero failures; cached-model installer: six native synthetic checks pass.
+
+Phone loading initially hit the default per-process memory limit. The student explicitly approved
+the developer-profile change: signed Increased Memory Limit, 64-MiB MLX allocator cache and a
+cold-load headroom guard resolve the observed failure on this phone. Native probe: load 1.858 s,
+total 8.990 s, 41.17 tokens/s, MLX peak 3.035 GB (not whole-process memory). Lowercase draft sentence
+boundaries and embedded/inherited copying are checked. Apple's actual echo lost a supported
+quantity; a narrow, fully checked cardinal spelling variant preserves it without another model
+retry or relaxing the short-copy caps. Earlier failed reports are retained.
+
+Read [Window 9 iPhone validation](testing/WINDOW9_IPHONE_VALIDATION.md) and `results/window9/phone_*`
+for evidence and reproduction. All input was fixed synthetic English, microphone off. Runtime
+walkthroughs use Debug aids; final Release was separately built, installed and launched. No real
+speech, background/lock-screen Metal inference, thermal endurance or broad independent factual
+validation was performed. Ordinary app data/settings were preserved; its private History backup
+export was rejected by automatic review and was not retried. No ordinary transcript was exported.
+
+The previous Simulator-phase snapshot follows for historical context.
+
+Earlier snapshot: 2026-10-14, **Window 9 native Qwen CPU runtime and postprocessing integration**.
 
 Window 9 worktree `.claude/worktrees/window9`, branch `feature/window9-summary-postprocessing`,
 continues Claude's `09db91f` from the preserved Window 8 snapshot. Qwen is the configured primary

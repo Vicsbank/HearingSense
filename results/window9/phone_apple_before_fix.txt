@@ -1,0 +1,39 @@
+Hearing Sense Window 9 self-test · 2026-10-15T01:21:21Z · iPhone19,2, iOS 27.2
+Microphone: off (synthetic capture). Speech is synthetic text. Expected engine: fallback.
+History store: isolated synthetic disk store.
+[PASS] 9    ticket-payment assertion covers spellings and clause-bound cancellation — seven synthetic assertion counterexamples
+Some engine available: true
+
+[PASS] A    Hearing Sense ON — state Listening
+[PASS] 6    normal speech does not start a summary — phase idle, summaries 0
+[PASS] 5    only the last two minutes are buffered — 9 utterances buffered
+Engine attempt: Qwen (Qwen3.5-4B-MLX-4bit), 0 s, qwen_model_not_installed
+Engine attempt: Apple on-device model, 3.570093 s, success
+[PASS] 7    a complete summary was written — tap to ready 4.6 s, model 4.56 s
+[PASS] 18   progress is shown while the model works — phase seen: true, island summarizing
+[PASS] 18   the main actor was never blocked for long during inference — longest gap 4 ms
+[PASS] 4    Qwen unavailable → Apple's model wrote it, and the reason is recorded — engine Apple on-device model, fallback qwen_model_not_installed
+[PASS] 8    the summary is saved with the engine's name — stored Apple on-device model
+[PASS] 8    supported facts survived postprocessing (day, times, money, names) — checked four facts
+[PASS] 9    written and spoken numbers agree: nothing deleted for its spelling — bus time and cupcake count present
+[PASS] 10   unsupported additions are absent (invented sofa decision, old sentence) — checked
+[PASS] 12   the correction replaced the old day: Friday stated, Thursday not stated as current — summary mentions Thursday only as the former day: true
+[PASS] 16   the island preview is a part; the stored summary is whole — stored 472 characters, preview 85 characters
+[PASS] 11   Continue starts following — phase continuing
+[PASS] 11   the update added the new facts (Saturday, parking, Dana) — updates 1, Saturday true, parking/library true, Dana true, speech to update 23.6 s
+[PASS] 12   the new correction replaced the outdated day (Friday no longer current for the meeting) — meeting Friday current: false
+[PASS] 11   Continue kept unrelated facts across summary and key points — flight, bus time and cupcake count present
+[FAIL] 12   free tickets supersede the payment instruction in summary and key points — old payment current: true
+[PASS] 11   the update did not duplicate earlier statements — duplicate sentences 0
+[PASS] 11   the engine of the update is named — engine Apple on-device model
+[PASS] 13   Stop saves the final summary as completed — saved 1, newest completed
+[PASS] 14   Stop does not stop listening — state Listening
+[PASS] 15   the full summary is in History, unabridged — stored 516 characters
+[PASS] 15   a fresh disk store reads the completed full summary and engine — reopened synthetic store
+[PASS] 17   the temporary transcript is gone — 0 captions
+[FAIL] 17   no stored text repeats more than 12 words of the speech in a row — longest shared run 14 words
+[PASS] 19   OFF during a summary cancels cleanly — phase idle, session off
+
+Engines: Summary engines (Window 9): qwen: mlx-community/Qwen3.5-4B-MLX-4bit @ unknown · unknown · mlx-swift-lm 3.32.3 / mlx-swift 0.32.3 / swift-transformers 1.3.5 + hearing-sense simulator-cpu-v1 adapter → fallback appleFoundationModels: SystemLanguageModel.default @ system · system · FoundationModels · last summary by Apple on-device model (fallback: qwen_model_not_installed) · model preparation requested: no
+Memory footprint at end: 27 MB (Simulator, Mac hardware; not an iPhone figure)
+RESULT: 26 checks passed, 2 failed

@@ -31,6 +31,8 @@ Shared: `Lexicon.swift` (word lists, a deterministic suffix stemmer, a small syn
    words only deleted: narration opener, a doubled word; the first letter may be capitalized.
    Merge may add the fixed presentation label "Superseded:" to an earlier compound statement
    whose correction is known but whose unrelated details cannot safely survive replacement.
+   A checked spelling-only cardinal conversion may replace an unambiguous number-word span with
+   equivalent digits, without changing any other text (`formatted_cardinal`).
    (`everyOutputStatementWasAnInputStatement`, `tidyingNeverAddsAWord`.)
 2. **Fail closed only on clear contradictions.** Removed (`unsupported`): a value or name never said
    (`invented_value`, `invented_name`), a value whose own words point to another utterance holding a
@@ -247,3 +249,65 @@ Synthetic regressions cover the observed generic forms, new structural variants,
 cleanup, meaningful negative and uncertain decisions, missing speech, and necessary short quotes.
 Scope remains bounded English lexical structure: arbitrary paraphrases of narration may remain, and
 no absence or uncertain substantive claim is deleted solely for being negative or uncertain.
+
+### Physical-phone synthetic fallback regression
+
+The fixed `Window9SelfTest` Apple fallback draft exposed two distinct boundaries: lowercase sentence
+starts must not let a historical meeting change or sofa uncertainty conceal a separate current payment
+instruction, and an embedded source passage must not evade privacy checks merely by having extra
+narration around it. `SummaryText.sentences` now respects explicit English full stops independent of
+the next word's case, retaining bounded title/meridiem/common abbreviations and initials. Once isolated,
+the original ticket instruction is rejected by the existing explicit payment-waiver correction.
+
+`PrivacyCopyFilter.hasOverlongSourceRun(in:transcriptLines:)` independently rejects more than twelve
+consecutive source words. The aggregate Window 7 verbatim-share calculation and approved short-copy
+caps remain unchanged. New statements and supplied restatements with embedded long runs enter the
+existing bounded restatement path; an unchanged source passage with a narration prefix is not a fix.
+Inherited long copies are also queued for restatement. If none is accepted, their facts remain pending
+in the returned output, which is **not safe to display/save** (`hasOverlongSourceRun == true`). This avoids
+silently deleting earlier facts merely to produce an apparently valid update. Accepted inherited
+restatements retain historical markers and must preserve the existing values, negations and content.
+
+Every final output also checks runs across summary/key-point and sentence boundaries, and rechecks
+after verifier deletions. `PostprocessingOutput.exceedsPrivacyLimits` combines that hard bound with the
+aggregate share. Callers must use it before accepting output; the engine's full-rewrite path must use
+its existing bounded restatement retry, and final-save validation must also invoke the public run check.
+These caller changes belong to the coordinating agent. No new model request mechanism, persistence
+or logging is introduced by the module. Source-run sets remain private, in-memory evidence only.
+
+Six phone-fixture regressions cover lowercase boundaries and complete factual retention, corrected
+payments, narration-wrapped copies, unsafe restatements, inherited-copy restatement, and output joins
+including verifier deletion. They contain only the fixed synthetic self-test speech. Execution and
+physical-phone acceptance remain with the coordinating agent; no new native result is claimed here.
+
+### Deterministic cardinal spelling before model restatement
+
+The isolated native Apple diagnostic confirmed that its restatement response echoed the synthetic
+cupcake sentence, changing only capitalization or punctuation. The long-copy rejection was correct;
+accepting that echo would retain fourteen consecutive source words and is not a fix.
+
+Before requesting a model restatement, the copy pass now tries a spelling-only variant for a unique,
+unquoted, two-word tens-plus-unit integer cardinal. Existing typed readings and number-word tables
+must establish the exact value; the original span alone is replaced with digits. All other characters,
+names, negatives, uncertainty, deadlines and relationships remain unchanged. Dates, ordinals, money,
+durations, ambiguous spoken time/number readings, digit strings, capitalized number names, literal
+quotes and explicit identifier contexts are excluded. Time/date prepositions and repeated identical
+word spans also conservatively prevent conversion. This deliberately bounded rule covers composed
+cardinals between twenty-one and ninety-nine, not arbitrary numeric-language rewriting.
+
+Every variant still needs `restatementProblem == nil`, ordinary grounding, no whole-source copy and
+no overlong source run. The aggregate share and final output guards remain active. The same path
+handles fresh and inherited copies; accepted spelling variants do not queue another model request.
+This automatic path is attempted only for an existing overlong source run; it cannot turn short
+copies rejected by adjacency or count caps into formatted copies. Caller-supplied model restatements
+retain their existing acceptance and queue behavior.
+Reports use the distinct `formatted_cardinal` reason with a restated verdict/count, so diagnostics
+never misattribute deterministic work to model generation. Unsupported original claims are rejected
+before trying the variant. Historical framing is preserved on inherited statements.
+
+New regressions cover multiple cardinal spellings, the actual Apple echo, preserved prohibition,
+an unsupported negation reversal, excluded ambiguous/typed/literal/identifier values, inherited facts,
+and a candidate that would copy another source sentence or leave another long run. Prior phone
+regressions now require safe automatic formatting rather than deletion when the numeric variant is
+provably accepted. All text remains fixed synthetic material; no new model call, logging or persistence
+is introduced. Full core and fresh phone acceptance are performed by the coordinating agent.

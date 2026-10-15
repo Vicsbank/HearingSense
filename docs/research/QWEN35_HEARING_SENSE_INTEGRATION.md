@@ -2,7 +2,9 @@
 
 2026-10-13/14. Branch `feature/window9-summary-postprocessing`, worktree `.claude/worktrees/window9`.
 Continued from Claude's `09db91f`; the `03f5802` snapshot already includes Window 8 UI work.
-Other worktrees were left alone. Nothing was merged, pushed, installed on, or run on a physical iPhone.
+Other worktrees were left alone. Nothing was merged or pushed. The initial scope was Simulator-only;
+on October 14 the student separately authorized repair and installation on the connected iPhone.
+See [native iPhone validation](../testing/WINDOW9_IPHONE_VALIDATION.md) for that later phase.
 
 ## Status
 
@@ -56,7 +58,9 @@ the app's outer initial request limit allows both attempts (626 s Simulator, 66 
 Simulator guarded rewrite uses that same outer budget. Timeouts use cooperative
 cancellation: an uncooperative native call can delay return. Fatal C++ assertions and process OOM
 cannot be recovered by a Swift `catch`; Simulator rejects a misconfigured GPU backend before loading.
-There is no claim of validated physical-device resource-exhaustion behavior.
+The later phone phase observed and repaired an actual cold-load process-limit kill. A preflight
+headroom guard can now route a cold load to Apple; pressure-injection and arbitrary later resource
+exhaustion remain unvalidated (see the iPhone report).
 
 Drafts carry their actual engine and fallback reason. Saved records have optional `engineLabel`
 and `fallbackReason`, permitting old records without these fields. Apple is identified by the public
@@ -147,13 +151,18 @@ is supplied separately by the maintained native adapters in
 The generated Swift source dependencies are ignored by Git and hold no model weights. Preparation
 verifies source-tree hashes; `--refresh` applies an adapter change only to a verified export.
 
-## Eventual iPhone requirements
+## iPhone deployment and remaining requirements
 
-No physical-device validation was authorized or performed. A future separately authorized phase needs:
+The later authorized phase now delivers this exact cached checkpoint outside the app bundle,
+verifies its manifest/checksums and activates it atomically. Real iPhone Metal inference and a fresh
+28/28 synthetic Qwen app workflow pass. The default process budget initially killed loading; the
+signed Increased Memory Limit capability, 64 MiB allocator-cache cap and cold-load headroom guard
+address that failure on the tested device. See the device report for measured values and limits.
+Remaining work beyond this development installation includes:
 
-1. A supported Apple GPU/device and genuine device execution of this exact checkpoint.
-2. Model delivery outside the app bundle: atomic installation, space checks, shard completeness,
-   model revision/checksum manifest, license attribution and a user-visible download/removal policy.
+1. Validation on more supported devices and under actual memory/thermal pressure.
+2. A production model download/removal interface, storage-budget preflight and signed remote-update
+   policy; this phase implements explicit cable delivery, shard completeness, checksums and attribution.
 3. Measured cold/warm latency, memory pressure, thermal behavior, background operation and cancellation
    on that device. Mac and Simulator timings are not iPhone estimates.
 4. An actual old-store SwiftData migration test; adding optional fields is compatible in intent,

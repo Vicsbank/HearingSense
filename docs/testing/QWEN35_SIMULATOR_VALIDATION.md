@@ -3,6 +3,11 @@
 2026-10-13/14. Branch `feature/window9-summary-postprocessing`; all inputs in this phase are
 synthetic English. Mac and iOS Simulator only. No physical iPhone access or microphone capture.
 
+This report retains the original Simulator phase. The separately authorized October 14 iPhone
+repair/install phase is documented in [Window 9 iPhone validation](WINDOW9_IPHONE_VALIDATION.md).
+Its native Metal inference and functioning phone Apple fallback supersede the deployment blockers
+for that tested phone; the Mac/Simulator Apple catalog failure remains environment-specific.
+
 ## Native Qwen Simulator runtime
 
 The previous stock-runtime Metal blocker is resolved through a maintained native CPU adapter.
