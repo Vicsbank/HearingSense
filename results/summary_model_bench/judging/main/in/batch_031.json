@@ -1,0 +1,652 @@
+{
+ "batch": "batch_031",
+ "conversations": [
+  {
+   "conversation": "fin-zh-019",
+   "language": "zh",
+   "transcript": [
+    "1. 那个方案我们到底用哪个",
+    "2. 就是小李上周发的那个还是老张改过的",
+    "3. 老张改过的比较完整",
+    "4. 但是预算超了",
+    "5. 超多少",
+    "6. 超了大概三万",
+    "7. 那小李那个呢",
+    "8. 小李那个预算内但是缺了售后部分",
+    "9. 那就用老张的把预算压一下",
+    "10. 他说压不下来",
+    "11. 谁说的",
+    "12. 老张刚才说的他说最多压一万",
+    "13. 那还超两万",
+    "14. 那就先去问问财务有没有机动经费",
+    "15. 财务那边我去问",
+    "16. 行周五之前给结果",
+    "17. 周五还是周四",
+    "18. 周五周四太赶了",
+    "19. 那就下周一",
+    "20. 好那我把会议纪要整理一下",
+    "21. 发到大家邮箱里你们看看有没有漏的",
+    "22. 没问题"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "团队在小李上周发的方案和老张改过的方案之间选择，老张改过的比较完整。",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f2",
+     "text": "老张的方案预算超出约三万元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "小李的方案在预算内，但缺少售后部分。",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "决定采用老张的方案并压缩预算。",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f5",
+     "text": "老张说预算最多只能压缩一万元，仍超出约两万元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "有人要去财务询问有没有机动经费。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "出结果的时间由原说的周五改为下周一，因为周四周五太赶。",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "财务已经批准了机动经费。"
+    },
+    {
+     "id": "n2",
+     "text": "去问财务的人是小李或老张（未说明）。"
+    },
+    {
+     "id": "n3",
+     "text": "结果周五之前给出（已改为下周一）。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "财务是否有机动经费不确定，尚未询问。"
+    },
+    {
+     "id": "u2",
+     "text": "超出的两万元缺口如何解决没有确定。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation centered on choosing between two project proposals: one by Xiao Li and one revised by Lao Zhang."
+      },
+      {
+       "u": "a2",
+       "text": "Lao Zhang's version had a budget overrun of approximately 30,000, while Xiao Li's was within budget but lacked after-sales support."
+      },
+      {
+       "u": "a3",
+       "text": "The group agreed to reduce Lao Zhang's budget by 10,000, but since that still left a 20,000 overrun, they decided to ask finance about discretionary funds."
+      },
+      {
+       "u": "a4",
+       "text": "Finance was to be contacted by someone, with results expected by Friday."
+      },
+      {
+       "u": "a5",
+       "text": "The meeting was scheduled for the following Monday, and someone will organize and distribute meeting minutes to the group."
+      },
+      {
+       "u": "k1",
+       "text": "The discussion was about which project proposal to use: Xiao Li's or Lao Zhang's revised version."
+      },
+      {
+       "u": "k2",
+       "text": "Lao Zhang's version had a budget overrun of approximately 30,000."
+      },
+      {
+       "u": "k3",
+       "text": "Xiao Li's version was within budget but lacked after-sales support."
+      },
+      {
+       "u": "k4",
+       "text": "The group agreed to reduce Lao Zhang's budget by 10,000."
+      },
+      {
+       "u": "k5",
+       "text": "Even after the reduction, Lao Zhang's budget was still over by 20,000."
+      },
+      {
+       "u": "k6",
+       "text": "Finance was asked to check for discretionary funds."
+      },
+      {
+       "u": "k7",
+       "text": "Finance will provide a response by Friday."
+      },
+      {
+       "u": "k8",
+       "text": "The next meeting is scheduled for Monday."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于方案选择，团队讨论了小李上周提交的版本与老张修改后的版本，后者虽更完整但预算超支约三万元，而小李的版本虽在预算内却缺少售后部分。"
+      },
+      {
+       "u": "a2",
+       "text": "最终决定采用老张的方案，但需先向财务咨询是否有机动经费以压缩预算，老张此前表示最多只能压减一万元，因此仍需进一步确认。"
+      },
+      {
+       "u": "a3",
+       "text": "财务方面将由小李负责跟进，并需在周一之前（原提议为周五或周四，但被认为太赶）提供结果。"
+      },
+      {
+       "u": "a4",
+       "text": "此外，小李还负责整理会议纪要并发送至大家邮箱，以便检查是否有遗漏内容，目前各方对此安排表示同意。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team decided to use Lao Zhang's revised proposal because it was more complete, despite its budget exceeding the limit by approximately 30,000."
+      },
+      {
+       "u": "a2",
+       "text": "Xiao Li's alternative was within budget but lacked after-sales support, and Lao Zhang confirmed he could only reduce the budget by 10,000, leaving a 20,000 overage."
+      },
+      {
+       "u": "a3",
+       "text": "Consequently, the plan is to ask the finance department for flexible funds, with Xiao Li to handle this inquiry."
+      },
+      {
+       "u": "a4",
+       "text": "The result must be provided by next Monday, as the previous suggestion of Friday or Thursday was deemed too rushed."
+      },
+      {
+       "u": "a5",
+       "text": "Someone will also prepare the meeting minutes and send them to the group email for review."
+      },
+      {
+       "u": "k1",
+       "text": "Lao Zhang's revised proposal was selected over Xiao Li's due to completeness."
+      },
+      {
+       "u": "k2",
+       "text": "The budget exceeds the limit by approximately 30,000."
+      },
+      {
+       "u": "k3",
+       "text": "Lao Zhang can only reduce the budget by 10,000."
+      },
+      {
+       "u": "k4",
+       "text": "The finance department will be asked for flexible funds."
+      },
+      {
+       "u": "k5",
+       "text": "The result must be provided by next Monday."
+      },
+      {
+       "u": "k6",
+       "text": "Meeting minutes will be prepared and sent to the group email."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于方案，决定使用老张修改过的版本，因为预算超出三万。"
+      },
+      {
+       "u": "a2",
+       "text": "预算超出的部分为三万，老张此前提到最多压一万，但仍超出两万。"
+      },
+      {
+       "u": "a3",
+       "text": "因此决定先联系财务确认是否可使用临时资金。"
+      },
+      {
+       "u": "a4",
+       "text": "会议纪要将整理并发送至邮箱，以便检查是否有遗漏。"
+      },
+      {
+       "u": "a5",
+       "text": "日期调整为下周一，而非周五或周四。"
+      },
+      {
+       "u": "a6",
+       "text": "相关信息有缺失，无法确定具体预算超出的确切金额。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The proposal being considered is either the one from 小李 last week or the one edited by 老张, with the edited version being more complete but costing more than budget."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed the edited version exceeded the budget by approximately 三万, and the 小李 version had a shortfall in the support component."
+      },
+      {
+       "u": "a3",
+       "text": "老张 said the budget could be reduced by at most 一万, but this still left the total over by two万, so they decided to check with finance for flexible funds."
+      },
+      {
+       "u": "a4",
+       "text": "They would go to finance, and they agreed the result should be available by 周五, but they reconsidered because 周五 or 周四 were too tight, so they set the new deadline for 周一."
+      },
+      {
+       "u": "a5",
+       "text": "they agreed to organize the meeting notes and share them via email to check for omissions."
+      },
+      {
+       "u": "a6",
+       "text": "the conversation notes that the budget exceeded two万, and they are unsure if the exact amount exceeded is known."
+      },
+      {
+       "u": "a7",
+       "text": "the missing part is unclear what the exact budget was before the edits, and they are not sure if the budget was exceeded by two万 or more than two万."
+      },
+      {
+       "u": "a8",
+       "text": "they agreed to proceed but are not certain about the precise numbers."
+      },
+      {
+       "u": "a9",
+       "text": "they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was exceeded by two万 or more than two万, and they are not sure if the budget was"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "小李发来的方案预算在内，但缺少售后部分；老张改过的方案更完整，但预算超了大概三万。"
+      },
+      {
+       "u": "a2",
+       "text": "小李的方案预算内，但缺售后部分，因此决定使用老张改过的方案。"
+      },
+      {
+       "u": "a3",
+       "text": "老张表示最多只能压一万，但方案仍超两万。"
+      },
+      {
+       "u": "a4",
+       "text": "财务经费是否有机动经费需要问，行计划周五前给出结果，但周五太赶，改为下周一。"
+      },
+      {
+       "u": "a5",
+       "text": "行将整理会议纪要并发到邮箱供大家查看。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-020",
+   "language": "zh",
+   "transcript": [
+    "1. 各位家长晚上好我说一下家长会的安排",
+    "2. 时间是这周六上午九点",
+    "3. 地点在高二三班教室就是教学楼二楼东头",
+    "4. 八点四十开始签到",
+    "5. 九点到九点二十班主任讲期中考试情况",
+    "6. 九点二十到九点四十数学老师讲学习方法",
+    "7. 九点四十到十点英语老师",
+    "8. 十点十分开始自由交流可以和任课老师单独聊",
+    "9. 每位家长限十分钟",
+    "10. 十一点半结束",
+    "11. 停车的话学校北门有二十个车位先到先得",
+    "12. 其他车辆请停在对面的体育馆停车场一小时五块",
+    "13. 另外请带上孩子的期中成绩单",
+    "14. 回执单要家长签字",
+    "15. 回执单周五之前让孩子交回来",
+    "16. 有问题的家长会后再留下来问"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "家长会定在这周六上午九点，地点是高二三班教室，在教学楼二楼东头。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "八点四十开始签到。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "九点到九点二十班主任讲期中考试情况。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "九点二十到九点四十数学老师讲学习方法。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "九点四十到十点是英语老师环节。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "十点十分开始自由交流，每位家长限十分钟，十一点半结束。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "学校北门有二十个车位，先到先得。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "其他车辆停在对面体育馆停车场，一小时五元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f9",
+     "text": "家长要带孩子的期中成绩单。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f10",
+     "text": "回执单需要家长签字，周五之前让孩子交回。",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "物理或语文老师也在家长会上发言（未提及）。"
+    },
+    {
+     "id": "n2",
+     "text": "十点到十点十分有安排的环节（没有说明）。"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "{ \"title\": \"Parent-Teacher Meeting Schedule\", \"summary\": \"The parent-teacher meeting is scheduled for Saturday at 9:00 AM in Room 204 of the second-floor east wing of the high school building, with check-in starting at 8:40 AM."
+      },
+      {
+       "u": "a2",
+       "text": "The schedule includes the homeroom teacher discussing midterm results from 9:00 to 9:20, followed by the math teacher on learning methods from 9:20 to 9:40, and the English teacher from 9:40 to 10:00."
+      },
+      {
+       "u": "a3",
+       "text": "Free discussion with subject teachers begins at 10:10, where each parent is allowed ten minutes for individual chats, concluding at 11:30 AM."
+      },
+      {
+       "u": "a4",
+       "text": "Parents must bring their child's midterm report card and a signed receipt form, which must be returned by Friday."
+      },
+      {
+       "u": "a5",
+       "text": "Parking is available at the school's north gate with twenty spaces, while other vehicles should park at the gymnasium opposite the school for one hour at a cost of 5 yuan."
+      },
+      {
+       "u": "a6",
+       "text": "\", \"keyPoints\": [ \"The meeting is on Saturday at 9:00 AM in Room 204.\", \"Check-in starts at 8:40 AM and ends at 11:30 AM.\", \"The homeroom teacher speaks from 9:00 to 9:20, math from 9:20 to 9:40, and English from 9:40 to 10:00.\", \"Free discussion with teachers begins at 10:10 with a 10-minute limit per parent.\", \"Parents must bring the midterm report card and a signed receipt form.\", \"The receipt form must be returned by Friday.\" ] }"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "附近的人收到以下安排：这周六上午九点在高二三班教室，即教学楼二楼东头，举行家长会。"
+      },
+      {
+       "u": "a2",
+       "text": "八点四十开始签到，九点到九点二十由班主任讲期中考试情况，九点二十到九点四十由数学老师讲学习方法，九点四十到十点由英语老师讲授。"
+      },
+      {
+       "u": "a3",
+       "text": "十点十分开始自由交流，每位家长限十分钟，十一点半结束。"
+      },
+      {
+       "u": "a4",
+       "text": "停车的话，学校北门有二十个车位先到先得，其他车辆请停在对面的体育馆停车场一小时五块。"
+      },
+      {
+       "u": "a5",
+       "text": "有问题的家长会后再留下来问。"
+      },
+      {
+       "u": "a6",
+       "text": "请带上孩子的期中成绩单，回执单要家长签字，回执单周五之前让孩子交回来。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容无法确认，具体情况待查。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "家长会将于这周六上午九点在高二三班教室（教学楼二楼东头）举行，签到时间为八点四十。"
+      },
+      {
+       "u": "a2",
+       "text": "九点到九点二十由班主任讲解期中考试情况，九点二十至九点四十由数学老师讲解学习方法，九点四十至十点由英语老师讲解，十点十分开始自由交流，家长可与任课老师单独交流，每位家长限十分钟。"
+      },
+      {
+       "u": "a3",
+       "text": "会议于十一点半结束。"
+      },
+      {
+       "u": "a4",
+       "text": "关于停车，学校北门有二十个车位先到先得，其他车辆请停在对面的体育馆停车场，收费一小时五块。"
+      },
+      {
+       "u": "a5",
+       "text": "家长需带上孩子的期中成绩单，并在周五之前将回执单交回。"
+      },
+      {
+       "u": "a6",
+       "text": "如有问题，家长可在会后留下询问。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The parent meeting is on this Saturday at nine in the morning in the second floor east corner of the second year, third class classroom."
+      },
+      {
+       "u": "a2",
+       "text": "sign-ins start at eight forty, with the class teacher speaking from nine to nine twenty, the math teacher from nine twenty to nine forty, the English teacher from nine forty to ten, and free conversation from ten to ten fifteen with a ten-minute limit per parent."
+      },
+      {
+       "u": "a3",
+       "text": "the meeting ends at eleven thirty-five."
+      },
+      {
+       "u": "a4",
+       "text": "parking is at the north entrance with twenty spaces taken on a first-come, first-served basis, or at the adjacent sports hall parking for one hour and fifteen dollars."
+      },
+      {
+       "u": "a5",
+       "text": "parents should bring their child’s midterm grades, a return slip signed by the parent, and the return slip must be submitted to the child by the fifth day of the week."
+      },
+      {
+       "u": "a6",
+       "text": "if there are issues, parents can stay after the meeting to ask questions."
+      },
+      {
+       "u": "a7",
+       "text": "missing parts of the schedule are missing."
+      },
+      {
+       "u": "k1",
+       "text": "The meeting is on Saturday at ten in the morning."
+      },
+      {
+       "u": "k2",
+       "text": "The location is the second floor east corner of the second year, third class classroom."
+      },
+      {
+       "u": "k3",
+       "text": "Sign-ins start at eight forty."
+      },
+      {
+       "u": "k4",
+       "text": "The class teacher speaks from nine to nine twenty."
+      },
+      {
+       "u": "k5",
+       "text": "The math teacher speaks from nine twenty to nine forty."
+      },
+      {
+       "u": "k6",
+       "text": "The English teacher speaks from nine forty to ten."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "本次家长会定于本周六上午举行，签到时间为八点四十，随后九点至九点二十由班主任通报期中考试情况，九点二十至九点四十数学老师讲解学习方法，九点四十至十点英语老师发言，十点十分开始自由交流环节，每位家长限十分钟可与任课老师单独沟通，整个会议于十一点半结束。"
+      },
+      {
+       "u": "a2",
+       "text": "会议地点为高二三班教室（教学楼二楼东头），家长需携带孩子的期中成绩单，回执单需家长签字并于本周五前交回，若有问题可在会后留下来咨询。"
+      },
+      {
+       "u": "a3",
+       "text": "关于停车安排，学校北门提供二十个车位供先到先得，其他车辆请停放至对面体育馆停车场，费用为一小时五元。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The parent meeting was scheduled for this Saturday at 9:00 AM in the second-floor classroom of building 2, east end."
+      },
+      {
+       "u": "a2",
+       "text": "Attendance begins at 8:40 AM, with the principal reporting on midterm exam results at 9:00-9:20 AM and the math teacher covering study methods from 9:20-9:40 AM."
+      },
+      {
+       "u": "a3",
+       "text": "The English teacher spoke from 9:40-10:00 AM, followed by a 10:10 AM free discussion period where parents could chat with their assigned teachers for up to 10 minutes each."
+      },
+      {
+       "u": "a4",
+       "text": "The meeting concluded at 11:30 AM."
+      },
+      {
+       "u": "a5",
+       "text": "Parking is available in the north gate's 20 spots on a first-come basis, while other vehicles should use the sports stadium parking lot for one hour at 5 yuan."
+      },
+      {
+       "u": "a6",
+       "text": "Parents are asked to bring their children's midterm grades and return the feedback form by Friday."
+      },
+      {
+       "u": "k1",
+       "text": "The meeting is this Saturday at 9:00 AM in the second-floor classroom of building 2, east end."
+      },
+      {
+       "u": "k2",
+       "text": "Attendance starts at 8:40 AM."
+      },
+      {
+       "u": "k3",
+       "text": "The principal will report on midterm exam results from 9:00-9:20 AM."
+      },
+      {
+       "u": "k4",
+       "text": "The math teacher will cover study methods from 9:20-9:40 AM."
+      },
+      {
+       "u": "k5",
+       "text": "The English teacher spoke from 9:40-10:00 AM."
+      },
+      {
+       "u": "k6",
+       "text": "Free discussion period begins at 10:10 AM with 10-minute limit per parent."
+      },
+      {
+       "u": "k7",
+       "text": "The meeting ends at 11:30 AM."
+      },
+      {
+       "u": "k8",
+       "text": "Parking: 20 spots at north gate (first-come, first-served) or sports stadium lot (1 hour, 5 yuan)."
+      },
+      {
+       "u": "k9",
+       "text": "Parents must bring children's midterm grades and return the feedback form by Friday."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

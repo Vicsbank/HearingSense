@@ -1,0 +1,833 @@
+{
+ "batch": "batch_036",
+ "conversations": [
+  {
+   "conversation": "fin-zh-029",
+   "language": "zh",
+   "transcript": [
+    "1. 奶奶八十大寿 你们想怎么过",
+    "2. 我觉得在家吃就行 她不喜欢外面吵",
+    "3. 可是在家做饭太累了 妈妈也不年轻了",
+    "4. 那订饭店 她上次说想吃粤菜",
+    "5. 粤菜是爷爷喜欢的吧 奶奶好像更爱吃淮扬菜",
+    "6. 哦对 是爷爷 那她就不一定想吃粤菜",
+    "7. 日子呢 是阳历的十一月二号 还是农历的九月二十",
+    "8. 奶奶生日是农历 今年农历九月二十就是阳历十一月九号",
+    "9. 那就十一月九号 星期六 大家都有空吗",
+    "10. 我那天要加班 不过可以晚一点到 六点之后",
+    "11. 那就中午吃 你下班就赶不上了",
+    "12. 中午也行 那我请半天假",
+    "13. 饭店我来订 我先问问姑姑他们来不来 她们有几个人",
+    "14. 姑姑一家估计四个人 加上我们一共十二个",
+    "15. 好 十二个人 我看看哪家有大包间"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "家人在商量奶奶八十岁大寿的安排",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "奶奶的生日按农历算，农历九月二十对应今年的阳历十一月九日",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "寿宴定在十一月九日",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f4",
+     "text": "喜欢粤菜的是爷爷，奶奶好像更爱吃淮扬菜",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f5",
+     "text": "因为有人那天要加班，寿宴改为中午吃，那个人打算请半天假",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f6",
+     "text": "有一位家人负责订饭店，并先去问姑姑一家来不来",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "姑姑一家估计来四个人，加上其他人总共十二人",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "订饭店时要找有大包间的店",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "寿宴在家里举办（最终是订饭店）"
+    },
+    {
+     "id": "n2",
+     "text": "姑姑一家已经确认会来（只是估计四个人，还要先问）"
+    },
+    {
+     "id": "n3",
+     "text": "寿宴订在晚上"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "具体选哪家饭店尚未确定，也没有明确选定菜系"
+    },
+    {
+     "id": "u2",
+     "text": "姑姑一家是否来、来几个人还没有确认"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Grandma’s 80th birthday is on November 9th, Sunday, and the date is confirmed as November 9th, Sunday."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed dinner will be at home because cooking is too tiring and ordering is preferred, though they debated whether Cantonese or Huaiyang cuisine is desired, with Cantonese mentioned as a preference but possibly not final."
+      },
+      {
+       "u": "a3",
+       "text": "The last time Cantonese was chosen, but grandma might prefer Huaiyang, and they’ll confirm with relatives."
+      },
+      {
+       "u": "a4",
+       "text": "they agreed lunch will be at noon, and someone will take half a day off work."
+      },
+      {
+       "u": "a5",
+       "text": "they can’t confirm if the person will arrive after 6 PM due to a late shift, but dinner will be at noon."
+      },
+      {
+       "u": "a6",
+       "text": "they’ll ask if relatives are coming, estimate four people from the relatives plus twelve total, and someone will check for a large private room."
+      },
+      {
+       "u": "a7",
+       "text": "the details about the relatives’ arrival and room availability are missing."
+      },
+      {
+       "u": "a8",
+       "text": "they agreed to let someone ask about the relatives’ arrival, but they can’t finalize the exact timing or room choice yet."
+      },
+      {
+       "u": "a9",
+       "text": "they agreed to handle the dinner arrangements, but the final decisions on cuisine and logistics are still undecided."
+      },
+      {
+       "u": "k1",
+       "text": "The birthday is on November 9th, Sunday."
+      },
+      {
+       "u": "k2",
+       "text": "Dinner will be at home due to tiredness."
+      },
+      {
+       "u": "k3",
+       "text": "Cantonese cuisine was mentioned but not confirmed."
+      },
+      {
+       "u": "k4",
+       "text": "Huaiyang cuisine might be preferred."
+      },
+      {
+       "u": "k5",
+       "text": "Lunch will be at noon."
+      },
+      {
+       "u": "k6",
+       "text": "Someone will take half a day off work for the dinner."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "奶奶定于农历九月二十（阳历十一月九日，星期六）过八十大寿，因她偏好淮扬菜且不喜欢外面吵闹，大家决定在家做饭太累，最终选择预订饭店。"
+      },
+      {
+       "u": "a2",
+       "text": "虽然奶奶上次提到想吃粤菜，但经确认是爷爷喜欢粤菜，因此奶奶更可能想吃淮扬菜。"
+      },
+      {
+       "u": "a3",
+       "text": "由于我那天需加班，只能六点之后到达，但大家同意中午用餐，我因此请了半天假。"
+      },
+      {
+       "u": "a4",
+       "text": "饭店将由我来预订，同时需先确认姑姑一家是否参加，预计姑姑家四人加上我们共十二人。"
+      },
+      {
+       "u": "a5",
+       "text": "目前尚未确定具体哪家饭店有大包间，且姑姑一家确切人数仍需核实。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "奶奶八十大寿，讨论了如何过这场生日庆典。"
+      },
+      {
+       "u": "a2",
+       "text": "大家决定在家吃饭，因为奶奶不喜欢外面吵闹，但家里做饭太累了。"
+      },
+      {
+       "u": "a3",
+       "text": "妈妈也不年轻了，所以需要订饭店。"
+      },
+      {
+       "u": "a4",
+       "text": "奶奶之前说想吃粤菜，但后来发现她更爱吃淮扬菜。"
+      },
+      {
+       "u": "a5",
+       "text": "生日是农历九月二十，对应阳历十一月九号，日期为星期六。"
+      },
+      {
+       "u": "a6",
+       "text": "所有人都想参加，但奶奶那天要加班，只能中午吃。"
+      },
+      {
+       "u": "a7",
+       "text": "奶奶请了半天假，负责订饭店。"
+      },
+      {
+       "u": "a8",
+       "text": "预计共十二个人（奶奶一家四人，加上其他十人），需要找一家有大包间的饭店。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to celebrate Grandma's 80th birthday at a restaurant rather than at home because cooking is too tiring for her mother."
+      },
+      {
+       "u": "a2",
+       "text": "They determined she prefers Huaiyang cuisine over Cantonese, which is her father's favorite, and set the date for Saturday, November 9th."
+      },
+      {
+       "u": "a3",
+       "text": "The meal will be served at noon, with one person taking half a day off to arrange the reservation."
+      },
+      {
+       "u": "a4",
+       "text": "The total guest count is twelve people, including Grandma's aunt and family, and the host will find a large private room."
+      },
+      {
+       "u": "k1",
+       "text": "The celebration is for Grandma's 80th birthday."
+      },
+      {
+       "u": "k2",
+       "text": "The event will be held at a restaurant."
+      },
+      {
+       "u": "k3",
+       "text": "The preferred cuisine is Huaiyang."
+      },
+      {
+       "u": "k4",
+       "text": "The date is Saturday, November 9th."
+      },
+      {
+       "u": "k5",
+       "text": "The meal will be served at noon."
+      },
+      {
+       "u": "k6",
+       "text": "There will be twelve guests in total."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The family is planning a 80th birthday dinner for Grandma."
+      },
+      {
+       "u": "a2",
+       "text": "They discussed whether to stay home or go to a restaurant, with the grandmother preferring to eat at home but the others suggesting a restaurant due to her fatigue."
+      },
+      {
+       "u": "a3",
+       "text": "The grandmother mentioned her birthday is on the lunar calendar September 20th, which corresponds to November 9th (Saturday)."
+      },
+      {
+       "u": "a4",
+       "text": "The group agreed to have twelve people total and decided the dinner would be at noon."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker offered to order from a restaurant and asked the granddaughter to confirm how many people will attend."
+      },
+      {
+       "u": "k1",
+       "text": "Grandma's 80th birthday is being celebrated"
+      },
+      {
+       "u": "k2",
+       "text": "Family is deciding between home cooking and restaurant dinner"
+      },
+      {
+       "u": "k3",
+       "text": "Grandma prefers to eat at home but is too tired to cook"
+      },
+      {
+       "u": "k4",
+       "text": "Lunar birthday date is September 20th (lunar) / November 9th (solar)"
+      },
+      {
+       "u": "k5",
+       "text": "Total of twelve people will attend"
+      },
+      {
+       "u": "k6",
+       "text": "Dinner is planned for noon"
+      },
+      {
+       "u": "k7",
+       "text": "Speaker will order from a restaurant"
+      },
+      {
+       "u": "k8",
+       "text": "Granddaughter asked the granddaughter to confirm attendance"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于 奶奶 八十大寿，决定在家吃，因为 奶奶 不喜欢 外面 吵，但 妈妈 不年轻，订饭店。"
+      },
+      {
+       "u": "a2",
+       "text": "上次 奶奶 说想吃 粤菜，但 粤菜 是 爷爷 喜欢的， 奶奶 更爱吃 淮扬菜，现在确认是 爷爷。"
+      },
+      {
+       "u": "a3",
+       "text": "日期确认为 阳历十一月九号 星期六，因为 奶奶 生日是 农历九月二十，今年对应 阳历十一月九号。"
+      },
+      {
+       "u": "a4",
+       "text": "个人 安排：当天要加班，但可晚一点到 六点之后，中午吃。"
+      },
+      {
+       "u": "a5",
+       "text": "决定由 个人 订饭店，先询问姑姑一家是否来，估计四人，加上大家共十二人。"
+      },
+      {
+       "u": "a6",
+       "text": "查看哪家有大包间。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容如“日子”的日期确认和姑姑人数尚不明确。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-030",
+   "language": "zh",
+   "transcript": [
+    "1. 动漫社招心的事 我们再对一下",
+    "2. 摆谈的时间是周二到周四 下午四点到六点 不对 是周三到周五",
+    "3. 对 学生会通知改了 周三到周五",
+    "4. 摊位在体育馆门口 一共有两个桌子",
+    "5. 宣传单我印了两百张 够吗",
+    "6. 够了 去年也就发了一百八十张左右",
+    "7. 报名表要不要做电子版 做做做 扫码填那个问卷",
+    "8. 文卷我来弄 二维码贴在海报上",
+    "9. cos的衣服谁带 小夏你不是有一套吗",
+    "10. 我有 不过周三我有课 周四周五可以",
+    "11. 那周三让小宇穿 他那套也行",
+    "12. 我周三也要上课到五点 五点以后才能到",
+    "13. 哎呀 那周三先不穿了 周四周五再说",
+    "14. 摊位费要交吗 不用 免费 就是要押一百块的押金",
+    "15. 押金活动完退 找学生会的周老师领"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "动漫社招新摆摊时间是周三到周五，下午四点到六点",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "摆摊时间原说周二到周四，根据学生会通知改为周三到周五",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f3",
+     "text": "摊位在体育馆门口，共有两张桌子",
+     "critical": false,
+     "kind": "place"
+    },
+    {
+     "id": "f4",
+     "text": "宣传单印了两百张，去年大约发了一百八十张",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "报名表会做成电子版问卷，二维码贴在海报上，由一位成员负责制作",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "周三小夏和小宇都因为有课无法穿角色服装，所以周三先不穿，周四周五再说",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f7",
+     "text": "摊位免费，需要押一百块押金，活动结束后退还，找学生会周老师领",
+     "critical": true,
+     "kind": "number"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "摆摊时间是周二到周四（已更正）"
+    },
+    {
+     "id": "n2",
+     "text": "小夏周三会穿角色服装"
+    },
+    {
+     "id": "n3",
+     "text": "摊位需要交摊位费（实际免费，只收押金）"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "周四周五具体由谁穿角色服装还没有确定"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "讨论了动漫社招心的事项，决定再次讨论。"
+      },
+      {
+       "u": "a2",
+       "text": "摆摊的时间被调整为周三到周五下午四点到六点，而不是周二到周四。"
+      },
+      {
+       "u": "a3",
+       "text": "学生会通知被改为周三到周五。"
+      },
+      {
+       "u": "a4",
+       "text": "摊位设在体育馆门口，共有两个桌子。"
+      },
+      {
+       "u": "a5",
+       "text": "宣传单已印制了两百份，足够，去年大约有一百八十份。"
+      },
+      {
+       "u": "a6",
+       "text": "报名表需要做电子版，通过扫码填写问卷。"
+      },
+      {
+       "u": "a7",
+       "text": "文具由本人负责，二维码将贴在海报上。"
+      },
+      {
+       "u": "a8",
+       "text": "cos扮演服装由小宇负责，因为小夏已安排好。"
+      },
+      {
+       "u": "a9",
+       "text": "摊位费无需支付，但需支付一百块押金，活动结束后退款，由学生会周老师负责领取。"
+      },
+      {
+       "u": "a10",
+       "text": "相关信息如“周三到周五”和“周三到周五”均被确认。"
+      },
+      {
+       "u": "a11",
+       "text": "部分内容如“cos的衣服谁带”和“我周三也要上课到五点”尚存不确定。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "动漫社招新活动定于周三至周五下午四点到六点，地点设在体育馆门口，共设两个摊位。"
+      },
+      {
+       "u": "a2",
+       "text": "宣传单已印制两百张，考虑到去年仅发放一百八十张，数量足够。"
+      },
+      {
+       "u": "a3",
+       "text": "报名将采用电子版问卷形式，由“我”负责制作二维码并张贴于海报上。"
+      },
+      {
+       "u": "a4",
+       "text": "关于 Cos 服装，小夏表示她有一套，但因周三有课，建议周三由小宇穿着他的服装，而“我”的服装则留待周四和周五使用。"
+      },
+      {
+       "u": "a5",
+       "text": "摊位费用方面，活动本身免费，但需缴纳一百元押金，活动结束后可退还，押金领取对象为学生会周老师。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The student council changed the booth schedule from Tuesday to Wednesday through Friday, with the location set at the entrance of the gymnasium featuring two tables."
+      },
+      {
+       "u": "a2",
+       "text": "The event will run from 4:00 PM to 6:00 PM, and the promotional flyers have been printed as 200 copies, which is deemed sufficient after last year's 180 were distributed."
+      },
+      {
+       "u": "a3",
+       "text": "An electronic registration form via QR code on the posters will be handled by the speaker, while Xiaohua will wear her costume on Thursday and Friday since she has classes on Wednesday."
+      },
+      {
+       "u": "a4",
+       "text": "A deposit of 100 yuan is required for the booth, which will be refunded after the event concludes, and the deposit can be collected from Teacher Zhou of the student council."
+      },
+      {
+       "u": "k1",
+       "text": "The booth schedule is Wednesday to Friday from 4 PM to 6 PM."
+      },
+      {
+       "u": "k2",
+       "text": "The location is the entrance of the gymnasium with two tables."
+      },
+      {
+       "u": "k3",
+       "text": "200 promotional flyers have been printed."
+      },
+      {
+       "u": "k4",
+       "text": "Registration will be done via a QR code on the posters."
+      },
+      {
+       "u": "k5",
+       "text": "Xiaohua will wear her costume on Thursday and Friday."
+      },
+      {
+       "u": "k6",
+       "text": "A 100 yuan deposit is required and refundable after the event."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about coordinating a student club recruitment event."
+      },
+      {
+       "u": "a2",
+       "text": "The meeting time was clarified as Wednesday to Friday, from 4 PM to 6 PM (correcting an earlier mention of Tuesday to Thursday)."
+      },
+      {
+       "u": "a3",
+       "text": "The booth will be set up at the gymnasium entrance with two tables."
+      },
+      {
+       "u": "a4",
+       "text": "Two hundred promotional flyers were printed, which was deemed sufficient since last year only 180 were distributed."
+      },
+      {
+       "u": "a5",
+       "text": "Electronic registration forms were decided to be created, with QR codes to be placed on posters."
+      },
+      {
+       "u": "a6",
+       "text": "Small Ha is mentioned as having a set of clothes but cannot attend on Wednesday due to a class until 5 PM, so she will wear them on Thursday or Friday instead."
+      },
+      {
+       "u": "a7",
+       "text": "A 100-yen deposit is required for the booth fee, which is returned after the event, and the student council member, Teacher Zhou, will collect it."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about a meeting for the anime society recruitment."
+      },
+      {
+       "u": "a2",
+       "text": "The time was clarified as Wednesday to Friday, afternoon 4-6 PM."
+      },
+      {
+       "u": "a3",
+       "text": "The booth will be at the gymnasium entrance with two tables."
+      },
+      {
+       "u": "a4",
+       "text": "They discussed printing 200 promotional flyers (last year 180) and creating an electronic registration form via QR code."
+      },
+      {
+       "u": "a5",
+       "text": "The student council president, Xiao Yu, was assigned to wear the clothes on Wednesday, but since they have class until 5 PM on Wednesday, they decided to postpone and do it on Thursday or Friday instead."
+      },
+      {
+       "u": "a6",
+       "text": "A 100-yuan deposit is required for the booth fee, which is returned after the event."
+      },
+      {
+       "u": "k1",
+       "text": "The meeting time is Wednesday to Friday, afternoon 4-6 PM"
+      },
+      {
+       "u": "k2",
+       "text": "The booth is at the gymnasium entrance with two tables"
+      },
+      {
+       "u": "k3",
+       "text": "200 promotional flyers were printed (last year 180)"
+      },
+      {
+       "u": "k4",
+       "text": "An electronic registration form via QR code was agreed upon"
+      },
+      {
+       "u": "k5",
+       "text": "Xiao Yu will wear the clothes on Wednesday but postponed to Thursday/Friday due to class until 5 PM"
+      },
+      {
+       "u": "k6",
+       "text": "A 100-yuan deposit is required for the booth fee, returned after the event"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The meeting times are Wednesday to Friday, four to six p.m., and the discussion will be about the student union notifications, which are now Wednesday to Friday."
+      },
+      {
+       "u": "a2",
+       "text": "the stall will be in the gymnasium entrance with two tables, and there are 200 promotional flyers to print—enough, as last year there were about 180."
+      },
+      {
+       "u": "a3",
+       "text": "they agreed to create an electronic version of the registration form with a QR code, and someone will handle the QR code for the booklet."
+      },
+      {
+       "u": "a4",
+       "text": "cosplay clothes: small summer will bring her set, but small summer has class on Wednesday, so small yu will wear it on Wednesday, and small summer will wear it on Friday."
+      },
+      {
+       "u": "a5",
+       "text": "the stall fee is free, but a 100-yuan deposit is required, and the deposit will be returned after the activity."
+      },
+      {
+       "u": "a6",
+       "text": "someone will ask student union member wang teacher to collect the deposit."
+      },
+      {
+       "u": "a7",
+       "text": "the conversation is missing parts about the exact questions on the survey and the final decision on the Wednesday cosplay outfit."
+      },
+      {
+       "u": "a8",
+       "text": "they agreed to postpone the Wednesday decision."
+      },
+      {
+       "u": "a9",
+       "text": "the location is the gymnasium entrance."
+      },
+      {
+       "u": "a10",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a11",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a12",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a13",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a14",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a15",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a16",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a17",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a18",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a19",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a20",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a21",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a22",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a23",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a24",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a25",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a26",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a27",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a28",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a29",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a30",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a31",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a32",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a33",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a34",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a35",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a36",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a37",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a38",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a39",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a40",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a41",
+       "text": "the set is small yu's."
+      },
+      {
+       "u": "a42",
+       "text": "the set is small summer's."
+      },
+      {
+       "u": "a43",
+       "text": "the"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

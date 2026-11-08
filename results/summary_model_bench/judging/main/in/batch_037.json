@@ -1,0 +1,714 @@
+{
+ "batch": "batch_037",
+ "conversations": [
+  {
+   "conversation": "fin-zh-031",
+   "language": "zh",
+   "transcript": [
+    "1. 这个月房租该分一下了 一共四千五",
+    "2. 我们三个人 你的房间最大 应该多付",
+    "3. 我的房间朝北 又冷 凭什么多付",
+    "4. 那这样 大的一千八 中间的一千五 小的一千二",
+    "5. 我是小的 我一千二 没问题",
+    "6. 我是中间的 一千五也行",
+    "7. 那我一千八 总共四千五 对",
+    "8. 网费呢 每个月一百 三个人平分",
+    "9. 不对吧 上个月涨价了 是一百二",
+    "10. 一百二 那就一人四十",
+    "11. 水电这个月还没出账 下周才知道",
+    "12. 房东说要不要续租 月底前给她回话",
+    "13. 我可能不续了 我想搬去公司附近",
+    "14. 你确定吗 还没定 只是有这个想法",
+    "15. 那我们月底前再聊一次"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "房租一共四千五百元，三个室友分摊",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f2",
+     "text": "房租分摊方案：大房间一千八，中间房间一千五，小房间一千二",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f3",
+     "text": "三个人都认可这个房租分摊方案",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f4",
+     "text": "网费上个月涨价，每月一百二十元，三人平分，每人四十",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "网费原先说是每月一百元，后更正为一百二十元",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f6",
+     "text": "水电这个月还没出账，下周才知道金额",
+     "critical": false,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "房东问是否续租，月底前要给她回话",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "大家约定月底前再聊一次续租的事",
+     "critical": true,
+     "kind": "decision"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "有一位室友已经决定不续租（只是想法，还没定）"
+    },
+    {
+     "id": "n2",
+     "text": "网费是每月一百元（已更正为一百二十元）"
+    },
+    {
+     "id": "n3",
+     "text": "水电费已经算好并分摊"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "一位室友是否续租、是否搬去公司附近尚未确定"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于房租，这个月总共四千五元，三人按房间大小分摊，房间最大的人多付，朝北又冷的房间不应额外负担。"
+      },
+      {
+       "u": "a2",
+       "text": "分配方案为：大的一千八，中间的一千五，小的一千二，分配结果为：小的一千二，中间的一千五，大的一千八，总计四千五。"
+      },
+      {
+       "u": "a3",
+       "text": "网费每个月一百，之前有涨价，现在为一百二，三人平分后一人负担四十。"
+      },
+      {
+       "u": "a4",
+       "text": "水电费用这个月尚未出账，下周才会知道。"
+      },
+      {
+       "u": "a5",
+       "text": "房东要求在月底前回复续租决定，有人表示可能不续租，考虑搬去公司附近，但尚未确定，决定在月底前再次讨论。"
+      },
+      {
+       "u": "a6",
+       "text": "相关信息如涨价和续租想法未明确。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The month's rent of 四千五元 needs to be divided among three people, with the largest room paying extra, and the arrangement decided as 大的一千八、中间的一千五、小的一千二，with the smallest room holder agreeing to 一千二元."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed the middle room holder would pay 一千五元, and the largest room holder 一千八元, totaling 四千五元."
+      },
+      {
+       "u": "a3",
+       "text": "网费每个月一百元，三人平分，但因为上个月涨价到一百二元，所以一人负责四十元。"
+      },
+      {
+       "u": "a4",
+       "text": "水电账单这个月还没出，下周才知道。"
+      },
+      {
+       "u": "a5",
+       "text": "房东要求在月底前回复续租决定，但有人说可能不续租，考虑搬去公司附近，目前没有确定，所以月底前再次讨论。"
+      },
+      {
+       "u": "a6",
+       "text": "他们还讨论过一个想法，但没有明确细节。"
+      },
+      {
+       "u": "k1",
+       "text": "The monthly rent is 四千五元."
+      },
+      {
+       "u": "k2",
+       "text": "The largest room pays 大的一千八元."
+      },
+      {
+       "u": "k3",
+       "text": "The middle room pays 一千五元."
+      },
+      {
+       "u": "k4",
+       "text": "The smallest room pays 一千二元."
+      },
+      {
+       "u": "k5",
+       "text": "网费每个月一百二元，一人付四十元."
+      },
+      {
+       "u": "k6",
+       "text": "水电账单下周才会出账."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group agreed to split the total rent of 4,500, with the largest room paying 1,800, the middle room 1,500, and the smallest room 1,200."
+      },
+      {
+       "u": "a2",
+       "text": "Internet service costs 120 per month, which will be divided equally at 40 per person."
+      },
+      {
+       "u": "a3",
+       "text": "Water and electricity bills are not yet issued and will be known next week."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding the lease renewal, one person expressed a desire to move near their company, but the decision is not final."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to discuss the lease renewal decision again before the end of the month."
+      },
+      {
+       "u": "k1",
+       "text": "The total rent is 4,500 split as 1,800, 1,500, and 1,200."
+      },
+      {
+       "u": "k2",
+       "text": "Internet service costs 120 per month, shared at 40 each."
+      },
+      {
+       "u": "k3",
+       "text": "Water and electricity bills are pending and will be known next week."
+      },
+      {
+       "u": "k4",
+       "text": "One person wants to move near their company but has not decided yet."
+      },
+      {
+       "u": "k5",
+       "text": "The lease renewal decision must be made before the end of the month."
+      },
+      {
+       "u": "k6",
+       "text": "The group agreed to meet again before the end of the month to finalize the lease."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about a rent dispute where three people discussed splitting a total rent of 4,500 yuan."
+      },
+      {
+       "u": "a2",
+       "text": "One person claimed their room was the largest and should pay more, while another argued their room was the smallest and had no issue."
+      },
+      {
+       "u": "a3",
+       "text": "The middle person agreed to pay 1,500 yuan for their room."
+      },
+      {
+       "u": "a4",
+       "text": "The total rent of 4,500 yuan was split three ways, with the first person paying 1,200 yuan and the second paying 1,500 yuan."
+      },
+      {
+       "u": "a5",
+       "text": "The second person mentioned that the monthly internet fee of 130 yuan was due to be split three ways, but it had increased to 120 yuan last month, making each person's share 40 yuan."
+      },
+      {
+       "u": "a6",
+       "text": "Water and electricity bills were not yet due."
+      },
+      {
+       "u": "a7",
+       "text": "The landlord asked if the tenant would renew the lease by the end of the month, but the tenant said they might not renew and wanted to move closer to their company."
+      },
+      {
+       "u": "a8",
+       "text": "They agreed to discuss the matter again before the month's end."
+      },
+      {
+       "u": "k1",
+       "text": "Total rent is 4,500 yuan to be split among three people"
+      },
+      {
+       "u": "k2",
+       "text": "One person claims their room is the largest and should pay more"
+      },
+      {
+       "u": "k3",
+       "text": "Another person states their room is the smallest and has no issue"
+      },
+      {
+       "u": "k4",
+       "text": "The middle person agrees to pay 1,500 yuan for their room"
+      },
+      {
+       "u": "k5",
+       "text": "The total rent of 4,500 yuan is split three ways (1,200 yuan, 1,500 yuan, and 1,200 yuan)"
+      },
+      {
+       "u": "k6",
+       "text": "Monthly internet fee is 130 yuan, due to be split three ways, but increased to 120 yuan last month"
+      },
+      {
+       "u": "k7",
+       "text": "Water and electricity bills are not yet due"
+      },
+      {
+       "u": "k8",
+       "text": "Landlord asked about lease renewal by month-end"
+      },
+      {
+       "u": "k9",
+       "text": "Tenant may not renew and wants to move closer to their company"
+      },
+      {
+       "u": "k10",
+       "text": "They agreed to discuss the matter again before month-end"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于本月房租分配，三人确认总金额为四千五，其中最大房间（一千八）、中等房间（一千五）和最小房间（一千二）的分配方案已达成一致。"
+      },
+      {
+       "u": "a2",
+       "text": "网费方面，虽然最初提议每月一百元平分，但随后更正为因涨价调整为每月一百二，即每人承担四十元。"
+      },
+      {
+       "u": "a3",
+       "text": "水电费用因尚未出账，预计下周才能确定具体金额。"
+      },
+      {
+       "u": "a4",
+       "text": "房东询问是否续租，截止日期为月底前，其中一人表示可能不续租并计划搬至公司附近，但对方强调该决定尚未最终确定。"
+      },
+      {
+       "u": "a5",
+       "text": "双方约定将在月底前再次沟通续租事宜，目前其他细节仍待确认。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "这段对话发生在租房相关的讨论中，涉及房租分摊、房东续租决定以及未来搬迁计划。"
+      },
+      {
+       "u": "a2",
+       "text": "以下是对对话的详细回顾："
+      },
+      {
+       "u": "a3",
+       "text": "租房人提到本月房租共四千五元，三人分摊，自己房间最大，认为应该多付。"
+      },
+      {
+       "u": "a4",
+       "text": "房东反驳说房间朝北又冷，质疑多付的理由。"
+      },
+      {
+       "u": "a5",
+       "text": "随后对房租金额的具体数额有多次提及：自己房间一千二元，房东说一千五元，房东说一千八元，总共四千五元。"
+      },
+      {
+       "u": "a6",
+       "text": "网费每月一百三元，三人平分，但上个月涨价到一百二元，导致每人应付四十元。"
+      },
+      {
+       "u": "a7",
+       "text": "水电费用本月尚未产生，下周才会知道。"
+      },
+      {
+       "u": "a8",
+       "text": "房东询问是否续租，租房人表示可能不续，想搬到公司附近，但表示尚未定夺，只是有这个想法。"
+      },
+      {
+       "u": "a9",
+       "text": "最后提到月底前再聊一次续租事宜。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-032",
+   "language": "zh",
+   "transcript": [
+    "1. 去成都的高铁 我订的是G二七四五",
+    "2. 几点的 早上八点十二分从西安北站发车",
+    "3. 几点到 十点四十到成都东 大概两个半小时",
+    "4. 哎 车票是三百二十五块一张 二等座",
+    "5. 酒店我订了春熙路旁边的 叫锦里小筑 住三晚",
+    "6. 一晚多少钱 三百九 含早餐",
+    "7. 我们先去吃火锅还是先去熊猫基地",
+    "8. 熊猫基地早上去最好 熊猫早上比较活跃 要早点出发",
+    "9. 门票是五十五块 我已经在手机上买好了",
+    "10. 那火锅就第一天晚上吃 我朋友推荐一家 叫蜀乡缘",
+    "11. 需要预约吗 要的 我晚上给他们打电话",
+    "12. 回程呢 我还没买 等看一下大家什么时候回",
+    "13. 身份证别忘了带 取票要用",
+    "14. 嗯 还有充电宝"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "去成都乘坐高铁G二七四五，早上八点十二分从西安北站出发，约十点四十到成都东站",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "高铁二等座每张三百二十五元",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "酒店订在春熙路旁边的锦里小筑，住三晚，每晚三百九十元，含早餐",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f4",
+     "text": "熊猫基地门票五十五元，已在手机上买好",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "建议早上去熊猫基地，因为熊猫早上比较活跃",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f6",
+     "text": "打算第一天晚上吃朋友推荐的火锅店蜀乡缘，需要预约，晚上打电话预约",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "回程车票还没买，要等大家确定回来的时间",
+     "critical": true,
+     "kind": "uncertainty"
+    },
+    {
+     "id": "f8",
+     "text": "取票要用身份证，别忘了带",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "回程车票已经订好"
+    },
+    {
+     "id": "n2",
+     "text": "火锅店已经预约成功"
+    },
+    {
+     "id": "n3",
+     "text": "出发日期是明天（对话没有说出发日期）"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "回程的日期和车次尚未确定"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "计划于早上八点十二分从西安北站乘坐 G2745 次高铁前往成都，预计十点四十抵达成都东站，全程耗时约两个半小时，二等座票价为三百二十五元。"
+      },
+      {
+       "u": "a2",
+       "text": "住宿已预订位于春熙路旁的“锦里小筑”，需入住三晚，每晚三百九十元含早餐。"
+      },
+      {
+       "u": "a3",
+       "text": "行程安排为第一天晚上前往朋友推荐的“蜀乡缘”火锅店用餐，而熊猫基地计划安排在第一天早上前往，门票五十五元已提前在手机购好。"
+      },
+      {
+       "u": "a4",
+       "text": "回程车票尚未购买，需等待确定大家的具体返程时间。"
+      },
+      {
+       "u": "a5",
+       "text": "此外，提醒携带身份证用于取票，并别忘了带上充电宝。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone booked high-speed train G2745 departing from Xi'an North at 8:12 AM, arriving at Chengdu East at 10:40 AM for a two-hour-30-minute journey."
+      },
+      {
+       "u": "a2",
+       "text": "The ticket costs 325 yuan for second class, and the hotel 'Jinli Xiaozhu' near Chunxi Road is booked for three nights at 390 yuan per night including breakfast."
+      },
+      {
+       "u": "a3",
+       "text": "They decided to visit the Panda Base first, noting the 55 yuan ticket is already purchased on their phone, followed by hotpot at 'Shuxiangyuan' on the first evening."
+      },
+      {
+       "u": "a4",
+       "text": "A reservation is required for the hotpot, and the return trip ticket is yet to be purchased while reminding everyone to bring their ID card and a power bank."
+      },
+      {
+       "u": "k1",
+       "text": "The train is G2745 from Xi'an North to Chengdu East at 8:12 AM."
+      },
+      {
+       "u": "k2",
+       "text": "The hotel is Jinli Xiaozhu near Chunxi Road for three nights."
+      },
+      {
+       "u": "k3",
+       "text": "The hotpot restaurant is Shuxiangyuan and requires a reservation."
+      },
+      {
+       "u": "k4",
+       "text": "The Panda Base ticket is 55 yuan and already bought."
+      },
+      {
+       "u": "k5",
+       "text": "The return trip ticket has not been purchased yet."
+      },
+      {
+       "u": "k6",
+       "text": "Passengers must bring their ID card and a power bank."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于前往成都的高铁行程，已订的是G二七四五次，出发时间为早上八点十二分，从西安北站出发，预计下午十点四十到达成都东，行程大约两个半小时。"
+      },
+      {
+       "u": "a2",
+       "text": "车票价格为三百二十五元，座位等级为二等座。"
+      },
+      {
+       "u": "a3",
+       "text": "酒店为春熙路旁边的锦里小筑，预订了三晚，每晚价格为三百九元，包含早餐。"
+      },
+      {
+       "u": "a4",
+       "text": "已决定先前往熊猫基地，因为门票为五十五元，且已在手机上购买。"
+      },
+      {
+       "u": "a5",
+       "text": "火锅则安排在第一天晚上，选择一家名为蜀乡缘的餐厅，需要预约。"
+      },
+      {
+       "u": "a6",
+       "text": "返回行程尚未安排，尚未购买票，需根据其他人返回时间决定。"
+      },
+      {
+       "u": "a7",
+       "text": "需要携带身份证，并准备好充电宝。"
+      },
+      {
+       "u": "a8",
+       "text": "相关信息如门票和预约状态存在缺失。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They are going to Chengdu by train, booking G train number G-2745, departing at 08:12 from西安北站 and arriving at 10:40 at成都东, taking approximately 2.5 hours."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed the ticket is 325 yuan for second class, and they booked a hotel called锦里小筑 on春熙路, staying three nights at 390 yuan per night including breakfast."
+      },
+      {
+       "u": "a3",
+       "text": "they decided to visit熊猫基地 first in the morning because pandas are most active early, with a ticket costing 55 yuan already purchased via phone, and they will eat火锅 on the first night at a place called蜀乡缘, needing to call to reserve."
+      },
+      {
+       "u": "a4",
+       "text": "they haven't booked return travel yet and are waiting to see when others return, and they forgot to mention to bring身份证, need to use身份证 for tickets, and they forgot to bring充电宝."
+      },
+      {
+       "u": "a5",
+       "text": "the conversation contains missing information about a specific decision regarding the return trip."
+      },
+      {
+       "u": "a6",
+       "text": "they agreed to confirm details later."
+      },
+      {
+       "u": "k1",
+       "text": "Train departure: 08:12 from西安北站"
+      },
+      {
+       "u": "k2",
+       "text": "Train arrival: 10:40 at成都东"
+      },
+      {
+       "u": "k3",
+       "text": "Train duration: approximately 2.5 hours"
+      },
+      {
+       "u": "k4",
+       "text": "Train ticket: 325 yuan, second class"
+      },
+      {
+       "u": "k5",
+       "text": "Hotel:锦里小筑, three nights"
+      },
+      {
+       "u": "k6",
+       "text": "Room rate: 390 yuan per night, includes breakfast"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The speaker is traveling from Xi'an North Station to Chengdu by high-speed rail, departing at 8:12 AM and arriving at 10:40 AM, with a travel time of approximately two and a half hours."
+      },
+      {
+       "u": "a2",
+       "text": "The train ticket costs 325 yuan for a second-class seat, and the hotel reservation at Jinkeri Zucheng (春熙路旁边) for three nights costs 300 yuan for the first night, including breakfast."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker plans to visit the Panda Base in the morning of the first day, as the pandas are more active in the morning, and has already purchased a 55-yuan ticket for the panda base."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker intends to have dinner at Shuxiang Yuan (蜀乡缘) on the first night and has already called to make a reservation."
+      },
+      {
+       "u": "a5",
+       "text": "The return trip has not yet been booked, and the speaker reminds everyone to bring their ID and use it for ticket collection."
+      },
+      {
+       "u": "a6",
+       "text": "The transcript ends with a reminder to bring a power bank (充电宝)."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The speaker is traveling by high-speed train from Xi'an North Station at 8:12 AM, arriving in Chengdu around 10:40 AM after a two-and-a-half-hour journey."
+      },
+      {
+       "u": "a2",
+       "text": "They booked a room at 锦里小筑 near Spring New Road for three nights at 300 RMB per night including breakfast."
+      },
+      {
+       "u": "a3",
+       "text": "They decided to visit the Panda Base in the morning as it is more active then, with a 55 RMB ticket already purchased on their phone."
+      },
+      {
+       "u": "a4",
+       "text": "They plan to have their first dinner at a restaurant called 蜀乡缘 and will call to make a reservation."
+      },
+      {
+       "u": "a5",
+       "text": "The return trip has not been booked yet and they need to bring their ID and use it for ticket collection."
+      },
+      {
+       "u": "k1",
+       "text": "Departure time: 8:12 AM from Xi'an North Station"
+      },
+      {
+       "u": "k2",
+       "text": "Arrival time: around 10:40 AM in Chengdu"
+      },
+      {
+       "u": "k3",
+       "text": "Train type: G二七四五 (high-speed train)"
+      },
+      {
+       "u": "k4",
+       "text": "Hotel: 锦里小筑 (Chinri Xiaozhu) near Spring New Road, 3 nights"
+      },
+      {
+       "u": "k5",
+       "text": "Hotel cost: 300 RMB per night including breakfast"
+      },
+      {
+       "u": "k6",
+       "text": "Panda Base visit: morning of first day, 55 RMB ticket"
+      },
+      {
+       "u": "k7",
+       "text": "Dinner plan: 蜀乡缘 restaurant, reservation needed"
+      },
+      {
+       "u": "k8",
+       "text": "Return trip: not yet booked"
+      },
+      {
+       "u": "k9",
+       "text": "Reminder: bring ID and use it for ticket collection"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

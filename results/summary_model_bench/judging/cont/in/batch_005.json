@@ -1,0 +1,897 @@
+{
+ "batch": "batch_005",
+ "conversations": [
+  {
+   "conversation": "cont-016",
+   "language": "zh",
+   "transcript": [
+    "1. 喂 你到哪了",
+    "2. 我在地铁上 还有三站",
+    "3. 信号不太好",
+    "4. 你说什么",
+    "5. 我说你到哪了",
+    "6. 快到了 大概十分钟",
+    "7. 那我先点菜了",
+    "8. 好 别点太辣",
+    "9. 上次吃活过 你不是说胃疼吗",
+    "10. 哈哈 那这次点鸳鸯锅",
+    "11. 嗯",
+    "12. 对了 小周来吗",
+    "13. 他说不一定",
+    "14. 看他忙不忙",
+    "15. 好吧",
+    "16. 我到门口了",
+    "17. 你们在哪桌"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "一位说话人在地铁上,还有三站,大约十分钟后到。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "另一位说话人先点菜,对方要求不要点太辣。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "这次打算点鸳鸯锅。",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f4",
+     "text": "对方上次说过自己胃疼。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "g1",
+     "text": "迟到的说话人已经到了餐厅门口。",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "小周一定会来。"
+    },
+    {
+     "id": "n2",
+     "text": "餐厅的具体名称已被提到(未提及)。"
+    },
+    {
+     "id": "m1",
+     "text": "小周被说成已到场或确定会来。"
+    },
+    {
+     "id": "m2",
+     "text": "桌号被编造。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "小周是否来不确定,他说看忙不忙。"
+    },
+    {
+     "id": "u2",
+     "text": "识别结果中的'活过'可能是'火锅',无法完全确定。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation occurred near a person who could not hear the speech."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker asked where the other person was, and the other person replied that they were on the subway with approximately three stations remaining and that the signal was poor."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker then stated they were almost there, about ten minutes away, and asked the other person to order food."
+      },
+      {
+       "u": "a4",
+       "text": "The other person agreed to order duck noodles (鸳鸯锅) and mentioned that Xiao Zhou might come but was uncertain whether he would."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker agreed to wait."
+      },
+      {
+       "u": "a6",
+       "text": "No further decisions or assignments were confirmed beyond the food order and the uncertainty about Xiao Zhou's attendance."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于地点，提到在地铁上还有三站。"
+      },
+      {
+       "u": "a2",
+       "text": "信号不太好，关于具体内容的部分信息不完整。"
+      },
+      {
+       "u": "a3",
+       "text": "提到快到了，大概十分钟。"
+      },
+      {
+       "u": "a4",
+       "text": "决定先点菜，并请求不要点太辣。"
+      },
+      {
+       "u": "a5",
+       "text": "回忆上次经历，提到胃疼，决定点鸳鸯锅。"
+      },
+      {
+       "u": "a6",
+       "text": "询问小周是否来，得到回答不一定，取决于忙不忙。"
+      },
+      {
+       "u": "a7",
+       "text": "The person arrived at the entrance, asked where others were seated, and mentioned that they were about to order."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "小周询问对方目前的位置，得知其正在地铁上且距离目的地还有三站，同时提醒信号不佳。"
+      },
+      {
+       "u": "a2",
+       "text": "随后确认对方预计十分钟后到达，并建议先点餐，但特别叮嘱不要点太辣。"
+      },
+      {
+       "u": "a3",
+       "text": "考虑到对方上次因吃活鱼导致胃疼的经历，最终决定点鸳鸯锅。"
+      },
+      {
+       "u": "a4",
+       "text": "关于小周是否会来，对方表示不确定，需视其忙碌程度而定，因此暂未确定小周的行程。"
+      },
+      {
+       "u": "a5",
+       "text": "说话者表示已经到达门口，并询问对方现在坐在哪一桌。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "小周询问对方位置，得知其正在地铁上且距离目的地还有三站，同时提醒信号不佳。"
+      },
+      {
+       "u": "a2",
+       "text": "随后确认对方预计十分钟后到达，并建议先点餐，但特别叮嘱不要点太辣。"
+      },
+      {
+       "u": "a3",
+       "text": "考虑到对方上次因吃活鱼导致胃疼的经历，最终决定点鸳鸯锅。"
+      },
+      {
+       "u": "a4",
+       "text": "关于小周是否会来，对方表示不确定，需视其忙碌程度而定，因此暂未确定小周的行程。"
+      },
+      {
+       "u": "a5",
+       "text": "对方已到达门口，并询问小周目前在哪张桌子。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation occurred near a person who could not hear the speech."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker asked where the other person was, and the other person replied that they were on the subway with approximately three stations remaining and that the signal was poor."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker then stated they were almost there, about ten minutes away, and asked the other person to order food."
+      },
+      {
+       "u": "a4",
+       "text": "The other person agreed to order duck noodles (鸳鸯锅) and mentioned that Xiao Zhou might come but was uncertain whether he would."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker agreed to wait."
+      },
+      {
+       "u": "a6",
+       "text": "No further decisions or assignments were confirmed beyond the food order and the uncertainty about Xiao Zhou's attendance."
+      },
+      {
+       "u": "a7",
+       "text": "The person arrived at the door and asked where the other person was."
+      },
+      {
+       "u": "a8",
+       "text": "They mentioned being about ten minutes away and asked the other person to order food."
+      },
+      {
+       "u": "a9",
+       "text": "The other person agreed to order duck noodles and said Xiao Zhou might come but was uncertain about his attendance."
+      },
+      {
+       "u": "a10",
+       "text": "The speaker agreed to wait."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于地点，提到在地铁上还有三站。"
+      },
+      {
+       "u": "a2",
+       "text": "信号不太好，关于具体内容的部分信息不完整。"
+      },
+      {
+       "u": "a3",
+       "text": "提到快到了，大概十分钟。"
+      },
+      {
+       "u": "a4",
+       "text": "决定先点菜，并请求不要点太辣。"
+      },
+      {
+       "u": "a5",
+       "text": "回忆上次经历，提到胃疼，决定点鸳鸯锅。"
+      },
+      {
+       "u": "a6",
+       "text": "询问小周是否来，得到回答不一定，取决于忙不忙。"
+      },
+      {
+       "u": "a7",
+       "text": "我到门口了。"
+      },
+      {
+       "u": "a8",
+       "text": "你们在哪桌。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-017",
+   "language": "zh",
+   "transcript": [
+    "1. 我把行程再念一遍",
+    "2. 周五晚上八点四十五的航班从上海飞成都",
+    "3. 航班号是MU五四一二",
+    "4. 晚上十一点半到",
+    "5. 酒店订在春熙路附近 叫锦程酒店",
+    "6. 房间是两间 每晚四百二十块",
+    "7. 周六上午去都江堰",
+    "8. 包车 司机姓赵 八点准时在酒店门口",
+    "9. 门票每人八十元",
+    "10. 中午在那边吃饭 大概一个人五十",
+    "11. 下午回来逛宽窄巷子",
+    "12. 周日上午去熊猫基地 要早点去",
+    "13. 八点半入园 人少",
+    "14. 下午三点去机场",
+    "15. 回程是周日晚上七点五十的航班",
+    "16. 回上海 十点多到",
+    "17. 对了 都江堰的车费我已经付了",
+    "18. 一共六百",
+    "19. 赵师傅的电话我发群里",
+    "20. 熊猫基地要提前网上预约",
+    "21. 我今晚预约"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "周五晚上八点四十五乘MU5412航班从上海飞成都,晚上十一点半到。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "酒店是春熙路附近的锦程酒店,订了两间房。",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f3",
+     "text": "周六上午包车去都江堰,姓赵的司机八点准时在酒店门口等。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "都江堰门票每人八十元,午饭大约每人五十元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "周六下午回来逛宽窄巷子。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f6",
+     "text": "周日上午去熊猫基地,八点半入园。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "周日下午三点去机场,晚上七点五十的航班回上海,十点多到。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "g1",
+     "text": "都江堰包车费用已由说话人付清,共六百元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "g2",
+     "text": "赵师傅的电话会发到群里。",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "g3",
+     "text": "熊猫基地需要提前网上预约,说话人今晚去预约。",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "酒店含早餐(未提及)。"
+    },
+    {
+     "id": "n2",
+     "text": "包车费用已被说明(未提及)。"
+    },
+    {
+     "id": "n3",
+     "text": "熊猫基地门票价格已被说明(未提及)。"
+    },
+    {
+     "id": "m1",
+     "text": "熊猫基地已经预约好。"
+    },
+    {
+     "id": "m2",
+     "text": "车费六百元被说成每人六百元。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "酒店每晚四百二十块是每间房的价格还是两间的总价不明确。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "一份行程被重复说明，包含周五晚上八点四十五分的航班，航班号为MU五四一二，从上海飞往成都，晚上十一点半抵达。"
+      },
+      {
+       "u": "a2",
+       "text": "酒店位于春熙路附近，名为锦程酒店，房间为两间，每晚四百二十元。"
+      },
+      {
+       "u": "a3",
+       "text": "周六上午前往都江堰，包车司机姓赵，八点准时在酒店门口，门票每人八十元，午餐费用大约为每人五十元，下午在宽窄巷子游览。"
+      },
+      {
+       "u": "a4",
+       "text": "周日上午前往熊猫基地，八点半入园，下午三点前往机场。"
+      },
+      {
+       "u": "a5",
+       "text": "回程为周日晚上七点五十的航班，抵达上海时间为十点多。"
+      },
+      {
+       "u": "a6",
+       "text": "车费已付六百元，赵师傅的电话已发群里，熊猫基地需提前网上预约，今晚已预约。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我把行程再念一遍，周五晚上八点四十五的航班从上海飞成都，航班号是MU五四一二，晚上十一点半到，酒店订在春熙路附近叫锦程酒店，房间是两间，每晚四百二十块。"
+      },
+      {
+       "u": "a2",
+       "text": "周六上午去都江堰，包车，司机姓赵，八点准时在酒店门口，门票每人八十元，中午在那边吃饭，大概一个人五十，下午回来逛宽窄巷子。"
+      },
+      {
+       "u": "a3",
+       "text": "周日上午去熊猫基地，八点半入园，人少，下午三点去机场，回程是周日晚上七点五十的航班，回上海，十点多到。"
+      },
+      {
+       "u": "a4",
+       "text": "对了 都江堰的车费我已经付了"
+      },
+      {
+       "u": "a5",
+       "text": "一共六百"
+      },
+      {
+       "u": "a6",
+       "text": "赵师傅的电话我发群里"
+      },
+      {
+       "u": "a7",
+       "text": "熊猫基地要提前网上预约"
+      },
+      {
+       "u": "a8",
+       "text": "我今晚预约"
+      },
+      {
+       "u": "a9",
+       "text": "更新后的行程如下：周五晚上八点四十五从上海飞成都，航班号MU五四一二，晚上十一点半到，酒店在春熙路附近的锦程酒店，房间两间，每晚四百二十块。"
+      },
+      {
+       "u": "a10",
+       "text": "周六上午去都江堰，包车，司机赵，八点准时在酒店门口，门票每人八十元，中午吃饭约十元，下午回来逛宽窄巷子。"
+      },
+      {
+       "u": "a11",
+       "text": "周日上午去熊猫基地，八点半入园，人少，下午三点去机场，回程是周日晚上七点五十的航班，回上海，十点多到。"
+      },
+      {
+       "u": "a12",
+       "text": "都江堰的车费已付，一共六百。"
+      },
+      {
+       "u": "a13",
+       "text": "赵师傅的电话已发群里。"
+      },
+      {
+       "u": "a14",
+       "text": "熊猫基地需提前网上预约，今晚已预约。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "一份行程被重复说明，包含周五晚上八点四十五分的航班，航班号为MU五四一二，从上海飞往成都，晚上十一点半抵达。"
+      },
+      {
+       "u": "a2",
+       "text": "酒店位于春熙路附近，名为锦程酒店，房间为两间，每晚四百二十元。"
+      },
+      {
+       "u": "a3",
+       "text": "周六上午前往都江堰，包车司机姓赵，八点准时在酒店门口，门票每人八十元，午餐费用大约为每人五十元，下午在宽窄巷子游览。"
+      },
+      {
+       "u": "a4",
+       "text": "周日上午前往熊猫基地，八点半入园，下午三点前往机场。"
+      },
+      {
+       "u": "a5",
+       "text": "回程为周日晚上七点五十的航班，抵达上海时间为十点多。"
+      },
+      {
+       "u": "a6",
+       "text": "The person said they had already paid for the car in Da Jianguan, the cost was six hundred, and they had shared the driver Zhao's phone number in the group chat."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我重新梳理了行程：周五晚上八点四十五，航班 MU5412 从上海飞往成都，预计十一点半抵达，并在春熙路附近的锦程酒店预订两间房，每晚四百二十元。"
+      },
+      {
+       "u": "a2",
+       "text": "周六上午将包车前往都江堰，司机姓赵，车费已支付共六百元，八点准时在酒店门口接人，门票每人八十元，午餐人均约五十元，下午返回后逛宽窄巷子。"
+      },
+      {
+       "u": "a3",
+       "text": "周日上午需早点前往熊猫基地，建议八点半入园以避免拥挤，下午三点需前往机场。"
+      },
+      {
+       "u": "a4",
+       "text": "回程航班定在周日晚上七点五十从成都飞回上海，预计十点多抵达。"
+      },
+      {
+       "u": "a5",
+       "text": "赵师傅的电话已发至群里，且熊猫基地需提前网上预约，我今晚将完成预约。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我重新梳理了行程：周五晚上八点四十五，航班 MU5412 从上海飞往成都，预计十一点半抵达，并在春熙路附近的锦程酒店预订两间房，每晚四百二十元。"
+      },
+      {
+       "u": "a2",
+       "text": "周六上午将包车前往都江堰，司机姓赵，八点准时在酒店门口接人，门票每人八十元，午餐人均约五十元，下午返回后逛宽窄巷子。"
+      },
+      {
+       "u": "a3",
+       "text": "周日上午需早点前往熊猫基地，建议八点半入园以避免拥挤，下午三点需前往机场。"
+      },
+      {
+       "u": "a4",
+       "text": "回程航班定在周日晚上七点五十从成都飞回上海，预计十点多抵达。"
+      },
+      {
+       "u": "a5",
+       "text": "说话人确认已支付六百元的都江堰包车费用，并将赵师傅的联系方式发至群聊，同时告知需提前在线预约熊猫基地，并计划今晚完成预约。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我把行程再念一遍，周五晚上八点四十五的航班从上海飞成都，航班号是MU五四一二，晚上十一点半到，酒店订在春熙路附近叫锦程酒店，房间是两间，每晚四百二十块。"
+      },
+      {
+       "u": "a2",
+       "text": "周六上午去都江堰，包车，司机姓赵，八点准时在酒店门口，门票每人八十元，中午在那边吃饭，大概一个人五十，下午回来逛宽窄巷子。"
+      },
+      {
+       "u": "a3",
+       "text": "周日上午去熊猫基地，八点半入园，人少，下午三点去机场，回程是周日晚上七点五十的航班，回上海，十点多到。"
+      },
+      {
+       "u": "a4",
+       "text": "The person confirmed they have paid the car fee for the Dujiangyan trip and mentioned that the driver's phone number was sent to the group."
+      },
+      {
+       "u": "a5",
+       "text": "They also noted that a prior online reservation is required for the Panda Base and that they have already made a reservation for tonight."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-018",
+   "language": "zh",
+   "transcript": [
+    "1. 我们小组的科学展示是周四对吧",
+    "2. 对 第四节课",
+    "3. 我们做的是水的净化",
+    "4. 谁负责做装置",
+    "5. 我和阿杰",
+    "6. 他说他带过滤的沙子和活性炭",
+    "7. 那我带瓶子和纱布",
+    "8. 海报呢",
+    "9. 小雨说她来画",
+    "10. 她说周三下午给我们看",
+    "11. 那我们周三放学后在她家碰头",
+    "12. 不 去学校的图书馆",
+    "13. 图书馆几点关门",
+    "14. 五点",
+    "15. 那四点半碰头",
+    "16. 好 然后讲稿每个人写自己那部分",
+    "17. 我写背景 阿杰写步骤",
+    "18. 小雨写结论",
+    "19. 我们还缺一个人讲解装置",
+    "20. 我可以",
+    "21. 刚收到老师的消息",
+    "22. 展示改到周五了",
+    "23. 第二节课",
+    "24. 那周三碰头还是照常",
+    "25. 小雨海报可以多画一天"
+   ],
+   "facts": [
+    {
+     "id": "f2",
+     "text": "阿杰带过滤用的沙子和活性炭,另一位说话人带瓶子和纱布。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "小雨负责画海报,周三下午给大家看。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "周三放学后四点半在学校图书馆碰头,图书馆五点关门。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "碰头地点从小雨家改为学校图书馆。",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f6",
+     "text": "讲稿分工:说话人写背景,阿杰写步骤,小雨写结论。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "有一位成员自愿讲解装置。",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "g1",
+     "text": "周三的碰头照常进行。",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "c1",
+     "text": "科学展示改到周五第二节课,不再是周四第四节课。",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "周三在小雨家碰头(已改到图书馆)。"
+    },
+    {
+     "id": "n2",
+     "text": "海报已经画好(只说周三给大家看)。"
+    },
+    {
+     "id": "n3",
+     "text": "阿杰与说话人是兄弟或朋友关系(未提及)。"
+    },
+    {
+     "id": "m1",
+     "text": "展示仍被说成在周四。"
+    },
+    {
+     "id": "m2",
+     "text": "周三碰头被取消。"
+    },
+    {
+     "id": "m3",
+     "text": "海报已经完成。"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我们小组的科学展示已定于周五进行，具体安排为第二节课，主题仍为水的净化。"
+      },
+      {
+       "u": "a2",
+       "text": "装置制作由我和阿杰负责，其中阿杰将提供过滤用的沙子和活性炭，而我负责准备瓶子和纱布；海报由小雨绘制，她计划于周四下午在图书馆向全班展示。"
+      },
+      {
+       "u": "a3",
+       "text": "由于图书馆五点关门，我们决定将碰头时间提前至周四下午四点半。"
+      },
+      {
+       "u": "a4",
+       "text": "关于讲稿分工，我负责撰写背景部分，阿杰负责步骤，小雨负责结论，但小组目前仍缺少一名讲解装置的同学。"
+      },
+      {
+       "u": "a5",
+       "text": "我表示愿意承担讲解装置的任务，但这一决定尚未得到最终确认。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "一个小组的科学展示定于周五第二节课进行，主题是水的净化。"
+      },
+      {
+       "u": "a2",
+       "text": "阿杰负责装置，他提到带过滤的沙子和活性炭，而小组成员则负责带瓶子和纱布。"
+      },
+      {
+       "u": "a3",
+       "text": "小雨负责画海报，并于周三下午带到学校与他们见面，地点是她家，而非学校的图书馆。"
+      },
+      {
+       "u": "a4",
+       "text": "图书馆于五点关闭，因此决定于四点半在小组成员家中集合。"
+      },
+      {
+       "u": "a5",
+       "text": "任务分配如下：小组成员负责撰写讲稿，小雨负责结论，而缺少一个人负责讲解装置。"
+      },
+      {
+       "u": "a6",
+       "text": "关于展示时间，确认为周五；关于小雨的海报，确认为多画一天。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我们小组的科学展示定于周四进行，具体安排为第四节课，主题是关于水的净化。"
+      },
+      {
+       "u": "a2",
+       "text": "装置制作由我和阿杰负责，其中阿杰将提供过滤用的沙子和活性炭，而我负责准备瓶子和纱布；海报由小雨绘制，她计划于周三下午在图书馆向全班展示。"
+      },
+      {
+       "u": "a3",
+       "text": "由于图书馆五点关门，我们决定将碰头时间提前至周三下午四点半。"
+      },
+      {
+       "u": "a4",
+       "text": "关于讲稿分工，我负责撰写背景部分，阿杰负责步骤，小雨负责结论，但小组目前仍缺少一名讲解装置的同学。"
+      },
+      {
+       "u": "a5",
+       "text": "我表示愿意承担讲解装置的任务，但这一决定尚未得到最终确认。"
+      },
+      {
+       "u": "a6",
+       "text": "老师通知我们将展示时间从周四改为周五，具体安排在第二节课，但周三下午四点半的碰头会照常进行。"
+      },
+      {
+       "u": "a7",
+       "text": "此外，小雨的海报绘制时间可以延长一天。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "一个小组的科学展示定于周四第四节课进行，主题是水的净化。"
+      },
+      {
+       "u": "a2",
+       "text": "阿杰负责装置，他提到带过滤的沙子和活性炭，而小组成员则负责带瓶子和纱布。"
+      },
+      {
+       "u": "a3",
+       "text": "小雨负责画海报，并于周三下午带到学校与他们见面，地点是她家，而非学校的图书馆。"
+      },
+      {
+       "u": "a4",
+       "text": "图书馆于五点关闭，因此决定于四点半在小组成员家中集合。"
+      },
+      {
+       "u": "a5",
+       "text": "任务分配如下：小组成员负责撰写讲稿，小雨负责结论，而缺少一个人负责讲解装置。"
+      },
+      {
+       "u": "a6",
+       "text": "关于图书馆的关闭时间，确认为五点。"
+      },
+      {
+       "u": "a7",
+       "text": "The person reported receiving news about a change in the display date, noting that the demonstration would now occur on Friday, second period, and that the meeting on the previous Wednesday would still happen as planned."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group's science demonstration is scheduled for Thursday during the fourth period."
+      },
+      {
+       "u": "a2",
+       "text": "The team is working on water purification, with me and Aje (阿杰) responsible for the apparatus, which includes filtered sand and activated charcoal that he brought, along with bottles and cotton that I provided."
+      },
+      {
+       "u": "a3",
+       "text": "Xiao Yu (小雨) is handling the poster and will show them on Wednesday afternoon, and the group plans to meet at her home after school on Wednesday, before the school library closes at 5 PM, with the meeting set for 4:30 PM."
+      },
+      {
+       "u": "a4",
+       "text": "The script-writing task has been assigned: I will write the background, Aje will write the steps, and Xiao Yu will write the conclusion."
+      },
+      {
+       "u": "a5",
+       "text": "There is still one person who needs to be assigned to explain the device."
+      },
+      {
+       "u": "a6",
+       "text": "The group's science demonstration is now scheduled for Friday during the fourth period, and the script-writing task has been reassigned: I will write the background, Aje will write the steps, and Xiao Yu will write the conclusion."
+      },
+      {
+       "u": "a7",
+       "text": "One person still needs to be assigned to explain the device."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group's science demonstration is scheduled for Thursday during the fourth period, with the team working on water purification using filtered sand and activated charcoal (brought by Aje) along with bottles and cotton (provided by me)."
+      },
+      {
+       "u": "a2",
+       "text": "Xiao Yu (小雨) is handling the poster and will show it on Wednesday afternoon, and the group plans to meet at her home after school on Wednesday before the school library closes at 5 PM, with the meeting set for 4:30 PM."
+      },
+      {
+       "u": "a3",
+       "text": "The script-writing task has been assigned: I will write the background, Aje will write the steps, and Xiao Yu will write the conclusion."
+      },
+      {
+       "u": "a4",
+       "text": "There is still one person who needs to be assigned to explain the device."
+      },
+      {
+       "u": "a5",
+       "text": "The group's science demonstration was rescheduled to Friday instead of Thursday."
+      },
+      {
+       "u": "a6",
+       "text": "The meeting on Wednesday has been confirmed for 4:30 PM at Xiao Yu's home before the library closes at 5 PM."
+      },
+      {
+       "u": "a7",
+       "text": "The script-writing assignments remain unchanged."
+      },
+      {
+       "u": "a8",
+       "text": "One person still needs to be assigned to explain the device."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

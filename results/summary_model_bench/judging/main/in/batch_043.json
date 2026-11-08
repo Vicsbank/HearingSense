@@ -1,0 +1,685 @@
+{
+ "batch": "batch_043",
+ "conversations": [
+  {
+   "conversation": "fin-zh-043",
+   "language": "zh",
+   "transcript": [
+    "1. 体检报告出来了 我给你讲一下 先看血压",
+    "2. 你的血压一百三十五比八十五 稍微偏高",
+    "3. 正常范围是一百二十比八十以下 你这个属于临界",
+    "4. 空腹血糖五点八 正常 总胆固醇六点三 偏高",
+    "5. 正常应该低于五点二 所以要注意饮食",
+    "6. 尿酸四百二十 这个也有一点高 正常上限是四百二",
+    "7. 我建议少吃油腻的 少喝酒 每周运动三次 每次三十分钟",
+    "8. 体重是七十八公斤 身高一米七五 体重指数二十五点五 稍微超重",
+    "9. 三个月后再来复查血脂和尿酸 大概是一月中旬",
+    "10. 血压每天在家量两次 早晚各一次 记下来",
+    "11. 如果超过一百四十比九十 就要马上来看门诊",
+    "12. 需要挂心内科的号 好的 谢谢医生"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "血压一百三十五比八十五，稍微偏高，属于临界",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f2",
+     "text": "空腹血糖五点八，正常",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "总胆固醇六点三，偏高，正常应低于五点二",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "尿酸四百二十，有一点高，正常上限是四百二",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "体重七十八公斤，身高一米七五，体重指数二十五点五，稍微超重",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "医生建议少吃油腻、少喝酒，每周运动三次，每次三十分钟",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "三个月后（大约一月中旬）复查血脂和尿酸",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "每天在家早晚各量一次血压并记录",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f9",
+     "text": "血压超过一百四十比九十就要马上来门诊，需要挂心内科的号",
+     "critical": true,
+     "kind": "number"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "患者确诊为高血压（医生说只是临界偏高）"
+    },
+    {
+     "id": "n2",
+     "text": "空腹血糖偏高"
+    },
+    {
+     "id": "n3",
+     "text": "患者需要开始吃降压药"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "体检报告显示血压为135比85，略高于正常范围120比80以下，空腹血糖5.8正常，总胆固醇6.3偏高，尿酸420略高。"
+      },
+      {
+       "u": "a2",
+       "text": "医生建议少吃油腻食物、少喝酒，并每周运动三次，每次30分钟，当前体重78公斤，身高1.75米，BMI为25.5，稍超重。"
+      },
+      {
+       "u": "a3",
+       "text": "复查血脂和尿酸的时间定在1月中旬，血压需每日早晚在家测量两次并记录。"
+      },
+      {
+       "u": "a4",
+       "text": "若血压超过140比90，应立即挂心内科门诊就诊。"
+      },
+      {
+       "u": "k1",
+       "text": "血压135比85，略高于正常范围"
+      },
+      {
+       "u": "k2",
+       "text": "总胆固醇6.3偏高，需控制饮食"
+      },
+      {
+       "u": "k3",
+       "text": "尿酸420略高，建议少喝酒"
+      },
+      {
+       "u": "k4",
+       "text": "每周运动三次，每次30分钟"
+      },
+      {
+       "u": "k5",
+       "text": "三个月后1月中旬复查血脂和尿酸"
+      },
+      {
+       "u": "k6",
+       "text": "血压超过140比90需挂心内科"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "体检报告显示您的血压为 135/85 mmHg，略高于正常范围（120/80 mmHg 以下），属于临界状态；空腹血糖 5.8 mmol/L 正常，总胆固醇 6.3 mmol/L 偏高（正常应低于 5.2 mmol/L），尿酸 420 μmol/L 也略高（正常上限为 420 μmol/L）。"
+      },
+      {
+       "u": "a2",
+       "text": "医生建议控制饮食，减少油腻食物和饮酒，并每周运动三次，每次持续三十分钟。"
+      },
+      {
+       "u": "a3",
+       "text": "您的体重为 78 公斤，身高 175 厘米，体重指数 25.5，略微超重。"
+      },
+      {
+       "u": "a4",
+       "text": "请于三个月后（约 1 月中旬）复查血脂和尿酸，并每日在家早晚各测量一次血压，记录结果。"
+      },
+      {
+       "u": "a5",
+       "text": "若血压超过 140/90 mmHg，需立即前往心内科门诊就诊。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The doctor reviewed the patient's blood pressure, fasting glucose, total cholesterol, and uric acid levels during a checkup."
+      },
+      {
+       "u": "a2",
+       "text": "Blood pressure was 135/85 (slightly high), fasting glucose was 5.8 (normal), total cholesterol was 6.3 (high), and uric acid was 420 (slightly high)."
+      },
+      {
+       "u": "a3",
+       "text": "The doctor advised reducing fatty foods and alcohol, exercising three times weekly for 30 minutes, and monitoring weight (78 kg, 1.75 m height, BMI 25.5)."
+      },
+      {
+       "u": "a4",
+       "text": "A follow-up is scheduled in about a month to recheck blood lipids and uric acid."
+      },
+      {
+       "u": "k1",
+       "text": "Blood pressure is 135/85, slightly high; classified as critical range"
+      },
+      {
+       "u": "k2",
+       "text": "Fasting glucose is 5.8, within normal range"
+      },
+      {
+       "u": "k3",
+       "text": "Total cholesterol is 6.3, above the normal limit of 5.2"
+      },
+      {
+       "u": "k4",
+       "text": "Uric acid is 420, slightly high with a normal upper limit of 420"
+      },
+      {
+       "u": "k5",
+       "text": "Doctor recommends reducing oil-rich foods and alcohol consumption"
+      },
+      {
+       "u": "k6",
+       "text": "Exercise three times per week for 30 minutes"
+      },
+      {
+       "u": "k7",
+       "text": "Weight is 78 kg, height 1.75 m, BMI 25.5 (slightly overweight)"
+      },
+      {
+       "u": "k8",
+       "text": "Follow-up in about a month to recheck blood lipids and uric acid"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "检查结果显示血压为一百三十五比八十五，略高，正常范围为一百二十比八十以下。"
+      },
+      {
+       "u": "a2",
+       "text": "空腹血糖为五点八，总胆固醇为六点三，偏高，正常应低于五点二。"
+      },
+      {
+       "u": "a3",
+       "text": "尿酸为四百二十，略高，正常上限为四百二。"
+      },
+      {
+       "u": "a4",
+       "text": "建议减少油腻食物、减少饮酒、每周运动三次，每次三十分钟。"
+      },
+      {
+       "u": "a5",
+       "text": "体重为七十八公斤，身高一米七五，体重指数为二十五点五，略高。"
+      },
+      {
+       "u": "a6",
+       "text": "确立复查计划：三个月后来检查血脂和尿酸，时间大约在一月中旬。"
+      },
+      {
+       "u": "a7",
+       "text": "血压每日在家测量两次，早晚各一次，并记录。"
+      },
+      {
+       "u": "a8",
+       "text": "若测量结果超过一百四十比九十，需立即就诊，需要挂号心内科。"
+      },
+      {
+       "u": "a9",
+       "text": "相关记录或建议部分为缺失。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A health report showed a blood pressure of 135/85, which is slightly high, with a normal range of 120/80 or below, and this is considered critical."
+      },
+      {
+       "u": "a2",
+       "text": "The fasting blood sugar was 5.8, total cholesterol 6.3 (higher than the normal 5.2), and urine acid 420 (higher than the normal 402)."
+      },
+      {
+       "u": "a3",
+       "text": "They advised reducing oily foods, drinking less alcohol, and exercising three times a week for 30 minutes each session."
+      },
+      {
+       "u": "a4",
+       "text": "The weight is 78 kg, height 1.75 m, and body mass index 25.5 (slightly overweight)."
+      },
+      {
+       "u": "a5",
+       "text": "They suggested returning in three months for blood lipid and urine acid testing around mid-February, and that blood pressure should be measured twice daily at home, once in the morning and once in the evening, with results recorded."
+      },
+      {
+       "u": "a6",
+       "text": "If readings exceed 140/90, they agreed immediate clinic care is needed, and a cardiology appointment is required."
+      },
+      {
+       "u": "a7",
+       "text": "The details of the appointment, including the exact date or location, are missing."
+      },
+      {
+       "u": "k1",
+       "text": "Blood pressure is 135/85, slightly high."
+      },
+      {
+       "u": "k2",
+       "text": "Fasting blood sugar is 5.8."
+      },
+      {
+       "u": "k3",
+       "text": "Total cholesterol is 6.3."
+      },
+      {
+       "u": "k4",
+       "text": "Urine acid is 420."
+      },
+      {
+       "u": "k5",
+       "text": "Exercise three times a week for 30 minutes."
+      },
+      {
+       "u": "k6",
+       "text": "Weight is 78 kg, height 1.75 m, BMI 25.5."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "医生告诉我我的血压是135/85，属于临界范围，正常应低于120/80。"
+      },
+      {
+       "u": "a2",
+       "text": "空腹血糖为5.8，略高于正常值，建议注意饮食；总胆固醇为6.3，超过正常上限5.2，需注意饮食；尿酸为420，略高于上限420，建议少吃油腻食物、少喝酒，每周运动三次，每次三十分钟。"
+      },
+      {
+       "u": "a3",
+       "text": "体重78公斤，身高1.75米，BMI为25.5，稍微超重。"
+      },
+      {
+       "u": "a4",
+       "text": "三个月后再来复查血脂和尿酸，大概在一月中旬。"
+      },
+      {
+       "u": "a5",
+       "text": "医生建议我每天在家量血压，早晚各一次，记录下来；如果血压超过140/90，应立即去门诊，需挂心内科号。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-044",
+   "language": "zh",
+   "transcript": [
+    "1. 科学展的题目 我们得今天定下来",
+    "2. 我想做水质检测 小林说他想做土壤",
+    "3. 我没说想做土壤 我是说也可以考虑",
+    "4. 哦 那你到底想做哪个 我都行",
+    "5. 那就水质 学校旁边那条河就可以 采样三个点",
+    "6. 采样要老师同意 我去问张老师 她上周说过可以",
+    "7. 不是张老师 是李老师负责科学展 张老师是班主任",
+    "8. 哦对 那我问李老师 他明天在办公室",
+    "9. 测量要用试纸 一盒二十块 我们三个人分",
+    "10. 他说他带显微镜 那个是学校的吗 不是 是他爸爸的",
+    "11. 那别弄坏了 要不要先问问他爸爸同意不同意",
+    "12. 他应该问过了 反正他说没问题",
+    "13. 好 下周三我们去采样 要提前把表格做好"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "小组决定科学展题目做水质检测",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f2",
+     "text": "采样地点是学校旁边的河，采样三个点",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f3",
+     "text": "采样需要老师同意，改为去问负责科学展的李老师，他明天在办公室",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "张老师是班主任，不是负责科学展的老师",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f5",
+     "text": "测量要用试纸，一盒二十块，三个人分摊",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "有人要带显微镜，那是他爸爸的，不是学校的",
+     "critical": true,
+     "kind": "relation"
+    },
+    {
+     "id": "f7",
+     "text": "下周三去采样，需要提前把记录表格做好",
+     "critical": true,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "小林一定想做土壤研究（他只说过也可以考虑）"
+    },
+    {
+     "id": "n2",
+     "text": "负责科学展的是张老师"
+    },
+    {
+     "id": "n3",
+     "text": "显微镜是学校的，也已经取得他爸爸同意"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "带显微镜的同学是否真的问过他爸爸，只是说应该问过"
+    },
+    {
+     "id": "u2",
+     "text": "李老师是否同意采样尚未确认，因为还没去问"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "科学展的题目今天定下来，决定做水质检测，小林说想做土壤，但已调整为考虑。"
+      },
+      {
+       "u": "a2",
+       "text": "学校旁边那条河是采样地点，共三个点，采样需老师同意，李老师负责，需先问她明天在办公室。"
+      },
+      {
+       "u": "a3",
+       "text": "测量用试纸，一盒二十块，三人分担，小林说带显微镜，但不明是学校还是他爸爸的。"
+      },
+      {
+       "u": "a4",
+       "text": "决定先询问他爸爸是否同意，因为已说没问题。"
+      },
+      {
+       "u": "a5",
+       "text": "下周三去采样，需提前做好表格。"
+      },
+      {
+       "u": "a6",
+       "text": "相关信息：李老师、办公室、显微镜、表格。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容缺失。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "科学展的题目定于今天确定，最终决定由小林负责水质检测，采样地点为学校旁边的一条河，共设三个采样点。"
+      },
+      {
+       "u": "a2",
+       "text": "采样前需获得老师同意，经澄清后确认由李老师负责科学展工作，而非张老师，因此计划明天去李老师办公室询问。"
+      },
+      {
+       "u": "a3",
+       "text": "采样将使用试纸，每人分得一盒二十块中的三份，而显微镜由小林自带，但他父亲拥有该设备，因此需先征得父亲同意以免损坏。"
+      },
+      {
+       "u": "a4",
+       "text": "采样活动定于下周三进行，在此之前需提前准备好表格，且小林已表示愿意协助。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The science fair topic must be decided today, and water quality testing is being considered instead of soil testing, though soil is also an option."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed water quality will be done at the river next to the school, sampling three points with teacher approval."
+      },
+      {
+       "u": "a3",
+       "text": "To ask Li Teacher, not Zhang Teacher, since Li Teacher is in charge, and to ask her tomorrow in the office."
+      },
+      {
+       "u": "a4",
+       "text": "measurement will use test strips, with one box costing twenty units, and three people will share the workload."
+      },
+      {
+       "u": "a5",
+       "text": "Carrying a microscope, which belongs to the school but is owned by someone’s dad, so permission from the dad is needed."
+      },
+      {
+       "u": "a6",
+       "text": "they agreed to check with the dad first, as the person said permission was granted."
+      },
+      {
+       "u": "a7",
+       "text": "the plan is to sample on next Wednesday, with advance preparation of a table, but the name of the person with the microscope is missing."
+      },
+      {
+       "u": "a8",
+       "text": "the schedule includes next week Wednesday for sampling, and the exact table details are not specified."
+      },
+      {
+       "u": "a9",
+       "text": "missing information includes the name of the person with the microscope and the full content of the conversation about the microscope."
+      },
+      {
+       "u": "a10",
+       "text": "they agreed to proceed but nothing is finalized yet."
+      },
+      {
+       "u": "k1",
+       "text": "The science fair topic must be decided today."
+      },
+      {
+       "u": "k2",
+       "text": "Water quality testing is planned, soil testing is not."
+      },
+      {
+       "u": "k3",
+       "text": "Sampling will be done at the river next to the school at three points."
+      },
+      {
+       "u": "k4",
+       "text": "Li Teacher is responsible for the science fair."
+      },
+      {
+       "u": "k5",
+       "text": "Someone will ask Li Teacher tomorrow in the office."
+      },
+      {
+       "u": "k6",
+       "text": "Measurement will use test strips, one box costs twenty units, and three people will share the workload."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "科学展的题目已定，主讲人决定以水质检测为主题。"
+      },
+      {
+       "u": "a2",
+       "text": "小林提议做水质检测，原本小林说想做土壤，但主讲人表示也可以考虑，最终决定以水质检测为项目。"
+      },
+      {
+       "u": "a3",
+       "text": "采样计划在学校旁边那条河的三个点进行，需要老师同意，主讲人将去询问张老师（实际是李老师负责科学展，张老师是班主任）。"
+      },
+      {
+       "u": "a4",
+       "text": "主讲人询问李老师，李老师表示明天在办公室可测量，测量将使用试纸（一盒二十块，三人分担）。"
+      },
+      {
+       "u": "a5",
+       "text": "关于显微镜，主讲人询问是否学校拥有，李老师说明是他爸爸的，建议先询问爸爸同意。"
+      },
+      {
+       "u": "a6",
+       "text": "最后约定下周三进行采样，并需提前准备表格。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to focus on water quality testing at the school's nearby river for the science fair, with sampling points to be determined by the teacher."
+      },
+      {
+       "u": "a2",
+       "text": "They confirmed that Li Teacher is responsible for the project, not Zhang Teacher, and will ask her for permission next Monday."
+      },
+      {
+       "u": "a3",
+       "text": "The plan involves using twenty test strips shared among three people, while a microscope provided by Li Teacher's father will be used for analysis."
+      },
+      {
+       "u": "a4",
+       "text": "Sampling is scheduled for next Wednesday, with the requirement to complete the form beforehand and obtain teacher approval."
+      },
+      {
+       "u": "a5",
+       "text": "It was clarified that the microscope belongs to the teacher's father and should not be damaged during the process."
+      },
+      {
+       "u": "k1",
+       "text": "The project topic is water quality testing at the school's nearby river."
+      },
+      {
+       "u": "k2",
+       "text": "Li Teacher is responsible for the science fair project."
+      },
+      {
+       "u": "k3",
+       "text": "Sampling will occur at three points next Wednesday."
+      },
+      {
+       "u": "k4",
+       "text": "Twenty test strips will be shared among three people."
+      },
+      {
+       "u": "k5",
+       "text": "A microscope provided by Li Teacher's father will be used."
+      },
+      {
+       "u": "k6",
+       "text": "The form must be completed before the sampling date."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to focus on water quality testing for the science fair."
+      },
+      {
+       "u": "a2",
+       "text": "They chose to sample three points along the river near the school."
+      },
+      {
+       "u": "a3",
+       "text": "They need teacher approval for sampling and plan to ask Li Teacher about the microscope."
+      },
+      {
+       "u": "a4",
+       "text": "The meeting is scheduled for next Wednesday with three people dividing a box of twenty test strips."
+      },
+      {
+       "u": "a5",
+       "text": "They will prepare the sampling table beforehand."
+      },
+      {
+       "u": "k1",
+       "text": "The science fair topic is water quality testing"
+      },
+      {
+       "u": "k2",
+       "text": "Three sampling points will be taken along the river near the school"
+      },
+      {
+       "u": "k3",
+       "text": "Teacher approval is required for sampling"
+      },
+      {
+       "u": "k4",
+       "text": "The group of three will share a box of twenty test strips"
+      },
+      {
+       "u": "k5",
+       "text": "Li Teacher is the one responsible for the science fair (not Zhang Teacher)"
+      },
+      {
+       "u": "k6",
+       "text": "Sampling is scheduled for next Wednesday"
+      },
+      {
+       "u": "k7",
+       "text": "A table must be prepared before the sampling trip"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

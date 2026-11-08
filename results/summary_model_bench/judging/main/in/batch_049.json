@@ -1,0 +1,750 @@
+{
+ "batch": "batch_049",
+ "conversations": [
+  {
+   "conversation": "fin-mix-011",
+   "language": "mixed",
+   "transcript": [
+    "1. 我们 国庆 去 日本 的 flight 我 订好 了 十月一号 早上 七点五十 从 Pudong 出发",
+    "2. 到 Osaka 的 Kansai 是 当地 十一点 二十 flight number 是 MU 五百 二十",
+    "3. 回程 是 十月 七号 下午 四点 十五 对吧",
+    "4. 对 回来 是 五点 四十 到 上海",
+    "5. 酒店 呢 我 订 了 Kyoto 的 一家 叫 Sakura Inn 一晚 一万 两千 日元",
+    "6. 住 四 晚 十月 一 号 到 五 号 然后 最后 两 晚 在 Osaka",
+    "7. Osaka 那 家 是 Namba 附近 总共 两晚 一万 八千 日元",
+    "8. 等 一下 Kyoto 一晚 是 一万 二 还是 一万 三",
+    "9. 一万 二 我 看 了 booking 的 confirmation",
+    "10. 好 那 JR pass 要 买 吗 七天 的 大概 五万 日元",
+    "11. 我 查 过 了 其实 不 划算 我们 买 单程 票 就 够",
+    "12. okay 那 我 把 行程 发 到 群 里 你 记得 check passport 有效期",
+    "13. 我 的 是 二零二八 年 到期 没 问题"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The outbound flight is October 1 at 7:50 am from Pudong, arriving at Kansai, Osaka at 11:20 local time.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The outbound flight number is MU 520.",
+     "critical": true,
+     "kind": "name"
+    },
+    {
+     "id": "f3",
+     "text": "The return flight is October 7 at 4:15 pm, arriving in Shanghai at 5:40.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "Kyoto hotel Sakura Inn costs 12,000 yen per night for four nights, October 1 to 5.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "The Kyoto price was corrected: 12,000 yen per night, not 13,000, per the booking confirmation.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f6",
+     "text": "The last two nights are in Osaka near Namba for a total of 18,000 yen.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "They decided not to buy a JR Pass (about 50,000 yen for seven days) and will buy single tickets instead.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f8",
+     "text": "The speaker's passport expires in 2028.",
+     "critical": false,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Kyoto costs 13,000 yen per night (not correct)."
+    },
+    {
+     "id": "n2",
+     "text": "They bought a JR Pass."
+    },
+    {
+     "id": "n3",
+     "text": "The trip includes visiting Tokyo."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The user is asking for a recap of a conversation that took place near a person who could not hear it."
+      },
+      {
+       "u": "a2",
+       "text": "The transcript is provided, and I need to write a detailed, accurate, natural recap of four to eight sentences."
+      },
+      {
+       "u": "a3",
+       "text": "I must preserve important facts: names, dates, times, numbers, places, decisions, requests, assigned tasks, and anything left open or uncertain."
+      },
+      {
+       "u": "a4",
+       "text": "If someone corrects an earlier statement, I should report the corrected value."
+      },
+      {
+       "u": "a5",
+       "text": "I should not repeat myself, use only what is in the transcript, and not add details, reasons, relationships, or feelings not said."
+      },
+      {
+       "u": "a6",
+       "text": "I must keep every \"not\" and \"no\" and not guess what a garbled passage meant."
+      },
+      {
+       "u": "a7",
+       "text": "If the transcript marks speech that could not be transcribed, I should say that part is missing."
+      },
+      {
+       "u": "a8",
+       "text": "The language should be the same as the conversation (if it mixes Chinese and English, write in Chinese and keep English terms as they were said)."
+      },
+      {
+       "u": "a9",
+       "text": "I should write only the recap as plain paragraph text."
+      },
+      {
+       "u": "a10",
+       "text": "Let me analyze the transcript:"
+      },
+      {
+       "u": "a11",
+       "text": "- The speaker is talking about a trip to Japan for National Day (国庆)."
+      },
+      {
+       "u": "a12",
+       "text": "- They booked a flight from Pudong to Osaka on October 1st at 7:50 AM, flight number MU 520, arriving at Kansai at 11:20."
+      },
+      {
+       "u": "a13",
+       "text": "- Return flight is October 7th at 4:15 PM, arriving in Shanghai at 5:40 PM."
+      },
+      {
+       "u": "a14",
+       "text": "- They stayed at Sakura Inn in Kyoto from October 1st to 5th (4 nights), costing 10,000 yen for the first night and 8,000 yen for the second night (total 18,000 yen for 2 nights)."
+      },
+      {
+       "u": "a15",
+       "text": "- They were unsure about the cost of staying one night in Kyoto (1,000 or 2,000 yen) and confirmed it was 1,000 yen."
+      },
+      {
+       "u": "a16",
+       "text": "- They discussed whether to buy a JR pass; the speaker said it's not worth it and they will use single-ride tickets."
+      },
+      {
+       "u": "a17",
+       "text": "- They decided to share the itinerary with the group and remind everyone to check passport validity."
+      },
+      {
+       "u": "a18",
+       "text": "The speaker's passport is valid until 2028."
+      },
+      {
+       "u": "a19",
+       "text": "Key facts to include:"
+      },
+      {
+       "u": "a20",
+       "text": "- Flight details: departure October 1st 7:50 AM from Pudong, arrival Osaka Kansai 11:20, flight MU 520; return October 7th 4:15 PM, arrival Shanghai 5:40 PM."
+      },
+      {
+       "u": "a21",
+       "text": "- Accommodation:"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A flight for 国庆 to 日本 was booked for 十月一号 早上 七点五十 from Pudong to 大阪 康采尔斯塔特, with the local flight at 十一点二十, flight number MU 五百 二十."
+      },
+      {
+       "u": "a2",
+       "text": "The return flight is set for 十月七号 下午 四点十五, arriving at 五点四十 in 上海."
+      },
+      {
+       "u": "a3",
+       "text": "A hotel at 京都的Sakura Inn was reserved for 一晚, 一万 两千 日元, for 四 晚 from 十月一号 to 十月五号, followed by 两晚 at 大阪的Namba area, totaling 一万 八千 日元."
+      },
+      {
+       "u": "a4",
+       "text": "The accommodation cost for 京都的一晚 was corrected to 一万 三千。"
+      },
+      {
+       "u": "a5",
+       "text": "JR pass for 七天 was considered but deemed not cost-effective, so a single-trip ticket was selected."
+      },
+      {
+       "u": "a6",
+       "text": "The itinerary was sent to 群, and it was noted that passport validity was confirmed as 二零二八年有效。"
+      },
+      {
+       "u": "a7",
+       "text": "相关信息如 booking 确认和行程细节存在缺失。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The speaker confirmed their flight to Japan was booked for October 1st at 7:50 AM from Pudong, departing for Osaka at 12:20 PM on flight MU 520, with a return flight on October 7th at 4:15 PM arriving in Shanghai at 5:40 PM."
+      },
+      {
+       "u": "a2",
+       "text": "They booked a one-night stay at Sakura Inn in Kyoto from October 1st to 5th, and two nights in Osaka (Namba area) from October 1st to 5th."
+      },
+      {
+       "u": "a3",
+       "text": "They questioned whether a JR pass was needed and whether a seven-day pass costing around 50,000 yen was worthwhile, concluding that single tickets were sufficient."
+      },
+      {
+       "u": "a4",
+       "text": "They also asked to share the itinerary to a group and reminded everyone to check passport validity, noting their passport expires in 2028 with no issues."
+      },
+      {
+       "u": "k1",
+       "text": "Flight to Japan booked for October 1st at 7:50 AM from Pudong, departing for Osaka at 12:20 PM on flight MU 520"
+      },
+      {
+       "u": "k2",
+       "text": "Return flight scheduled for October 7th at 4:15 PM arriving in Shanghai at 5:40 PM"
+      },
+      {
+       "u": "k3",
+       "text": "Hotel booked at Sakura Inn in Kyoto from October 1st to 5th for one night"
+      },
+      {
+       "u": "k4",
+       "text": "Two nights stayed in Osaka (Namba area) from October 1st to 5th"
+      },
+      {
+       "u": "k5",
+       "text": "Discussion about whether to buy a seven-day JR pass costing approximately 50,000 yen"
+      },
+      {
+       "u": "k6",
+       "text": "Decision to use single tickets instead of a JR pass"
+      },
+      {
+       "u": "k7",
+       "text": "Request to share itinerary to group and reminder to check passport validity (expires 2028)"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone confirmed a round-trip flight from Pudong to Osaka on October 1st at 7:50 AM with a return on October 7th at 4:15 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The itinerary includes a 4-night stay in Kyoto at Sakura Inn for 12,000 yen and 2 nights near Namba in Osaka for 18,000 yen."
+      },
+      {
+       "u": "a3",
+       "text": "After verifying the price, they decided against buying a 7-day JR pass, opting instead for single tickets."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker will send the full itinerary to a group chat and reminded everyone to check their passport validity, noting the speaker's passport expires in 2028."
+      },
+      {
+       "u": "k1",
+       "text": "The outbound flight departs Pudong on October 1st at 7:50 AM."
+      },
+      {
+       "u": "k2",
+       "text": "The return flight arrives in Shanghai on October 7th at 5:40 PM."
+      },
+      {
+       "u": "k3",
+       "text": "The Kyoto hotel is Sakura Inn for 4 nights at 12,000 yen per night."
+      },
+      {
+       "u": "k4",
+       "text": "The Osaka hotel is near Namba for 2 nights at 9,000 yen per night."
+      },
+      {
+       "u": "k5",
+       "text": "The group decided to buy single tickets instead of a 7-day JR pass."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker will send the itinerary to the group chat."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The flight for National Day to Japan is booked for October 1 at 7:50 AM from Pudong to Osaka, Kansai at 11:20 AM, with flight number MU 520, and the return is October 7 at 4:15 PM, arriving at 5:40 PM in Shanghai."
+      },
+      {
+       "u": "a2",
+       "text": "someone agreed the hotel in Kyoto is Sakura Inn for one night at 11,200 yen, with a four-night stay from October 1 to October 5, and the last two nights in Osaka at Namba for 11,800 yen."
+      },
+      {
+       "u": "a3",
+       "text": "someone checked the booking confirmation for Kyoto and confirmed it is 11,200 yen."
+      },
+      {
+       "u": "a4",
+       "text": "someone agreed a 7-day JR pass is about 50,000 yen but decided to buy single-trip tickets instead because it’s not cost-effective."
+      },
+      {
+       "u": "a5",
+       "text": "To send the itinerary to a group and to check the passport validity, confirming the passport expires in 2028."
+      },
+      {
+       "u": "a6",
+       "text": "the missing part is unclear, but someone said to wait."
+      },
+      {
+       "u": "a7",
+       "text": "someone agreed to proceed with the plan."
+      },
+      {
+       "u": "k1",
+       "text": "Flight from Pudong to Osaka on October 1 at 7:50 AM, flight number MU 520."
+      },
+      {
+       "u": "k2",
+       "text": "Return flight on October 7 at 4:15 PM, arrival in Shanghai at 5:40 PM."
+      },
+      {
+       "u": "k3",
+       "text": "Hotel in Kyoto: Sakura Inn, one night at 11,200 yen, four nights from October 1 to October 5."
+      },
+      {
+       "u": "k4",
+       "text": "Hotel in Osaka: Namba area, two nights at 11,800 yen."
+      },
+      {
+       "u": "k5",
+       "text": "JR pass: 7-day pass costs about 50,000 yen, single-trip tickets recommended."
+      },
+      {
+       "u": "k6",
+       "text": "Passport validity: expires in 2028."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我们已确认国庆期间前往日本的行程，去程航班定于十月一号早上七点五十从浦东机场起飞，MU520航班抵达大阪关西机场，当地时间为十一点二十；回程航班为十月七日下午四点十五从关西出发，预计五点四十抵达上海。"
+      },
+      {
+       "u": "a2",
+       "text": "住宿方面，京都的樱之宿酒店（Sakura Inn）一晚一万二日元，共四晚（十月一号至五号），大阪的难波附近酒店共两晚，总价一万八千日元。"
+      },
+      {
+       "u": "a3",
+       "text": "关于 JR Pass，经确认购买单程票更为划算，因此决定不购买七天 JR Pass。"
+      },
+      {
+       "u": "a4",
+       "text": "最后，我已将完整行程发送至群聊，并提醒检查护照有效期，其中我的护照将于二零二八年到期，目前没有问题。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-mix-012",
+   "language": "mixed",
+   "transcript": [
+    "1. 诶 Physics 的 lab partner 到底 怎么 分 啊",
+    "2. Mr. Chen 说 两个 人 一组 但是 Amy 和 Zoe 说 他们 要 三个 人",
+    "3. 最后 好像 是 可以 三个 人 只 限 她们 那 组 因为 班上 是 单数",
+    "4. 那 我 跟 谁 一组 你 跟 Ryan 吗",
+    "5. 我 本来 说 跟 Ryan 但 他 说 他 跟 Marcus 了",
+    "6. 那 你 跟 我 吧 我们 做 pendulum 那个 实验",
+    "7. pendulum 不是 要 做 两周 吗",
+    "8. 不是 一周 哦 他 说 data 要 在 十月 二十五 号 交 他 说 是 一周 多一点",
+    "9. 不 他 说 的 是 二十 八 号 因为 二十 五 号 是 周日",
+    "10. 对 二十 八 号 周三 对 是 二十 八",
+    "11. 他 还 说 它 要 用 stopwatch 不 能 用 手机 因为 它 不 准",
+    "12. 谁 的 它 不 准 手机 吗 还是 stopwatch",
+    "13. 手机 的 啦 他 说 手机 的 timer 有 delay",
+    "14. 好 那 我 去 跟 Mr. Chen 说 我们 两个 一组",
+    "15. 嗯 你 顺便 问 一下 report 要 手写 还是 打字"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Lab groups are pairs, except Amy and Zoe's group may have three because the class has an odd number of students.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f2",
+     "text": "Ryan is working with Marcus, so the two speakers will pair up.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f3",
+     "text": "The pair will do the pendulum experiment.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "The data is due on October 28, a Wednesday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "The due date was corrected from October 25 to October 28 because the 25th is a Sunday.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f6",
+     "text": "A stopwatch must be used rather than a phone, because the phone timer has a delay.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f7",
+     "text": "One speaker will tell Mr. Chen the two of them form a group.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The data is due October 25 (superseded)."
+    },
+    {
+     "id": "n2",
+     "text": "Mr. Chen said phones can be used for timing."
+    },
+    {
+     "id": "n3",
+     "text": "The experiment lasts two weeks (disputed and corrected to about a week)."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether the lab report must be handwritten or typed is not known; one speaker will ask."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The physics lab group assignment was unclear, with a decision made that three people could work together in one group because the class has an odd number of students, and Amy and Zoe were assigned to that group."
+      },
+      {
+       "u": "a2",
+       "text": "someone agreed Amy would work with the narrator instead of Ryan, who had already been paired with Marcus, and they decided to do the pendulum experiment."
+      },
+      {
+       "u": "a3",
+       "text": "The experiment requires data collection over one week, but clarified it is slightly longer, with a deadline of October 28th instead of October 25th because October 25th is a Sunday."
+      },
+      {
+       "u": "a4",
+       "text": "A stopwatch must be used because a phone timer has a delay."
+      },
+      {
+       "u": "a5",
+       "text": "someone decided to speak with Mr. Chen about being in the same group."
+      },
+      {
+       "u": "a6",
+       "text": "someone asked if the report should be handwritten or typed."
+      },
+      {
+       "u": "a7",
+       "text": "the missing part is: '那 我 去 跟 Mr. Chen 说 我们 两个 一组' and '嗯 你 顺便 问 一下 report 要 手写 还是 打字'."
+      },
+      {
+       "u": "k1",
+       "text": "The group assignment requires three people in one group."
+      },
+      {
+       "u": "k2",
+       "text": "Amy and Zoe are in the group with three people."
+      },
+      {
+       "u": "k3",
+       "text": "Amy will work with the narrator instead of Ryan."
+      },
+      {
+       "u": "k4",
+       "text": "Ryan is working with Marcus."
+      },
+      {
+       "u": "k5",
+       "text": "The pendulum experiment requires data collection over one week."
+      },
+      {
+       "u": "k6",
+       "text": "The deadline for data is October 28th, not October 25th."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于 Physics 的 lab 组别，有人说两个人一组，但 Amy 和 Zoe 说需要三个人，最后决定是三个成员一组，仅限她们组，因为班级是单数。"
+      },
+      {
+       "u": "a2",
+       "text": "原本打算与 Ryan 合作，但 Ryan 说已与 Marcus 合作，因此决定与对话者合作，共同进行 pendulum 实验。"
+      },
+      {
+       "u": "a3",
+       "text": "关于实验时长，有人说两周，但后来调整为一周，数据要在十月二十五号提交，后来改为二十八号，因为二十五号是周日。"
+      },
+      {
+       "u": "a4",
+       "text": "还提到需要用 stopwatch，不能用手机，因为手机计时有延迟。"
+      },
+      {
+       "u": "a5",
+       "text": "对话者决定去与 Mr. Chen 确认两人一组，并顺便询问 report 是否需要手写或打字。"
+      },
+      {
+       "u": "a6",
+       "text": "部分内容如具体分组细节和报告格式是否正确，尚不明确。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "在 Physics 实验室分组安排中，Mr."
+      },
+      {
+       "u": "a2",
+       "text": "Chen 最初表示两人一组，但 Amy 和 Zoe 坚持要求三人一组，最终因班级人数为单数而获准三人一组。"
+      },
+      {
+       "u": "a3",
+       "text": "说话者原本打算与 Ryan 一组，但 Ryan 已表示要与 Marcus 一组，因此说话者决定与对方配对。"
+      },
+      {
+       "u": "a4",
+       "text": "两人将共同完成 pendulum 实验，该实验持续一周多，数据提交日期确认为十月二十八日（周三），而非最初提到的十月二十五日。"
+      },
+      {
+       "u": "a5",
+       "text": "实验要求使用秒表计时，禁止使用手机计时器，因为手机计时存在延迟。"
+      },
+      {
+       "u": "a6",
+       "text": "说话者计划去向 Mr. Chen 确认两人一组并询问报告是否需要手写。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place near a person who could not hear the speech, so some lines are missing or garbled."
+      },
+      {
+       "u": "a2",
+       "text": "Mr. Chen initially stated that lab partners should be two people per group, but Amy and Zoe wanted to be three people."
+      },
+      {
+       "u": "a3",
+       "text": "It was later clarified that only Zoe and her group of three could be limited to three people because the class has an odd number."
+      },
+      {
+       "u": "a4",
+       "text": "When asked who to pair with, the speaker said they would pair with Ryan, but Ryan stated he was paired with Marcus instead."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to form a pair and work on the pendulum experiment."
+      },
+      {
+       "u": "a6",
+       "text": "The pendulum experiment is not supposed to take two weeks but one week; however, the deadline for data submission is October 25th, and Ryan corrected this to October 28th because October 25th is a Sunday."
+      },
+      {
+       "u": "a7",
+       "text": "The data must be submitted on October 28th (Wednesday)."
+      },
+      {
+       "u": "a8",
+       "text": "The experiment requires a stopwatch, not a phone, because the phone's timer has a delay."
+      },
+      {
+       "u": "a9",
+       "text": "The speaker plans to inform Mr. Chen that they are a pair of two."
+      },
+      {
+       "u": "a10",
+       "text": "A report is mentioned"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Mr. Chen suggested two-person groups, but Amy and Zoe wanted three people."
+      },
+      {
+       "u": "a2",
+       "text": "They decided three people could work together since the class has an odd number."
+      },
+      {
+       "u": "a3",
+       "text": "Someone asked who they should be paired with, and they agreed to pair with Ryan."
+      },
+      {
+       "u": "a4",
+       "text": "However, Ryan said he was paired with Marcus, so they decided to pair with each other instead."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to do the pendulum experiment."
+      },
+      {
+       "u": "a6",
+       "text": "The deadline for data is October 25th, but Ryan clarified it is actually October 28th because October 25th is a Sunday."
+      },
+      {
+       "u": "a7",
+       "text": "They confirmed the deadline is October 28th (Wednesday) and that a stopwatch is required instead of a phone due to timing delays."
+      },
+      {
+       "u": "a8",
+       "text": "Finally, they agreed to write the report by hand."
+      },
+      {
+       "u": "k1",
+       "text": "Mr. Chen proposed two-person groups for the lab."
+      },
+      {
+       "u": "k2",
+       "text": "Amy and Zoe wanted to be in a three-person group."
+      },
+      {
+       "u": "k3",
+       "text": "They decided three people can work together since the class has an odd number."
+      },
+      {
+       "u": "k4",
+       "text": "They agreed to pair with each other instead of Ryan."
+      },
+      {
+       "u": "k5",
+       "text": "The pendulum experiment is required."
+      },
+      {
+       "u": "k6",
+       "text": "Data must be submitted by October 25th, but Ryan clarified it is October 28th (Wednesday)."
+      },
+      {
+       "u": "k7",
+       "text": "A stopwatch is needed instead of a phone due to timing delays."
+      },
+      {
+       "u": "k8",
+       "text": "They agreed to write the report by hand."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about forming lab groups where Mr. Chen initially suggested pairs, but Amy and Zoe requested a group of three, which was approved because the class size is odd."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker decided to pair up with the listener, while the listener confirmed they are already paired with Ryan and will work with the speaker on the pendulum experiment."
+      },
+      {
+       "u": "a3",
+       "text": "The experiment duration was clarified as one week, with data submission scheduled for October 28th, which is a Wednesday, correcting the initial thought of October 25th."
+      },
+      {
+       "u": "a4",
+       "text": "The group must use a stopwatch for timing because phone timers have a delay, and the speaker plans to inform Mr. Chen about the two-person arrangement."
+      },
+      {
+       "u": "a5",
+       "text": "The listener also asked whether the report needs to be handwritten or typed."
+      },
+      {
+       "u": "k1",
+       "text": "The lab groups are three people instead of two."
+      },
+      {
+       "u": "k2",
+       "text": "The speaker will be paired with the listener for the pendulum experiment."
+      },
+      {
+       "u": "k3",
+       "text": "The listener is already paired with Ryan."
+      },
+      {
+       "u": "k4",
+       "text": "Data must be submitted by October 28th."
+      },
+      {
+       "u": "k5",
+       "text": "A stopwatch must be used because phone timers are inaccurate."
+      },
+      {
+       "u": "k6",
+       "text": "The experiment duration is one week."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

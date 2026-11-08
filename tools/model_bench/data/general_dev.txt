@@ -1,0 +1,24 @@
+# Hearing Sense local model benchmark — general abilities, DEVELOPMENT set (pilot and format checks only).
+# Written for this benchmark (October 2026). Item lines: id | category | kind | answer | prompt   (\n = line break)
+# kind: mc (letter), yn (yes/no), exact (short answer; alternatives a;b), json (expected object),
+#       sum (rules: must=a;b / any=c;d / forbid=e / max=<words>)
+gd01|logic|mc|B|All glorps are red. Tim is a glorp. What follows?\nA. Tim is not red.\nB. Tim is red.\nC. All red things are glorps.\nD. Nothing follows.
+gd02|logic|exact|3|Ann is taller than Ben. Ben is taller than Cy. Dee is shorter than Cy. How many people are taller than Dee? Answer with a number.
+gd03|instruction|exact|river|Reply with the fourth word of this sentence: The old stone river bridge collapsed yesterday.
+gd04|instruction|exact|7|Count the words in this phrase and answer with a number: we will meet again by the lake
+gd05|semantic|yn|yes|Do these two sentences mean the same? "The shop shuts at six." and "The store closes at 6 pm."
+gd06|semantic|mc|C|Which word is closest in meaning to "postpone"?\nA. cancel\nB. hurry\nC. delay\nD. forget
+gd07|causal|mc|A|The streets were flooded because the river burst its banks. What was the cause?\nA. The river burst its banks.\nB. The streets were flooded.\nC. It was a cold day.\nD. There was no cause.
+gd08|causal|yn|no|Maya watered the plant every day, but it died because the room had no light. Did the plant die because of a lack of water?
+gd09|negation|yn|no|"Not all of the trains were late." Were all of the trains late?
+gd10|negation|yn|yes|"The meeting was not cancelled." Did the meeting take place as far as we know?
+gd11|hypothetical|yn|no|"If it had rained, the match would have been called off." Did it rain?
+gd12|hypothetical|yn|no|"I wish I had bought the tickets." Did the speaker buy the tickets?
+gd13|context|exact|the trophy;trophy|"The trophy did not fit in the suitcase because it was too big." What was too big? Answer with two words.
+gd14|context|mc|B|At a restaurant someone says: "Could we get the bill?" What do they want?\nA. A bird's beak\nB. To pay\nC. A proposed law\nD. A poster
+gd15|ambiguity|yn|yes|"I saw the man with the telescope." Can this sentence be understood in more than one way?
+gd16|ambiguity|mc|C|"Can you pass the salt?" said at dinner is most likely\nA. a question about ability\nB. a joke\nC. a polite request\nD. a complaint
+gd17|structured|json|{"name": "Lea", "age": 31}|Extract into JSON with the keys "name" (string) and "age" (number): Lea turned 31 last week.
+gd18|structured|json|{"city": "Oslo", "delayed": true}|Extract into JSON with the keys "city" (string) and "delayed" (true or false): The flight to Oslo is running two hours late.
+gd19|summary|sum|must=bridge / any=closed;shut;closure / max=14|Summarize in one sentence of at most 12 words: The town council said on Monday that the old bridge will be closed for repairs for six weeks starting in May, and drivers will have to use the ring road.
+gd20|summary|sum|must=library / any=sunday;sundays / forbid=saturday / max=14|Summarize in one sentence of at most 12 words: After many requests from students, the city library will now also open on Sundays from ten to four, the director announced.

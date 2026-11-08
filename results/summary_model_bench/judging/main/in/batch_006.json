@@ -1,0 +1,799 @@
+{
+ "batch": "batch_006",
+ "conversations": [
+  {
+   "conversation": "fin-en-013",
+   "language": "en",
+   "transcript": [
+    "1. okay let me read the itinerary back to you",
+    "2. we fly out Thursday March sixth on Skyline flight two eighteen",
+    "3. departure is six forty a.m. from Gate B twelve",
+    "4. wait they sent an update this morning the departure moved to seven oh five",
+    "5. oh good I hate the early ones okay seven oh five",
+    "6. we land in Lisbon at eleven fifty local time",
+    "7. and then the hotel is the Casa Alma on Rua do Carmo",
+    "8. check-in is at three but they said we can drop the bags earlier",
+    "9. the confirmation number is K R seven nine two",
+    "10. K R seven nine two got it",
+    "11. car rental we pick up Friday morning at nine at the airport desk not Thursday",
+    "12. right because we won't need it in the city the first day",
+    "13. the car is a compact and it's ninety six euros total for three days",
+    "14. ninety six for three days that's cheap",
+    "15. and the return flight is Sunday the ninth at eight fifteen p.m.",
+    "16. so we have to drop the car by five on Sunday",
+    "17. dinner Friday night is booked at a place called Tasca do Rui at eight thirty",
+    "18. for four people or five",
+    "19. four I only reserved for four",
+    "20. we need to tell Marta then because she's coming too",
+    "21. I'll text her"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The outbound flight is on Thursday March 6 on Skyline flight 218.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The outbound departure time was changed from 6:40 a.m. to 7:05 a.m.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f3",
+     "text": "The flight lands in Lisbon at 11:50 local time.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "The hotel is Casa Alma on Rua do Carmo, with check-in at 3 and early bag drop allowed.",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f5",
+     "text": "The hotel confirmation number is KR792.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "The rental car is picked up Friday morning at 9 at the airport desk, not Thursday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "The compact rental car costs 96 euros total for three days.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "The return flight is Sunday March 9 at 8:15 p.m. and the car must be returned by 5 on Sunday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f9",
+     "text": "Dinner on Friday night is booked at Tasca do Rui at 8:30.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f10",
+     "text": "The dinner reservation is for four, but Marta is coming too, and one speaker will text her.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The flight departs at 6:40 a.m."
+    },
+    {
+     "id": "n2",
+     "text": "The car is picked up on Thursday."
+    },
+    {
+     "id": "n3",
+     "text": "The dinner reservation already includes Marta."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether the departure gate is still B12 after the schedule update is not stated."
+    },
+    {
+     "id": "u2",
+     "text": "Whether the dinner reservation will be changed to five people is not settled."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group confirmed their flight out on Thursday, March 6th, with a departure time changed to 7:05 AM from Gate B12, and a return flight on Sunday, March 9th at 8:15 PM."
+      },
+      {
+       "u": "a2",
+       "text": "They will land in Lisbon at 11:50 AM local time and check into the Casa Alma hotel on Rua do Carmo, with drop-off bags allowed before the 3:00 PM check-in."
+      },
+      {
+       "u": "a3",
+       "text": "A compact car rental for 96 euros over three days is scheduled for pickup on Friday morning at 9:00 AM, with the car to be returned by 5:00 PM on Sunday."
+      },
+      {
+       "u": "a4",
+       "text": "Dinner for four people is booked at Tasca do Rui on Friday night at 8:30 PM, though the speaker noted they need to inform Marta who is also joining them."
+      },
+      {
+       "u": "a5",
+       "text": "The itinerary confirmation number is KR792, and the speaker plans to text Marta to finalize her details."
+      },
+      {
+       "u": "k1",
+       "text": "The outbound flight is Thursday, March 6th, departing at 7:05 AM from Gate B12."
+      },
+      {
+       "u": "k2",
+       "text": "The return flight is Sunday, March 9th, arriving at 8:15 PM."
+      },
+      {
+       "u": "k3",
+       "text": "The hotel is Casa Alma on Rua do Carmo with check-in at 3:00 PM."
+      },
+      {
+       "u": "k4",
+       "text": "The car rental is a compact for 96 euros for three days, picked up Friday at 9:00 AM."
+      },
+      {
+       "u": "k5",
+       "text": "The car must be returned by 5:00 PM on Sunday."
+      },
+      {
+       "u": "k6",
+       "text": "Dinner is booked for four people at Tasca do Rui on Friday at 8:30 PM."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group is departing on Thursday, March 6th, on Skyline flight 218, with a departure time of 7:05 a.m."
+      },
+      {
+       "u": "a2",
+       "text": "from Gate B12 (originally 6:40 a.m.)."
+      },
+      {
+       "u": "a3",
+       "text": "They will arrive in Lisbon at 11:50 local time and check into Casa Alma on Rua do Carmo, with check-in at 3:00 p.m."
+      },
+      {
+       "u": "a4",
+       "text": "(bags can be dropped off earlier)."
+      },
+      {
+       "u": "a5",
+       "text": "The confirmation number is K R 792."
+      },
+      {
+       "u": "a6",
+       "text": "A compact car rental is scheduled for pickup on Friday morning at 9:00 a.m."
+      },
+      {
+       "u": "a7",
+       "text": "at the airport desk for 96 euros total for three days."
+      },
+      {
+       "u": "a8",
+       "text": "The return flight is Sunday, March 9th, at 8:15 p.m., with the car to be dropped off by 5:00 p.m."
+      },
+      {
+       "u": "a9",
+       "text": "on Sunday."
+      },
+      {
+       "u": "a10",
+       "text": "Dinner is booked at Tasca do Rui on Friday night at 8:30 p.m."
+      },
+      {
+       "u": "a11",
+       "text": "for four people, and the speaker notes that Marta needs to be informed about this."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A recap of the conversation shows flights scheduled for Thursday, March sixth, on Skyline flight two eighteen, departing at seven oh five a.m."
+      },
+      {
+       "u": "a2",
+       "text": "from Gate B twelve, with landing in Lisbon at eleven fifty local time."
+      },
+      {
+       "u": "a3",
+       "text": "The hotel is Casa Alma on Rua do Carmo, with check-in at three but an earlier drop-off allowed."
+      },
+      {
+       "u": "a4",
+       "text": "The confirmation number is K R seven nine two."
+      },
+      {
+       "u": "a5",
+       "text": "Car rental is set for Friday morning at nine at the airport desk, not Thursday, with a compact vehicle costing ninety six euros total for three days, and the car must be returned by five on Sunday."
+      },
+      {
+       "u": "a6",
+       "text": "Dinner Friday night is booked at Tasca do Rui at eight thirty for four or five people, with a correction noting four was reserved."
+      },
+      {
+       "u": "a7",
+       "text": "The speaker plans to text Marta because she is also coming."
+      },
+      {
+       "u": "a8",
+       "text": "Details about the car return time and dinner headcount remain uncertain."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group reviewed their travel itinerary, confirming flight details including a Thursday departure at 7:05 AM from Gate B12 and a return flight on Sunday the ninth at 8:15 PM."
+      },
+      {
+       "u": "a2",
+       "text": "They confirmed hotel booking at Casa Alma in Lisbon with check-in at 3 PM and a car rental pickup on Friday morning at 9 AM at the airport desk."
+      },
+      {
+       "u": "a3",
+       "text": "The car rental cost is 96 euros for three days, and dinner is booked at Tasca do Rui for four people on Friday night at 8:30 PM."
+      },
+      {
+       "u": "a4",
+       "text": "They need to inform Marta about the dinner reservation since she is also coming."
+      },
+      {
+       "u": "k1",
+       "text": "Flight departs Thursday March sixth at 7:05 AM from Gate B12"
+      },
+      {
+       "u": "k2",
+       "text": "Flight lands in Lisbon at 11:50 local time"
+      },
+      {
+       "u": "k3",
+       "text": "Hotel is Casa Alma on Rua do Carmo with check-in at 3 PM"
+      },
+      {
+       "u": "k4",
+       "text": "Car rental is a compact for 96 euros total for three days, picked up Friday morning at 9 AM at the airport desk"
+      },
+      {
+       "u": "k5",
+       "text": "Return flight is Sunday the ninth at 8:15 PM"
+      },
+      {
+       "u": "k6",
+       "text": "Dinner is booked at Tasca do Rui for four people on Friday night at 8:30 PM"
+      },
+      {
+       "u": "k7",
+       "text": "Marta needs to be informed about the dinner reservation"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The itinerary was confirmed for a trip starting Thursday, March 6th, with the departure time updated from 6:40 a.m."
+      },
+      {
+       "u": "a2",
+       "text": "to 7:05 a.m."
+      },
+      {
+       "u": "a3",
+       "text": "on Skyline flight 218 from Gate B12, landing in Lisbon at 11:50 a.m."
+      },
+      {
+       "u": "a4",
+       "text": "local time."
+      },
+      {
+       "u": "a5",
+       "text": "The hotel reservation is for Casa Alma on Rua do Carmo with a check-in at 3:00 p.m., though bags can be dropped off earlier, and the confirmation number is KR792."
+      },
+      {
+       "u": "a6",
+       "text": "Car rental was rescheduled to Friday morning at 9:00 a.m."
+      },
+      {
+       "u": "a7",
+       "text": "at the airport desk instead of Thursday, for a compact vehicle costing 96 euros for three days, with the car to be returned by 5:00 p.m."
+      },
+      {
+       "u": "a8",
+       "text": "on Sunday, the 9th."
+      },
+      {
+       "u": "a9",
+       "text": "Dinner on Friday night is booked for four people at Tasca do Rui at 8:30 p.m., and the speaker noted that Marta needs to be informed and will be texting her."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "To review the itinerary, which includes flying out Thursday, March 6th, on Skyline flight 218, with departure changed to 7:05 a.m."
+      },
+      {
+       "u": "a2",
+       "text": "from Gate B12, and landing in Lisbon at 11:50 local time."
+      },
+      {
+       "u": "a3",
+       "text": "check-in at the Casa Alma on Rua do Carmo is at 3:00 p.m., but bags can be dropped earlier, with confirmation number KR792."
+      },
+      {
+       "u": "a4",
+       "text": "car rental is for Friday morning at 9:00 at the airport desk, not Thursday, because the compact car costs 96 euros for three days and it won’t be needed in the city the first day."
+      },
+      {
+       "u": "a5",
+       "text": "the return flight is Sunday, March 9th, at 8:15 p.m., so the car must be returned by 5:00 p.m."
+      },
+      {
+       "u": "a6",
+       "text": "on Sunday."
+      },
+      {
+       "u": "a7",
+       "text": "dinner Friday night is booked at Tasca do Rui at 8:30 p.m."
+      },
+      {
+       "u": "a8",
+       "text": "for four people, and they need to inform Marta, who is also coming, via text."
+      },
+      {
+       "u": "a9",
+       "text": "the exact number of people for dinner is unclear, but 4 was reserved."
+      },
+      {
+       "u": "a10",
+       "text": "some information is missing."
+      },
+      {
+       "u": "k1",
+       "text": "The flight departs Thursday, March 6th, at 7:05 a.m."
+      },
+      {
+       "u": "k2",
+       "text": "The arrival in Lisbon is at 11:50 local time."
+      },
+      {
+       "u": "k3",
+       "text": "The hotel is Casa Alma on Rua do Carmo."
+      },
+      {
+       "u": "k4",
+       "text": "Check-in is at 3:00 p.m."
+      },
+      {
+       "u": "k5",
+       "text": "Car rental is Friday morning at 9:00 at the airport desk."
+      },
+      {
+       "u": "k6",
+       "text": "The car costs 96 euros for three days and is a compact car."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-014",
+   "language": "en",
+   "transcript": [
+    "1. morning everybody quick standup",
+    "2. yesterday I finished the login flow and I opened a poor request for review",
+    "3. can someone look at it today",
+    "4. I can take it after lunch",
+    "5. thanks today I'm working on the on the payment payment screen",
+    "6. blocker is the staging server is down again",
+    "7. who owns the staging server",
+    "8. that's Ravi but he's out till Wednesday",
+    "9. so we're stuck till Wednesday",
+    "10. maybe Elena can restart it she has the cooper nettys access",
+    "11. I'll ask her",
+    "12. okay next the demo for the client is Friday at two",
+    "13. so we freeze code on Thursday at noon",
+    "14. Thursday noon not Wednesday",
+    "15. right Thursday noon",
+    "16. sorry can you close the door it's loud out there",
+    "17. the the test coverage is at seventy one percent and we want eighty by the release",
+    "18. that's not gonna happen by Friday",
+    "19. no it's for the release not the demo",
+    "20. release is the end of the month the thirty first",
+    "21. okay I'll write more unit tests for the cart module",
+    "22. great and who's bringing doughnuts for Friday",
+    "23. me"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "One speaker finished the login flow yesterday and opened a pull request for review (transcribed as 'poor request').",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f2",
+     "text": "Another speaker will review the pull request after lunch today.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "The speaker is working on the payment screen today.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "The staging server is down and its owner, Ravi, is out until Wednesday.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f5",
+     "text": "One speaker will ask Elena to restart the staging server.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The client demo is Friday at 2.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "The code freeze is Thursday at noon, not Wednesday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "Test coverage is at 71 percent and the target is 80 percent by the release.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f9",
+     "text": "The release is on the 31st, the end of the month.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f10",
+     "text": "One speaker will write more unit tests for the cart module.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f11",
+     "text": "One speaker will bring doughnuts on Friday.",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Test coverage must reach 80 percent by Friday's demo."
+    },
+    {
+     "id": "n2",
+     "text": "The staging server has been restarted."
+    },
+    {
+     "id": "n3",
+     "text": "Ravi is on vacation (only that he is out is stated)."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Elena may be able to restart the server because she has some kind of access, transcribed as 'cooper nettys', probably Kubernetes."
+    },
+    {
+     "id": "u2",
+     "text": "Whether Elena will agree to restart the server is not yet known."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The standup meeting covered several key points."
+      },
+      {
+       "u": "a2",
+       "text": "Yesterday, someone finished the login flow and opened a review request that needs attention today, with the speaker offering to review it after lunch."
+      },
+      {
+       "u": "a3",
+       "text": "The team is currently working on the payment screen, but there's a blocker because the staging server is down."
+      },
+      {
+       "u": "a4",
+       "text": "Ravi owns the staging server but is unavailable until Wednesday, so the team is waiting for him or for Elena to restart it."
+      },
+      {
+       "u": "a5",
+       "text": "The client demo is scheduled for Friday at 2 PM, which means code will be frozen on Thursday at noon."
+      },
+      {
+       "u": "a6",
+       "text": "Test coverage is at 71% and needs to reach 80% by release, which won't be achieved by Friday."
+      },
+      {
+       "u": "a7",
+       "text": "The release is at the end of the month (the 31st)."
+      },
+      {
+       "u": "a8",
+       "text": "The speaker also mentioned writing more unit tests for the cart module."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The login flow was finished yesterday and a poor request was opened for review, with someone asked to look at it today and someone else able to take it after lunch."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed the blocker is the staging server being down again, with Ravi owning it but being unavailable until Wednesday, so the team is stuck until Wednesday; Elena was suggested to restart it with cooper nettys access, and someone will ask her."
+      },
+      {
+       "u": "a3",
+       "text": "The next demo for the client is Friday at two, so code must be frozen on Thursday at noon, confirmed as Thursday noon not Wednesday."
+      },
+      {
+       "u": "a4",
+       "text": "Someone asked to close the door because it's loud, and the test coverage is at seventy-one percent, which is not enough for the eighty percent needed by the release, though it's for the release not the demo."
+      },
+      {
+       "u": "a5",
+       "text": "The release is the end of the month, the thirty-first, and someone will write more unit tests for the cart module."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed they will bring doughnuts for Friday, and that part is missing."
+      },
+      {
+       "u": "k1",
+       "text": "The login flow was finished yesterday."
+      },
+      {
+       "u": "k2",
+       "text": "A poor request for review was opened."
+      },
+      {
+       "u": "k3",
+       "text": "The blocker is the staging server being down."
+      },
+      {
+       "u": "k4",
+       "text": "Ravi owns the staging server and is out till Wednesday."
+      },
+      {
+       "u": "k5",
+       "text": "Elena has cooper nettys access and can restart the server."
+      },
+      {
+       "u": "k6",
+       "text": "The demo for the client is Friday at two, code freeze on Thursday at noon, Thursday noon not Wednesday, Thursday noon confirmed."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The speaker finished the login flow and opened a poor request for review, asking someone to look at it today after lunch."
+      },
+      {
+       "u": "a2",
+       "text": "They are working on the payment screen but the staging server is down because Ravi is out until Wednesday, causing a blocker."
+      },
+      {
+       "u": "a3",
+       "text": "They suggest Elena might restart the server since she has the cooper nettys access."
+      },
+      {
+       "u": "a4",
+       "text": "The demo for the client is scheduled for Friday at two, and code will be frozen on Thursday at noon."
+      },
+      {
+       "u": "a5",
+       "text": "Test coverage is at seventy one percent and needs to reach eighty by release, which won't happen by Friday."
+      },
+      {
+       "u": "a6",
+       "text": "The release is at the end of the month, on the thirty first."
+      },
+      {
+       "u": "k1",
+       "text": "The login flow was finished and a poor request for review was opened, needing attention today after lunch."
+      },
+      {
+       "u": "k2",
+       "text": "The payment screen work is blocked because the staging server is down."
+      },
+      {
+       "u": "k3",
+       "text": "Ravi owns the staging server but is out until Wednesday, creating a blocker."
+      },
+      {
+       "u": "k4",
+       "text": "Elena may restart the server as she has cooper nettys access."
+      },
+      {
+       "u": "k5",
+       "text": "The client demo is on Friday at two."
+      },
+      {
+       "u": "k6",
+       "text": "Code will be frozen on Thursday at noon."
+      },
+      {
+       "u": "k7",
+       "text": "Test coverage is at seventy one percent and needs to reach eighty by release."
+      },
+      {
+       "u": "k8",
+       "text": "The release is on the thirty first, not the demo date."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A quick standup took place, where work on the login flow was noted completed yesterday, and a poor request was opened for review with a request for someone to look at it today."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker mentioned they could take it after lunch and stated they were working on the payment screen, noting a blocker due to the staging server being down again."
+      },
+      {
+       "u": "a3",
+       "text": "It was clarified that the server owner is Ravi, who is unavailable until Wednesday, leaving the team stuck until then."
+      },
+      {
+       "u": "a4",
+       "text": "Elena was suggested to restart the server with cooper nettys access, and the speaker planned to ask her."
+      },
+      {
+       "u": "a5",
+       "text": "The demo for the client was scheduled for Friday at two, with code freezing on Thursday at noon, confirmed as Thursday noon, not Wednesday."
+      },
+      {
+       "u": "a6",
+       "text": "The test coverage was at seventy-one percent, and an eighty percent target was set for the release, which is the end of the month, the thirty-first."
+      },
+      {
+       "u": "a7",
+       "text": "The speaker agreed to write more unit tests for the cart module and confirmed they would bring doughnuts for Friday."
+      },
+      {
+       "u": "a8",
+       "text": "A request to close the door was made, and the statement that the test coverage is not sufficient by Friday was acknowledged."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team discussed finishing the login flow and requested a review, with the speaker offering to handle it after lunch."
+      },
+      {
+       "u": "a2",
+       "text": "A blocker was identified where the staging server is down, owned by Ravi who is out until Wednesday, leaving the team stuck until then unless Elena restarts it."
+      },
+      {
+       "u": "a3",
+       "text": "The demo for the client is scheduled for Friday at two, but code must be frozen on Thursday at noon, not Wednesday."
+      },
+      {
+       "u": "a4",
+       "text": "Test coverage is currently at seventy-one percent, but the requirement for eighty percent applies to the release on the thirty-first of the month, not the demo."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker agreed to write more unit tests for the cart module and volunteered to bring doughnuts for Friday."
+      },
+      {
+       "u": "k1",
+       "text": "The login flow is finished and needs review by the end of the day."
+      },
+      {
+       "u": "k2",
+       "text": "The team is blocked on the staging server until Wednesday because Ravi is out."
+      },
+      {
+       "u": "k3",
+       "text": "Elena may restart the staging server if needed."
+      },
+      {
+       "u": "k4",
+       "text": "Code must be frozen on Thursday at noon for the Friday demo."
+      },
+      {
+       "u": "k5",
+       "text": "The release date is the thirty-first of the month."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker will write more unit tests for the cart module."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "During the morning standup, the team confirmed that the login flow was completed yesterday, with a pull request opened for review that the speaker intends to address after lunch."
+      },
+      {
+       "u": "a2",
+       "text": "The payment screen development is currently blocked because the staging server is down again, and since Ravi, who owns it, is out until Wednesday, the team is stuck until then unless Elena restarts it using her Cooper Netty access."
+      },
+      {
+       "u": "a3",
+       "text": "Regarding the client demo scheduled for Friday at two, the team agreed to freeze code on Thursday at noon, correcting an earlier mention of Wednesday."
+      },
+      {
+       "u": "a4",
+       "text": "The test coverage goal is eighty percent by the end of the month on the thirty-first, clarifying that the seventy-one percent current level is not expected to be met by Friday."
+      },
+      {
+       "u": "a5",
+       "text": "Finally, the speaker volunteered to write additional unit tests for the cart module and offered to bring doughnuts for the Friday demo."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

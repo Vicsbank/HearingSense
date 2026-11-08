@@ -1,0 +1,833 @@
+{
+ "batch": "batch_019",
+ "conversations": [
+  {
+   "conversation": "fin-en-039",
+   "language": "en",
+   "transcript": [
+    "1. attention passengers flight for one eight to Denver is now boarding at gate B fourteen",
+    "2. is that us",
+    "3. no ours is the Seattle flight at six forty",
+    "4. did the gate change",
+    "5. it says gate B twelve now it was B nine before",
+    "6. okay B twelve then",
+    "7. we have like forty minutes should we get food",
+    "8. yeah there's a burger place near gate B ten",
+    "9. I want a coffee more than a burger",
+    "10. the line for coffee is huge look",
+    "11. ugh okay burger place then",
+    "12. can you text mom after we eat",
+    "13. yeah yeah I will",
+    "14. attention passengers the six forty to Seattle is delayed delayed until seven ten",
+    "15. great another thirty minutes",
+    "16. well more time to eat",
+    "17. do we still go to B twelve",
+    "18. I think so unless it changes again",
+    "19. okay let's go eat",
+    "20. do you have the boarding passes on your phone",
+    "21. yes in the wallet app but my battery is at fifteen percent",
+    "22. I have a charger and there's an outlet right by the burger place",
+    "23. perfect lead the way",
+    "24. and watch the bags",
+    "25. I've got them"
+   ],
+   "facts": [
+    {
+     "id": "f7",
+     "text": "One speaker's phone battery is at 15 percent and holds the boarding passes; the other has a charger, and an outlet is by the burger place.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f1",
+     "text": "The speakers are traveling on the Seattle flight, originally at 6:40.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "The Seattle flight's gate changed from B9 to B12.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f3",
+     "text": "The Seattle flight is delayed until 7:10.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f4",
+     "text": "The flight boarding at gate B14 is to Denver and is not the speakers' flight.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f5",
+     "text": "The coffee line is very long, so the speakers decide to eat at the burger place near gate B10.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f6",
+     "text": "One speaker will text mom after they eat.",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The Seattle flight leaves at 6:40."
+    },
+    {
+     "id": "n2",
+     "text": "Mom is waiting for them in Seattle (never stated)."
+    },
+    {
+     "id": "n3",
+     "text": "The flight to Denver is the speakers' flight."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The Denver flight number is garbled in the transcript ('for one eight', possibly 418)."
+    },
+    {
+     "id": "u2",
+     "text": "Whether the gate will change again is unknown."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Passengers were informed that the flight to Denver is boarding at gate B12, while the Seattle flight is delayed until 7:10."
+      },
+      {
+       "u": "a2",
+       "text": "The group decided to eat at a burger place near gate B10 instead of getting coffee because the line was too long."
+      },
+      {
+       "u": "a3",
+       "text": "They agreed that someone would text their mother after they finished eating."
+      },
+      {
+       "u": "a4",
+       "text": "A concern was raised about the phone battery being at 15%, but a charger outlet was found near the food location."
+      },
+      {
+       "u": "a5",
+       "text": "The passengers agreed to watch their bags while they eat."
+      },
+      {
+       "u": "k1",
+       "text": "The Denver flight is boarding at gate B12."
+      },
+      {
+       "u": "k2",
+       "text": "The Seattle flight is delayed until 7:10."
+      },
+      {
+       "u": "k3",
+       "text": "The group decided to eat at a burger place near gate B10."
+      },
+      {
+       "u": "k4",
+       "text": "Someone will text mom after they eat."
+      },
+      {
+       "u": "k5",
+       "text": "The phone battery is at 15 percent."
+      },
+      {
+       "u": "k6",
+       "text": "A charger outlet is located near the burger place."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Passengers were boarding for a flight to Denver at gate B twelve, which changed from B nine to B twelve."
+      },
+      {
+       "u": "a2",
+       "text": "The flight was delayed until 7:10, giving them more time to eat."
+      },
+      {
+       "u": "a3",
+       "text": "They decided to go to the burger place near gate B ten and requested coffee, though the line was long."
+      },
+      {
+       "u": "a4",
+       "text": "After eating, they agreed to text their mom and were reminded to check boarding passes on their phone."
+      },
+      {
+       "u": "a5",
+       "text": "The battery was at 15% but a charger was available near the burger place."
+      },
+      {
+       "u": "k1",
+       "text": "The flight to Denver was boarding at gate B twelve, which had changed from B nine."
+      },
+      {
+       "u": "k2",
+       "text": "The flight was delayed until 7:10, providing additional time to eat."
+      },
+      {
+       "u": "k3",
+       "text": "Passengers decided to go to the burger place near gate B ten."
+      },
+      {
+       "u": "k4",
+       "text": "There was a long line for coffee, and they requested coffee more than a burger."
+      },
+      {
+       "u": "k5",
+       "text": "After eating, they agreed to text their mom."
+      },
+      {
+       "u": "k6",
+       "text": "Boarding passes were on the phone in the wallet app with 15% battery."
+      },
+      {
+       "u": "k7",
+       "text": "A charger was available near the burger place."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation occurred near a person who could not hear it, and the transcript captures the key events and decisions from the boarding announcement."
+      },
+      {
+       "u": "a2",
+       "text": "Passengers were informed that the flight to Denver at 8:30 was boarding at gate B14, but the gate was later updated to B12, and the boarding time was approximately 6:40."
+      },
+      {
+       "u": "a3",
+       "text": "After confirming the gate change, the group was given about forty minutes to eat, with a burger place near gate B10 and a coffee line that was described as huge."
+      },
+      {
+       "u": "a4",
+       "text": "The group decided to go to the burger place, and the person with the phone agreed to text their mom after they ate."
+      },
+      {
+       "u": "a5",
+       "text": "The boarding passes were confirmed to be on the phone in the wallet app, though the battery was at 15 percent, and a charger was available near the burger place."
+      },
+      {
+       "u": "a6",
+       "text": "The group was instructed to watch their bags and was led to the burger place, with the person stating they had the bags."
+      },
+      {
+       "u": "a7",
+       "text": "The flight to Seattle at 6:40 was later delayed until 7:10, providing additional time to eat."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group confirmed they are on the flight to Denver, not the Seattle flight which is scheduled for 6:40 PM."
+      },
+      {
+       "u": "a2",
+       "text": "After realizing the gate changed from B9 to B12, they decided to head to the burger place near gate B10 for food, noting that the coffee line is too long."
+      },
+      {
+       "u": "a3",
+       "text": "One passenger requested a coffee over a burger, but the group agreed to eat at the burger place first."
+      },
+      {
+       "u": "a4",
+       "text": "They planned to text their mother after eating, and the passenger with the phone noted their battery is at 15% but has a charger available near the food location."
+      },
+      {
+       "u": "a5",
+       "text": "The Seattle flight was announced as delayed until 7:10 PM, adding another 30 minutes to the schedule."
+      },
+      {
+       "u": "a6",
+       "text": "The group agreed to head to gate B12 for boarding, with one person offering to watch their bags while the others eat."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A person near the gate is told the flight for one eight to Denver is boarding at gate B fourteen, and it is confirmed that the Seattle flight at six forty is not the correct one."
+      },
+      {
+       "u": "a2",
+       "text": "The gate is updated from B nine to B twelve, and it is agreed to proceed to B twelve."
+      },
+      {
+       "u": "a3",
+       "text": "A request is made about getting food, and a burger place near gate B ten is mentioned, though a coffee preference is noted."
+      },
+      {
+       "u": "a4",
+       "text": "The line for coffee is described as huge, so a burger is chosen instead."
+      },
+      {
+       "u": "a5",
+       "text": "A request to text mom after eating is accepted, and the flight to Seattle is delayed until seven ten, adding thirty minutes."
+      },
+      {
+       "u": "a6",
+       "text": "It is decided to go to B twelve, and someone confirms having boarding passes in the wallet app with a fifteen percent battery, noting a charger and outlet near the burger place."
+      },
+      {
+       "u": "a7",
+       "text": "The person is instructed to lead the way and watch the bags, which are already accounted for."
+      },
+      {
+       "u": "a8",
+       "text": "Details about the delay and gate changes remain uncertain."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The flight for one eight to Denver is now boarding at gate B fourteen, but the Seattle flight at six forty is delayed until seven ten, adding another thirty minutes."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed the gate changed from B nine to B twelve, and they decided to get food at gate B ten, choosing a burger instead of coffee because the coffee line is huge."
+      },
+      {
+       "u": "a3",
+       "text": "Someone asked if they could text mom after eating, and they agreed."
+      },
+      {
+       "u": "a4",
+       "text": "They checked that boarding passes are in the wallet app with a fifteen percent battery, but a charger and outlet near the burger place are available."
+      },
+      {
+       "u": "a5",
+       "text": "They decided to go to B twelve to eat, and someone agreed to lead the way while watching bags."
+      },
+      {
+       "u": "a6",
+       "text": "The conversation is missing details about the exact nature of the delay or any other unclear information."
+      },
+      {
+       "u": "a7",
+       "text": "They agreed to proceed, but the final destination or specific meal preferences are not confirmed."
+      },
+      {
+       "u": "k1",
+       "text": "The flight for one eight to Denver is boarding at gate B fourteen."
+      },
+      {
+       "u": "k2",
+       "text": "The Seattle flight at six forty is delayed until seven ten."
+      },
+      {
+       "u": "k3",
+       "text": "The gate changed from B nine to B twelve."
+      },
+      {
+       "u": "k4",
+       "text": "They decided to eat at gate B ten."
+      },
+      {
+       "u": "k5",
+       "text": "They chose a burger over coffee."
+      },
+      {
+       "u": "k6",
+       "text": "They checked the wallet app for boarding passes with a fifteen percent battery."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-040",
+   "language": "en",
+   "transcript": [
+    "1. okay community garden committee let's start",
+    "2. did Walt get the compost delivered",
+    "3. he said Friday but it came Thursday which is fine",
+    "4. wait I thought it hadn't come I was there Thursday evening",
+    "5. it's behind the shed maybe you missed it",
+    "6. oh okay",
+    "7. next the plot assignments we have twenty four plots and thirty one applicants",
+    "8. so seven people wait",
+    "9. unless Brenda's group gives up their two plots she said she might",
+    "10. might or will",
+    "11. she said might she's checking with the school",
+    "12. okay we do a lottery for the rest",
+    "13. when's the lottery",
+    "14. let's do it at the open day on April twelfth",
+    "15. I thought open day was the nineteenth",
+    "16. no that's the rain date",
+    "17. okay so the twelfth with the nineteenth as backup",
+    "18. and who's running the lottery",
+    "19. I can do it with Omar",
+    "20. good and the water bill was higher this month three hundred and forty",
+    "21. higher than what",
+    "22. last month was two twenty",
+    "23. that's the hose Walt left on I think",
+    "24. do we know that",
+    "25. no just guessing"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The compost was delivered on Thursday, a day earlier than the Friday Walt had said, and is behind the shed.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f2",
+     "text": "The garden has 24 plots and 31 applicants, so seven people would be left waiting.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "Remaining plots will be assigned by lottery.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f4",
+     "text": "The lottery will be held at the open day on April 12, with April 19 as the rain date.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "One speaker and Omar will run the lottery.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The water bill this month is $340, compared with $220 last month.",
+     "critical": true,
+     "kind": "number"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Brenda's group has given up its two plots."
+    },
+    {
+     "id": "n2",
+     "text": "The open day is on April 19."
+    },
+    {
+     "id": "n3",
+     "text": "Walt left the hose on (only a guess)."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether Brenda's group will give up its two plots is unconfirmed; she said 'might' and is checking with the school."
+    },
+    {
+     "id": "u2",
+     "text": "The cause of the higher water bill is unknown; a left-on hose is only a guess."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The community garden committee discussed whether Walt received his compost delivery, noting that while he expected it on Friday, it actually arrived on Thursday, which was acceptable."
+      },
+      {
+       "u": "a2",
+       "text": "Regarding plot assignments, there are twenty-four plots for thirty-one applicants, resulting in seven people on a waiting list unless Brenda's group relinquishes their two plots, a possibility she is currently verifying with the school."
+      },
+      {
+       "u": "a3",
+       "text": "The committee decided to hold the lottery for the remaining applicants on April twelfth, with April nineteenth serving as the rain date, correcting the initial assumption that the event would be on the nineteenth."
+      },
+      {
+       "u": "a4",
+       "text": "Omar agreed to run the lottery, and the group also addressed a water bill increase to three hundred and forty dollars, which is higher than last month's two hundred and twenty dollars."
+      },
+      {
+       "u": "a5",
+       "text": "This discrepancy was attributed to Walt leaving a hose on, though the committee admitted they only have a guess about this cause and no confirmed confirmation."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The community garden committee discussed the compost delivery, noting it arrived on Thursday instead of Friday."
+      },
+      {
+       "u": "a2",
+       "text": "They reviewed plot assignments, with 24 plots and 31 applicants, and mentioned that Brenda's group might give up their two plots for a lottery."
+      },
+      {
+       "u": "a3",
+       "text": "The lottery was scheduled for April 12th, with April 19th as a backup date."
+      },
+      {
+       "u": "a4",
+       "text": "Someone offered to run the lottery with Omar."
+      },
+      {
+       "u": "a5",
+       "text": "The water bill was higher this month at $340 compared to $220 last month, attributed to Walt leaving the hose on."
+      },
+      {
+       "u": "k1",
+       "text": "Compost delivery arrived on Thursday, not Friday as expected"
+      },
+      {
+       "u": "k2",
+       "text": "There are 24 plots and 31 applicants for the garden"
+      },
+      {
+       "u": "k3",
+       "text": "Brenda's group might give up their two plots for a lottery"
+      },
+      {
+       "u": "k4",
+       "text": "The lottery is scheduled for April 12th with April 19th as backup"
+      },
+      {
+       "u": "k5",
+       "text": "Someone offered to run the lottery with Omar"
+      },
+      {
+       "u": "k6",
+       "text": "The water bill was $340 this month, up from $220 last month due to Walt leaving the hose on"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation reviewed the compost delivery, noting that it arrived Thursday instead of Friday, though the timing was deemed fine."
+      },
+      {
+       "u": "a2",
+       "text": "A discrepancy was identified because someone had been present Thursday evening and believed nothing had arrived."
+      },
+      {
+       "u": "a3",
+       "text": "The plot assignments were discussed, with twenty-four plots and thirty-one applicants, leading to seven people waiting."
+      },
+      {
+       "u": "a4",
+       "text": "Unless Brenda’s group relinquishes two plots, she said she might, might, or will, pending confirmation with the school."
+      },
+      {
+       "u": "a5",
+       "text": "A lottery was decided for the remaining plots, scheduled for the open day on April twelfth, with the nineteenth serving as a backup."
+      },
+      {
+       "u": "a6",
+       "text": "The twelfth was confirmed over the nineteenth, and the lottery would be run by the assistant and Omar."
+      },
+      {
+       "u": "a7",
+       "text": "The water bill was reported as three hundred and forty this month, higher than two hundred and twenty last month, though the exact cause was uncertain."
+      },
+      {
+       "u": "a8",
+       "text": "It was noted that the hose left by Walt was involved, but no definitive knowledge existed."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The community garden committee discussed several items."
+      },
+      {
+       "u": "a2",
+       "text": "Walt confirmed that the compost was delivered on Thursday, which was fine since he had expected it on Friday."
+      },
+      {
+       "u": "a3",
+       "text": "The committee noted that there are twenty-four plots and thirty-one applicants, leaving seven people without assignments unless Brenda's group relinquishes their two plots, which she may or may not do while checking with the school."
+      },
+      {
+       "u": "a4",
+       "text": "A lottery for the remaining plots was scheduled for the open day on April twelfth, with the nineteenth serving as a backup date."
+      },
+      {
+       "u": "a5",
+       "text": "The lottery will be run by Omar with Walt's assistance."
+      },
+      {
+       "u": "a6",
+       "text": "The water bill was higher this month at three hundred and forty, compared to two hundred and twenty last month, and the higher amount is attributed to Walt leaving the hose on."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The community garden committee will start discussing plot assignments."
+      },
+      {
+       "u": "a2",
+       "text": "They discussed whether compost was delivered, noting it arrived on Thursday instead of Friday, and mentioned it is behind the shed."
+      },
+      {
+       "u": "a3",
+       "text": "They have 24 plots and 31 applicants, so seven people wait unless Brenda's group gives up two plots, which Brenda said she might do after checking with the school."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to hold a lottery for the remaining plots at the open day on April 12th, with April 19th as a backup, and someone offered to run the lottery with Omar."
+      },
+      {
+       "u": "a5",
+       "text": "The water bill was higher this month at 340 compared to 220 last month, attributed to a hose left on by Walt."
+      },
+      {
+       "u": "a6",
+       "text": "They do not know who left the hose."
+      },
+      {
+       "u": "a7",
+       "text": "Missing information includes the reason for the higher water bill and the identity of the person running the lottery."
+      },
+      {
+       "u": "a8",
+       "text": "They agreed to proceed but left the final details open."
+      },
+      {
+       "u": "a9",
+       "text": "They also noted Brenda's group might or will give up their plots."
+      },
+      {
+       "u": "a10",
+       "text": "They agreed to use the open day for the lottery."
+      },
+      {
+       "u": "a11",
+       "text": "They discussed the timing of the open day."
+      },
+      {
+       "u": "a12",
+       "text": "They discussed the compost delivery."
+      },
+      {
+       "u": "a13",
+       "text": "They discussed the plot assignments."
+      },
+      {
+       "u": "a14",
+       "text": "They discussed the water bill."
+      },
+      {
+       "u": "a15",
+       "text": "They discussed the lottery."
+      },
+      {
+       "u": "a16",
+       "text": "They discussed the open day."
+      },
+      {
+       "u": "a17",
+       "text": "They discussed the school's involvement."
+      },
+      {
+       "u": "a18",
+       "text": "They discussed the hose."
+      },
+      {
+       "u": "a19",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a20",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a21",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a22",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a23",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a24",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a25",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a26",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a27",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a28",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a29",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a30",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a31",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a32",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a33",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a34",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a35",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a36",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a37",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a38",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a39",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a40",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a41",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a42",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a43",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a44",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a45",
+       "text": "They discussed the person running the lottery."
+      },
+      {
+       "u": "a46",
+       "text": "They discussed"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The committee discussed Walt's compost delivery, which arrived on Thursday despite being scheduled for Friday, and resolved to assign plots via a lottery since seven applicants remain after Brenda's group might withdraw their two plots."
+      },
+      {
+       "u": "a2",
+       "text": "The lottery will be held on April 12th at the open day, with April 19th serving as a backup date in case of rain."
+      },
+      {
+       "u": "a3",
+       "text": "Omar agreed to run the lottery, and the group noted that the water bill increased from $220 to $340, likely due to Walt leaving the hose on."
+      },
+      {
+       "u": "a4",
+       "text": "The meeting concluded without confirming the cause of the high water bill, as it remains a guess."
+      },
+      {
+       "u": "k1",
+       "text": "Walt's compost was delivered on Thursday instead of the scheduled Friday."
+      },
+      {
+       "u": "k2",
+       "text": "Seven people are waiting for plot assignments out of thirty-one applicants."
+      },
+      {
+       "u": "k3",
+       "text": "Brenda's group may withdraw their two plots, leaving seven plots open."
+      },
+      {
+       "u": "k4",
+       "text": "The plot lottery will be held on April 12th with April 19th as a backup."
+      },
+      {
+       "u": "k5",
+       "text": "Omar will run the lottery."
+      },
+      {
+       "u": "k6",
+       "text": "The water bill increased from $220 to $340, possibly due to Walt leaving the hose on."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

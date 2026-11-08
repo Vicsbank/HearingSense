@@ -1,0 +1,125 @@
+{
+ "model": "apple",
+ "name": "Apple AFM 3 Core",
+ "info": {
+  "variant": "AFM 3 Core",
+  "context_size": 4096,
+  "available": true,
+  "os": "Version 27.2 (Build 26B5101f)",
+  "bridge_start_seconds": 0.044683665997581556,
+  "mode": "guided",
+  "prewarm": true,
+  "sampling": "greedy",
+  "runtime": "FoundationModels, SystemLanguageModel.default"
+ },
+ "set": "final",
+ "pre": {
+  "sysmon": {
+   "memory_free_percent": 63,
+   "swap_used_mb": 10612.0,
+   "swapins": 2137642,
+   "swapouts": 3481875,
+   "cpu_speed_limit": null,
+   "thermal_warning": false,
+   "other_runs": []
+  },
+  "load": [
+   7.17919921875,
+   10.935546875,
+   15.79345703125
+  ]
+ },
+ "started": "2026-10-12 14:07:41",
+ "groups": {
+  "neutral": {
+   "n": 110,
+   "wall_seconds": 640.708566904068,
+   "mem_after": {
+    "note": "the model runs in a system service; its memory is not visible to this process"
+   },
+   "sysmon": {
+    "memory_free_percent": 58,
+    "swap_used_mb": 10448.38,
+    "swapins": 2181931,
+    "swapouts": 3519769,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    7.8251953125,
+    11.78173828125,
+    14.16064453125
+   ]
+  },
+  "prod": {
+   "n": 110,
+   "wall_seconds": 1234.7344188690186,
+   "mem_after": {
+    "note": "the model runs in a system service; its memory is not visible to this process"
+   },
+   "sysmon": {
+    "memory_free_percent": 59,
+    "swap_used_mb": 10424.38,
+    "swapins": 2183678,
+    "swapouts": 3519769,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    5.23681640625,
+    5.64306640625,
+    8.66748046875
+   ]
+  },
+  "continue": {
+   "n": 30,
+   "wall_seconds": 342.19839000701904,
+   "mem_after": {
+    "note": "the model runs in a system service; its memory is not visible to this process"
+   },
+   "sysmon": {
+    "memory_free_percent": 59,
+    "swap_used_mb": 10424.38,
+    "swapins": 2183878,
+    "swapouts": 3519769,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    4.8466796875,
+    6.3017578125,
+    8.11279296875
+   ]
+  },
+  "latency": {
+   "n": 36,
+   "mem_after": {
+    "note": "the model runs in a system service; its memory is not visible to this process"
+   },
+   "sysmon": {
+    "memory_free_percent": 55,
+    "swap_used_mb": 10408.38,
+    "swapins": 2184286,
+    "swapouts": 3519769,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    10.35791015625,
+    6.3291015625,
+    6.84765625
+   ]
+  }
+ },
+ "first_request_seconds": 7.8670144169882406,
+ "latency_quiet": {
+  "waited": 379,
+  "quiet": true,
+  "load": 3.33251953125
+ },
+ "finished": "2026-10-12 14:54:57"
+}

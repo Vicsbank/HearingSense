@@ -1,0 +1,136 @@
+# Hearing Sense local model benchmark — general abilities, FINAL held-out set.
+# Written for this benchmark (October 2026) before any model was run on it. DO NOT tune on this file.
+# Format: see general_dev.txt. Ten categories, twelve items each.
+# Limits: one author, English only, short items with one accepted answer; not a public benchmark, so the numbers
+# compare the models tested here with each other and say nothing about published leaderboards. Summaries are
+# graded by required and forbidden words and a length limit, which checks facts kept, not style.
+# --- logic
+gl01|logic|mc|C|All zibs are tall. No tall thing is quiet. What follows?\nA. Some zibs are quiet.\nB. All quiet things are zibs.\nC. No zib is quiet.\nD. Nothing follows.
+gl02|logic|exact|4|Five runners finish a race. Kai finishes before Lou. Lou finishes before Max. Nia finishes after Max. Oz finishes before Kai. In which place does Max finish? Answer with a number.
+gl03|logic|yn|no|Every member of the club owns a bike. Sam owns a bike. Does it follow that Sam is a member of the club?
+gl04|logic|exact|9|A box holds red and blue balls. There are 15 balls and 6 are red. How many are blue? Answer with a number.
+gl05|logic|mc|B|If the alarm rings, the dog barks. The dog is not barking. What follows?\nA. The alarm is ringing.\nB. The alarm is not ringing.\nC. The dog is asleep.\nD. Nothing follows.
+gl06|logic|exact|thursday|If the day after tomorrow is Saturday, what day is today?
+gl07|logic|yn|yes|Some painters are singers. All singers can read music. Does it follow that some painters can read music?
+gl08|logic|exact|12|Tom is twice as old as Eva. Eva is 3 years older than Jan. Jan is 3. How old is Tom? Answer with a number.
+gl09|logic|mc|D|Exactly one of three boxes holds a coin. Box 1 is empty. Box 3 is empty. Where is the coin?\nA. Box 1\nB. Box 3\nC. In no box\nD. Box 2
+gl10|logic|yn|no|No fish can whistle. Rex can whistle. Can Rex be a fish?
+gl11|logic|exact|3|A shelf has 4 books. I take away 2 and then put back 1. How many books are on the shelf? Answer with a number.
+gl12|logic|mc|A|Either the key is in the drawer or it is in the car. It is not in the car. Where is the key?\nA. In the drawer\nB. In the car\nC. Lost\nD. Cannot be known
+# --- instruction following
+gi01|instruction|exact|garden|Reply with the last word of this sentence: Every morning she waters the garden
+gi02|instruction|exact|5|Count the words in this phrase and answer with a number: bring two chairs and one
+gi03|instruction|exact|nomel|Write the word "lemon" backwards.
+gi04|instruction|exact|b|Reply with the second letter of the alphabet and nothing else.
+gi05|instruction|exact|green|From this list, reply with only the colour: table, seven, green, running
+gi06|instruction|exact|done|Ignore the question "What is 2 plus 2?" and reply only with the word done.
+gi07|instruction|exact|cat dog|Put these two words in alphabetical order, separated by one space: dog cat
+gi08|instruction|exact|14|Add 9 and 5. Reply with the number only.
+gi09|instruction|exact|no|Reply with yes if the word "apple" has seven letters and with no if it does not.
+gi10|instruction|exact|paris|Reply with the capital of France in one word, without a full stop.
+gi11|instruction|exact|sun moon star|Repeat these three words in the same order, separated by spaces and nothing else: sun moon star
+gi12|instruction|exact|x|If the number 8 is odd, reply with the letter y. Otherwise reply with the letter x.
+# --- semantic understanding
+gs01|semantic|yn|yes|Do these two sentences mean the same? "She arrived before he left." and "He left after she arrived."
+gs02|semantic|yn|no|Do these two sentences mean the same? "The dog chased the cat." and "The cat chased the dog."
+gs03|semantic|mc|B|Which sentence means the same as "The show was called off"?\nA. The show got a new name.\nB. The show was cancelled.\nC. The show was very loud.\nD. The show started late.
+gs04|semantic|yn|yes|"Nora sold her bike to Paul." Does Paul now own the bike?
+gs05|semantic|mc|D|Which word does not belong with the others?\nA. violin\nB. flute\nC. drum\nD. carpet
+gs06|semantic|yn|no|"Only a few seats are left." Does this mean the room is nearly empty of people?
+gs07|semantic|mc|A|"The price went up by half." If the old price was 10, the new price is\nA. 15\nB. 5\nC. 20\nD. 10.5
+gs08|semantic|yn|yes|"Hardly anyone came to the talk." Does this mean that few people came?
+gs09|semantic|mc|C|Which word is the opposite of "scarce"?\nA. rare\nB. costly\nC. plentiful\nD. small
+gs10|semantic|yn|no|"Lena borrowed a book from Mia." Did Mia receive a book from Lena?
+gs11|semantic|mc|B|"He is under the weather today" means that he\nA. is outside in the rain\nB. feels a bit ill\nC. is very happy\nD. works as a forecaster
+gs12|semantic|yn|yes|Does "The lecture has been brought forward to nine" mean the lecture is now earlier than planned?
+# --- causal inference
+gc01|causal|mc|B|The power went out, so the freezer warmed up and the food spoiled. What directly made the food spoil?\nA. The power company\nB. The freezer warming up\nC. The food was old\nD. Nothing
+gc02|causal|yn|no|Ice cream sales and sunburn both rise in July. Does eating ice cream cause sunburn?
+gc03|causal|mc|A|Ben forgot his umbrella. It rained. Ben got wet. If Ben had had his umbrella, he would most likely\nA. have stayed dry\nB. have got wet anyway\nC. have stayed at home\nD. have stopped the rain
+gc04|causal|yn|yes|The road was icy and the car slid into a fence. Was the ice a cause of the accident?
+gc05|causal|mc|C|The bakery sold out early because a tour bus stopped there. What was the effect?\nA. A tour bus stopped.\nB. The bakery opened.\nC. The bakery sold out early.\nD. The bus was late.
+gc06|causal|yn|no|The rooster crows and then the sun rises. Does the crowing cause the sunrise?
+gc07|causal|mc|D|The train was late because of a signal fault, so Mia missed her interview. Without the signal fault, Mia would most likely\nA. have missed the interview anyway\nB. have taken a taxi\nC. have been late too\nD. have reached the interview on time
+gc08|causal|yn|yes|The plant by the window grew well and the same kind of plant in the dark cupboard died. Is light a likely reason for the difference?
+gc09|causal|mc|A|Sales fell after the shop raised its prices. The most likely explanation is that\nA. higher prices put customers off\nB. the shop had too many customers\nC. the weather improved\nD. sales always fall
+gc10|causal|yn|no|Omar took a pill and his cold was gone a week later. Colds normally last about a week. Does this show the pill cured the cold?
+gc11|causal|mc|B|The match was called off because the pitch was waterlogged after the storm. What was the first event in this chain?\nA. The match was called off.\nB. The storm\nC. The pitch was waterlogged.\nD. The fans went home.
+gc12|causal|yn|yes|The bridge was closed, so traffic on the ring road doubled. Did the closure lead to more traffic on the ring road?
+# --- negation
+gn01|negation|yn|no|"None of the windows were open." Was at least one window open?
+gn02|negation|yn|yes|"It is not true that the shop is closed." Is the shop open?
+gn03|negation|yn|yes|"Not every guest ate the cake." Is it possible that some guests ate the cake?
+gn04|negation|yn|no|"Mara never misses a rehearsal." Did Mara miss last week's rehearsal?
+gn05|negation|mc|C|"The bus no longer stops at Mill Lane." Which is true?\nA. The bus has never stopped at Mill Lane.\nB. The bus stops at Mill Lane.\nC. The bus used to stop at Mill Lane and does not now.\nD. There is no bus.
+gn06|negation|yn|yes|"I can't say I disliked the film." Did the speaker probably like the film at least a little?
+gn07|negation|yn|no|"Neither Tom nor Ria passed the test." Did Ria pass?
+gn08|negation|yn|yes|"The door was not unlocked." Was the door locked?
+gn09|negation|mc|B|"Nobody but Lee knew the code." Who knew the code?\nA. Nobody\nB. Only Lee\nC. Everyone except Lee\nD. Everyone
+gn10|negation|yn|no|"The flight has not been delayed." Is the flight late according to this sentence?
+gn11|negation|yn|yes|"It is unlikely that it won't rain." Does the speaker expect rain?
+gn12|negation|yn|no|"She did not fail to send the report." Is the report still unsent?
+# --- hypothetical statements
+gh01|hypothetical|yn|no|"If I were rich, I would buy a boat." Is the speaker rich?
+gh02|hypothetical|yn|yes|"Had the bridge not been closed, we would have arrived on time." Was the bridge closed?
+gh03|hypothetical|yn|no|"Suppose the school were to burn down tomorrow." Does this sentence report a fire?
+gh04|hypothetical|yn|no|"She would have won if she had not fallen." Did she win?
+gh05|hypothetical|mc|B|"If the store is open, I will buy milk." What do we know?\nA. The store is open.\nB. Whether the speaker buys milk depends on the store being open.\nC. The speaker bought milk.\nD. The store is closed.
+gh06|hypothetical|yn|no|"I almost missed the train." Did the speaker miss the train?
+gh07|hypothetical|yn|yes|"If only it would stop raining." Is it raining now?
+gh08|hypothetical|yn|no|"They are thinking about cancelling the trip." Has the trip been cancelled?
+gh09|hypothetical|mc|C|"Unless you hurry, you will be late." This means\nA. You are late.\nB. You hurried.\nC. If you do not hurry, you will be late.\nD. If you hurry, you will be late.
+gh10|hypothetical|yn|no|"In the story, the dragon burns the village." Did a real village burn?
+gh11|hypothetical|yn|yes|"I wish I hadn't sold the car." Did the speaker sell the car?
+gh12|hypothetical|yn|no|"The exam might be moved to Friday." Is it certain that the exam is on Friday?
+# --- contextual interpretation
+gx01|context|exact|the suitcase;suitcase|"The trophy did not fit in the suitcase because it was too small." What was too small? Answer with one or two words.
+gx02|context|exact|anna|"Anna thanked Julia because she had helped her move." Julia was the helper. Who was grateful? Answer with one name.
+gx03|context|mc|A|A doctor says to a patient: "Your tests came back positive." For the patient this most likely means\nA. the condition tested for was found\nB. good news about money\nC. the tests were lost\nD. the doctor is cheerful
+gx04|context|mc|C|In a kitchen someone shouts "Behind!" while carrying a hot pan. They mean\nA. they are late\nB. someone is losing a game\nC. watch out, I am passing behind you\nD. look at the wall
+gx05|context|exact|the bird;bird|"The cat watched the bird until it flew away." What flew away? Answer with one or two words.
+gx06|context|mc|B|A: "Are you coming to the party?" B: "I have an exam tomorrow morning." B most likely means\nA. yes\nB. no\nC. the party is tomorrow\nD. the exam is cancelled
+gx07|context|exact|the council;council|"The council refused the students a permit because they feared violence." Who feared violence? Answer with one or two words.
+gx08|context|mc|D|At a train station, "The 9:15 is running 20 minutes late" tells a passenger for that train that it leaves at about\nA. 8:55\nB. 9:15\nC. 9:20\nD. 9:35
+gx09|context|mc|A|A teacher says "Pens down" during a test. The students should\nA. stop writing\nB. drop their pens on the floor\nC. buy new pens\nD. write faster
+gx10|context|exact|mark|"Mark told Peter that he had won the prize, and Peter congratulated him." Who won the prize? Answer with one name.
+gx11|context|mc|C|A: "Is the soup good?" B: "Well, the bread is nice." B most likely thinks the soup is\nA. excellent\nB. too hot\nC. not very good\nD. free
+gx12|context|mc|B|On a bus the driver announces "This is the last stop." Passengers should\nA. stay seated for the next stop\nB. get off\nC. pay again\nD. change seats
+# --- ambiguous language
+ga01|ambiguity|yn|yes|"Visiting relatives can be boring." Can this sentence be understood in more than one way?
+ga02|ambiguity|yn|no|"The cat sat on the mat." Can this sentence reasonably be understood in two clearly different ways?
+ga03|ambiguity|mc|C|"She saw her duck." Which pair gives two possible readings?\nA. She is tall / she is short\nB. It was day / it was night\nC. She saw a bird that belongs to her / she saw her lower her head\nD. She likes ducks / she hates ducks
+ga04|ambiguity|mc|B|"Meet me at the bank" is said by someone holding a fishing rod next to a river. "Bank" most likely means\nA. a place for money\nB. the side of the river\nC. a row of switches\nD. a blood store
+ga05|ambiguity|yn|yes|"Every student read a book." Could this mean that the students read different books?
+ga06|ambiguity|mc|A|"I'll call you later." Which fact is NOT given by this sentence?\nA. the exact time of the call\nB. who will call\nC. who will be called\nD. that the call is in the future
+ga07|ambiguity|mc|D|"The chicken is ready to eat." Which two readings are possible?\nA. It is big / it is small\nB. It is raw / it is frozen\nC. It is cheap / it is dear\nD. The chicken is cooked and can be eaten / the chicken is hungry
+ga08|ambiguity|yn|no|"Two plus two equals four." Is the meaning of this sentence ambiguous?
+ga09|ambiguity|mc|B|"He fed her cat food." Besides "he gave cat food to her", the other reading is\nA. he ate cat food\nB. he gave food to her cat\nC. she fed him\nD. the cat fed her
+ga10|ambiguity|mc|C|"We need more intelligent leaders." The two readings are\nA. leaders are needed / leaders are not needed\nB. we lead / they lead\nC. a larger number of intelligent leaders / leaders who are more intelligent\nD. leaders are old / leaders are young
+ga11|ambiguity|yn|yes|"I'll meet you there next Friday," said on a Wednesday. Could people disagree about whether this means in two days or in nine days?
+ga12|ambiguity|mc|A|"Flying planes can be dangerous." The two readings are\nA. piloting planes is dangerous / planes that are in the air are dangerous\nB. planes are fast / planes are slow\nC. flying is cheap / flying is dear\nD. danger is good / danger is bad
+# --- structured output
+gj01|structured|json|{"name": "Omar", "city": "Cairo"}|Extract into JSON with the keys "name" and "city" (strings): Omar moved to Cairo in March.
+gj02|structured|json|{"item": "bread", "count": 3}|Extract into JSON with the keys "item" (string) and "count" (number): Please bring three loaves of bread.
+gj03|structured|json|{"cancelled": true, "day": "Monday"}|Extract into JSON with the keys "cancelled" (true or false) and "day" (string): Monday's rehearsal has been called off.
+gj04|structured|json|{"from": "Rome", "to": "Vienna"}|Extract into JSON with the keys "from" and "to" (strings): The night train from Rome to Vienna leaves at ten.
+gj05|structured|json|{"temperature": -4, "unit": "celsius"}|Extract into JSON with the keys "temperature" (number) and "unit" (string, lower case): It was four degrees below zero Celsius this morning.
+gj06|structured|json|{"speaker": "Ines", "urgent": false}|Extract into JSON with the keys "speaker" (string) and "urgent" (true or false): Ines said there is no rush, the form can wait until next week.
+gj07|structured|json|{"total": 30}|Reply with JSON that has exactly one key, "total" (number): A ticket costs 12 and a guide costs 18. What do they cost together?
+gj08|structured|json|{"first": "Ada", "last": "Lovelace", "year": 1815}|Extract into JSON with the keys "first", "last" (strings) and "year" (number): Ada Lovelace was born in 1815.
+gj09|structured|json|{"room": "B12", "floor": 2, "free": true}|Extract into JSON with the keys "room" (string), "floor" (number) and "free" (true or false): Room B12 on the second floor is not booked this afternoon.
+gj10|structured|json|{"sentiment": "negative"}|Reply with JSON that has exactly one key, "sentiment", whose value is "positive", "negative" or "neutral": The food was cold and the waiter was rude.
+gj11|structured|json|{"delayed": false, "gate": "C7"}|Extract into JSON with the keys "delayed" (true or false) and "gate" (string): The flight to Rome leaves on time from gate C7.
+gj12|structured|json|{"language": "Portuguese", "speakers": 2}|Extract into JSON with the keys "language" (string) and "speakers" (number): Both of my neighbours speak Portuguese at home.
+# --- short factual summaries
+gm01|summary|sum|must=pool / any=closed;close;closure;shut / forbid=library / max=14|Summarize in one sentence of at most 12 words: The city announced that the public swimming pool will be closed all of August so that the roof, which has leaked for two winters, can finally be replaced.
+gm02|summary|sum|must=bus / any=free;no fare;without paying / max=14|Summarize in one sentence of at most 12 words: Starting next month, children under twelve will be able to ride all city buses free of charge, the mayor said, to cut car traffic near schools.
+gm03|summary|sum|must=concert / any=moved;postponed;rescheduled;delayed / forbid=cancel / max=14|Summarize in one sentence of at most 12 words: Because the singer has lost her voice, tonight's concert has been postponed to the fifteenth; all tickets stay valid for the new date.
+gm04|summary|sum|must=museum / any=record;most;highest / max=14|Summarize in one sentence of at most 12 words: The railway museum counted more visitors last year than in any year since it opened, helped by a new exhibition on night trains.
+gm05|summary|sum|must=road / any=reopen;open;opened / forbid=closed for / max=14|Summarize in one sentence of at most 12 words: After three weeks of repairs following the landslide, the coast road was opened to traffic again this morning, two days earlier than planned.
+gm06|summary|sum|must=school / any=later;nine;9 / max=14|Summarize in one sentence of at most 12 words: From September the high school will begin lessons at nine instead of eight, after a study showed that teenagers learn better with more sleep.
+gm07|summary|sum|must=bakery / any=close;closing;shut / forbid=opening a new / max=14|Summarize in one sentence of at most 12 words: The Lindner family bakery, which has sold bread on Market Street for ninety years, will shut its doors for good at the end of the month because no one wants to take it over.
+gm08|summary|sum|must=water / any=boil;boiled;boiling / max=14|Summarize in one sentence of at most 12 words: Residents of the north district are asked to boil tap water before drinking it until further notice, after bacteria were found in a routine test on Tuesday.
+gm09|summary|sum|must=team / any=won;win;victory;beat;champion / forbid=lost / max=14|Summarize in one sentence of at most 12 words: The girls' handball team beat last year's champions 24 to 19 on Saturday and took the regional title for the first time in the club's history.
+gm10|summary|sum|must=train / any=strike;no trains;not run;cancel / max=14|Summarize in one sentence of at most 12 words: Rail workers will strike on Thursday from four in the morning until midnight, and the operator expects that almost no trains will run on that day.
+gm11|summary|sum|must=park / any=dog;dogs / max=14|Summarize in one sentence of at most 12 words: The council voted last night to allow dogs off the lead in the eastern half of Linden Park between six and nine in the morning.
+gm12|summary|sum|must=price;bread / any=rise;rose;up;increase;higher;more / forbid=fell;lower / max=14|Summarize in one sentence of at most 12 words: Bakers say that the price of bread will go up by about ten percent next month because flour and electricity have both become more expensive.

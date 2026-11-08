@@ -1,0 +1,732 @@
+{
+ "batch": "batch_001",
+ "conversations": [
+  {
+   "conversation": "fin-en-003",
+   "language": "en",
+   "transcript": [
+    "1. alright let's get started we've got about twenty minutes",
+    "2. first item the onboarding redesign Dana where are we",
+    "3. design is done we're waiting on the legal review of the new consent screen",
+    "4. when do we expect that",
+    "5. they said Friday but I'd plan for the following Wednesday",
+    "6. okay so engineering starts the build after that",
+    "7. we can start the settings pages now though they don't depend on it",
+    "8. good do that",
+    "9. second item the beta feedback Marcus you had the numbers",
+    "10. yeah we got one hundred and forty responses from the beta group",
+    "11. about sixty percent said the sync was slow",
+    "12. and the top complaint was login failing after the update",
+    "13. that one's a real bug we've reproduced it on Android only",
+    "14. okay Sam can you own the login bug",
+    "15. sure I'll have a fix candidate by next Tuesday",
+    "16. third the pricing page copy is still not approved",
+    "17. Priya said she'd send the final draft but I haven't seen it",
+    "18. I'll chase her today",
+    "19. great let's also decide on the release date",
+    "20. I'm thinking we target the twelfth of November",
+    "21. that feels tight if legal slips",
+    "22. agreed let's say the twelfth tentatively and decide next Thursday",
+    "23. fine anything else no then we're done thanks everyone"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The onboarding redesign design work is done and the team is waiting on legal review of the new consent screen.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "Legal said the consent screen review would come Friday, but Dana plans for the following Wednesday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "Engineering will start the settings pages now because they do not depend on the legal review.",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f4",
+     "text": "The beta group sent 140 responses.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "About 60 percent of beta respondents said the sync was slow.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "The top beta complaint was login failing after the update, a real bug reproduced on Android only.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f7",
+     "text": "Sam owns the login bug and will have a fix candidate by next Tuesday.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f8",
+     "text": "The pricing page copy is not yet approved and the final draft from Priya has not been received.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f9",
+     "text": "One participant will chase Priya about the pricing draft today.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f10",
+     "text": "The release is tentatively targeted for November 12, to be decided next Thursday.",
+     "critical": true,
+     "kind": "decision"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The November 12 release date is final."
+    },
+    {
+     "id": "n2",
+     "text": "The login bug affects iOS."
+    },
+    {
+     "id": "n3",
+     "text": "Legal has approved the consent screen."
+    },
+    {
+     "id": "n4",
+     "text": "Dana is the engineering lead (her role is not stated)."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "When the legal review will actually be finished is uncertain (Friday per legal, possibly the following Wednesday)."
+    },
+    {
+     "id": "u2",
+     "text": "Whether the November 12 release can hold depends on legal not slipping."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team confirmed the onboarding redesign design is complete and waiting for legal review of the new consent screen, which is expected by Friday with engineering starting the build on the following Wednesday."
+      },
+      {
+       "u": "a2",
+       "text": "Regarding beta feedback from Marcus, they received 140 responses where 60% reported slow sync and the top complaint was login failures after the update, a bug reproduced on Android only that Sam will fix with a candidate by next Tuesday."
+      },
+      {
+       "u": "a3",
+       "text": "Priya agreed to send the final draft of the pricing page copy today, and the team tentatively set the release date for November 12th, deciding to finalize this by next Thursday if legal delays occur."
+      },
+      {
+       "u": "a4",
+       "text": "No other items were discussed, and the meeting concluded with everyone thanking each other."
+      },
+      {
+       "u": "k1",
+       "text": "The onboarding redesign design is complete and awaiting legal review of the new consent screen."
+      },
+      {
+       "u": "k2",
+       "text": "Legal review is expected by Friday, with engineering starting the build on the following Wednesday."
+      },
+      {
+       "u": "k3",
+       "text": "Beta feedback shows 140 responses, with 60% reporting slow sync and login failures after the update."
+      },
+      {
+       "u": "k4",
+       "text": "The login bug is confirmed on Android only, and Sam will have a fix candidate by next Tuesday."
+      },
+      {
+       "u": "k5",
+       "text": "Priya will send the final draft of the pricing page copy today."
+      },
+      {
+       "u": "k6",
+       "text": "The release date is tentatively set for November 12th, with a decision to be made by next Thursday."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team discussed the onboarding redesign, noting design is complete but legal review of the new consent screen is pending."
+      },
+      {
+       "u": "a2",
+       "text": "They planned for legal review by Friday but would target Wednesday."
+      },
+      {
+       "u": "a3",
+       "text": "Engineering will start the build after legal review, and settings pages can be started immediately."
+      },
+      {
+       "u": "a4",
+       "text": "Beta feedback showed 140 responses with 60% complaining about slow sync and login failures after an update."
+      },
+      {
+       "u": "a5",
+       "text": "Sam was assigned to fix the login bug with a fix candidate due by next Tuesday."
+      },
+      {
+       "u": "a6",
+       "text": "The pricing page copy was not yet approved, and Priya was expected to send the final draft."
+      },
+      {
+       "u": "a7",
+       "text": "The release date was tentatively set for November 12th, with a decision to be made by next Thursday."
+      },
+      {
+       "u": "k1",
+       "text": "Onboarding redesign is complete; legal review of the new consent screen is pending."
+      },
+      {
+       "u": "k2",
+       "text": "Engineering will start the build after legal review; settings pages can be started immediately."
+      },
+      {
+       "u": "k3",
+       "text": "Beta feedback: 140 responses, 60% reported slow sync and login failures after update."
+      },
+      {
+       "u": "k4",
+       "text": "Sam will own the login bug fix with a candidate due by next Tuesday."
+      },
+      {
+       "u": "k5",
+       "text": "Pricing page copy is not yet approved; Priya was expected to send the final draft."
+      },
+      {
+       "u": "k6",
+       "text": "Release date tentatively set for November 12th, with a decision to be made by next Thursday."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team confirmed that Dana's onboarding redesign is complete, with engineering to begin the build after legal reviews the new consent screen, which is expected by Friday but planned for next Wednesday."
+      },
+      {
+       "u": "a2",
+       "text": "Marcus reported that the beta group provided 140 responses, revealing that 60% found sync slow and the top issue was a login failure bug affecting only Android, which Sam agreed to fix with a candidate by next Tuesday."
+      },
+      {
+       "u": "a3",
+       "text": "Regarding the pricing page, Priya promised to send the final draft today, and the team tentatively set the release date for November 12th, with a decision to be made next Thursday in case legal delays occur."
+      },
+      {
+       "u": "a4",
+       "text": "No other items were raised, and the meeting concluded with a thank you to everyone."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The onboarding redesign is complete, and legal review of the new consent screen is expected by Friday, though the speaker plans for the following Wednesday."
+      },
+      {
+       "u": "a2",
+       "text": "Engineering will begin the build after legal review and can start working on settings pages immediately."
+      },
+      {
+       "u": "a3",
+       "text": "Beta feedback shows 140 responses, with 60% complaining about slow sync and login failures after an update, which is a bug on Android that Sam will fix by next Tuesday."
+      },
+      {
+       "u": "a4",
+       "text": "The pricing page copy is not yet approved; Priya was supposed to send the final draft but hasn't been seen, so the speaker will chase her today."
+      },
+      {
+       "u": "a5",
+       "text": "The team tentatively targets November 12th for release, with a decision to be made next Thursday in case legal delays occur."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The meeting is about twenty minutes long and the onboarding redesign for Dana is underway, with design complete and legal review of the new consent screen expected by Friday, but someone advised planning for the following Wednesday."
+      },
+      {
+       "u": "a2",
+       "text": "Engineering will start building settings pages after the legal review, and someone said they can start those now since they don't depend on other work."
+      },
+      {
+       "u": "a3",
+       "text": "For beta feedback from Marcus, one hundred forty responses were received, with sixty percent reporting slow sync and a top complaint of login failure after the update, which is a real bug reproduced only on Android."
+      },
+      {
+       "u": "a4",
+       "text": "Someone agreed Sam will own the login bug and will have a fix candidate by next Tuesday."
+      },
+      {
+       "u": "a5",
+       "text": "The pricing page copy is still not approved, and someone said Priya will send the final draft but it hasn't been seen yet, so someone will chase her today."
+      },
+      {
+       "u": "a6",
+       "text": "Someone agreed to target the twelfth of November for release, but noted it feels tight if legal slips, so tentatively set for the twelfth and decide next Thursday."
+      },
+      {
+       "u": "a7",
+       "text": "No further items were discussed, and the meeting concluded."
+      },
+      {
+       "u": "k1",
+       "text": "The onboarding redesign for Dana is in progress."
+      },
+      {
+       "u": "k2",
+       "text": "Legal review of the new consent screen is expected by Friday."
+      },
+      {
+       "u": "k3",
+       "text": "Engineering will start building settings pages after the legal review."
+      },
+      {
+       "u": "k4",
+       "text": "One hundred forty responses from the beta group were received."
+      },
+      {
+       "u": "k5",
+       "text": "Sixty percent reported slow sync, and login failure is a real bug on Android."
+      },
+      {
+       "u": "k6",
+       "text": "Sam will fix the login bug by next Tuesday."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation began with a timeline of twenty minutes allocated for tasks."
+      },
+      {
+       "u": "a2",
+       "text": "The onboarding redesign for Dana was discussed, noting that design was complete but the legal review of the new consent screen was pending; an earlier expectation of Friday was corrected to the following Wednesday."
+      },
+      {
+       "u": "a3",
+       "text": "Engineering was set to begin building after the review, and settings pages could proceed since they did not rely on it."
+      },
+      {
+       "u": "a4",
+       "text": "For beta feedback from Marcus, one hundred forty responses were received, with sixty percent reporting slow sync and a top complaint of login failure after the update, described as a real bug reproduced only on Android."
+      },
+      {
+       "u": "a5",
+       "text": "Sam was assigned the login bug and instructed to have a fix candidate by next Tuesday."
+      },
+      {
+       "u": "a6",
+       "text": "The pricing page copy was still not approved, and Priya was informed to send the final draft, with a follow-up scheduled for the current day."
+      },
+      {
+       "u": "a7",
+       "text": "A tentative release date of the twelfth of November was agreed upon, contingent on no legal delays, and the decision was to revisit it next Thursday."
+      },
+      {
+       "u": "a8",
+       "text": "No further items were listed, and the session concluded."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-004",
+   "language": "en",
+   "transcript": [
+    "1. so who's doing the slides",
+    "2. I thought Lena was",
+    "3. no Lena's doing the research part Kai said he'd do the slides",
+    "4. wait Kai said that or you said that",
+    "5. he said it in the chat yesterday",
+    "6. okay then Kai does slides and I'll do the intro and conclusion",
+    "7. and who presents",
+    "8. Mr. Hartley said each of us has to say something",
+    "9. so three minutes each",
+    "10. no it's four minutes each the rubric says twelve total",
+    "11. oh four okay I thought it was three because of the other class",
+    "12. that was Ms. Brandt's class that one was three",
+    "13. right right this is Hartley's",
+    "14. the due date is the ninth right",
+    "15. the ninth is the practice run the real presentation is the sixteenth",
+    "16. oh wow okay good I'd have panicked",
+    "17. can we meet Thursday to put it together",
+    "18. I have band practice till five Thursday",
+    "19. after that works for me what about the library at five thirty",
+    "20. she can't she works Thursdays",
+    "21. who Lena",
+    "22. yeah she said she's at the bookstore till seven",
+    "23. ugh so Friday then",
+    "24. Friday lunch could work we can use the room by the cafeteria",
+    "25. okay I'll ask Hartley if we can have it",
+    "26. cool"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Kai will make the slides.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f2",
+     "text": "Lena is doing the research part.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "One speaker will do the introduction and conclusion.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "Each person presents for four minutes under Mr. Hartley's rubric, twelve minutes in total.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "The earlier mention of three minutes each came from Ms. Brandt's class and was corrected to four minutes for Mr. Hartley's class.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f6",
+     "text": "The ninth is a practice run and the real presentation is on the sixteenth.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "A Thursday meeting is hard: one speaker has band practice until 5, and Lena works at the bookstore until 7 on Thursdays.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "The group is considering meeting Friday at lunch in the room by the cafeteria.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f9",
+     "text": "One speaker will ask Mr. Hartley whether the group can use the room by the cafeteria.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Lena is making the slides."
+    },
+    {
+     "id": "n2",
+     "text": "The presentation is due on the ninth as the final performance."
+    },
+    {
+     "id": "n3",
+     "text": "Each presenter has three minutes."
+    },
+    {
+     "id": "n4",
+     "text": "The Friday lunch meeting is confirmed."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether Mr. Hartley will allow the group to use the room by the cafeteria on Friday is not yet known."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Kai will create the slides while Lena handles the research, and Mr. Hartley requires each person to speak for four minutes instead of the initially thought three."
+      },
+      {
+       "u": "a2",
+       "text": "The group presentation is due on the sixteenth, with a practice run scheduled for the ninth."
+      },
+      {
+       "u": "a3",
+       "text": "They agreed to meet on Friday at lunchtime in the room by the cafeteria to finalize the plan, as Thursday was unavailable due to band practice and Lena's work schedule at the bookstore until seven."
+      },
+      {
+       "u": "a4",
+       "text": "Someone will ask Mr. Hartley to confirm the room availability for Friday."
+      },
+      {
+       "u": "k1",
+       "text": "Kai is responsible for the slides."
+      },
+      {
+       "u": "k2",
+       "text": "Lena is responsible for the research."
+      },
+      {
+       "u": "k3",
+       "text": "Each person must speak for four minutes."
+      },
+      {
+       "u": "k4",
+       "text": "The practice presentation is on the ninth."
+      },
+      {
+       "u": "k5",
+       "text": "The final presentation is on the sixteenth."
+      },
+      {
+       "u": "k6",
+       "text": "The group will meet on Friday to finalize the plan."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided that Kai will handle the slides while the speaker will do the intro and conclusion."
+      },
+      {
+       "u": "a2",
+       "text": "The presentation has four minutes per person with a total of twelve minutes."
+      },
+      {
+       "u": "a3",
+       "text": "The due date is the ninth, with the real presentation on the sixteenth."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to meet on Thursday after band practice, and Friday lunch was selected as the meeting time to finalize details."
+      },
+      {
+       "u": "a5",
+       "text": "Lena is unavailable until seven on Thursdays, so Friday is the chosen day."
+      },
+      {
+       "u": "k1",
+       "text": "Kai is assigned to create the slides"
+      },
+      {
+       "u": "k2",
+       "text": "The speaker will present the intro and conclusion"
+      },
+      {
+       "u": "k3",
+       "text": "Each person has four minutes for the presentation"
+      },
+      {
+       "u": "k4",
+       "text": "The total presentation time is twelve minutes"
+      },
+      {
+       "u": "k5",
+       "text": "The due date is the ninth"
+      },
+      {
+       "u": "k6",
+       "text": "The real presentation is on the sixteenth"
+      },
+      {
+       "u": "k7",
+       "text": "They agreed to meet on Thursday after band practice"
+      },
+      {
+       "u": "k8",
+       "text": "Friday lunch was selected as the meeting time"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Lena was doing the research part, but Kai said he'd do the slides, so Kai does the slides and someone does the intro and conclusion."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed each person has to present for four minutes each, with a twelve-minute total, and clarified that the three-minute rule from Ms. Brandt's class doesn't apply."
+      },
+      {
+       "u": "a3",
+       "text": "The due date is the ninth for the practice run and the sixteenth for the real presentation."
+      },
+      {
+       "u": "a4",
+       "text": "Someone suggested meeting Thursday to plan, but someone has band practice until five, and the library at five thirty is unavailable because someone works Thursdays."
+      },
+      {
+       "u": "a5",
+       "text": "They decided Friday lunch could work using the room by the cafeteria, and someone will ask Hartley if they can use it."
+      },
+      {
+       "u": "a6",
+       "text": "The meeting location is unclear, and a schedule for Thursday is missing."
+      },
+      {
+       "u": "k1",
+       "text": "Kai does the slides."
+      },
+      {
+       "u": "k2",
+       "text": "Someone does the intro and conclusion."
+      },
+      {
+       "u": "k3",
+       "text": "Four minutes per person, twelve minutes total."
+      },
+      {
+       "u": "k4",
+       "text": "The due date is the ninth (practice run) and the sixteenth (real presentation)."
+      },
+      {
+       "u": "k5",
+       "text": "Someone has band practice until five Thursday."
+      },
+      {
+       "u": "k6",
+       "text": "The library at five thirty is unavailable because someone works Thursdays."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Kai was assigned to create the slides while Lena handles the research, and the speaker will manage the introduction and conclusion."
+      },
+      {
+       "u": "a2",
+       "text": "Mr. Hartley clarified that each presenter must speak for four minutes, bringing the total presentation time to twelve minutes, correcting an earlier assumption of three minutes per person."
+      },
+      {
+       "u": "a3",
+       "text": "The practice presentation is scheduled for the ninth, with the actual presentation due on the sixteenth."
+      },
+      {
+       "u": "a4",
+       "text": "The group agreed to meet on Friday to finalize the materials, as Thursday was unavailable due to band practice and Lena's work at the bookstore until seven."
+      },
+      {
+       "u": "a5",
+       "text": "They decided to use the room by the cafeteria for the meeting, pending confirmation from Mr. Hartley."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about dividing presentation responsibilities for an event."
+      },
+      {
+       "u": "a2",
+       "text": "Lena was initially thought to handle the research portion, but Kai was assigned the slides."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker confirmed that Kai will create the slides while they (the speaker) will handle the intro and conclusion."
+      },
+      {
+       "u": "a4",
+       "text": "The group agreed that each person must present for four minutes, with a total of twelve minutes allocated."
+      },
+      {
+       "u": "a5",
+       "text": "The practice run is scheduled for the ninth, and the actual presentation is on the sixteenth."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker mentioned they would meet on Thursday after band practice, but Lena is unavailable until 7 PM on Thursdays, so they settled on Friday lunch to use the room by the cafeteria."
+      },
+      {
+       "u": "a7",
+       "text": "The speaker will ask Hartley to confirm the meeting time."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation discussed who is handling the slides, with Kai stating he will handle them and the speaker assigning the intro and conclusion."
+      },
+      {
+       "u": "a2",
+       "text": "Lena was mentioned in relation to research, but the speaker clarified that Kai had mentioned handling the slides in a chat from the previous day."
+      },
+      {
+       "u": "a3",
+       "text": "Each person is scheduled to present for four minutes, with a total of twelve minutes required according to the rubric, despite a prior belief that three minutes were needed."
+      },
+      {
+       "u": "a4",
+       "text": "The due date is the ninth, designated as the practice run, while the real presentation is set for the sixteenth."
+      },
+      {
+       "u": "a5",
+       "text": "A meeting was proposed for Thursday to coordinate, but scheduling conflicts arose due to band practice and library availability."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker noted Ms. Brandt’s class had a three-minute requirement, and Mr. Hartley confirmed the timing."
+      },
+      {
+       "u": "a7",
+       "text": "Plans were adjusted to meet on Friday, with the possibility of using the room by the cafeteria, and the speaker will inquire about availability."
+      },
+      {
+       "u": "a8",
+       "text": "Details about the bookstore and specific times remain unclear."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

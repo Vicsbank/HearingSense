@@ -1,0 +1,56 @@
+# Hearing Sense local model benchmark — semantic relevance, DEVELOPMENT set.
+# Synthetic, written for this benchmark (October 2026); no real conversation. Used for the pilot and for checking
+# that request texts, templates and parsing work. Request texts may be adjusted on this file. Its profiles and
+# sentences occur in no earlier Hearing Sense set and not in hs_final.txt.
+# Profile lines: @profile | <profile> | about | <facts about the listener>
+#                @profile | <profile> | goal | <key> | <goal text>
+# Item lines: id | profile | category | expected | acceptable goals | flags | earlier lines (a // b) | sentence | why
+# The goal "safety" exists for every profile (immediate danger to the people nearby).
+@profile | intern | about | My name is Dana. I am an intern on the design team. My manager is Priya. My desk is next to the printer.
+@profile | intern | goal | tasks | Tell me when someone gives me a task or changes one of my tasks.
+@profile | intern | goal | meetings | Let me know when a meeting of the design team is moved or cancelled.
+in01|intern|obvious|relevant|tasks|||Dana, could you have the icon set exported by three?|a task, by name
+in02|intern|unrelated|irrelevant||||The new sandwich place downstairs is honestly not bad.|small talk
+in03|intern|implicit|relevant|meetings|||Design sync is going to be in the big room after lunch instead of this morning.|the team's meeting moved, no goal words
+in04|intern|addressed_other|irrelevant||||Marcus, can you send the invoice to finance before you leave?|a task for someone else
+in05|intern|group_in|relevant|tasks|||Design team, everybody please upload your files to the shared folder by tonight.|a task for the listener's team
+in06|intern|group_out|irrelevant||||Sales folks, your quarterly numbers are due on Friday.|another team
+in07|intern|third_person|irrelevant||||My cousin's internship got cancelled two days before it started.|someone else, elsewhere
+in08|intern|implicit|relevant|tasks|||Priya wants the mockups in dark mode as well now, not just light.|the listener's task grows; said about the manager's wish
+in09|intern|negation|irrelevant||||The Thursday review stays exactly where it is.|nothing changes
+in10|intern|negation_news|relevant|meetings|||There won't be a design standup tomorrow.|the not is the news
+in11|intern|hypothetical|irrelevant||||If we ever moved the standup to the afternoon I'd finally get some sleep.|only imagined
+in12|intern|past|irrelevant||||Last year they used to cancel the design review all the time.|the past
+in13|intern|idiom|irrelevant||||This printer is going to be the death of me.|figure of speech
+in14|intern|emergency|relevant|safety|important,urgent||Everyone out, there's smoke coming from the server room!|danger, act now
+in15|intern|emergency_false|irrelevant||||The fire drill last month was a complete mess.|past drill, no danger
+in16|intern|context|relevant|tasks||Who is doing the onboarding slides? // I think that's the intern.|Then they need to be finished before Monday.|the earlier lines make it the listener's task
+in17|intern|context|irrelevant|||Who is doing the onboarding slides? // That's Marcus this time.|Then they need to be finished before Monday.|the earlier lines give it to someone else
+in18|intern|duplicate|irrelevant|||Design sync is going to be in the big room after lunch instead of this morning.|Remember, design sync is after lunch in the big room.|repeats what was said
+in19|intern|update|relevant|meetings||Design sync is going to be in the big room after lunch instead of this morning.|Change of plan, design sync is pushed to tomorrow at ten.|a new change after the first
+in20|intern|overheard_relevant|relevant|tasks|||Priya, I told Dana's team the banner has to be redone from scratch.|said to the manager, but it changes the listener's work
+in21|intern|about_other_relevant|relevant|meetings|||Priya is out sick, so she called off the design review.|about the manager, cancels the team's meeting
+in22|intern|unrelated|irrelevant||||Did you see the game last night? Unbelievable ending.|small talk
+@profile | dorm | about | I live in room 214 on the second floor of Birch Hall. I wash my clothes in the laundry room in the basement.
+@profile | dorm | goal | floor | Tell me about anything that affects my room or my floor.
+@profile | dorm | goal | laundry | Let me know when the laundry room is closed or when a machine becomes free.
+do01|dorm|obvious|relevant|laundry|||The laundry room is closed until Thursday.|names the laundry room
+do02|dorm|implicit|relevant|floor|||They're shutting off the hot water on two tomorrow morning.|the second floor loses hot water
+do03|dorm|group_out|irrelevant||||Fourth floor, your hallway gets painted on Monday, keep your doors shut.|another floor
+do04|dorm|group_in|relevant|floor|||Second floor residents, room inspections start at nine tomorrow.|the listener's floor
+do05|dorm|unrelated|irrelevant||||I think I failed that statistics quiz.|small talk
+do06|dorm|implicit|relevant|laundry|||I just took my stuff out of the dryer on the left, it's empty now.|a machine is free
+do07|dorm|third_person|irrelevant||||My sister's dorm in Leeds has no laundry room at all.|another dorm
+do08|dorm|negation|irrelevant||||Quiet hours on our floor are the same as always.|nothing changes
+do09|dorm|hypothetical|irrelevant||||Imagine if they put a second washer in, that would be a dream.|a wish
+do10|dorm|past|irrelevant||||The basement flooded two winters ago and the machines were gone for a month.|the past
+do11|dorm|idiom|irrelevant||||My room is such a disaster zone right now.|exaggeration
+do12|dorm|emergency|relevant|safety|important,urgent||Gas smell in the stairwell, don't use the lighters, get outside!|danger, act now
+do13|dorm|emergency_false|irrelevant||||That movie where the building explodes was so stupid.|a film
+do14|dorm|context|relevant|floor||Which rooms are getting the new locks today? // Two ten through two twenty.|You'll need to pick up the new key at the desk before six.|the listener's room is in the range
+do15|dorm|context|irrelevant|||Which rooms are getting the new locks today? // Three ten through three twenty.|You'll need to pick up the new key at the desk before six.|not the listener's room
+do16|dorm|duplicate|irrelevant|||The laundry room is closed until Thursday.|Like I said, no laundry until Thursday.|repeats
+do17|dorm|update|relevant|laundry||The laundry room is closed until Thursday.|Good news, the laundry room is open again already.|the news changed
+do18|dorm|addressed_other|irrelevant||||Hey Tom, your package is at the front desk.|for someone else
+do19|dorm|about_other_relevant|relevant|floor|||The guy in 216 left his tap running and the water is going under the wall into the next rooms.|about a neighbour, but 214 is next door
+do20|dorm|negation_news|relevant|floor|||The elevator will no longer stop on the second floor after ten at night.|the not is the news

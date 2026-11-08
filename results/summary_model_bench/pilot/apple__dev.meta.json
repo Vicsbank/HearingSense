@@ -1,0 +1,100 @@
+{
+ "model": "apple",
+ "name": "Apple AFM 3 Core",
+ "info": {
+  "context_size": 4096,
+  "variant": "AFM 3 Core",
+  "available": true,
+  "os": "Version 27.2 (Build 26B5101f)",
+  "bridge_start_seconds": 0.045364250021521,
+  "mode": "guided",
+  "prewarm": true,
+  "sampling": "greedy",
+  "runtime": "FoundationModels, SystemLanguageModel.default"
+ },
+ "set": "dev",
+ "pre": {
+  "sysmon": {
+   "memory_free_percent": 65,
+   "swap_used_mb": 10692.06,
+   "swapins": 2131906,
+   "swapouts": 3481875,
+   "cpu_speed_limit": null,
+   "thermal_warning": false,
+   "other_runs": []
+  },
+  "load": [
+   14.8017578125,
+   17.33203125,
+   21.61962890625
+  ]
+ },
+ "started": "2026-10-12 13:56:30",
+ "groups": {
+  "neutral": {
+   "n": 12,
+   "wall_seconds": 69.13000392913818,
+   "mem_after": {
+    "note": "the model runs in a system service; its memory is not visible to this process"
+   },
+   "sysmon": {
+    "memory_free_percent": 57,
+    "swap_used_mb": 10644.06,
+    "swapins": 2134623,
+    "swapouts": 3481875,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    17.0205078125,
+    17.00537109375,
+    21.0576171875
+   ]
+  },
+  "prod": {
+   "n": 12,
+   "wall_seconds": 134.87259483337402,
+   "mem_after": {
+    "note": "the model runs in a system service; its memory is not visible to this process"
+   },
+   "sysmon": {
+    "memory_free_percent": 57,
+    "swap_used_mb": 10628.06,
+    "swapins": 2135681,
+    "swapouts": 3481875,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    12.50830078125,
+    15.52783203125,
+    19.8720703125
+   ]
+  },
+  "continue": {
+   "n": 3,
+   "wall_seconds": 40.0068039894104,
+   "mem_after": {
+    "note": "the model runs in a system service; its memory is not visible to this process"
+   },
+   "sysmon": {
+    "memory_free_percent": 57,
+    "swap_used_mb": 10628.06,
+    "swapins": 2136009,
+    "swapouts": 3481875,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    11.951171875,
+    15.03076171875,
+    19.49072265625
+   ]
+  }
+ },
+ "first_request_seconds": 7.940478290984174,
+ "finished": "2026-10-12 14:00:52"
+}

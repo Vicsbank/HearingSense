@@ -1,0 +1,212 @@
+{
+ "model": "apple-text",
+ "spec": {
+  "kind": "apple",
+  "mode": "text",
+  "name": "Apple AFM 3 Core (plain text)"
+ },
+ "task": "hs",
+ "set": "hs_dev",
+ "phase": "pilot",
+ "seed": 7,
+ "warmup_requests": 2,
+ "first_request_seconds_after_load": [
+  1.1361960172653198
+ ],
+ "info": {
+  "variant": "AFM 3 Core",
+  "os": "Version 27.2 (Build 26B5101f)",
+  "context_size": 4096,
+  "available": true,
+  "bridge_start_seconds": 0.04780816601123661,
+  "mode": "text",
+  "prewarm": true,
+  "sampling": "greedy",
+  "runtime": "FoundationModels, SystemLanguageModel.default"
+ },
+ "memory": {
+  "note": "the model runs in a system service; its memory is not visible to this process"
+ },
+ "timing": {
+  "requests": 20,
+  "errors": 0,
+  "seconds_p50": 0.9015250205993652,
+  "seconds_p95": 0.9945350885391235,
+  "seconds_p99": 1.0318039655685425,
+  "seconds_mean": 0.9147705435752869,
+  "first_seconds_p50": 0.9014180898666382,
+  "output_tokens_mean": 23.3,
+  "input_tokens_mean": 410.35,
+  "decode_tps_median": null,
+  "prefill_tps_median": null,
+  "decisions_per_minute_back_to_back": 65.59021868532862
+ },
+ "score": {
+  "n": 20,
+  "tp": 7,
+  "fp": 6,
+  "fn": 0,
+  "tn": 7,
+  "precision": 0.5384615384615384,
+  "recall": 1.0,
+  "f1": 0.7000000000000001,
+  "accuracy": 0.7,
+  "goal_accuracy_on_tp": 1.0,
+  "implicit_recall": 1.0,
+  "important_total": 0,
+  "important_missed": 0,
+  "urgent_total": 0,
+  "urgent_flagged": 0,
+  "urgent_false_flags": 1,
+  "status": {
+   "ok": 20,
+   "repaired": 0,
+   "failed": 0,
+   "error": 0,
+   "missing": 0
+  },
+  "structured_ok_rate": 1.0,
+  "categories": {
+   "obvious": {
+    "n": 2,
+    "right": 2,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "implicit": {
+    "n": 1,
+    "right": 1,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "group_in": {
+    "n": 1,
+    "right": 1,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "third_person": {
+    "n": 2,
+    "right": 2,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 2
+   },
+   "negation": {
+    "n": 1,
+    "right": 1,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 1
+   },
+   "hypothetical": {
+    "n": 2,
+    "right": 0,
+    "tp": 0,
+    "fp": 2,
+    "fn": 0,
+    "tn": 0
+   },
+   "idiom": {
+    "n": 2,
+    "right": 1,
+    "tp": 0,
+    "fp": 1,
+    "fn": 0,
+    "tn": 1
+   },
+   "emergency_false": {
+    "n": 2,
+    "right": 2,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 2
+   },
+   "context": {
+    "n": 2,
+    "right": 0,
+    "tp": 0,
+    "fp": 2,
+    "fn": 0,
+    "tn": 0
+   },
+   "update": {
+    "n": 2,
+    "right": 2,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "about_other_relevant": {
+    "n": 1,
+    "right": 1,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "group_out": {
+    "n": 1,
+    "right": 0,
+    "tp": 0,
+    "fp": 1,
+    "fn": 0,
+    "tn": 0
+   },
+   "unrelated": {
+    "n": 1,
+    "right": 1,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 1
+   }
+  },
+  "wrong_ids": [
+   "in11",
+   "in17",
+   "do03",
+   "do09",
+   "do11",
+   "do15"
+  ]
+ },
+ "wall_seconds": 19.72339677810669,
+ "system_before": {
+  "memory_free_percent": 69,
+  "swap_used_mb": 12278.56,
+  "swapins": 1132566,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ },
+ "system_after_load": {
+  "memory_free_percent": 69,
+  "swap_used_mb": 12278.56,
+  "swapins": 1132566,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ },
+ "system_after": {
+  "memory_free_percent": 69,
+  "swap_used_mb": 12278.56,
+  "swapins": 1132781,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ }
+}

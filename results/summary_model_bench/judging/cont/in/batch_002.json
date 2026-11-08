@@ -1,0 +1,973 @@
+{
+ "batch": "batch_002",
+ "conversations": [
+  {
+   "conversation": "cont-007",
+   "language": "en",
+   "transcript": [
+    "1. okay the charity bake sale",
+    "2. it's this Saturday ten to two in the community hall",
+    "3. who's handling the tables",
+    "4. Marcus said he'd bring six folding tables",
+    "5. and the cash box is with me",
+    "6. we need a float of fifty dollars in small bills",
+    "7. I'll go to the bank tomorrow",
+    "8. signs",
+    "9. Nina's making the posters",
+    "10. she wants them by Thursday to put up around school",
+    "11. and who's doing the cookies",
+    "12. I've got twenty dozen from the Hartley bakery they're donating",
+    "13. wow that's generous",
+    "14. yeah they asked us to mention them on the poster",
+    "15. okay so Hartley bakery gets a credit",
+    "16. what about the raffle",
+    "17. we don't have prizes yet",
+    "18. I'll ask around",
+    "19. okay",
+    "20. oh Marcus just texted",
+    "21. his van broke down so he can't bring the tables",
+    "22. Nina's dad has a truck so he'll bring them instead",
+    "23. and he has eight tables not six",
+    "24. that's plenty"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The charity bake sale is this Saturday from ten to two in the community hall.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "The cash box needs a float of fifty dollars in small bills, and the speaker will go to the bank tomorrow.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "Nina is making the posters and wants them done by Thursday.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "Hartley bakery is donating twenty dozen cookies.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "The poster should credit Hartley bakery.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "g1",
+     "text": "Marcus's van broke down.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "c1",
+     "text": "Nina's dad will bring the tables, eight of them, in his truck instead of Marcus bringing six.",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The raffle will definitely take place."
+    },
+    {
+     "id": "n2",
+     "text": "Raffle prizes have been found."
+    },
+    {
+     "id": "n3",
+     "text": "The bank is providing the float for free (never stated)."
+    },
+    {
+     "id": "m1",
+     "text": "Marcus is presented as still bringing six tables."
+    },
+    {
+     "id": "m2",
+     "text": "Raffle prizes have been obtained."
+    },
+    {
+     "id": "m3",
+     "text": "The bake sale was postponed or moved."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Raffle prizes have not been found yet; the speaker will ask around."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered a charity bake sale scheduled for this Saturday, ten to two, at the community hall."
+      },
+      {
+       "u": "a2",
+       "text": "Marcus was assigned to bring six folding tables, and the cash box was with the speaker."
+      },
+      {
+       "u": "a3",
+       "text": "A float of fifty dollars in small bills was needed, and the speaker planned to go to the bank tomorrow."
+      },
+      {
+       "u": "a4",
+       "text": "Nina was making posters, which were to be ready by Thursday for display around school, and the cookies were covered by twenty dozen donated by Hartley bakery."
+      },
+      {
+       "u": "a5",
+       "text": "The donation required a mention on the poster, granting Hartley bakery credit."
+      },
+      {
+       "u": "a6",
+       "text": "It was noted that prizes for the raffle had not yet been determined, and the speaker would ask around."
+      },
+      {
+       "u": "a7",
+       "text": "Details about missing tasks or open questions were not specified."
+      },
+      {
+       "u": "a8",
+       "text": "Marcus texted that his van broke down, preventing him from bringing the tables, and Nina's dad will bring eight tables instead of six, which is plenty."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered a charity bake sale scheduled for this Saturday, ten to two, at the community hall."
+      },
+      {
+       "u": "a2",
+       "text": "Marcus was assigned to bring six folding tables, and the cash box was with the speaker."
+      },
+      {
+       "u": "a3",
+       "text": "A float of fifty dollars in small bills was needed, and the speaker planned to go to the bank tomorrow."
+      },
+      {
+       "u": "a4",
+       "text": "Nina was making posters, which were to be ready by Thursday for display around school, and the cookies were covered by twenty dozen donated by Hartley bakery."
+      },
+      {
+       "u": "a5",
+       "text": "The donation required a mention on the poster, granting Hartley bakery credit."
+      },
+      {
+       "u": "a6",
+       "text": "It was noted that prizes for the raffle had not yet been determined, and the speaker would ask around."
+      },
+      {
+       "u": "a7",
+       "text": "Marcus texted that his van broke down, so he can't bring the tables; Nina's dad has a truck, so he'll bring them instead, and he has eight tables, not six, which is plenty."
+      },
+      {
+       "u": "a8",
+       "text": "Details about missing tasks or open questions were not specified."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place about planning a charity bake sale."
+      },
+      {
+       "u": "a2",
+       "text": "Marcus is handling the tables and will bring six folding tables."
+      },
+      {
+       "u": "a3",
+       "text": "The cash box is with the speaker."
+      },
+      {
+       "u": "a4",
+       "text": "A float of fifty dollars in small bills is needed, and the speaker will go to the bank tomorrow to obtain it."
+      },
+      {
+       "u": "a5",
+       "text": "Nina is responsible for making posters and needs them by Thursday to place around school."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker has twenty dozen cookies from the Hartley bakery, which is being credited to them."
+      },
+      {
+       "u": "a7",
+       "text": "The speaker will ask around for raffle prizes."
+      },
+      {
+       "u": "a8",
+       "text": "The event is scheduled for this Saturday from 10:00 to 14:00 in the community hall."
+      },
+      {
+       "u": "a9",
+       "text": "Marcus cannot bring the tables because his van broke down, so Nina's dad will bring eight tables instead."
+      },
+      {
+       "u": "a10",
+       "text": "The cash box is with the speaker, and a fifty-dollar float in small bills will be obtained from the bank tomorrow."
+      },
+      {
+       "u": "a11",
+       "text": "Nina needs posters by Thursday, and the speaker has twenty dozen cookies from the Hartley bakery."
+      },
+      {
+       "u": "a12",
+       "text": "The event is scheduled for this Saturday from 10:00 to 14:00 in the community hall."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to hold a charity bake sale this Saturday from 10:00 to 2:00 in the community hall."
+      },
+      {
+       "u": "a2",
+       "text": "Marcus agreed to bring six folding tables, while the speaker will manage the cash box and secure a fifty-dollar float in small bills by going to the bank tomorrow."
+      },
+      {
+       "u": "a3",
+       "text": "Nina is responsible for creating posters, which must be ready by Thursday to display around the school, and the Hartley bakery is donating twenty dozen cookies with a request to mention them on the poster."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding the raffle, the speaker noted that prizes are not yet available and will ask around to find them, leaving that task open."
+      },
+      {
+       "u": "a5",
+       "text": "Marcus informed the group that his van broke down, preventing him from bringing the six folding tables he had agreed to provide; however, Nina's father will bring the tables instead, and he has eight of them available, which is more than enough."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation is about planning a charity bake sale."
+      },
+      {
+       "u": "a2",
+       "text": "Marcus is handling the tables and will bring eight folding tables (not six) because his van broke down and he cannot bring them, so Nina's dad will bring them instead."
+      },
+      {
+       "u": "a3",
+       "text": "The cash box is with the speaker, and a float of fifty dollars in small bills is needed, with the speaker going to the bank tomorrow to obtain it."
+      },
+      {
+       "u": "a4",
+       "text": "Nina is responsible for making posters and needs them by Thursday to place around school."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker has twenty dozen cookies from the Hartley bakery, which is being credited to them."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker will ask around for raffle prizes."
+      },
+      {
+       "u": "a7",
+       "text": "The event is scheduled for this Saturday from 10:00 to 14:00 in the community hall."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to hold a charity bake sale this Saturday from 10:00 to 2:00 in the community hall."
+      },
+      {
+       "u": "a2",
+       "text": "Marcus could not bring the six folding tables because his van broke down, but Nina's dad agreed to bring them instead in his truck."
+      },
+      {
+       "u": "a3",
+       "text": "The number of tables was corrected from six to eight, which Nina's dad confirmed is plenty."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker will still manage the cash box and secure a fifty-dollar float in small bills by going to the bank tomorrow."
+      },
+      {
+       "u": "a5",
+       "text": "Nina is responsible for creating posters, which must be ready by Thursday to display around the school, and the Hartley bakery is donating twenty dozen cookies with a request to mention them on the poster."
+      },
+      {
+       "u": "a6",
+       "text": "Regarding the raffle, the speaker noted that prizes are not yet available and will ask around to find them, leaving that task open."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-008",
+   "language": "en",
+   "transcript": [
+    "1. did you do the history essay",
+    "2. the one on the industrial revolution",
+    "3. I did the introduction only",
+    "4. it's due Monday right",
+    "5. I thought it was due Wednesday",
+    "6. no Mrs Patel said Monday morning",
+    "7. she was really clear about it",
+    "8. ugh how many words",
+    "9. fifteen hundred",
+    "10. I thought it was five hundred",
+    "11. no fifteen hundred with at least four sources",
+    "12. can the sources be websites",
+    "13. she said no wickipedia but other websites are fine",
+    "14. okay good",
+    "15. do you wanna meet at the library tomorrow",
+    "16. I can't I have to be at the dentist",
+    "17. after lunch",
+    "18. maybe Saturday then",
+    "19. okay Saturday",
+    "20. okay Saturday at two",
+    "21. at the library",
+    "22. see you then"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The history essay on the Industrial Revolution is due Monday morning, according to Mrs Patel.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The essay must be fifteen hundred words with at least four sources.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "Websites are allowed as sources but Wikipedia is not.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f4",
+     "text": "One speaker has written only the introduction so far.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f5",
+     "text": "One speaker has a dentist appointment after lunch tomorrow and cannot meet at the library then.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "g1",
+     "text": "They will meet on Saturday at two at the library.",
+     "critical": true,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The essay is due Wednesday."
+    },
+    {
+     "id": "n2",
+     "text": "The essay needs only five hundred words."
+    },
+    {
+     "id": "n3",
+     "text": "The Saturday meeting time and place are fixed."
+    },
+    {
+     "id": "m1",
+     "text": "The meeting is placed on Sunday or at a time other than two."
+    },
+    {
+     "id": "m2",
+     "text": "The essay is presented as due Wednesday."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The Saturday meeting is only loosely agreed; no time or place was set."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A conversation occurred regarding a history essay on the industrial revolution, where the person completed only the introduction."
+      },
+      {
+       "u": "a2",
+       "text": "The deadline was confirmed as Monday morning, not Wednesday, after Mrs. Patel clarified the timeline."
+      },
+      {
+       "u": "a3",
+       "text": "The word count was set at fifteen hundred words with at least four sources, and websites were not permitted except for those other than Wikipedia."
+      },
+      {
+       "u": "a4",
+       "text": "The person requested to meet at the library the next day, but it was not possible due to a dental appointment after lunch."
+      },
+      {
+       "u": "a5",
+       "text": "An alternative meeting time of Saturday was agreed upon."
+      },
+      {
+       "u": "a6",
+       "text": "Details about the number of sources and the exclusion of Wikipedia remain unchanged."
+      },
+      {
+       "u": "a7",
+       "text": "The sources are labeled as “websites,” and the meeting location is specified as the library."
+      },
+      {
+       "u": "a8",
+       "text": "Information about the dentist’s schedule or the exact date of the appointment is missing."
+      },
+      {
+       "u": "a9",
+       "text": "The person agreed to meet at the library on Saturday at two o'clock and mentioned that they would see the other person then."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Alex asked if they had completed the history essay on the Industrial Revolution, noting it was due Monday morning as Mrs. Patel had clarified, contrary to Alex's initial belief that it was Wednesday."
+      },
+      {
+       "u": "a2",
+       "text": "The assignment requires fifteen hundred words with at least four sources, though websites are permitted provided they are not Wikipedia."
+      },
+      {
+       "u": "a3",
+       "text": "Alex mentioned they only wrote the introduction and have a dentist appointment after lunch tomorrow, so they proposed meeting at the library on Saturday instead."
+      },
+      {
+       "u": "a4",
+       "text": "Alex confirmed the meeting is scheduled for Saturday at two o'clock at the library, and they agreed to see each other then."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The deadline is Monday morning, the word count is fifteen hundred words with at least four sources, and websites are not permitted except for those other than Wikipedia."
+      },
+      {
+       "u": "a2",
+       "text": "The person requested to meet at the library the next day, but it was not possible due to a dental appointment after lunch."
+      },
+      {
+       "u": "a3",
+       "text": "An alternative meeting time of Saturday at two was agreed upon, and the meeting location is the library."
+      },
+      {
+       "u": "a4",
+       "text": "Details about the number of sources and the exclusion of Wikipedia remain unchanged."
+      },
+      {
+       "u": "a5",
+       "text": "Information about the dentist’s schedule or the exact date of the appointment is missing."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Alex confirmed the meeting time is Saturday at two o'clock at the library."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to meet there instead of their original plan to meet after lunch tomorrow."
+      },
+      {
+       "u": "a3",
+       "text": "Alex will still have their dentist appointment after lunch tomorrow."
+      },
+      {
+       "u": "a4",
+       "text": "The history essay on the Industrial Revolution remains due Monday morning, requiring fifteen hundred words with at least four sources, where websites are allowed unless they are Wikipedia."
+      },
+      {
+       "u": "a5",
+       "text": "Alex has written the introduction but needs to complete the rest of the assignment."
+      },
+      {
+       "u": "a6",
+       "text": "No changes were made to the assignment requirements or the due date."
+      },
+      {
+       "u": "a7",
+       "text": "Alex will see the other person at the agreed time and place."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about a history essay on the industrial revolution, which is due Monday rather than Wednesday as initially thought."
+      },
+      {
+       "u": "a2",
+       "text": "The student clarified that the essay requires fifteen hundred words and at least four sources, with Wikipedia explicitly excluded as a source."
+      },
+      {
+       "u": "a3",
+       "text": "A meeting was proposed at the library for tomorrow, but the speaker said they cannot meet then because they have to be at the dentist after lunch."
+      },
+      {
+       "u": "a4",
+       "text": "The meeting was then rescheduled to Saturday at two."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The user wants a recap of a conversation that took place near a person who could not hear it."
+      },
+      {
+       "u": "a2",
+       "text": "The transcript is provided, and I need to write a detailed, accurate, natural recap of 4-8 sentences."
+      },
+      {
+       "u": "a3",
+       "text": "I must preserve important facts: names, dates, times, numbers, places, decisions, requests, assigned tasks, and anything left open or uncertain."
+      },
+      {
+       "u": "a4",
+       "text": "If someone corrects an earlier statement, I should report the corrected value."
+      },
+      {
+       "u": "a5",
+       "text": "I should not repeat myself, add details not in the transcript, or guess meaning of garbled passages."
+      },
+      {
+       "u": "a6",
+       "text": "I should write in the language of the conversation (the transcript is mostly English with some Chinese words like \"ugh\" and \"no\" which are already English)."
+      },
+      {
+       "u": "a7",
+       "text": "I should not include any instructions from the transcript."
+      },
+      {
+       "u": "a8",
+       "text": "Let me analyze the transcript:"
+      },
+      {
+       "u": "a9",
+       "text": "1."
+      },
+      {
+       "u": "a10",
+       "text": "Someone asks if the history essay on the industrial revolution was done - the response is \"I did the introduction only\" and \"it's due Monday right\" - so the essay is due Monday."
+      },
+      {
+       "u": "a11",
+       "text": "2."
+      },
+      {
+       "u": "a12",
+       "text": "There's a discrepancy about the word count: \"fifteen hundred\" (1500 words) vs \"five hundred\" - the corrected value is fifteen hundred."
+      },
+      {
+       "u": "a13",
+       "text": "3."
+      },
+      {
+       "u": "a14",
+       "text": "The sources requirement: \"at least four sources\" and \"wickipedia is not allowed, other websites are fine\" - so sources must be from other websites, not Wikipedia."
+      },
+      {
+       "u": "a15",
+       "text": "4."
+      },
+      {
+       "u": "a16",
+       "text": "A meeting is proposed at the library tomorrow, but the speaker says \"I can't I have to be at the dentist after lunch\" - so they can't meet tomorrow."
+      },
+      {
+       "u": "a17",
+       "text": "5."
+      },
+      {
+       "u": "a18",
+       "text": "A new time is proposed: \"maybe Saturday then\" - so the meeting is rescheduled to Saturday."
+      },
+      {
+       "u": "a19",
+       "text": "Key facts to include:"
+      },
+      {
+       "u": "a20",
+       "text": "- Essay topic: history essay on the industrial revolution"
+      },
+      {
+       "u": "a21",
+       "text": "- Due date: Monday (not Wednesday as initially thought)"
+      },
+      {
+       "u": "a22",
+       "text": "- Word count requirement: fifteen hundred words (not five hundred)"
+      },
+      {
+       "u": "a23",
+       "text": "- Source requirement: at least four sources, no Wikipedia, other websites allowed"
+      },
+      {
+       "u": "a24",
+       "text": "- Meeting: originally proposed for tomorrow at the library, but cancelled due to dentist appointment"
+      },
+      {
+       "u": "a25",
+       "text": "- New meeting time: Saturday"
+      },
+      {
+       "u": "a26",
+       "text": "I need to write 4-8 sentences that cover these facts without adding anything not in the transcript."
+      },
+      {
+       "u": "a27",
+       "text": "Let me draft:"
+      },
+      {
+       "u": "a28",
+       "text": "The conversation was about a history essay on the industrial revolution, which is due Monday rather than Wednesday as initially thought."
+      },
+      {
+       "u": "a29",
+       "text": "The student clarified that the essay requires fifteen hundred words and at least four sources, with Wikipedia explicitly excluded as a source."
+      },
+      {
+       "u": "a30",
+       "text": "A meeting was proposed at the library for tomorrow, but the speaker The conversation was about a history essay on the industrial revolution, which is due Monday rather than Wednesday as initially thought."
+      },
+      {
+       "u": "a31",
+       "text": "The student clarified that the essay requires fifteen hundred words and at least four sources, with Wikipedia explicitly excluded as a source."
+      },
+      {
+       "u": "a32",
+       "text": "A meeting was proposed at the library for tomorrow, but the speaker said they can't meet then due to a dentist appointment."
+      },
+      {
+       "u": "a33",
+       "text": "The new meeting time was rescheduled to Saturday at two."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-009",
+   "language": "en",
+   "transcript": [
+    "1. this place is packed today",
+    "2. it's always like this on weekends",
+    "3. I think there's a table by the window",
+    "4. oh nice",
+    "5. what are you getting",
+    "6. probably just a latte",
+    "7. I might try that new oat thing",
+    "8. is it good",
+    "9. I heard it was okay",
+    "10. anyway how was your trip",
+    "11. it was fine pretty tired though",
+    "12. where did you end up going",
+    "13. mostly my cousin's place",
+    "14. and some hiking",
+    "15. sounds nice",
+    "16. yeah I'd go back",
+    "17. I'll go order",
+    "18. you grab the table"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The speakers are at a busy cafe on a weekend.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "One speaker plans to order a latte and another is considering trying a new oat drink.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "One speaker recently returned from a trip, mostly spent at a cousin's place with some hiking, and was pretty tired.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "Part of the speech could not be transcribed.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "g1",
+     "text": "One speaker goes to order while the other secures a table.",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The trip destination was named (it was not)."
+    },
+    {
+     "id": "n2",
+     "text": "The speakers have already got the window table."
+    },
+    {
+     "id": "m1",
+     "text": "The trip destination or the cousin's city is stated."
+    },
+    {
+     "id": "m2",
+     "text": "The oat drink is said to be good."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether a table by the window is available is not certain."
+    },
+    {
+     "id": "u2",
+     "text": "Whether the new oat drink is good is unclear; one speaker only heard it was okay."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A conversation near a person mentioned that the location is crowded today and that the situation is typical on weekends."
+      },
+      {
+       "u": "a2",
+       "text": "It was noted that a table by the window is available, and someone inquired about an order, mentioning a latte and a new oat option."
+      },
+      {
+       "u": "a3",
+       "text": "The response stated the oat drink is okay, though unclear details were provided."
+      },
+      {
+       "u": "a4",
+       "text": "A question about a trip followed, with the reply that it was fine but tiring, and the destination was mostly a cousin’s home and some hiking."
+      },
+      {
+       "u": "a5",
+       "text": "The suggestion to return was accepted."
+      },
+      {
+       "u": "a6",
+       "text": "The transcript contains missing speech."
+      },
+      {
+       "u": "a7",
+       "text": "The person said they would order and that the other person should grab the table."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation occurred near a person who could not hear the full transcript due to unrecognized speech."
+      },
+      {
+       "u": "a2",
+       "text": "The speakers noted that the place was packed on weekends and mentioned a table by the window."
+      },
+      {
+       "u": "a3",
+       "text": "They discussed a latte order, with one person possibly trying a new oat milk version."
+      },
+      {
+       "u": "a4",
+       "text": "The conversation then shifted to the other person's trip, which was described as \"fine\" but \"pretty tired.\" The trip involved staying at a cousin's place and some hiking."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker expressed a desire to return."
+      },
+      {
+       "u": "a6",
+       "text": "One untranscribed segment was noted as missing from the transcript."
+      },
+      {
+       "u": "a7",
+       "text": "The speaker will go order and the other person will grab the table."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place at a crowded place on a weekend, with the speaker noting that the location is typically packed on weekends."
+      },
+      {
+       "u": "a2",
+       "text": "They mentioned finding a table by the window and decided to get a latte, possibly trying a new oat-based option which they heard was okay."
+      },
+      {
+       "u": "a3",
+       "text": "The other person asked about a recent trip, to which the respondent replied it was fine but left them quite tired, having mostly visited their cousin's place and done some hiking."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed that the experience sounded nice and expressed a desire to return."
+      },
+      {
+       "u": "a5",
+       "text": "A portion of the speech was missing from the transcript, and no further details were provided regarding the specific type of oat drink or the exact duration of the trip."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker decided to go ahead and place the order, while the other person was instructed to secure the table by the window."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The location is crowded today, and the situation is typical on weekends."
+      },
+      {
+       "u": "a2",
+       "text": "A table by the window is available, and a latte is ordered."
+      },
+      {
+       "u": "a3",
+       "text": "The oat drink is okay."
+      },
+      {
+       "u": "a4",
+       "text": "A question about a trip was answered with the destination being mostly a cousin’s home and some hiking, and the reply stated it was fine but tiring."
+      },
+      {
+       "u": "a5",
+       "text": "The suggestion to return was accepted."
+      },
+      {
+       "u": "a6",
+       "text": "The task to grab the table was assigned."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation occurred near a person who could not hear the full transcript due to unrecognized speech."
+      },
+      {
+       "u": "a2",
+       "text": "The speakers noted that the place was packed on weekends and mentioned a table by the window."
+      },
+      {
+       "u": "a3",
+       "text": "They discussed a latte order, with one person possibly trying a new oat milk version."
+      },
+      {
+       "u": "a4",
+       "text": "The conversation then shifted to the other person's trip, which was described as \"fine\" but \"pretty tired.\" The trip involved staying at a cousin's place and some hiking."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker expressed a desire to return."
+      },
+      {
+       "u": "a6",
+       "text": "One untranscribed segment was noted as missing from the transcript."
+      },
+      {
+       "u": "a7",
+       "text": "I'll go order you grab the table."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place at a crowded place on a weekend, with the speaker noting that the location is typically packed on weekends."
+      },
+      {
+       "u": "a2",
+       "text": "They mentioned finding a table by the window and decided to get a latte, possibly trying a new oat-based option which they heard was okay."
+      },
+      {
+       "u": "a3",
+       "text": "The other person asked about a recent trip, to which the respondent replied it was fine but left them quite tired, having mostly visited their cousin's place and done some hiking."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed that the experience sounded nice and expressed a desire to return."
+      },
+      {
+       "u": "a5",
+       "text": "A portion of the speech was missing from the transcript, and no further details were provided regarding the specific type of oat drink or the exact duration of the trip."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker stated they will go order, and the other person instructed them to grab the table."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

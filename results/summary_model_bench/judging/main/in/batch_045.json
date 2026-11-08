@@ -1,0 +1,731 @@
+{
+ "batch": "batch_045",
+ "conversations": [
+  {
+   "conversation": "fin-mix-003",
+   "language": "mixed",
+   "transcript": [
+    "1. okay let's start 先过一下 sprint review 的 action items",
+    "2. login 页面那个 bug 谁在 fix 的",
+    "3. 是我 不过 Daniel 说他先看了 其实他已经 push 了一个 PR",
+    "4. 哦 那 Daniel 的那个 PR 我 review 一下 周二之前给 feedback",
+    "5. 好 然后 release 呢 原本 plan 是 周四 对吧",
+    "6. 对 但是 QA 说 regression test 还没跑完",
+    "7. 那就推到 下周一 不 下周二吧 给 QA 多一天",
+    "8. 他们要 sign off 才能 deploy 所以 release 改成下周二",
+    "9. 可是 marketing 那边 已经 announce 周四了",
+    "10. 这个我来跟 Priya 说 她管 social media 的",
+    "11. 另外 那个 vendor 的 contract 谁来 follow up",
+    "12. 他们不是说 这周要 send 新版本吗 还没收到",
+    "13. 我今天下午 email 他们 催一下 然后 cc Legal",
+    "14. 好 还有 budget 的事 Sarah 说 Q4 的 cloud cost 超了 大概百分之十二",
+    "15. 原因还不清楚 可能是 staging 环境没关",
+    "16. 那 Sarah 你查一下 周五前 report 给大家",
+    "17. okay 下次 sync 还是周一十点 在 Zoom 上 我 会 把 agenda 提前 发 到 Slack channel",
+    "18. 大家 有 blocker 的 话 随时 ping 我 不用 等 到 meeting thanks",
+    "19. 另外 notes 我 会 放 在 Confluence 的 sprint review 页面 上 请 大家 看 一下"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The login page bug already has a pull request from Daniel.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "One speaker will review Daniel's PR and give feedback by Tuesday.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "The release moved from Thursday to next Tuesday to give QA an extra day for regression tests.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f4",
+     "text": "QA must sign off before deployment.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f5",
+     "text": "Marketing already announced the Thursday date; one speaker will tell Priya, who handles social media.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "One speaker will email the vendor this afternoon about the new contract version and cc Legal.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "Q4 cloud cost exceeded budget by about 12 percent.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "Sarah will investigate the cloud cost overrun and report by Friday.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f9",
+     "text": "The next sync is Monday at 10.",
+     "critical": true,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The release is still on Thursday (superseded)."
+    },
+    {
+     "id": "n2",
+     "text": "The release moved to Monday (said then corrected to Tuesday)."
+    },
+    {
+     "id": "n3",
+     "text": "The cost overrun was definitely caused by the staging environment (only a guess)."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The cause of the cloud cost overrun is unknown; an unclosed staging environment is only a possibility."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "会议首先确认了登录页面 Bug 由说话人负责修复，同时 Daniel 已推送 PR，要求说话人在周二前完成审查并提供反馈。"
+      },
+      {
+       "u": "a2",
+       "text": "原定周四发布计划因 QA 回归测试未完成而推迟，最终决定将发布时间改为下周二，以便 QA 有额外一天进行签名确认，但需通知营销部门 Priya 更新其周四的官方公告。"
+      },
+      {
+       "u": "a3",
+       "text": "此外，针对供应商承诺本周发送新版本却未收到的情况，说话人计划今天下午发送邮件催促并抄送法务，同时询问谁负责跟进合同事宜。"
+      },
+      {
+       "u": "a4",
+       "text": "关于 Sarah 指出的 Q4 云成本超支约百分之十二的问题，因具体原因不明，她需在周五前查明原因并报告。"
+      },
+      {
+       "u": "a5",
+       "text": "最后，下次同步会议定于周一上午十点通过 Zoom 举行，议程将提前发至 Slack，会议笔记将上传至 Confluence 的 sprint review 页面供查阅。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "会议回顾了 sprint review 的 action items。"
+      },
+      {
+       "u": "a2",
+       "text": "关于登录页面上的 bug，说话者表示自己将负责修复，但 Daniel 已经先查看过并推送了 PR，说话者将于周二审查并给出反馈。"
+      },
+      {
+       "u": "a3",
+       "text": "关于发布计划，原定于周四，但 QA 指出回归测试尚未完成，因此推迟到下周一（但也提到下周二）。"
+      },
+      {
+       "u": "a4",
+       "text": "由于营销方已在周四宣布，说话者将通知 Priya（负责社交媒体）这一变更。"
+      },
+      {
+       "u": "a5",
+       "text": "关于供应商合同，谁来跟进尚未明确，说话者已今天下午邮件催促对方并加了 Legal 副本，但尚未收到更新。"
+      },
+      {
+       "u": "a6",
+       "text": "Sarah 报告 Q4 云成本超支约 12%，原因不明（可能是 staging 环境未关闭），要求她在周五前提交报告。"
+      },
+      {
+       "u": "a7",
+       "text": "下次同步会议定于周一 10 点在"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team decided to review the login page bug fix, with Daniel's PR to be reviewed and feedback provided by Tuesday."
+      },
+      {
+       "u": "a2",
+       "text": "The release date was moved from Thursday to next Tuesday to accommodate QA regression testing and marketing sign-off, though marketing had already announced Thursday."
+      },
+      {
+       "u": "a3",
+       "text": "A vendor contract follow-up is needed regarding a promised new version this week, with an email to be sent today after noon, CC'ing Legal."
+      },
+      {
+       "u": "a4",
+       "text": "Sarah is tasked with investigating the 12% Q4 cloud cost overrun and reporting findings by Friday."
+      },
+      {
+       "u": "a5",
+       "text": "The next sync is scheduled for Monday at 10 AM on Zoom, with the agenda to be shared via Slack and notes to be posted on the Confluence sprint review page."
+      },
+      {
+       "u": "k1",
+       "text": "Daniel's PR for the login bug needs review with feedback by Tuesday."
+      },
+      {
+       "u": "k2",
+       "text": "The release date is changed to next Tuesday due to QA and marketing requirements."
+      },
+      {
+       "u": "k3",
+       "text": "A vendor contract follow-up is required, with an email to be sent today after noon CC'ing Legal."
+      },
+      {
+       "u": "k4",
+       "text": "Sarah must investigate the 12% Q4 cloud cost overrun and report by Friday."
+      },
+      {
+       "u": "k5",
+       "text": "The next sync is on Monday at 10 AM on Zoom with an agenda to be shared via Slack."
+      },
+      {
+       "u": "k6",
+       "text": "Meeting notes will be posted on the Confluence sprint review page."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The sprint review discussed action items including a login page bug fix and a release date change."
+      },
+      {
+       "u": "a2",
+       "text": "Daniel had already pushed a PR for the bug, and the speaker will review it before Tuesday."
+      },
+      {
+       "u": "a3",
+       "text": "The release was originally planned for Thursday but was pushed to next Tuesday due to QA regression test delays."
+      },
+      {
+       "u": "a4",
+       "text": "Marketing had already announced the release for Thursday, so the speaker will inform Priya about this change."
+      },
+      {
+       "u": "a5",
+       "text": "The vendor contract follow-up and the Q4 cloud cost overage (12%) were also addressed, with Sarah tasked to check the vendor and report to the team by Friday."
+      },
+      {
+       "u": "a6",
+       "text": "The next sync is scheduled for Monday at 10:00 AM on Zoom, with agenda posted to Slack."
+      },
+      {
+       "u": "k1",
+       "text": "The login page bug was assigned to the speaker, who confirmed Daniel had already pushed a PR."
+      },
+      {
+       "u": "k2",
+       "text": "The release date was moved from Thursday to next Tuesday due to QA regression test delays."
+      },
+      {
+       "u": "k3",
+       "text": "Marketing had already announced the Thursday release, so the speaker will update Priya about the change."
+      },
+      {
+       "u": "k4",
+       "text": "The vendor contract follow-up was addressed, and Sarah was tasked to check the contract and report by Friday."
+      },
+      {
+       "u": "k5",
+       "text": "The Q4 cloud cost exceeded 12% due to an unclear cause, possibly staging environment issues."
+      },
+      {
+       "u": "k6",
+       "text": "The next sync is on Monday at 10:00 AM via Zoom with the agenda posted to Slack."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation reviewed sprint review action items, including the login page bug, which was identified as being fixed by the speaker, though Daniel stated he had already pushed a PR."
+      },
+      {
+       "u": "a2",
+       "text": "Daniel’s PR was scheduled for review by the speaker before Tuesday, but the release timeline was adjusted from Thursday to Monday or Tuesday due to regression tests not being completed."
+      },
+      {
+       "u": "a3",
+       "text": "QA required sign-off for deployment, and the release was set for Tuesday, despite marketing announcing Thursday."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker planned to discuss the matter with Priya regarding social media."
+      },
+      {
+       "u": "a5",
+       "text": "A vendor contract follow-up was assigned, and the speaker noted a pending new version, which was not yet received, prompting an email to the vendor with Legal cc’d."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker reported that Sarah’s Q4 cloud cost exceeded twelve percent, and Sarah was instructed to report by Friday."
+      },
+      {
+       "u": "a7",
+       "text": "The next sync was confirmed for Monday at ten on Zoom, with the speaker to share the agenda on Slack."
+      },
+      {
+       "u": "a8",
+       "text": "Notes were to be posted on the Confluence sprint review page."
+      },
+      {
+       "u": "a9",
+       "text": "Missing: details on who reviewed the PR and the exact wording of the vendor’s email."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "To start by reviewing sprint review action items, including the login page bug, which someone is fixing, and Daniel pushing a PR that will be reviewed before Tuesday, with a release plan originally set for Thursday but delayed to Monday or Tuesday due to QA needing extra time for regression tests, despite marketing announcing Thursday."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to have Priya handle the marketing announcement, and someone will follow up on the vendor contract, which hasn't received a new version yet, after emailing them today afternoon with Legal cc'd."
+      },
+      {
+       "u": "a3",
+       "text": "The Q4 cloud cost exceeded approximately twelve percent, with Sarah to check the Friday report, and the next sync is Monday at ten on Zoom with agenda shared on Slack and notes on Confluence."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to address blockers immediately and not wait for the meeting."
+      },
+      {
+       "u": "k1",
+       "text": "The login page bug requires fixing."
+      },
+      {
+       "u": "k2",
+       "text": "Daniel pushed a PR for review before Tuesday."
+      },
+      {
+       "u": "k3",
+       "text": "The release plan is delayed to Monday or Tuesday due to QA."
+      },
+      {
+       "u": "k4",
+       "text": "Marketing announced the release for Thursday."
+      },
+      {
+       "u": "k5",
+       "text": "Priya will handle the social media announcement."
+      },
+      {
+       "u": "k6",
+       "text": "The vendor contract needs follow-up due to missing new version data."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-mix-004",
+   "language": "mixed",
+   "transcript": [
+    "1. 诶 你们 English essay 写完了吗 我还没开始",
+    "2. 我也是 Ms. Reyes 到底说的是 周三还是周四交",
+    "3. 她说周三 不对 她后来改了 说周四 因为周三有 assembly",
+    "4. 哦 对对对 我记得 周四早上八点之前 submit 到 Turnitin",
+    "5. 那个 essay 是不是要 引用 至少五个 sources",
+    "6. 她说是 至少四个 其中一个必须是 primary source",
+    "7. 四个吗 我写了五个 那更保险",
+    "8. 你写的是 Gatsby 还是 Hamlet",
+    "9. 我是 Gatsby 他是 Hamlet 对吧 Jason",
+    "10. 不是 我也选了 Gatsby 我以为 Hamlet 是 Honors 的",
+    "11. 对 Honors 那班才读 Hamlet 我们 regular 的不用",
+    "12. 诶那 word count 呢 一千两百字吗",
+    "13. 是 一千字 左右 上下 一百字 都可以",
+    "14. 哦 好 那我今晚 outline 一下 明天 draft",
+    "15. 要不要一起去 library 写 我周二放学后有空",
+    "16. 周二不行 我有 swim practice 周三可以吗",
+    "17. 周三可以 四点 library 门口见",
+    "18. okay 我 会 带 我 的 laptop 和 那 本 书 到时候 我们 一起 把 outline 对 一下",
+    "19. 好 那 你 先 把 thesis statement 想 好 明天 在 group chat 发 给 我 看",
+    "20. 没 问题 我 今晚 就 想 然后 明天 早上 在 school bus 上 再 改 一 改 你 也 记得 把 你 的 outline 带 来 给 我 参考 一下 谢谢"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The English essay is due Thursday at 8 am on Turnitin.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The due date moved from Wednesday to Thursday because of an assembly on Wednesday.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f3",
+     "text": "The essay needs at least four sources, one of which must be a primary source.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "The essay length is about 1,000 words, give or take 100.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "The regular class essay is on Gatsby; Hamlet is read only in the Honors class.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f6",
+     "text": "Two students plan to meet at the library entrance on Wednesday at 4 pm to write.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "One student cannot meet Tuesday because of swim practice.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The essay is due Wednesday (superseded)."
+    },
+    {
+     "id": "n2",
+     "text": "The essay requires five sources (a speaker first said five, then it was corrected to four)."
+    },
+    {
+     "id": "n3",
+     "text": "The speakers are in the Honors class."
+    },
+    {
+     "id": "n4",
+     "text": "The essay is 1,200 words."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about an English essay assignment."
+      },
+      {
+       "u": "a2",
+       "text": "Ms. Reyes clarified that the essay is due on Thursday (not Wednesday) because Wednesday has an assembly."
+      },
+      {
+       "u": "a3",
+       "text": "She noted the essay should be around 1,200 words (or 1,000-1,100 words), with at least four sources, one of which must be a primary source."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker (Jason) confirmed they wrote five sources and chose to write about *Gatsby* (not *Hamlet*)."
+      },
+      {
+       "u": "a5",
+       "text": "They discussed timing: the essay should be submitted to Turnitin by Thursday morning at 8 AM."
+      },
+      {
+       "u": "a6",
+       "text": "The group agreed to meet at the library on Tuesday after school (but Tuesday was unavailable due to swim practice), and then on Wednesday at 4 PM."
+      },
+      {
+       "u": "a7",
+       "text": "The speaker agreed to bring their laptop and the book, and to share their outline for review."
+      },
+      {
+       "u": "a8",
+       "text": "The group chat was to be used for sharing the outline."
+      },
+      {
+       "u": "a9",
+       "text": "No final decisions were made about the exact word count or source count beyond \"at least four\" with one primary source."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A discussion occurred about an English essay, with the deadline set for Thursday morning before eight o’clock, to be submitted to Turnitin."
+      },
+      {
+       "u": "a2",
+       "text": "It was stated that the essay required at least four sources, with at least one primary source, and a corrected requirement of at least four sources instead of five."
+      },
+      {
+       "u": "a3",
+       "text": "The topic was Gatsby, though there was confusion about whether Hamlet was involved, with a mention of Honors and regular classes."
+      },
+      {
+       "u": "a4",
+       "text": "The word count was clarified as one thousand words, with one hundred words allowance."
+      },
+      {
+       "u": "a5",
+       "text": "A schedule was agreed upon: outline tonight, draft tomorrow, with a meeting at the library at four o’clock on Wednesday."
+      },
+      {
+       "u": "a6",
+       "text": "It was decided that the speaker would bring their laptop and the book, and the outline would be reviewed together."
+      },
+      {
+       "u": "a7",
+       "text": "The next step was for the speaker to draft a thesis statement tonight, with revisions planned for the school bus tomorrow, and to bring the outline for reference."
+      },
+      {
+       "u": "a8",
+       "text": "The specific timing for the library meeting was confirmed as Wednesday at four."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to submit the English essay on Thursday instead of Wednesday because of an assembly, with submissions due to Turnitin by 8 AM."
+      },
+      {
+       "u": "a2",
+       "text": "The essay must include at least four sources, one of which must be a primary source, and the topic is either Gatsby or Hamlet, with Jason choosing Gatsby while others selected Hamlet for the Honors class."
+      },
+      {
+       "u": "a3",
+       "text": "The word count is approximately 1200 words, allowing for a range of 1100 to 1300 words, and the outline must be sent to Ms. Reyes in the group chat tonight."
+      },
+      {
+       "u": "a4",
+       "text": "Jason will bring his laptop and the required book to meet at the library at 4 PM on Wednesday after swim practice, while others will draft the thesis statement on the school bus the next morning."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to review the outline together at the library and ensure the final draft is completed by Thursday."
+      },
+      {
+       "u": "k1",
+       "text": "The essay is due on Thursday by 8 AM."
+      },
+      {
+       "u": "k2",
+       "text": "The submission must be made via Turnitin."
+      },
+      {
+       "u": "k3",
+       "text": "At least four sources are required, including one primary source."
+      },
+      {
+       "u": "k4",
+       "text": "The word count is approximately 1200 words (1100-1300)."
+      },
+      {
+       "u": "k5",
+       "text": "The meeting to review the outline is on Wednesday at 4 PM at the library."
+      },
+      {
+       "u": "k6",
+       "text": "Jason chose Gatsby, while others selected Hamlet for the Honors class."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The English essay was not finished and discussed submission dates, with a decision that the essay is due on Thursday because Wednesday has assembly."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed the essay must include at least four sources, with at least one primary source, and that four sources is sufficient even though five were written for safety."
+      },
+      {
+       "u": "a3",
+       "text": "Someone wrote about the book, deciding on Gatsby instead of Hamlet, and clarifying that Honors students read Hamlet while regular students do not."
+      },
+      {
+       "u": "a4",
+       "text": "The word count is approximately one thousand words, and someone agreed to outline tonight and draft tomorrow."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to meet at the library on Wednesday at four with a laptop and book, and someone will bring a thesis statement for review tomorrow morning on the school bus."
+      },
+      {
+       "u": "a6",
+       "text": "Someone will bring an outline for reference, and they agreed to use the group chat for communication."
+      },
+      {
+       "u": "a7",
+       "text": "Missing information includes the exact sources required and the final outline details."
+      },
+      {
+       "u": "a8",
+       "text": "They agreed to go to the library on Tuesday, but that time is not possible due to swim practice."
+      },
+      {
+       "u": "a9",
+       "text": "The meeting location is not specified beyond the library."
+      },
+      {
+       "u": "a10",
+       "text": "They agreed to meet at the library on Wednesday at four with a laptop and book, and someone will bring a thesis statement for review tomorrow morning on the school bus."
+      },
+      {
+       "u": "a11",
+       "text": "Someone will bring an outline for reference, and they agreed to use the group chat for communication."
+      },
+      {
+       "u": "a12",
+       "text": "Missing information includes the exact sources required and the final outline details."
+      },
+      {
+       "u": "a13",
+       "text": "They agreed to go to the library on Tuesday, but that time is not possible due to swim practice."
+      },
+      {
+       "u": "a14",
+       "text": "The meeting location is not specified beyond the library."
+      },
+      {
+       "u": "k1",
+       "text": "The English essay is due on Thursday."
+      },
+      {
+       "u": "k2",
+       "text": "The essay must include at least four sources, at least one primary source."
+      },
+      {
+       "u": "k3",
+       "text": "Someone wrote about Gatsby instead of Hamlet."
+      },
+      {
+       "u": "k4",
+       "text": "The word count is approximately one thousand words."
+      },
+      {
+       "u": "k5",
+       "text": "Someone will outline tonight and draft tomorrow."
+      },
+      {
+       "u": "k6",
+       "text": "They will meet at the library on Wednesday at four with a laptop and book."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Jason 和说话者确认了英语作文的截止日期为周四（而非最初误传的周三），因为周三有集会，且作业需提交至 Turnitin，字数约为 1200 字（允许上下浮动 100 字），并需引用至少四个来源（其中至少一个为原始来源），尽管说话者已准备了五个。"
+      },
+      {
+       "u": "a2",
+       "text": "两人最终确定 Jason 选择的是《了不起的盖茨比》而非《哈姆雷特》，因为后者是荣誉班的课程，而 Jason 所在的为普通班。"
+      },
+      {
+       "u": "a3",
+       "text": "关于作业要求，说话者提到她最初以为需要五个来源，但老师实际要求至少四个，因此 Jason 准备五个更为稳妥。"
+      },
+      {
+       "u": "a4",
+       "text": "他们约定周三下午四点在图书馆门口见面，Jason 将携带笔记本电脑和那本书，两人将共同核对大纲。"
+      },
+      {
+       "u": "a5",
+       "text": "说话者要求 Jason 在今晚构思好中心论点，并于明天早上在班级群聊天中发送给她，以便她在校车途中修改，同时 Jason 也需带上自己的大纲供她参考。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group discussed the status of an English essay assignment, clarifying that the deadline is Wednesday rather than Thursday due to an assembly on Wednesday."
+      },
+      {
+       "u": "a2",
+       "text": "They confirmed the word count is around 1,200 words, with a minimum of four sources including one primary source."
+      },
+      {
+       "u": "a3",
+       "text": "The writer has five sources and plans to submit by Tuesday morning at the library."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to meet on Wednesday at 4 PM at the library entrance to review the outline and make revisions."
+      },
+      {
+       "u": "a5",
+       "text": "The writer will bring their laptop and the required book, and the group will collaborate on the outline and word count adjustments."
+      },
+      {
+       "u": "k1",
+       "text": "The essay deadline is Wednesday, not Thursday, because Wednesday has an assembly."
+      },
+      {
+       "u": "k2",
+       "text": "The minimum requirement is four sources, with one needing to be a primary source."
+      },
+      {
+       "u": "k3",
+       "text": "The writer has five sources and is comfortable with the word count of around 1,200 words."
+      },
+      {
+       "u": "k4",
+       "text": "They plan to meet on Wednesday at 4 PM at the library to review the outline and make revisions."
+      },
+      {
+       "u": "k5",
+       "text": "The writer will bring their laptop and the required book to the meeting."
+      },
+      {
+       "u": "k6",
+       "text": "The group will collaborate on the outline and ensure the thesis statement is ready for review."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

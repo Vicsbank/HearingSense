@@ -1,0 +1,659 @@
+{
+ "batch": "batch_027",
+ "conversations": [
+  {
+   "conversation": "fin-zh-011",
+   "language": "zh",
+   "transcript": [
+    "1. 我把下周的出差安排说一下",
+    "2. 周一上午八点五十的高铁从杭州到南京",
+    "3. 车次是G一三二二",
+    "4. 到南京十点半客户公司在河西",
+    "5. 下午两点开产品对接会参会的有五个人",
+    "6. 周二上午去江宁工厂参观",
+    "7. 中午十二点和厂长吃饭",
+    "8. 下午回南京见第二家客户是明辉科技",
+    "9. 周三原来是飞去成都的",
+    "10. 但是航班取消了改成周四上午十一点五十的飞机",
+    "11. 所以周三白天空出来回杭州处理别的事",
+    "12. 住宿订的是河西的云栖酒店两晚",
+    "13. 周一周二两晚每晚四百二十元",
+    "14. 周四的机票是一千一百八十块",
+    "15. 机票和酒店我已经订好了",
+    "16. 报销单你们回来后一周内交给小周",
+    "17. 好的"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "出差第一天周一，乘上午八点五十从杭州到南京的高铁，车次G一三二二。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "周一十点半到南京，客户公司在河西。",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f3",
+     "text": "周一下午两点开产品对接会，参会五人。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "周二上午参观江宁工厂，中午十二点与厂长吃饭。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "周二下午回南京拜访第二家客户明辉科技。",
+     "critical": true,
+     "kind": "name"
+    },
+    {
+     "id": "f6",
+     "text": "去成都的航班原定周三，因航班取消改到周四上午十一点五十。",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f7",
+     "text": "周三白天空出来，回杭州处理别的事。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f8",
+     "text": "住宿订在河西的云栖酒店，周一周二两晚，每晚四百二十元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f9",
+     "text": "周四机票一千一百八十元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f10",
+     "text": "机票和酒店已经订好，报销单要在回来后一周内交给小周。",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "飞往成都的航班仍在周三。"
+    },
+    {
+     "id": "n2",
+     "text": "周三当天在成都工作。"
+    },
+    {
+     "id": "n3",
+     "text": "周四的航班从南京起飞（未说明起飞城市）。"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The business trip involves a meeting in Nanjing with a client at ten thirty on Monday morning, a product meeting at two in the afternoon with five attendees, and a factory visit in Jiangning at ten in the morning on Tuesday, followed by lunch with the factory manager at twelve noon and a visit to a second client, 明辉科技, in Nanjing in the afternoon."
+      },
+      {
+       "u": "a2",
+       "text": "The original flight to Chengdu on Wednesday was canceled, and the new flight is at one hundred fifteen minutes on Thursday, so Wednesday is used for returning to Hangzhou to handle other matters."
+      },
+      {
+       "u": "a3",
+       "text": "Accommodation is booked at 云栖酒店 in 河西 for two nights on Monday and Tuesday at four hundred twenty yuan per night, and the Thursday flight costs one thousand one hundred eighty yuan; flights and accommodation are already booked."
+      },
+      {
+       "u": "a4",
+       "text": "A reimbursement form is to be submitted within one week after returning, and someone said to give it to 小周."
+      },
+      {
+       "u": "a5",
+       "text": "The specific hotel address and the names of the five attendees are not mentioned, and the part about the meeting location is missing."
+      },
+      {
+       "u": "k1",
+       "text": "The meeting is at ten thirty on Monday morning in Nanjing."
+      },
+      {
+       "u": "k2",
+       "text": "The product meeting is at two in the afternoon on Monday with five attendees."
+      },
+      {
+       "u": "k3",
+       "text": "A factory visit is at ten in the morning on Tuesday in Jiangning."
+      },
+      {
+       "u": "k4",
+       "text": "Lunch with the factory manager is at twelve noon on Tuesday."
+      },
+      {
+       "u": "k5",
+       "text": "The second client is 明辉科技 in Nanjing on Tuesday afternoon."
+      },
+      {
+       "u": "k6",
+       "text": "The flight to Chengdu is canceled, and the new flight is at one hundred fifteen minutes on Thursday."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于下周的出差安排，周一上午八点五十的高铁从杭州到南京，车次是G一三二二，预计在南京到达十点半，客户公司位于河西。"
+      },
+      {
+       "u": "a2",
+       "text": "下午两点有产品对接会，参会人数为五人。"
+      },
+      {
+       "u": "a3",
+       "text": "周二上午前往江宁工厂参观，中午十二点与厂长共进午餐，下午返回南京见第二家客户，是明辉科技。"
+      },
+      {
+       "u": "a4",
+       "text": "周三原本安排飞往成都，但航班取消，改在周四上午十一点五十飞往成都。"
+      },
+      {
+       "u": "a5",
+       "text": "因此，周三安排在杭州处理其他事务，住宿安排在河西的云栖酒店，周一周二两晚每晚四百二十元。"
+      },
+      {
+       "u": "a6",
+       "text": "周四的机票费用为一千一百八十元，机票和酒店已完成预订。"
+      },
+      {
+       "u": "a7",
+       "text": "报销单将在一周后交给小周。"
+      },
+      {
+       "u": "a8",
+       "text": "相关信息有缺失，无法确认具体细节。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The speaker arranged next week's business trip, including a high-speed train from Hangzhou to Nanjing on Monday at 8:50 PM, a product alignment meeting on Tuesday afternoon with five attendees, a factory visit to Jining on Tuesday morning and lunch with the plant manager at noon, a second client visit to Minghui Technology on Wednesday, a cancelled flight to Chengdu that was rescheduled to Thursday at 11:50 AM, and hotel and flight bookings confirmed."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker will submit reimbursement forms to Xiao Zhou within one week of return."
+      },
+      {
+       "u": "k1",
+       "text": "The high-speed train from Hangzhou to Nanjing is scheduled for Monday at 8:50 PM (G一三二二)"
+      },
+      {
+       "u": "k2",
+       "text": "A product alignment meeting will be held on Tuesday afternoon with five participants"
+      },
+      {
+       "u": "k3",
+       "text": "A factory visit to Jining is planned for Tuesday morning, with lunch at noon with the plant manager"
+      },
+      {
+       "u": "k4",
+       "text": "The second client visit to Minghui Technology is scheduled for Wednesday"
+      },
+      {
+       "u": "k5",
+       "text": "The original flight to Chengdu was cancelled and rescheduled to Thursday at 11:50 AM"
+      },
+      {
+       "u": "k6",
+       "text": "Hotel accommodation at Huixi Cloud Hotel for two nights (Monday-Tuesday) at 420 RMB per night"
+      },
+      {
+       "u": "k7",
+       "text": "The flight ticket for Thursday is 1180 RMB"
+      },
+      {
+       "u": "k8",
+       "text": "Reimbursement forms must be submitted to Xiao Zhou within one week of return"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The speaker outlined a travel plan starting with a Monday morning 8:50 AM high-speed train from Hangzhou to Nanjing, arriving at 10:30 AM for a product对接 meeting with five people at the client's Hexi office."
+      },
+      {
+       "u": "a2",
+       "text": "On Tuesday, they will visit the Jiangning factory for lunch with the factory director at 12:00 PM before returning to Nanjing in the afternoon to meet the second client, Minghui Technology."
+      },
+      {
+       "u": "a3",
+       "text": "Originally planned for Wednesday, the trip to Chengdu was cancelled, so the flight was rescheduled to Thursday at 11:50 AM, leaving Wednesday free for other tasks in Hangzhou."
+      },
+      {
+       "u": "a4",
+       "text": "Accommodation is booked at Yunqi Hotel in Hexi for two nights on Monday and Tuesday at 420 yuan per night, while the Thursday flight costs 1,180 yuan."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker has already confirmed the flight and hotel bookings and requested that the reimbursement form be submitted to Xiao Zhou within one week after returning."
+      },
+      {
+       "u": "k1",
+       "text": "The train trip is on Monday at 8:50 AM from Hangzhou to Nanjing."
+      },
+      {
+       "u": "k2",
+       "text": "The product meeting is on Monday at 2:00 PM with five attendees at the Hexi office."
+      },
+      {
+       "u": "k3",
+       "text": "The factory visit is on Tuesday at 12:00 PM with the factory director."
+      },
+      {
+       "u": "k4",
+       "text": "The flight to Chengdu is rescheduled to Thursday at 11:50 AM."
+      },
+      {
+       "u": "k5",
+       "text": "The hotel is Yunqi Hotel in Hexi for two nights at 420 yuan per night."
+      },
+      {
+       "u": "k6",
+       "text": "The flight ticket costs 1,180 yuan and is already booked."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "以下是对对话的回顾："
+      },
+      {
+       "u": "a2",
+       "text": "周一上午八点五十从杭州乘坐高铁G一三二二前往南京，预计到达南京十点半。"
+      },
+      {
+       "u": "a3",
+       "text": "下午两点将参加客户公司在河西的产品对接会，预计有五人参会。"
+      },
+      {
+       "u": "a4",
+       "text": "周二上午前往江宁工厂参观，午餐在厂长处进行，下午返回南京接待明辉科技客户。"
+      },
+      {
+       "u": "a5",
+       "text": "原定周三飞往成都的行程因航班取消而改为周四上午十一点五十的飞机，周三白天将空出时间处理其他事宜。"
+      },
+      {
+       "u": "a6",
+       "text": "已订住宿为河西云栖酒店两晚，周一至周二两晚每晚四百二十元，周四机票费用一千一百八十元。"
+      },
+      {
+       "u": "a7",
+       "text": "机票和酒店已订定，报销单需在回来后一周内交给小周。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "下周出差安排如下：周一上午八点五十从杭州乘坐 G1322 次高铁前往南京，下午两点在河西客户公司参加产品对接会，参会者为五人；周二上午前往江宁工厂参观，中午十二点与厂长用餐，下午返回南京会见第二家客户明辉科技；周三原计划飞往成都，但因航班取消改为周四上午十一点五十的航班，因此周三白天空出用于回杭州处理其他事务。"
+      },
+      {
+       "u": "a2",
+       "text": "住宿已预订南京河西的云栖酒店两晚，周一和周二共两晚，每晚四百二十元，周四机票费用为一千一百八十元，所有行程均已确认。"
+      },
+      {
+       "u": "a3",
+       "text": "报销单需在返回后一周内交给小周。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-012",
+   "language": "zh",
+   "transcript": [
+    "1. 听说期末考的时间又改了",
+    "2. 真的吗不是十二月二十号开始吗",
+    "3. 老师刚在群里说了提前到十二月十八号",
+    "4. 不是十八号是十七号",
+    "5. 你确定吗",
+    "6. 我又看了一遍群里写的是十七号",
+    "7. 十七号上午语文下午数学",
+    "8. 十八号是英语和物理",
+    "9. 哪个先考不知道",
+    "10. 化学放到十九号上午",
+    "11. 那十九号下午呢",
+    "12. 下午是政治历史选考的人才考",
+    "13. 我们不选历史啊",
+    "14. 那你下午就放假了",
+    "15. 对了考场也换了我们在新教学楼",
+    "16. 不是新教学楼是实验楼",
+    "17. 老师说的是实验楼三层",
+    "18. 哦那我记错了",
+    "19. 希望这次别再改了复习都乱了",
+    "20. 是啊我们晚上回去再把复习计划重新排一下"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "期末考试开始时间从原定十二月二十日提前到十二月十七日。",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f2",
+     "text": "十二月十七日上午考语文，下午考数学。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "十二月十八日考英语和物理。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "化学放在十二月十九日上午。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "十九日下午的政治、历史只有选考的人才考。",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f6",
+     "text": "说话人之一不选历史，所以十九日下午不用考。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f7",
+     "text": "考场在实验楼三层，而不是新教学楼。",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "期末考试从十二月十八日开始（先有人这么说，后被更正为十七日）。"
+    },
+    {
+     "id": "n2",
+     "text": "考场在新教学楼。"
+    },
+    {
+     "id": "n3",
+     "text": "英语在物理之前考（先后顺序没说）。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "十八日英语和物理哪个先考不知道。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "根据对话内容，会议讨论了期末考试时间的变动情况。"
+      },
+      {
+       "u": "a2",
+       "text": "老师在群里通知学生提前到12月18日进行考试，但学生指出群里实际写的是12月17日。"
+      },
+      {
+       "u": "a3",
+       "text": "具体安排如下：12月17日上午进行语文和数学考试，12月18日进行英语和物理考试，12月19日上午安排化学考试，下午安排政治和历史选考。"
+      },
+      {
+       "u": "a4",
+       "text": "学生表示希望考试时间不再改动，以免复习计划混乱。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The final exam dates were changed from December 20th to December 17th, with subjects scheduled for the 17th, 18th, and 19th."
+      },
+      {
+       "u": "a2",
+       "text": "The 17th includes Chinese in the morning and Math in the afternoon, while the 18th has English and Physics, and the 19th morning is Chemistry."
+      },
+      {
+       "u": "a3",
+       "text": "The 19th afternoon is for Politics and History, but since the group did not select History, the afternoon on the 19th is a holiday."
+      },
+      {
+       "u": "a4",
+       "text": "The exam location was changed from the new teaching building to the experimental building, specifically the third floor."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to reorganize their review plans after returning home that evening."
+      },
+      {
+       "u": "k1",
+       "text": "The exams start on December 17th instead of the 20th."
+      },
+      {
+       "u": "k2",
+       "text": "Subjects on the 17th are Chinese and Math."
+      },
+      {
+       "u": "k3",
+       "text": "Subjects on the 18th are English and Physics."
+      },
+      {
+       "u": "k4",
+       "text": "Chemistry is scheduled for the 19th morning."
+      },
+      {
+       "u": "k5",
+       "text": "The 19th afternoon is free because History is not selected."
+      },
+      {
+       "u": "k6",
+       "text": "The exam location is the third floor of the experimental building."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "期末考的时间被改动，最初提到的是十二月二十号开始，后来修正为十二月十八号。"
+      },
+      {
+       "u": "a2",
+       "text": "后来又调整为十二月十七号，语文在上午、数学在下午、英语和物理在十八号。"
+      },
+      {
+       "u": "a3",
+       "text": "化学安排在十九号上午，下午是政治和历史选考的人才考，因为他们不选历史，所以下午没有考试。"
+      },
+      {
+       "u": "a4",
+       "text": "考场地点被确认为实验楼三层，而不是新教学楼。"
+      },
+      {
+       "u": "a5",
+       "text": "晚上将重新安排复习计划。"
+      },
+      {
+       "u": "a6",
+       "text": "关于十九号下午的安排，部分信息是缺失的。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The end-of-term exam schedule was modified, with the start date shifted to December 18th."
+      },
+      {
+       "u": "a2",
+       "text": "The conversation confirms that the test day is December 18th, with morning Chinese and afternoon math, while December 19th is for English and physics."
+      },
+      {
+       "u": "a3",
+       "text": "The test center has moved to the new teaching building (also called the experimental building on the third floor)."
+      },
+      {
+       "u": "a4",
+       "text": "Someone expressed concern about the changes disrupting their revision plans and asked to reschedule the evening back to the original time."
+      },
+      {
+       "u": "a5",
+       "text": "The group agreed to review the revision plan after returning home."
+      },
+      {
+       "u": "k1",
+       "text": "The end-of-term exam start date was changed to December 18th."
+      },
+      {
+       "u": "k2",
+       "text": "The test day is December 18th with morning Chinese and afternoon math."
+      },
+      {
+       "u": "k3",
+       "text": "December 19th is for English and physics."
+      },
+      {
+       "u": "k4",
+       "text": "The test center moved to the new teaching building (experimental building, third floor)."
+      },
+      {
+       "u": "k5",
+       "text": "Someone worried about disrupted revision plans and requested the evening back to the original time."
+      },
+      {
+       "u": "k6",
+       "text": "The group agreed to reschedule the revision plan after returning home."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "听说期末考试时间被提前，原定的十二月二十日改为十二月十七日，十七日上午考语文和数学，下午考英语和物理，十八日安排化学，十九日上午进行政治和历史选考。"
+      },
+      {
+       "u": "a2",
+       "text": "由于我们未选择历史科目，十九日下午将放假，但考场地点从新教学楼更正为实验楼三层。"
+      },
+      {
+       "u": "a3",
+       "text": "大家确认了具体科目安排后，计划晚上回家重新梳理复习计划，同时希望后续不再再有变动以免打乱进度。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The final exam schedule was changed, and someone confirmed it was no longer December 20 but December 17."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed the exam was on December 17: morning for Chinese and afternoon for mathematics, December 18: English and physics, and December 19: chemistry in the morning with political science and history for selected students in the afternoon."
+      },
+      {
+       "u": "a3",
+       "text": "They noted the exam location was changed from the new teaching building to the experimental building, specifically the third floor, and someone realized they had misremembered."
+      },
+      {
+       "u": "a4",
+       "text": "Someone agreed to review the study plan again in the evening, hoping the changes wouldn’t disrupt preparation."
+      },
+      {
+       "u": "a5",
+       "text": "The schedule is missing for the afternoon of December 19."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed not to make any further changes."
+      },
+      {
+       "u": "a7",
+       "text": "They agreed they were not selecting history."
+      },
+      {
+       "u": "a8",
+       "text": "They agreed the afternoon of December 19 would be free."
+      },
+      {
+       "u": "a9",
+       "text": "They hoped the changes wouldn’t affect their studies."
+      },
+      {
+       "u": "k1",
+       "text": "The final exam is on December 17."
+      },
+      {
+       "u": "k2",
+       "text": "December 17: morning Chinese, afternoon mathematics."
+      },
+      {
+       "u": "k3",
+       "text": "December 18: English, physics."
+      },
+      {
+       "u": "k4",
+       "text": "December 19: chemistry in the morning, political science and history in the afternoon."
+      },
+      {
+       "u": "k5",
+       "text": "The exam location is the experimental building, third floor."
+      },
+      {
+       "u": "k6",
+       "text": "The study plan will be reviewed in the evening."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

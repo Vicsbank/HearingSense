@@ -1,0 +1,667 @@
+{
+ "batch": "batch_032",
+ "conversations": [
+  {
+   "conversation": "fin-zh-021",
+   "language": "zh",
+   "transcript": [
+    "1. 你好我想买点感冒药",
+    "2. 是哪种症状",
+    "3. 主要是鼻塞还有点咳嗽没发烧",
+    "4. 那你可以吃这个复方的一天三次一次一粒",
+    "5. 饭后吃",
+    "6. 多少钱",
+    "7. 一盒二十八块五",
+    "8. 有没有别的便宜一点的",
+    "9. 那个是十九块但是有点困",
+    "10. 我白天要开车还是买贵的",
+    "11. 好那要一盒",
+    "12. 要不要口罩",
+    "13. 要一包",
+    "14. 一包十个八块钱",
+    "15. 一共三十六块五",
+    "16. 扫码吗",
+    "17. 对扫码",
+    "18. 需要小票吗",
+    "19. 不用了谢谢",
+    "20. 回去多喝点水多休息",
+    "21. 好的谢谢你再见",
+    "22. 哦对如果三天以后还咳嗽就去医院看看",
+    "23. 好的我记住了",
+    "24. 最近换季药店里买感冒药的人特别多"
+   ],
+   "facts": [
+    {
+     "id": "f7",
+     "text": "药剂师建议如果三天以后还咳嗽就去医院看看。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f1",
+     "text": "顾客症状是鼻塞和轻微咳嗽，没有发烧。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "药剂师推荐一种复方感冒药，一天三次，一次一粒，饭后吃，一盒二十八块五。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "另有十九块的便宜药，但会让人犯困。",
+     "critical": false,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "顾客白天要开车，所以买了贵的那款一盒。",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f5",
+     "text": "顾客还买了一包口罩，十个八块钱。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "总共三十六块五，扫码付款。",
+     "critical": true,
+     "kind": "number"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "顾客得的是流感或需要看医生。"
+    },
+    {
+     "id": "n2",
+     "text": "顾客买了十九块的药。"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "用户想买感冒药，描述症状为鼻塞和咳嗽但没有发烧。"
+      },
+      {
+       "u": "a2",
+       "text": "医生建议服用复方药，一天三次，一粒饭后服用，价格是一盒二十八块五。"
+      },
+      {
+       "u": "a3",
+       "text": "用户询问是否有更便宜的选择，医生提到十九块钱的药但指出有困意，用户决定购买贵的便宜药，一盒三十"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "顾客因鼻塞和咳嗽（无发烧）前往药店咨询感冒药，店员推荐了复方感冒药，用法为每日三次、每次一粒，建议饭后服用。"
+      },
+      {
+       "u": "a2",
+       "text": "顾客询问价格后得知一盒售价二十八块五，并了解到另一种十九块五的选项但可能引起嗜睡，考虑到白天需开车，顾客最终决定购买一盒二十八块五的复方药。"
+      },
+      {
+       "u": "a3",
+       "text": "此外，顾客还要求加购一包十个装、售价八块的口罩，最终确认支付总额为三十六块五并通过扫码完成交易，且无需小票。"
+      },
+      {
+       "u": "a4",
+       "text": "店员提醒顾客回家后多饮水多休息，并建议若三天后咳嗽仍未缓解则需就医，顾客表示已记住该建议。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone asked for cold medicine for symptoms including nasal congestion and cough without fever, and they decided against the cheaper option that causes drowsiness because they need to drive during the day."
+      },
+      {
+       "u": "a2",
+       "text": "They purchased one box of the 28.5 yuan medicine and one pack of masks for 8 yuan, bringing the total to 36.5 yuan which was paid via QR code without a receipt."
+      },
+      {
+       "u": "a3",
+       "text": "The person was advised to drink more water, rest, and visit a hospital if coughing persists after three days."
+      },
+      {
+       "u": "a4",
+       "text": "The conversation ended with a reminder that many people are buying cold medicine as the season changes."
+      },
+      {
+       "u": "k1",
+       "text": "The customer has nasal congestion and cough but no fever."
+      },
+      {
+       "u": "k2",
+       "text": "They chose the 28.5 yuan medicine over the 19 yuan option to avoid drowsiness while driving."
+      },
+      {
+       "u": "k3",
+       "text": "They bought one box of medicine and one pack of ten masks."
+      },
+      {
+       "u": "k4",
+       "text": "The total cost was 36.5 yuan paid by scanning a QR code."
+      },
+      {
+       "u": "k5",
+       "text": "No receipt was requested."
+      },
+      {
+       "u": "k6",
+       "text": "They should see a doctor if coughing continues after three days."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They want to buy cold medicine for symptoms of nasal congestion and cough with no fever, and they should take the compounded version once daily, three times daily, after meals."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed the cost is twenty-eight dollars and fifty cents for one box, but a cheaper option of nineteen dollars is available despite causing drowsiness, and they decided to buy the more expensive option because they need to drive during the day."
+      },
+      {
+       "u": "a3",
+       "text": "They agreed to buy one box and one pack of eight masks for eight dollars and forty-five cents, totaling thirty-six dollars and fifty cents, and they agreed to scan a code and not receive a receipt."
+      },
+      {
+       "u": "a4",
+       "text": "They were advised to drink water, rest, and if symptoms persist for three days, see a hospital."
+      },
+      {
+       "u": "a5",
+       "text": "The conversation noted many people are buying cold medicine at the pharmacy during the change of seasons."
+      },
+      {
+       "u": "a6",
+       "text": "The details left open are any missing information from the conversation."
+      },
+      {
+       "u": "k1",
+       "text": "Someone wants to buy cold medicine for nasal congestion and cough."
+      },
+      {
+       "u": "k2",
+       "text": "The recommended dosage is one capsule, three times daily, after meals."
+      },
+      {
+       "u": "k3",
+       "text": "The price for one box is twenty-eight dollars and fifty cents."
+      },
+      {
+       "u": "k4",
+       "text": "A cheaper option costs nineteen dollars but causes drowsiness."
+      },
+      {
+       "u": "k5",
+       "text": "They decided to buy the more expensive option due to driving needs."
+      },
+      {
+       "u": "k6",
+       "text": "They agreed to buy one box and one pack of eight masks for eight dollars and forty-five cents, totaling thirty-six dollars and fifty cents, and to scan a code without a receipt."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A person wanted to buy cold medicine and asked about symptoms, which included nasal congestion and coughing without fever."
+      },
+      {
+       "u": "a2",
+       "text": "They were offered a compound medicine taken three times daily, priced at 28.5 yuan per box, and asked about cheaper alternatives."
+      },
+      {
+       "u": "a3",
+       "text": "A cheaper option of 19 yuan was mentioned but noted to cause drowsiness."
+      },
+      {
+       "u": "a4",
+       "text": "The person decided to buy the 28.5 yuan box and asked about a mask and a pack of 10 for 8 yuan each, totaling 36.5 yuan."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to scan a QR code and were told no receipt is needed."
+      },
+      {
+       "u": "a6",
+       "text": "They were advised to drink water and rest, and reminded to see a doctor if coughing persists after three days."
+      },
+      {
+       "u": "k1",
+       "text": "The person has nasal congestion and coughing without fever."
+      },
+      {
+       "u": "k2",
+       "text": "A compound cold medicine is recommended at 28.5 yuan per box, taken three times daily."
+      },
+      {
+       "u": "k3",
+       "text": "A cheaper alternative of 19 yuan was mentioned but causes drowsiness."
+      },
+      {
+       "u": "k4",
+       "text": "The person chose to buy the 28.5 yuan box."
+      },
+      {
+       "u": "k5",
+       "text": "A pack of 10 masks at 8 yuan each was considered, totaling 36.5 yuan."
+      },
+      {
+       "u": "k6",
+       "text": "QR code scanning is required and no receipt is needed."
+      },
+      {
+       "u": "k7",
+       "text": "Advice was given to drink water and rest."
+      },
+      {
+       "u": "k8",
+       "text": "If coughing continues after three days, they should see a doctor."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于感冒药的讨论涉及以下事项：一个人询问购买感冒药，描述症状为鼻塞、咳嗽且未发烧。"
+      },
+      {
+       "u": "a2",
+       "text": "建议服用复方药，一天三次，每次一粒，饭后服用。"
+      },
+      {
+       "u": "a3",
+       "text": "费用为一盒二十八块五，另有选项为十九块但感到困倦。"
+      },
+      {
+       "u": "a4",
+       "text": "决定购买一盒，询问是否需要口罩，收到一包十个，每包八块五，总价三十六块五。"
+      },
+      {
+       "u": "a5",
+       "text": "确认需要扫码且不需要小票。"
+      },
+      {
+       "u": "a6",
+       "text": "建议回去多喝水、多休息。"
+      },
+      {
+       "u": "a7",
+       "text": "决定若三天后仍咳嗽，将去医院。"
+      },
+      {
+       "u": "a8",
+       "text": "讨论中提到最近换季药店里购买感冒药的人特别多。"
+      },
+      {
+       "u": "a9",
+       "text": "部分内容为“扫码吗”或“需要小票吗”的确认。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-022",
+   "language": "zh",
+   "transcript": [
+    "1. 你看到物业的通知了吗",
+    "2. 看到了说是明天要停水",
+    "3. 几点到几点",
+    "4. 早上八点到下午两点",
+    "5. 不对是八点到下午四点",
+    "6. 我看的是两点",
+    "7. 通知上写的是四点我刚才又看了",
+    "8. 嗯",
+    "9. 所以我们今晚得先存点水",
+    "10. 哪几栋停",
+    "11. 好像是三号楼和五号楼",
+    "12. 我们是五号楼吧",
+    "13. 不是你们是六号楼",
+    "14. 啊那我们不停",
+    "15. 但是六号楼的水压可能会变小",
+    "16. 物业说如果有变化会在群里通知",
+    "17. 好那我先去接几桶水",
+    "18. 顺便把浴缸也放满",
+    "19. 洗衣机也要今晚先洗完",
+    "20. 明天就不能洗了",
+    "21. 明天早饭也得提前做好不然来不及",
+    "22. 那我今晚多煮一点粥明早热一下就行",
+    "(speech could not be transcribed at seconds 26.0-33.0)"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "物业通知明天要停水。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "停水时间最终是早上八点到下午四点。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "停水结束时间由有人先说的下午两点更正为下午四点，更正者重新看了通知。",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f4",
+     "text": "今晚要先存一些水。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "六号楼水压可能会变小。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f6",
+     "text": "物业说如果有变化会在群里通知。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f7",
+     "text": "有一段话无法转写。",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "停水到下午两点结束。"
+    },
+    {
+     "id": "n2",
+     "text": "六号楼一定会停水。"
+    },
+    {
+     "id": "n3",
+     "text": "说话人住在五号楼。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "哪几栋楼停水不确定，只说好像是三号楼和五号楼。"
+    },
+    {
+     "id": "u2",
+     "text": "说话人一方是否住在不停水的六号楼，是根据对方的话，并不十分肯定。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "你看到物业的通知了吗？"
+      },
+      {
+       "u": "a2",
+       "text": "看到了说是明天要停水。"
+      },
+      {
+       "u": "a3",
+       "text": "早上八点到下午两点，注意到有争议，最初说是八点到下午四点，后来你看的是两点。"
+      },
+      {
+       "u": "a4",
+       "text": "物业通知上写的是四点，你确认了。"
+      },
+      {
+       "u": "a5",
+       "text": "于是决定今晚先存点水，涉及三号楼和五号楼，确认是五号楼（不是六号楼）。"
+      },
+      {
+       "u": "a6",
+       "text": "物业提到六号楼的水压可能会变小，会在群里通知。"
+      },
+      {
+       "u": "a7",
+       "text": "你决定先去接几桶水，并顺便把浴缸放满、洗衣机也要今晚先洗完。"
+      },
+      {
+       "u": "a8",
+       "text": "明天早饭也需要提前做好，否则来不及，所以今晚多煮一点粥，明早热一下即可。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "用户确认已收到物业通知，指出原定停水时间为早上八点至下午两点，但经再次核对通知后更正为八点至下午四点。"
+      },
+      {
+       "u": "a2",
+       "text": "由于确认停水时段为八时至十四时，用户决定今晚先储存水，并计划将三号楼和五号楼纳入关注范围，尽管用户自述住在六号楼，物业方面表示六号楼水压可能减小但若有变化会在群内通知。"
+      },
+      {
+       "u": "a3",
+       "text": "用户还安排了今晚的具体任务，包括接几桶水、放满浴缸以及完成洗衣机的洗涤，并强调明日早晨需提前准备早餐以防时间不足。"
+      },
+      {
+       "u": "a4",
+       "text": "最后，用户计划今晚多煮一些粥以便明早加热食用，以应对停水期间的饮食需求。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone confirmed the water shutdown is scheduled from 8:00 AM to 4:00 PM, correcting an initial thought of 2:00 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The outage affects Building 3 and Building 6, though the speaker is in Building 6 and will not be directly affected by the shutdown."
+      },
+      {
+       "u": "a3",
+       "text": "They decided to store water tonight, fill the bathtub, and run the washing machine before the outage begins."
+      },
+      {
+       "u": "a4",
+       "text": "Plans include cooking extra porridge for tomorrow morning to save time on breakfast preparation."
+      },
+      {
+       "u": "a5",
+       "text": "The property management will notify any pressure changes via a group chat."
+      },
+      {
+       "u": "k1",
+       "text": "The water outage is scheduled from 8:00 AM to 4:00 PM."
+      },
+      {
+       "u": "k2",
+       "text": "Buildings 3 and 6 are affected by the water shutdown."
+      },
+      {
+       "u": "k3",
+       "text": "The speaker lives in Building 6 and will not experience the outage."
+      },
+      {
+       "u": "k4",
+       "text": "Water pressure in Building 6 may decrease during the outage."
+      },
+      {
+       "u": "k5",
+       "text": "Updates regarding pressure changes will be sent via group chat."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker plans to cook extra porridge for tomorrow morning."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于物业的通知，提到明天要停水，时间被确认为早上八点到下午四点，而非早上八点到下午两点。"
+      },
+      {
+       "u": "a2",
+       "text": "确认停水楼栋为三号楼和五号楼，确认本人住在五号楼。"
+      },
+      {
+       "u": "a3",
+       "text": "收到错误信息，通知上写的是四点，本人之前看的是两点，现已纠正。"
+      },
+      {
+       "u": "a4",
+       "text": "决定今晚先存水，顺便把浴缸放满，洗衣机也今晚先洗完，明天不能洗。"
+      },
+      {
+       "u": "a5",
+       "text": "明天早饭需提前准备，以免来不及。"
+      },
+      {
+       "u": "a6",
+       "text": "今晚安排多煮一点粥，明天早上加热即可。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容无法被识别。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Water will be shut off from 8:00 PM to 4:00 AM tomorrow, affecting 3 and 5, but they agreed they are in 6."
+      },
+      {
+       "u": "a2",
+       "text": "They confirmed the outage is confirmed and noted water pressure may decrease, with updates in a group."
+      },
+      {
+       "u": "a3",
+       "text": "Someone agreed to save water tonight, fill the bathtub, run the washing machine tonight, and do breakfast prep early."
+      },
+      {
+       "u": "a4",
+       "text": "They will cook extra rice tonight and reheat tomorrow morning."
+      },
+      {
+       "u": "a5",
+       "text": "About 7 seconds of speech could not be transcribed."
+      },
+      {
+       "u": "a6",
+       "text": "Missing details include the exact group name and the reason for the unspecified delay."
+      },
+      {
+       "u": "k1",
+       "text": "Water will be shut off from 8:00 PM to 4:00 AM."
+      },
+      {
+       "u": "k2",
+       "text": "The outage affects 3 and 5, but they are in 6."
+      },
+      {
+       "u": "k3",
+       "text": "Water pressure may decrease."
+      },
+      {
+       "u": "k4",
+       "text": "Updates will be posted in a group."
+      },
+      {
+       "u": "k5",
+       "text": "Save water tonight."
+      },
+      {
+       "u": "k6",
+       "text": "Fill the bathtub tonight."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone saw a property notice about a water shutdown tomorrow."
+      },
+      {
+       "u": "a2",
+       "text": "The notice said 8 AM to 2 PM, but the speaker corrected it to 8 AM to 4 PM."
+      },
+      {
+       "u": "a3",
+       "text": "They agreed to store water tonight and confirmed that building 3 and 5 are affected, while building 6 is not."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker will go to get water and fill the bathtub and washers before the water is shut off tomorrow morning."
+      },
+      {
+       "u": "a5",
+       "text": "They also plan to make extra congee for breakfast since washing will be delayed."
+      },
+      {
+       "u": "k1",
+       "text": "The property notice stated a water shutdown tomorrow from 8 AM to 2 PM, but the speaker corrected this to 8 AM to 4 PM."
+      },
+      {
+       "u": "k2",
+       "text": "Buildings 3 and 5 are affected by the water shutdown, while building 6 is not."
+      },
+      {
+       "u": "k3",
+       "text": "Someone will go to get water and fill the bathtub and washers tonight."
+      },
+      {
+       "u": "k4",
+       "text": "The water shutdown will prevent washing and early breakfast preparation tomorrow."
+      },
+      {
+       "u": "k5",
+       "text": "They plan to make extra congee for breakfast to have it ready in the morning."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

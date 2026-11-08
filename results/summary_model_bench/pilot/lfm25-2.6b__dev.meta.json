@@ -1,0 +1,118 @@
+{
+ "model": "lfm25-2.6b",
+ "name": "LFM2.5-2.6B",
+ "info": {
+  "repo": "/Users/vicwei/.cache/huggingface/hub/models--LiquidAI--LFM2.5-2.6B-MLX-4bit/snapshots/04efa23776ce61ec34ec95ec34c859854c89542b",
+  "runtime": "mlx-lm 0.32.0, mlx 0.32.3",
+  "load_seconds": 1.6387581250164658,
+  "mlx_active_gb_after_load": 1.583085576,
+  "rss_gb_after_load": 2.035073024,
+  "template_has_thinking_switch": false,
+  "thinking": false,
+  "prefix_cache": true,
+  "sampling": "greedy (temperature 0)",
+  "revision": "04efa23776ce61ec34ec95ec34c859854c89542b"
+ },
+ "set": "dev",
+ "pre": {
+  "sysmon": {
+   "memory_free_percent": 53,
+   "swap_used_mb": 10620.06,
+   "swapins": 2136881,
+   "swapouts": 3481875,
+   "cpu_speed_limit": null,
+   "thermal_warning": false,
+   "other_runs": [
+    "29176       01:34 /bin/zsh -c source /Users/vicwei/.claude/shell-snapshots/snapshot-zsh-1791777467837-1s23g2.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB N",
+    "29177       01:34 /bin/zsh -c source /Users/vicwei/.claude/shell-snapshots/snapshot-zsh-1791777467837-1s23g2.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB N",
+    "29178       01:34 timeout 300 caffeinate -i swift run hs-semantic-eval recap --split dev",
+    "29180       01:34 .build/out/Products/Debug/hs-semantic-eval recap --split dev",
+    "29181       01:34 caffeinate -i swift run hs-semantic-eval recap --split dev"
+   ]
+  },
+  "load": [
+   9.85595703125,
+   12.296875,
+   17.14404296875
+  ]
+ },
+ "started": "2026-10-12 14:04:57",
+ "groups": {
+  "neutral": {
+   "n": 12,
+   "wall_seconds": 56.6370050907135,
+   "mem_after": {
+    "mlx_peak_gb": 2.388295504,
+    "mlx_active_gb": 1.669068808,
+    "rss_gb": 1.767325696,
+    "max_rss_gb": 2.194522112
+   },
+   "sysmon": {
+    "memory_free_percent": 50,
+    "swap_used_mb": 10620.06,
+    "swapins": 2137012,
+    "swapouts": 3481875,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": [
+     "29176       02:50 /bin/zsh -c source /Users/vicwei/.claude/shell-snapshots/snapshot-zsh-1791777467837-1s23g2.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB N"
+    ]
+   },
+   "load": [
+    11.53662109375,
+    12.5126953125,
+    16.82861328125
+   ]
+  },
+  "prod": {
+   "n": 12,
+   "wall_seconds": 49.83154892921448,
+   "mem_after": {
+    "mlx_peak_gb": 2.38967176,
+    "mlx_active_gb": 1.669068808,
+    "rss_gb": 1.76422912,
+    "max_rss_gb": 2.194522112
+   },
+   "sysmon": {
+    "memory_free_percent": 52,
+    "swap_used_mb": 10612.0,
+    "swapins": 2137471,
+    "swapouts": 3481875,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    9.19873046875,
+    11.7724609375,
+    16.31005859375
+   ]
+  },
+  "continue": {
+   "n": 3,
+   "wall_seconds": 22.093816995620728,
+   "mem_after": {
+    "mlx_peak_gb": 2.38967176,
+    "mlx_active_gb": 1.725986824,
+    "rss_gb": 1.764491264,
+    "max_rss_gb": 2.194522112
+   },
+   "sysmon": {
+    "memory_free_percent": 52,
+    "swap_used_mb": 10612.0,
+    "swapins": 2137638,
+    "swapouts": 3481875,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    7.82958984375,
+    11.298828125,
+    16.0341796875
+   ]
+  }
+ },
+ "first_request_seconds": 5.441542417014716,
+ "finished": "2026-10-12 14:07:21"
+}

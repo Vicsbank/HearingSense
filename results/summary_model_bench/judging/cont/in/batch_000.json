@@ -1,0 +1,963 @@
+{
+ "batch": "batch_000",
+ "conversations": [
+  {
+   "conversation": "cont-001",
+   "language": "en",
+   "transcript": [
+    "1. okay everybody quiet down for a second",
+    "2. a few things before you leave",
+    "3. the lab reports on enzyme activity are due this Thursday",
+    "4. not Friday Thursday because I'm away Friday",
+    "5. use the template on the class website",
+    "6. you can work in groups of three but each of you submits your own write up",
+    "7. yes Jasmine",
+    "8. no no late reports lose ten percent per day",
+    "9. and the unit test is next Tuesday",
+    "10. it covers chapters five through seven",
+    "11. forty minutes at the start of the period",
+    "12. someone asked about extra credit",
+    "13. I haven't decided on that I'll let you know maybe next week",
+    "14. oh and the room for the review session is two oh four",
+    "15. Wednesday after school at three thirty",
+    "16. okay that's it see you tomorrow",
+    "17. wait sorry I need to fix something",
+    "18. the test covers chapters five through eight not seven",
+    "19. chapter eight is short but it's on there",
+    "20. and bring a calculator for the test",
+    "21. alright now go"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The lab reports on enzyme activity are due this Thursday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The teacher is away on Friday, which is why the reports are due Thursday.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "Students may work in groups of three but each student submits their own write-up.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f4",
+     "text": "Late reports lose ten percent per day.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "The unit test is next Tuesday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "The unit test lasts forty minutes at the start of the period.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "A review session is on Wednesday after school at 3:30 in room 204.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "g1",
+     "text": "Students should bring a calculator to the unit test.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "g2",
+     "text": "Chapter eight is short but is included in the test.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "c1",
+     "text": "The unit test covers chapters five through eight, not five through seven.",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The unit test is open book (never stated)."
+    },
+    {
+     "id": "n2",
+     "text": "Extra credit will be offered (the teacher has not decided)."
+    },
+    {
+     "id": "n3",
+     "text": "The reports are due Friday."
+    },
+    {
+     "id": "m1",
+     "text": "The unit test covering only chapters five through seven is presented as current."
+    },
+    {
+     "id": "m2",
+     "text": "The school provides calculators (never stated)."
+    },
+    {
+     "id": "m3",
+     "text": "Extra credit has been confirmed."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether extra credit will be offered is undecided; the teacher may say next week."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation concluded with the lab reports on enzyme activity due Thursday, not Friday, and the use of the template on the class website."
+      },
+      {
+       "u": "a2",
+       "text": "Working in groups of three is permitted, but each person must submit their own write-up."
+      },
+      {
+       "u": "a3",
+       "text": "Late reports incur a ten percent penalty per day, and the unit test is scheduled for next Tuesday, covering chapters five through seven, lasting forty minutes at the start of the period."
+      },
+      {
+       "u": "a4",
+       "text": "The review session room is two oh four, Wednesday after school at three thirty."
+      },
+      {
+       "u": "a5",
+       "text": "The extra credit request has not been decided, and the decision may be made next week."
+      },
+      {
+       "u": "a6",
+       "text": "Details about the review session time include two oh four and three thirty."
+      },
+      {
+       "u": "a7",
+       "text": "Information on the review session location is two oh four."
+      },
+      {
+       "u": "a8",
+       "text": "The person apologized, saying they needed to fix something, and clarified that the test covers chapters five through eight, including chapter eight, which is short but on the syllabus, and they were told to bring a calculator."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation concluded with several key announcements."
+      },
+      {
+       "u": "a2",
+       "text": "Lab reports on enzyme activity are due this Thursday (not Friday, as the speaker clarified), and students must use the template on the class website, submitting individual write-ups even when working in groups of three."
+      },
+      {
+       "u": "a3",
+       "text": "Late reports risk losing ten percent per day."
+      },
+      {
+       "u": "a4",
+       "text": "The unit test is scheduled for next Tuesday, covering chapters five through eight and lasting forty minutes at the start of the period."
+      },
+      {
+       "u": "a5",
+       "text": "Extra credit status is undecided and will be announced next week."
+      },
+      {
+       "u": "a6",
+       "text": "The review session is set for Wednesday after school at three thirty in room 2-4."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The instructor announced that lab reports on enzyme activity are due this Thursday, not Friday, because they will be away on Friday."
+      },
+      {
+       "u": "a2",
+       "text": "Students should use the template available on the class website and may work in groups of three, though each student must submit their own write-up."
+      },
+      {
+       "u": "a3",
+       "text": "Late reports will result in a ten percent deduction per day, and the upcoming unit test covering chapters five through seven is scheduled for next Tuesday with a forty-minute duration at the start of the period."
+      },
+      {
+       "u": "a4",
+       "text": "The instructor has not yet decided on extra credit and will provide an update possibly next week, while the review session is set for Wednesday at 8:00 PM in room 204 after school at 3:30 PM."
+      },
+      {
+       "u": "a5",
+       "text": "The instructor clarified that the upcoming test will actually cover chapters five through eight, correcting the earlier statement that it ended at chapter seven, and added that students must bring a calculator to the exam."
+      },
+      {
+       "u": "a6",
+       "text": "They also instructed everyone to stop what they are doing and prepare to move on."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The lab reports on enzyme activity are due Thursday, and the use of the template on the class website is permitted."
+      },
+      {
+       "u": "a2",
+       "text": "Working in groups of three is allowed, but each person must submit their own write-up."
+      },
+      {
+       "u": "a3",
+       "text": "Late reports incur a ten percent penalty per day, and the unit test is scheduled for next Tuesday, covering chapters five through eight, lasting forty minutes at the start of the period."
+      },
+      {
+       "u": "a4",
+       "text": "The review session room is two oh four, Wednesday after school at three thirty."
+      },
+      {
+       "u": "a5",
+       "text": "The extra credit request has not been decided, and the decision may be made next week."
+      },
+      {
+       "u": "a6",
+       "text": "Information on the review session location is two oh four."
+      },
+      {
+       "u": "a7",
+       "text": "The test includes chapter eight, and a calculator is required."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The instructor announced that lab reports on enzyme activity are due this Thursday, not Friday, because they will be away on Friday."
+      },
+      {
+       "u": "a2",
+       "text": "Students should use the template available on the class website and may work in groups of three, though each student must submit their own write-up."
+      },
+      {
+       "u": "a3",
+       "text": "Late reports will result in a ten percent deduction per day."
+      },
+      {
+       "u": "a4",
+       "text": "The upcoming unit test covering chapters five through eight is scheduled for next Tuesday with a forty-minute duration at the start of the period."
+      },
+      {
+       "u": "a5",
+       "text": "The instructor has not yet decided on extra credit and will provide an update possibly next week."
+      },
+      {
+       "u": "a6",
+       "text": "The review session is set for Wednesday at 8:00 PM in room 204 after school at 3:30 PM."
+      },
+      {
+       "u": "a7",
+       "text": "Students are reminded to bring a calculator for the test."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation concluded with several key announcements."
+      },
+      {
+       "u": "a2",
+       "text": "Lab reports on enzyme activity are due this Thursday (not Friday, as the speaker clarified), and students must use the template on the class website, submitting individual write-ups even when working in groups of three."
+      },
+      {
+       "u": "a3",
+       "text": "Late reports risk losing ten percent per day."
+      },
+      {
+       "u": "a4",
+       "text": "The unit test is scheduled for next Tuesday, covering chapters five through seven and lasting forty minutes at the start of the period."
+      },
+      {
+       "u": "a5",
+       "text": "Extra credit status is undecided and will be announced next week."
+      },
+      {
+       "u": "a6",
+       "text": "The review session is set for Wednesday after school at three thirty in room 2-4."
+      },
+      {
+       "u": "a7",
+       "text": "The test covers chapters five through eight, not seven, and students should bring a calculator."
+      },
+      {
+       "u": "a8",
+       "text": "The review session is set for Wednesday after school at three thirty in room 2-4."
+      },
+      {
+       "u": "a9",
+       "text": "Lab reports are due this Thursday, and late reports risk losing ten percent per day."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-002",
+   "language": "en",
+   "transcript": [
+    "1. so are we still doing grandma's on Saturday",
+    "2. yeah she said six o'clock",
+    "3. what should we bring",
+    "4. she asked for a salad and maybe some bread",
+    "5. I can do the salad",
+    "6. I'll stop at the bakery on Elm Street for the bread",
+    "7. that place closes at five though",
+    "8. right so I'll go after school",
+    "9. what about Dad his train gets in at five forty",
+    "10. someone has to pick him up from the station",
+    "11. I can't I have practice until five thirty",
+    "12. okay I'll get him then you meet us there",
+    "13. do you know if Aunt Rosa is coming",
+    "14. I think so but she hasn't said for sure",
+    "15. okay",
+    "16. and don't forget her birthday card",
+    "17. oh whose birthday",
+    "18. grandma's it's next week",
+    "19. okay sounds good",
+    "20. see you at dinner",
+    "21. bye"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Dinner at grandma's is on Saturday at six o'clock.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "Grandma asked for a salad and some bread to be brought.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "One speaker will make the salad.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "The bread will be bought after school at the bakery on Elm Street, which closes at five.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "Dad's train arrives at the station at five forty.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "One speaker has practice until five thirty and cannot pick Dad up; the other will pick him up and the first will meet them at grandma's.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "A birthday card is needed for grandma, whose birthday is next week.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Aunt Rosa is definitely coming."
+    },
+    {
+     "id": "n2",
+     "text": "The speakers are a mother and her child (never stated)."
+    },
+    {
+     "id": "n3",
+     "text": "Dad is driving himself to grandma's."
+    },
+    {
+     "id": "m1",
+     "text": "Aunt Rosa's attendance is presented as confirmed."
+    },
+    {
+     "id": "m2",
+     "text": "Any changed plan (time, place, or who brings what) is invented after the closing remarks."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether Aunt Rosa is coming is not confirmed; she has not said for sure."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The plan to attend Grandma's gathering on Saturday at six o'clock was confirmed, with a salad being requested and one offered to be brought, while bread was to be picked up from the bakery on Elm Street, where the shop closes at five."
+      },
+      {
+       "u": "a2",
+       "text": "It was agreed that the visit would occur after school, but it was clarified that Dad's train arrives at five forty, and the person assigned to pick him up from the station is currently unspecified."
+      },
+      {
+       "u": "a3",
+       "text": "The person confirmed they could not assist due to practice ending at five thirty, so the other agreed to pick up Dad and meet afterward."
+      },
+      {
+       "u": "a4",
+       "text": "It was confirmed that someone would meet at the location, and a birthday card for Grandma's birthday next week was mentioned, with the exact day now clarified as next week."
+      },
+      {
+       "u": "a5",
+       "text": "The name Aunt Rosa was mentioned, but it was clarified that she is not confirmed to attend."
+      },
+      {
+       "u": "a6",
+       "text": "A statement about the birthday card was confirmed to be for Grandma's birthday."
+      },
+      {
+       "u": "a7",
+       "text": "Details about the station and the person assigned to pick up Dad remain unspecified."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place about plans for Saturday, including grandma's event."
+      },
+      {
+       "u": "a2",
+       "text": "Grandma is scheduled for six o'clock."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker will bring a salad and stop at the bakery on Elm Street for bread, which closes at five."
+      },
+      {
+       "u": "a4",
+       "text": "They plan to go after school."
+      },
+      {
+       "u": "a5",
+       "text": "Dad's train arrives at five forty, and someone needs to pick him up from the station; the speaker cannot do this because of practice until five thirty, so they arrange for someone else to pick him up then."
+      },
+      {
+       "u": "a6",
+       "text": "The group will meet at the station."
+      },
+      {
+       "u": "a7",
+       "text": "Aunt Rosa is possibly coming, but her attendance is uncertain."
+      },
+      {
+       "u": "a8",
+       "text": "The speaker also reminds everyone not to forget grandma's birthday card, which is next week."
+      },
+      {
+       "u": "a9",
+       "text": "The speaker confirmed the plan for Saturday, noting grandma's event at six o'clock and that they will bring a salad and stop at the bakery on Elm Street before the bakery closes at five."
+      },
+      {
+       "u": "a10",
+       "text": "Dad's train arrives at five forty, and since the speaker cannot pick him up until five thirty due to practice, someone else will be arranged to do so."
+      },
+      {
+       "u": "a11",
+       "text": "The group will meet at the station, and Aunt Rosa may or may not attend."
+      },
+      {
+       "u": "a12",
+       "text": "The speaker also reminded everyone not to forget grandma's birthday card, which is next week."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "We are still planning to have Grandma's birthday party on Saturday at six o'clock, and she requested a salad and some bread."
+      },
+      {
+       "u": "a2",
+       "text": "I will prepare the salad, while I plan to stop at the bakery on Elm Street for the bread, though I must note that the bakery closes at five."
+      },
+      {
+       "u": "a3",
+       "text": "Since my practice ends at five thirty, I will arrange to pick up Dad, whose train arrives at five forty, and then meet the group after school."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding Aunt Rosa, she has not confirmed her attendance yet, so I am unsure if she will be coming."
+      },
+      {
+       "u": "a5",
+       "text": "We also need to remember to send Grandma a birthday card, as the party is next week."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker agreed to the plan and confirmed they would see everyone at dinner, before signing off."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation is about plans for Saturday, including grandma's event."
+      },
+      {
+       "u": "a2",
+       "text": "Grandma is scheduled for six o'clock."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker will bring a salad and stop at the bakery on Elm Street for bread, which closes at five."
+      },
+      {
+       "u": "a4",
+       "text": "They plan to go after school."
+      },
+      {
+       "u": "a5",
+       "text": "Dad's train arrives at five forty, and someone needs to pick him up from the station; the speaker cannot do this because of practice until five thirty, so they arrange for someone else to pick him up then."
+      },
+      {
+       "u": "a6",
+       "text": "The group will meet at the station."
+      },
+      {
+       "u": "a7",
+       "text": "Aunt Rosa is possibly coming, but her attendance is uncertain."
+      },
+      {
+       "u": "a8",
+       "text": "The speaker also reminds everyone not to forget grandma's birthday card, which is next week."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation discussed whether to attend Grandma's gathering on Saturday, with the agreed time of six o'clock."
+      },
+      {
+       "u": "a2",
+       "text": "A salad was requested, and the person offered to bring one, while another planned to pick up bread from the bakery on Elm Street, noting the shop closes at five."
+      },
+      {
+       "u": "a3",
+       "text": "The plan was to go after school, but it was noted that Dad's train arrives at five forty, and someone needed to pick him up from the station."
+      },
+      {
+       "u": "a4",
+       "text": "The person stated they could not help due to practice ending at five thirty, so the other agreed to pick up Dad and meet afterward."
+      },
+      {
+       "u": "a5",
+       "text": "It was confirmed that someone would meet at the location, and a birthday card for Grandma's birthday next week was mentioned, though the exact day was unclear."
+      },
+      {
+       "u": "a6",
+       "text": "The name Aunt Rosa was mentioned, but it was unclear if she was confirmed to attend."
+      },
+      {
+       "u": "a7",
+       "text": "The statement about the birthday card was clarified to be for Grandma's birthday."
+      },
+      {
+       "u": "a8",
+       "text": "Details about the station and the person assigned to pick up Dad remain unspecified."
+      },
+      {
+       "u": "a9",
+       "text": "The person confirmed that everything sounded good, promised to see the other person at dinner, and said goodbye."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "We are still planning to have Grandma's birthday party on Saturday at six o'clock, and she requested a salad and some bread."
+      },
+      {
+       "u": "a2",
+       "text": "I will prepare the salad, while I plan to stop at the bakery on Elm Street for the bread, though I must note that the bakery closes at five."
+      },
+      {
+       "u": "a3",
+       "text": "Since my practice ends at five thirty, I will arrange to pick up Dad, whose train arrives at five forty, and then meet the group after school."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding Aunt Rosa, she has not confirmed her attendance yet, so I am unsure if she will be coming."
+      },
+      {
+       "u": "a5",
+       "text": "We also need to remember to send Grandma a birthday card, as the party is next week."
+      },
+      {
+       "u": "a6",
+       "text": "The conversation concluded with an agreement to meet at dinner, and the group is parting ways."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-003",
+   "language": "en",
+   "transcript": [
+    "1. alright let's get started we've got three items",
+    "2. first the website relaunch",
+    "3. Dana you said the design is done",
+    "4. yeah final mockups went to the dev team yesterday",
+    "5. good so dev starts Monday",
+    "6. the target is the fourteenth of March",
+    "7. that's tight but okay",
+    "8. second item budget for the ad campaign",
+    "9. finance approved forty thousand dollars",
+    "10. that includes the video shoot",
+    "11. Luis can you book the studio",
+    "12. sure I'll call them today",
+    "13. third item hiring",
+    "14. we have two candidates for the analyst role",
+    "15. interviews are next Wednesday and Thursday",
+    "16. Priya will run those",
+    "17. any questions",
+    "18. um what about the logo update",
+    "19. park that for next meeting",
+    "20. okay thanks everybody",
+    "21. oh one correction on the budget",
+    "22. finance emailed just now it's thirty five thousand not forty",
+    "23. the video shoot is still included",
+    "24. so Luis keep the studio quote under ten thousand",
+    "25. okay"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Dana's final website mockups went to the dev team yesterday.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "Development of the website relaunch starts Monday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "The target launch date for the website relaunch is March 14.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "Luis will call the studio today to book it.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "There are two candidates for the analyst role.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "Interviews are next Wednesday and Thursday and Priya will run them.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f8",
+     "text": "The logo update is postponed to the next meeting.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "g1",
+     "text": "Luis should keep the studio quote under ten thousand dollars.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "c1",
+     "text": "The ad campaign budget is thirty-five thousand dollars, not forty thousand, and still includes the video shoot.",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The studio has already been booked."
+    },
+    {
+     "id": "n2",
+     "text": "A candidate has been hired for the analyst role."
+    },
+    {
+     "id": "n3",
+     "text": "The logo update was approved or rejected."
+    },
+    {
+     "id": "m1",
+     "text": "The forty thousand dollar budget is presented as the current budget."
+    },
+    {
+     "id": "m2",
+     "text": "The studio has been booked (Luis only agreed to call)."
+    },
+    {
+     "id": "m3",
+     "text": "The logo update was decided."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered three main items: the website relaunch, the ad campaign budget, and hiring for the analyst role."
+      },
+      {
+       "u": "a2",
+       "text": "The website design was finalized yesterday and development begins Monday with a target launch date of March 14th."
+      },
+      {
+       "u": "a3",
+       "text": "Finance approved $40,000 for the ad campaign, which includes the video shoot, and Luis is tasked with booking the studio."
+      },
+      {
+       "u": "a4",
+       "text": "For the analyst position, two candidates are available, with interviews scheduled for next Wednesday and Thursday, and Priya will conduct the interviews."
+      },
+      {
+       "u": "a5",
+       "text": "The logo update was deferred to the next meeting."
+      },
+      {
+       "u": "a6",
+       "text": "All details are clear and no corrections were needed."
+      },
+      {
+       "u": "a7",
+       "text": "The budget for the ad campaign was corrected to $35,000 instead of $40,000, and Luis should keep the studio quote under $10,000."
+      },
+      {
+       "u": "a8",
+       "text": "The video shoot remains included in the budget, and the website design was finalized yesterday with development starting Monday and a target launch of March 14th."
+      },
+      {
+       "u": "a9",
+       "text": "For the analyst role, interviews are scheduled for next Wednesday and Thursday with Priya conducting them."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The meeting began with three agenda items, starting with the website relaunch where Dana confirmed the design is complete and final mockups were sent to the dev team yesterday, meaning development starts on Monday with a target launch date of March 14."
+      },
+      {
+       "u": "a2",
+       "text": "The second item covered the ad campaign budget, which finance approved at forty thousand dollars including the video shoot, and Luis agreed to book the studio by calling them today."
+      },
+      {
+       "u": "a3",
+       "text": "For the third item regarding hiring, two candidates are scheduled for interviews next Wednesday and Thursday, with Priya assigned to run those sessions."
+      },
+      {
+       "u": "a4",
+       "text": "Finally, the group decided to park the logo update discussion until the next meeting, and the conversation concluded with a thank you to everyone."
+      },
+      {
+       "u": "a5",
+       "text": "The group clarified that the ad campaign budget is actually thirty-five thousand dollars, not forty thousand, though the video shoot remains included, with Luis instructed to keep the studio quote under ten thousand."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The meeting began with three agenda items, starting with the website relaunch where Dana confirmed the design is complete and final mockups were sent to the dev team yesterday, meaning development starts on Monday with a target launch date of March 14."
+      },
+      {
+       "u": "a2",
+       "text": "The second item covered the ad campaign budget, which finance confirmed is thirty-five thousand dollars including the video shoot, and Luis agreed to book the studio by calling them today while keeping the studio quote under ten thousand."
+      },
+      {
+       "u": "a3",
+       "text": "For the third item regarding hiring, two candidates are scheduled for interviews next Wednesday and Thursday, with Priya assigned to run those sessions."
+      },
+      {
+       "u": "a4",
+       "text": "Finally, the group decided to park the logo update discussion until the next meeting, and the conversation concluded with a thank you to everyone."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered three items: the website relaunch, the ad campaign budget, and hiring."
+      },
+      {
+       "u": "a2",
+       "text": "The design for the website relaunch is confirmed as complete, with final mockups sent to the development team yesterday, and development begins Monday."
+      },
+      {
+       "u": "a3",
+       "text": "The target date is the fourteenth of March."
+      },
+      {
+       "u": "a4",
+       "text": "The ad campaign budget is set at forty thousand dollars, covering the video shoot, and Luis is tasked with booking the studio today."
+      },
+      {
+       "u": "a5",
+       "text": "Two candidates are identified for the analyst role, with interviews scheduled for next Wednesday and Thursday, led by Priya."
+      },
+      {
+       "u": "a6",
+       "text": "A correction was noted regarding the logo update, which is now scheduled for the next meeting."
+      },
+      {
+       "u": "a7",
+       "text": "The transcript includes missing information about the exact timing of the studio booking."
+      },
+      {
+       "u": "a8",
+       "text": "A correction was made regarding the budget, stating that the amount is thirty-five thousand dollars, not forty, and the video shoot is still included."
+      },
+      {
+       "u": "a9",
+       "text": "Luis is instructed to keep the studio quote under ten thousand dollars."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered three items: the website relaunch, the ad campaign budget, and hiring."
+      },
+      {
+       "u": "a2",
+       "text": "The design for the website relaunch is confirmed as complete, with final mockups sent to the development team yesterday, and development begins Monday."
+      },
+      {
+       "u": "a3",
+       "text": "The target date is the fourteenth of March."
+      },
+      {
+       "u": "a4",
+       "text": "The ad campaign budget is set at thirty-five thousand dollars, covering the video shoot, and Luis is tasked with booking the studio today."
+      },
+      {
+       "u": "a5",
+       "text": "Two candidates are identified for the analyst role, with interviews scheduled for next Wednesday and Thursday, led by Priya."
+      },
+      {
+       "u": "a6",
+       "text": "A correction was noted regarding the logo update, which is now scheduled for the next meeting."
+      },
+      {
+       "u": "a7",
+       "text": "The video shoot is still included, so Luis should keep the studio quote under ten thousand dollars."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The budget for the ad campaign has been corrected to $35,000, not $40,000, as confirmed by finance's recent email."
+      },
+      {
+       "u": "a2",
+       "text": "The video shoot remains included in the budget."
+      },
+      {
+       "u": "a3",
+       "text": "Luis is still tasked with booking the studio, with a studio quote under $10,000."
+      },
+      {
+       "u": "a4",
+       "text": "The website design was finalized yesterday, and development begins Monday with a target launch date of March 14th."
+      },
+      {
+       "u": "a5",
+       "text": "For the analyst position, two candidates are available, with interviews scheduled for next Wednesday and Thursday, and Priya will conduct the interviews."
+      },
+      {
+       "u": "a6",
+       "text": "The logo update was deferred to the next meeting."
+      },
+      {
+       "u": "a7",
+       "text": "All details are clear and no corrections were needed."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

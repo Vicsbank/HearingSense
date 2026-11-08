@@ -1,0 +1,724 @@
+{
+ "batch": "batch_023",
+ "conversations": [
+  {
+   "conversation": "fin-zh-003",
+   "language": "zh",
+   "transcript": [
+    "1. 喂你好请问是王先生吗",
+    "2. 我是速达快地的",
+    "3. 你有一个件放在小区东门的驿占了",
+    "4. 取剑码是七三零九",
+    "5. 七三零九对吧我记一下",
+    "6. 对的那个箱子比较大有十二公斤",
+    "7. 你一个人拿得动吗",
+    "8. 拿不动的话明天可以送上门",
+    "9. 明天上午十点以前送到你家楼下",
+    "10. 啊那不用麻烦了我今晚下班自己去取",
+    "11. 大概几点到",
+    "12. 七点左右吧",
+    "13. 驿站几点关门",
+    "14. 晚上九点关门过了就只能明天取了",
+    "15. 好的谢谢",
+    "16. 里面是易碎品啊是什么东西",
+    "17. 听发货人写的是玻璃茶具所以请轻拿轻放",
+    "18. 哦那是我妈寄给我的谢谢你提醒"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "快递员打电话通知王先生有一个包裹放在小区东门的驿站。",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f2",
+     "text": "取件码是七三零九。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "包裹是个大箱子，重十二公斤。",
+     "critical": false,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "快递员提出可以在明天上午十点前把包裹送到楼下，王先生拒绝了。",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f5",
+     "text": "王先生打算今晚下班后大约七点自己去驿站取件。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "驿站晚上九点关门，过时只能第二天取。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "包裹是易碎品，发货人写的内容是玻璃茶具。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f8",
+     "text": "包裹是王先生的妈妈寄给他的。",
+     "critical": false,
+     "kind": "relation"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "包裹已经由快递员送上门。"
+    },
+    {
+     "id": "n2",
+     "text": "驿站明天才开门取件（未说，只说今晚九点关门）。"
+    },
+    {
+     "id": "n3",
+     "text": "包裹里的玻璃茶具已经确认完好或已经损坏。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "快递公司名称被识别为“速达快地”，可能是“速达快递”，无法确定。"
+    },
+    {
+     "id": "u2",
+     "text": "“驿占”“取剑码”是识别错误，应分别指驿站和取件码，但原文并非完全清楚。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They are at 速达快地 and someone is asking if they are 王先生."
+      },
+      {
+       "u": "a2",
+       "text": "they have a package at the小区东门驿站, with the取剑码七三零九, and someone confirmed this is correct."
+      },
+      {
+       "u": "a3",
+       "text": "the box is twelve公斤, and they asked if someone can carry it; if not, it can be delivered tomorrow before ten o’clock."
+      },
+      {
+       "u": "a4",
+       "text": "someone agreed to go get it tonight around seven o’clock, but the驿站 closes at nine o’clock, so after that it must be picked up tomorrow."
+      },
+      {
+       "u": "a5",
+       "text": "they mentioned the contents are易碎品, specifically glass tea ware, and someone thanked them for the reminder."
+      },
+      {
+       "u": "a6",
+       "text": "This is for their mom."
+      },
+      {
+       "u": "a7",
+       "text": "the time and place are missing."
+      },
+      {
+       "u": "a8",
+       "text": "the package is missing."
+      },
+      {
+       "u": "a9",
+       "text": "the name is 王先生."
+      },
+      {
+       "u": "a10",
+       "text": "the weight is twelve公斤."
+      },
+      {
+       "u": "a11",
+       "text": "the package is at the小区东门驿站."
+      },
+      {
+       "u": "a12",
+       "text": "the time to arrive is seven o’clock."
+      },
+      {
+       "u": "a13",
+       "text": "the closing time is nine o’clock."
+      },
+      {
+       "u": "a14",
+       "text": "the delivery window is before ten o’clock tomorrow."
+      },
+      {
+       "u": "a15",
+       "text": "the code is seven three zero nine."
+      },
+      {
+       "u": "k1",
+       "text": "someone is asking if they are 王先生."
+      },
+      {
+       "u": "k2",
+       "text": "someone is at 速达快地."
+      },
+      {
+       "u": "k3",
+       "text": "someone has a twelve公斤 package at the小区东门驿站."
+      },
+      {
+       "u": "k4",
+       "text": "the 取剑码 is seven three zero nine."
+      },
+      {
+       "u": "k5",
+       "text": "someone can deliver the package before ten o’clock tomorrow."
+      },
+      {
+       "u": "k6",
+       "text": "someone can pick up the package tonight around seven o’clock."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A delivery person confirmed a package was left at the community entrance gate."
+      },
+      {
+       "u": "a2",
+       "text": "The package weighs twelve kilograms and contains fragile glass tea sets."
+      },
+      {
+       "u": "a3",
+       "text": "The recipient confirmed they can pick it up themselves tonight before 10 AM, or it will be delivered tomorrow morning by 10 AM."
+      },
+      {
+       "u": "a4",
+       "text": "The recipient declined the delivery and will collect it themselves tonight around 7 PM."
+      },
+      {
+       "u": "a5",
+       "text": "The sender reminded them to handle the fragile items carefully."
+      },
+      {
+       "u": "k1",
+       "text": "A package was left at the community entrance gate (驿站) near the east door."
+      },
+      {
+       "u": "k2",
+       "text": "The package weighs twelve kilograms and contains fragile glass tea sets."
+      },
+      {
+       "u": "k3",
+       "text": "The recipient confirmed they can pick up the package themselves tonight before 10 AM."
+      },
+      {
+       "u": "k4",
+       "text": "If not picked up, delivery will occur tomorrow morning by 10 AM."
+      },
+      {
+       "u": "k5",
+       "text": "The recipient declined the delivery and will collect it tonight around 7 PM."
+      },
+      {
+       "u": "k6",
+       "text": "The sender reminded the recipient to handle the fragile items carefully."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于王先生，速达快地确认有件物品放在小区东门驿站，取件码为七三零九。"
+      },
+      {
+       "u": "a2",
+       "text": "箱子重量为十二公斤，确认七三零九正确，且需要确认是否能一人拿得动，否则安排明天上午十点前送到楼下。"
+      },
+      {
+       "u": "a3",
+       "text": "确认明天上午十点前送达，下班后自行前往取件，预计七点左右到达。"
+      },
+      {
+       "u": "a4",
+       "text": "驿站晚上九点关门，之后只能明天取件。"
+      },
+      {
+       "u": "a5",
+       "text": "确认内有易碎品，为易碎物品，发货人写为玻璃茶具，需轻拿轻放。"
+      },
+      {
+       "u": "a6",
+       "text": "确认无需麻烦，感谢提醒。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容为听发货人写的内容，具体物品类型或时间有待确认。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "速达快地的接听了王先生的来电，确认了王先生的身份。"
+      },
+      {
+       "u": "a2",
+       "text": "王先生提到有件物品放在小区东门的驿站，箱子比较大，重量约十二公斤。"
+      },
+      {
+       "u": "a3",
+       "text": "对方询问是否能独自搬运，王先生表示可以，但如果无法搬动则明天上午十点前送到家楼下。"
+      },
+      {
+       "u": "a4",
+       "text": "王先生表示今晚下班自行前往取件，预计大概七点左右到达。"
+      },
+      {
+       "u": "a5",
+       "text": "驿站晚上九点关门，过后只能明天取件。"
+      },
+      {
+       "u": "a6",
+       "text": "王先生提到箱子里有易碎品（玻璃茶具），要求轻拿轻放。"
+      },
+      {
+       "u": "a7",
+       "text": "对方感谢并确认送货安排。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone confirmed they are Mr. Wang and received a message about a 12kg glass tea set package left at the east gate of the residential area."
+      },
+      {
+       "u": "a2",
+       "text": "The recipient agreed to pick it up tonight between 7 PM and 9 PM, though the courier offered to deliver it tomorrow by 10 AM if needed."
+      },
+      {
+       "u": "a3",
+       "text": "The package tracking number is 7309, and the courier warned the item is fragile and should be handled carefully."
+      },
+      {
+       "u": "a4",
+       "text": "The recipient thanked the courier for the reminder and agreed to handle the delivery themselves."
+      },
+      {
+       "u": "k1",
+       "text": "The package is a 12kg glass tea set left at the east gate."
+      },
+      {
+       "u": "k2",
+       "text": "The tracking number for the package is 7309."
+      },
+      {
+       "u": "k3",
+       "text": "The recipient plans to pick up the package tonight between 7 PM and 9 PM."
+      },
+      {
+       "u": "k4",
+       "text": "The courier offered to deliver the package tomorrow by 10 AM if needed."
+      },
+      {
+       "u": "k5",
+       "text": "The package is fragile and requires careful handling."
+      },
+      {
+       "u": "k6",
+       "text": "The recipient confirmed they will handle the pickup themselves."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "速达快递工作人员确认王先生是收件人，并告知其小区东门驿站有一件十二公斤的包裹，取件码为 7309。"
+      },
+      {
+       "u": "a2",
+       "text": "工作人员提醒该包裹内装的是易碎的玻璃茶具，发货人已在单上注明需轻拿轻放。"
+      },
+      {
+       "u": "a3",
+       "text": "王先生表示今晚下班后打算自行前往取件，预计到达时间为晚上七点左右。"
+      },
+      {
+       "u": "a4",
+       "text": "驿站晚上九点关门，因此王先生确认将在九点前取走包裹。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-004",
+   "language": "zh",
+   "transcript": [
+    "1. 您好这里是明德社区医院预约台",
+    "2. 我想给我爸挂一个号看血压",
+    "3. 好的请问老人多大年纪",
+    "4. 六十八岁",
+    "5. 姓名和身份证后四位",
+    "6. 姓张张国华身份证后四位是四二一六",
+    "7. 有心内科的号吗最近的",
+    "8. 最近的是下周二上午的有九点二十的和十点的",
+    "9. 九点二十的可以吗",
+    "10. 可以不过要提前十五分钟取号",
+    "11. 好那就下周二九点二十",
+    "12. 医生是谁",
+    "13. 是陈淑兰主任",
+    "14. 挂号费二十五元现场扣医保",
+    "15. 需要空腹吗",
+    "16. 要空腹要抽血所以早上不要吃饭",
+    "17. 水可以喝吗",
+    "18. 可以少量喝水药也照常吃",
+    "19. 地址在哪",
+    "20. 在东风路一百一十八号二楼",
+    "21. 到时候带上医保卡和以前的检查报告",
+    "22. 好的谢谢"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "来电者给父亲张国华（六十八岁）预约了社区医院的心内科号，目的是看血压。",
+     "critical": true,
+     "kind": "name"
+    },
+    {
+     "id": "f2",
+     "text": "预约时间是下周二上午九点二十。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "需要提前十五分钟取号。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "接诊医生是陈淑兰主任。",
+     "critical": true,
+     "kind": "name"
+    },
+    {
+     "id": "f5",
+     "text": "挂号费二十五元，现场用医保扣款。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "需要空腹，因为要抽血，早上不要吃饭。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "可以少量喝水，药照常服用。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f8",
+     "text": "医院在东风路一百一十八号二楼。",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f9",
+     "text": "就诊时要带医保卡和以前的检查报告。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f10",
+     "text": "预约台所在医院名为明德社区医院。",
+     "critical": false,
+     "kind": "name"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "张国华已经被诊断患有高血压（只说是去看血压）。"
+    },
+    {
+     "id": "n2",
+     "text": "预约的是十点的号（选的是九点二十）。"
+    },
+    {
+     "id": "n3",
+     "text": "必须滴水不沾（实际说可以少量喝水）。"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "在明德社区医院预约台，讨论了为一名六十八岁的患者张国华申请血压检查。"
+      },
+      {
+       "u": "a2",
+       "text": "确认张国华的身份证后四位是四二一六，并询问是否有心内科号，最近的下周二上午有九点二十和十点。"
+      },
+      {
+       "u": "a3",
+       "text": "九点二十的号可否使用，确认可使用但需提前十五分钟取号，最终安排于下周二九点二十。"
+      },
+      {
+       "u": "a4",
+       "text": "医生是陈淑兰主任，挂号费二十五元，现场扣除医保。"
+      },
+      {
+       "u": "a5",
+       "text": "需要空腹且需抽血，早上不要吃饭，可少量喝水，药可照常服用。"
+      },
+      {
+       "u": "a6",
+       "text": "地址为东风路一百一十八号二楼，需携带医保卡和以前的检查报告。"
+      },
+      {
+       "u": "a7",
+       "text": "相关信息已确认，后续事项未提及。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "张张国华先生为六十八岁的父亲预约了明德社区医院心内科的号，身份证后四位为4216。"
+      },
+      {
+       "u": "a2",
+       "text": "经确认，最近可用的就诊时间是下周二上午九点二十，需提前十五分钟取号，挂号费二十五元将现场通过医保扣除。"
+      },
+      {
+       "u": "a3",
+       "text": "就诊医生为陈淑兰主任，患者需空腹抽血，但可少量喝水并照常服药。"
+      },
+      {
+       "u": "a4",
+       "text": "就诊地点位于东风路一百一十八号二楼，张先生需携带医保卡及既往检查报告前往。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They wanted to schedule a blood pressure appointment for their father at Mingde Community Hospital."
+      },
+      {
+       "u": "a2",
+       "text": "They asked about the patient's age, which is sixty-eight, and provided the name Zhang Zhuanhua with ID ending in 4216."
+      },
+      {
+       "u": "a3",
+       "text": "They inquired about heart-related appointments, and the closest available is Tuesday morning at 9:20 or 10:00."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to 9:20 but noted a fifteen-minute wait for appointment pickup."
+      },
+      {
+       "u": "a5",
+       "text": "The doctor is Dr. Chen Shulan, and the fee is twenty-five yuan with medical insurance deducted at the site."
+      },
+      {
+       "u": "a6",
+       "text": "They mentioned fasting is required due to blood tests, but water is allowed in small amounts, and medication can continue as usual."
+      },
+      {
+       "u": "a7",
+       "text": "The address is East Wind Road 118, second floor."
+      },
+      {
+       "u": "a8",
+       "text": "They advised bringing insurance and past test results."
+      },
+      {
+       "u": "a9",
+       "text": "The details about the appointment time and location are final."
+      },
+      {
+       "u": "a10",
+       "text": "The information about the appointment location and required documentation is incomplete."
+      },
+      {
+       "u": "a11",
+       "text": "The details about the appointment time and location are final."
+      },
+      {
+       "u": "a12",
+       "text": "The information about the appointment location and required documentation is incomplete."
+      },
+      {
+       "u": "k1",
+       "text": "The patient is sixty-eight years old."
+      },
+      {
+       "u": "k2",
+       "text": "The patient's name is Zhang Zhuanhua, ID ending in 4216."
+      },
+      {
+       "u": "k3",
+       "text": "The appointment time is Tuesday 9:20 AM."
+      },
+      {
+       "u": "k4",
+       "text": "The doctor is Dr. Chen Shulan."
+      },
+      {
+       "u": "k5",
+       "text": "The fee is twenty-five yuan with medical insurance deduction."
+      },
+      {
+       "u": "k6",
+       "text": "Fasting is required for blood tests, but water is allowed in small amounts, and medication can continue as usual."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "明德社区医院预约台接待了张国华先生（68岁），其身份证后四位为四二一六。"
+      },
+      {
+       "u": "a2",
+       "text": "预约内科挂号，最近可用号在下周二上午，九点二十时可就诊，需提前十五分钟取号。"
+      },
+      {
+       "u": "a3",
+       "text": "医生为陈淑兰主任，挂号费二十五元现场扣医保。"
+      },
+      {
+       "u": "a4",
+       "text": "就诊前需空腹，建议早晨不吃饭，水可少量饮用。"
+      },
+      {
+       "u": "a5",
+       "text": "挂号地址位于东风路一百一十八号二楼，患者需携带医保卡和之前的检查报告。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone scheduled an appointment for Mr. Zhang Zhaohua, 68 years old, to see Dr. Chen Shulan for a blood pressure check at Mingde Community Hospital."
+      },
+      {
+       "u": "a2",
+       "text": "The visit is set for next Tuesday at 9:20 AM in Room 204, with a 15-minute early arrival required for ticket pickup."
+      },
+      {
+       "u": "a3",
+       "text": "The registration fee is 25 yuan, paid directly against the medical insurance card, and the patient must fast before the appointment but may drink small amounts of water."
+      },
+      {
+       "u": "a4",
+       "text": "Mr. Zhang should bring his ID card, the last four digits of which are 4216, and his previous medical reports to the hospital at No."
+      },
+      {
+       "u": "a5",
+       "text": "118 Dongfeng Road, 2nd floor."
+      },
+      {
+       "u": "k1",
+       "text": "The appointment is for Mr. Zhang Zhaohua, 68 years old."
+      },
+      {
+       "u": "k2",
+       "text": "The visit is scheduled for next Tuesday at 9:20 AM."
+      },
+      {
+       "u": "k3",
+       "text": "The doctor is Dr. Chen Shulan in the Cardiology department."
+      },
+      {
+       "u": "k4",
+       "text": "The registration fee is 25 yuan, paid via medical insurance."
+      },
+      {
+       "u": "k5",
+       "text": "The patient must fast but can drink small amounts of water."
+      },
+      {
+       "u": "k6",
+       "text": "The hospital is located at No. 118 Dongfeng Road, 2nd floor."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A patient at 明德社区医院预约台挂号看血压，年龄六十八岁，姓名张国华，身份证后四位四二一六。"
+      },
+      {
+       "u": "a2",
+       "text": "医生陈淑兰主任负责，下周二上午九点二十取号，空腹需抽血，需提前十五分钟取号，需携带医保卡和以前检查报告。"
+      },
+      {
+       "u": "k1",
+       "text": "Patient is 68 years old, named 张国华, ID last four digits 4216"
+      },
+      {
+       "u": "k2",
+       "text": "Appointment scheduled for next Tuesday at 9:20 AM"
+      },
+      {
+       "u": "k3",
+       "text": "Doctor is 陈淑兰主任"
+      },
+      {
+       "u": "k4",
+       "text": "Blood test requires fasting, so patient should not eat in the morning"
+      },
+      {
+       "u": "k5",
+       "text": "Patient must bring medical insurance card and previous examination report"
+      },
+      {
+       "u": "k6",
+       "text": "Appointment time requires 15 minutes advance notice for call-in"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

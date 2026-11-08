@@ -1,0 +1,724 @@
+{
+ "batch": "batch_033",
+ "conversations": [
+  {
+   "conversation": "fin-zh-023",
+   "language": "zh",
+   "transcript": [
+    "1. 好 大家都到了吧 那我们开始说一下下个月摄影展的事",
+    "2. 先确定时间 展览定在十一月十五号到十七号 就在学生活动中心一楼",
+    "3. 啊 不是十五号 我刚看了场地表 活动中心十五号被辩论赛占了",
+    "4. 那改成十六号到十八号 可以吗",
+    "5. 可以可以 十六号到十八号",
+    "6. 好 那就十六号到十八号 小雅你负责去学生处盖章申请场地",
+    "7. 行 我明天下午就去",
+    "8. 然后是作品 每个人至少交三张 最多五张 十一月五号之前发到群里",
+    "9. 冲印的话 我问过打印店 十寸的一张八块 一共大概要印六十张",
+    "10. 六十张那就是四百八十块 社团经费还剩六百二十块 够用",
+    "11. 对 剩下的钱拿去买展架的夹子",
+    "12. 海报谁来做",
+    "13. 我来吧 阿杰说他可以帮忙排版",
+    "14. 对 我周末弄好 下周一给大家看",
+    "15. 还有 开幕那天要不要请指导老师来讲几句",
+    "16. 这个我再问一下林老师 还不确定她那天有没有空"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "摄影展改在十一月十六日至十八日举行",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "展览日期原定为十一月十五日至十七日，因为十五日学生活动中心被辩论赛占用而改期",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f3",
+     "text": "展览地点是学生活动中心一楼",
+     "critical": false,
+     "kind": "place"
+    },
+    {
+     "id": "f4",
+     "text": "小雅负责去学生处盖章申请场地，打算明天下午去",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "每人至少交三张、最多五张作品，十一月五日之前发到群里",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "十寸照片冲印每张八块钱，计划印约六十张，共四百八十块",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "社团经费还剩六百二十块",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "冲印之后剩下的经费打算用来买展架夹子",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f9",
+     "text": "有一位成员承担制作海报，周末完成，下周一给大家看，阿杰帮忙排版",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "展览仍然从十一月十五日开始（该日期已被更正）"
+    },
+    {
+     "id": "n2",
+     "text": "林老师已经确认会出席开幕式"
+    },
+    {
+     "id": "n3",
+     "text": "场地申请已经获批（小雅明天才去申请）"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "林老师开幕那天是否有空、是否来讲话尚未确认"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "会议确认了下个月摄影展的时间调整为十一月十六日至十八日，原定的十一月十五日因被辩论赛占用而取消。"
+      },
+      {
+       "u": "a2",
+       "text": "小雅负责前往学生处盖章申请场地，并计划于明天下午执行，同时作品提交要求每人至少三张、最多五张，需在十一月五日前发送至群聊。"
+      },
+      {
+       "u": "a3",
+       "text": "关于印刷费用，十寸照片每张八元，预计六十张照片共需四百八十元，社团剩余六百二十元经费足以支付，余款将用于购买展架夹子。"
+      },
+      {
+       "u": "a4",
+       "text": "海报由“我”负责，阿杰将协助排版，预计周末完成并下周一展示。"
+      },
+      {
+       "u": "a5",
+       "text": "此外，关于开幕当天是否邀请林老师讲话，目前尚未确定她届时是否有空，需进一步询问。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The photography exhibit will be held from November 16th to 18th at the Student Activity Center, first floor, because November 15th was already booked for a debate tournament."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed that small ya will handle the application to the Student Affairs office, and someone will go tomorrow afternoon."
+      },
+      {
+       "u": "a3",
+       "text": "Each person must submit at least three and at most five works by November 5th, with prints costing $8 per 11x14 sheet for approximately 60 copies, totaling $480."
+      },
+      {
+       "u": "a4",
+       "text": "The remaining $620 in club funds is sufficient, and the leftover money will be used for exhibition stands."
+      },
+      {
+       "u": "a5",
+       "text": "Someone will make the posters, and they agreed to handle layout with help from a person named a-j, completing the work over the weekend and reviewing it next Monday."
+      },
+      {
+       "u": "a6",
+       "text": "They will ask l-n about opening day, asking if a teacher should speak, but it is still unclear if l-n will be available."
+      },
+      {
+       "u": "a7",
+       "text": "Missing information: the exact amount for the prints, and the final decision on the teacher's participation."
+      },
+      {
+       "u": "a8",
+       "text": "They agreed, but specifics are not yet confirmed."
+      },
+      {
+       "u": "a9",
+       "text": "The details are not finalized, and the tasks are still being coordinated."
+      },
+      {
+       "u": "k1",
+       "text": "The exhibit is from November 16th to 18th at the Student Activity Center, first floor."
+      },
+      {
+       "u": "k2",
+       "text": "small ya is responsible for applying to the Student Affairs office."
+      },
+      {
+       "u": "k3",
+       "text": "Each person must submit at least three and at most five works by November 5th."
+      },
+      {
+       "u": "k4",
+       "text": "Prints cost $8 per 11x14 sheet for 60 copies, totaling $480."
+      },
+      {
+       "u": "k5",
+       "text": "Club funds are $620, sufficient for the exhibit."
+      },
+      {
+       "u": "k6",
+       "text": "Posters will be made, layout handled with help from a-j, completed over the weekend, reviewed next Monday, and someone will ask l-n about the teacher's participation on opening day."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "讨论了下个月摄影展的时间，决定展览定在十一月十五号到十七号，但场地问题导致时间调整为十六号到十八号。"
+      },
+      {
+       "u": "a2",
+       "text": "小雅被指定负责去学生处盖章申请场地，并确认于明天下午前往。"
+      },
+      {
+       "u": "a3",
+       "text": "每个人需至少提交三张作品，最多五张，作品于十一月五号之前发至群内。"
+      },
+      {
+       "u": "a4",
+       "text": "冲印费用为每张十寸八块，共计六十张，总计四百八十元，社团经费六百二十元足够。"
+      },
+      {
+       "u": "a5",
+       "text": "剩余资金将用于购买展架夹子。"
+      },
+      {
+       "u": "a6",
+       "text": "海报制作由个人负责，阿杰表示可协助排版，并计划周末完成，下周一展示。"
+      },
+      {
+       "u": "a7",
+       "text": "关于开幕当天是否请指导老师发言，决定先咨询林老师，情况未定。"
+      },
+      {
+       "u": "a8",
+       "text": "相关信息如场地表和具体安排仍有缺失。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "好的，会议已结束。"
+      },
+      {
+       "u": "a2",
+       "text": "下个月的摄影展定在11月15日至17日，原定于11月15日但因活动中心被辩论赛占用而改为11月16日至18日。"
+      },
+      {
+       "u": "a3",
+       "text": "小雅被指派前往学生处盖章申请场地，并表示明天下午会去。"
+      },
+      {
+       "u": "a4",
+       "text": "作品要求每人至少交三张，最多五张，需在11月5日前发到群里；打印店报价十寸一张八块，六十张打印费用为480元，社团经费剩余620元，用于购买展架夹子。"
+      },
+      {
+       "u": "a5",
+       "text": "海报由本人负责，阿杰将协助排版，周末完成并下周一展示。"
+      },
+      {
+       "u": "a6",
+       "text": "关于开幕日是否需要请指导老师讲话，会议中未确定，需再咨询林老师。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to hold the photography exhibition from November 16th to 18th at the first floor of the Student Activity Center because the 15th was occupied by a debate."
+      },
+      {
+       "u": "a2",
+       "text": "Xiaoya will handle the venue stamping application at the Student Affairs Office starting tomorrow afternoon, while the group will submit between three and five photos per person by November 5th."
+      },
+      {
+       "u": "a3",
+       "text": "The estimated printing cost of 480 yuan for 60 sheets of 10-inch prints fits within the remaining 620 yuan of club funds, with leftover money intended for display stand clips."
+      },
+      {
+       "u": "a4",
+       "text": "Ajie will assist with layout design, and the poster will be completed by the weekend for display on Monday."
+      },
+      {
+       "u": "a5",
+       "text": "The organizer will ask Teacher Lin to confirm her availability to give a speech on the opening day."
+      },
+      {
+       "u": "k1",
+       "text": "The exhibition is scheduled from November 16th to 18th."
+      },
+      {
+       "u": "k2",
+       "text": "The venue is the first floor of the Student Activity Center."
+      },
+      {
+       "u": "k3",
+       "text": "Xiaoya will apply for the venue stamp starting tomorrow afternoon."
+      },
+      {
+       "u": "k4",
+       "text": "Photos must be submitted by November 5th, with 3 to 5 per person."
+      },
+      {
+       "u": "k5",
+       "text": "The total printing cost is 480 yuan, leaving 140 yuan for display clips."
+      },
+      {
+       "u": "k6",
+       "text": "Teacher Lin's availability for the opening speech is still being confirmed."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The photography exhibition is scheduled for November 15-18 at the Student Activity Center first floor."
+      },
+      {
+       "u": "a2",
+       "text": "The original date of November 15 was changed to November 16-18 after the debate competition occupied the venue on the 15th."
+      },
+      {
+       "u": "a3",
+       "text": "Xiaoya was assigned to go to the student office to apply for the venue, and she will do so the next afternoon."
+      },
+      {
+       "u": "a4",
+       "text": "Participants must submit at least three works and no more than five, with all submissions due by November 5 to the group chat."
+      },
+      {
+       "u": "a5",
+       "text": "Printing 60 posters at 8 yuan each costs 480 yuan, leaving 620 yuan from the club budget for exhibition stands and banners."
+      },
+      {
+       "u": "a6",
+       "text": "The opening day may require a guide teacher to speak, and Lin Teacher needs to be checked for availability."
+      },
+      {
+       "u": "k1",
+       "text": "The photography exhibition is set for November 15 to 18 at the Student Activity Center first floor."
+      },
+      {
+       "u": "k2",
+       "text": "The original date of November 15 was changed to November 16-18 due to a debate competition occupying the venue."
+      },
+      {
+       "u": "k3",
+       "text": "Xiaoya was assigned to go to the student office to apply for the venue and will do so the next afternoon."
+      },
+      {
+       "u": "k4",
+       "text": "Each participant must submit at least three works and no more than five, with all submissions due by November 5 to the group chat."
+      },
+      {
+       "u": "k5",
+       "text": "Printing 60 posters at 8 yuan each costs 480 yuan, leaving 620 yuan for exhibition stands and banners."
+      },
+      {
+       "u": "k6",
+       "text": "The opening day may require a guide teacher to speak, and Lin Teacher's availability needs to be confirmed."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-024",
+   "language": "zh",
+   "transcript": [
+    "1. 你好 是李先生吧 我是中介小吴 房子就是这套 在六楼",
+    "2. 六楼没有电梯啊 对 老楼 不过房子是去年刚装修的",
+    "3. 面积四十五平 一室一厅 朝南",
+    "4. 月租是三千二 押一付三",
+    "5. 哦不好意思 我说错了 是押二付一 房东同意的",
+    "6. 水电怎么算 水是民用价 电费五毛八一度 物业费每个月一百五 租客出",
+    "7. 一百五是房东出还是我们出 是租客出 刚才说了",
+    "8. 离地铁站多远 走过去大概八百米 十来分钟",
+    "9. 家具呢 床 衣柜 冰箱 洗衣机都有 空调是去年新装的",
+    "10. 那最早什么时候能住 房东说十二月一号交房 你们要提前也可以再商量",
+    "11. 房东姓周 周阿姨 她下周三有空 可以当面签合同",
+    "12. 好 我回去跟室友商量一下 周五之前给你答复",
+    "13. 行 那我周四再给你发几个视频"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "房子在六楼，没有电梯，去年刚装修过",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "房子面积四十五平方米，一室一厅，朝南",
+     "critical": false,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "月租金是三千二百元",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "付款方式是押二付一",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "中介先说押一付三，随后更正为押二付一",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f6",
+     "text": "电费每度五毛八，水按民用价",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "物业费每月一百五十元，由租客承担",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "房子离地铁站约八百米，步行大约十分钟",
+     "critical": false,
+     "kind": "place"
+    },
+    {
+     "id": "f9",
+     "text": "房东预计十二月一日交房",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f10",
+     "text": "房东周阿姨下周三有空，可以当面签合同",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f11",
+     "text": "李先生打算跟室友商量，周五之前给中介答复",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f12",
+     "text": "中介周四会再发几个房子的视频",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "付款方式是押一付三（已被更正为押二付一）"
+    },
+    {
+     "id": "n2",
+     "text": "李先生已经决定租下这套房"
+    },
+    {
+     "id": "n3",
+     "text": "月租金已经包含物业费"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "能否提前于十二月一日入住，只说可以再商量，没有确定"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The house is on the sixth floor with no elevator, is an older building but was recently renovated, and has an area of 45 square meters, one bedroom, one living room, and faces south."
+      },
+      {
+       "u": "a2",
+       "text": "the monthly rent is 3,200 yuan with a deposit of 2,000 yuan and 1,000 yuan, though someone said the correct arrangement is 2,000 yuan deposit and 1,000 yuan, with the landlord agreeing; water is billed at standard rates, electricity is 58.8 cents per unit, property maintenance is 150 yuan monthly, and rent is 150 yuan, with the landlord covering the property fee and the tenant covering the rent."
+      },
+      {
+       "u": "a3",
+       "text": "they agreed the distance to the subway is approximately 800 meters, about 10 minutes walking, and the furniture includes a bed, wardrobe, refrigerator, washing machine, and air conditioning installed last year."
+      },
+      {
+       "u": "a4",
+       "text": "the earliest possible move-in date is December 12, with the landlord available to sign contracts on Wednesday next week, and someone said they will respond by Friday before the week ends; someone also said they will send several videos on Thursday."
+      },
+      {
+       "u": "a5",
+       "text": "the landlord's name is 周, and the contact is 周阿姨."
+      },
+      {
+       "u": "a6",
+       "text": "some details are missing."
+      },
+      {
+       "u": "k1",
+       "text": "The house is on the sixth floor."
+      },
+      {
+       "u": "k2",
+       "text": "The area is 45 square meters, one bedroom, one living room, and faces south."
+      },
+      {
+       "u": "k3",
+       "text": "Monthly rent is 3,200 yuan with a 2,000 yuan deposit and 1,000 yuan."
+      },
+      {
+       "u": "k4",
+       "text": "Electricity is 58.8 cents per unit."
+      },
+      {
+       "u": "k5",
+       "text": "Property maintenance is 150 yuan monthly."
+      },
+      {
+       "u": "k6",
+       "text": "The distance to the subway is 800 meters, about 10 minutes walking from the house, and the earliest move-in date is December 12, with the landlord available to sign on Wednesday next week, and someone said they will respond by Friday before the week ends, and send videos on Thursday, and the landlord's name is 周, contact is 周阿姨, and some details are missing."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Xu, the real estate agent, confirmed the apartment is on the 6th floor with no elevator, recently renovated, 45 square meters, south-facing, monthly rent 3,200 with deposit paid in two installments."
+      },
+      {
+       "u": "a2",
+       "text": "The tenant clarified the payment terms and confirmed water is metered at residential rates, electricity is 0.58 yuan/kWh, and property fees are 150 yuan monthly."
+      },
+      {
+       "u": "a3",
+       "text": "The landlord Zhou agreed to hand over the apartment on December 1st, and the tenant will discuss with their roommates and respond by Friday."
+      },
+      {
+       "u": "a4",
+       "text": "The landlord Zhou will be available next Wednesday for a face-to-face contract signing, and the tenant will send videos on Thursday."
+      },
+      {
+       "u": "k1",
+       "text": "Apartment is on the 6th floor with no elevator"
+      },
+      {
+       "u": "k2",
+       "text": "Rent is 3,200 yuan monthly with deposit paid in two installments"
+      },
+      {
+       "u": "k3",
+       "text": "Water is metered at residential rates, electricity is 0.58 yuan/kWh"
+      },
+      {
+       "u": "k4",
+       "text": "Property fee is 150 yuan per month"
+      },
+      {
+       "u": "k5",
+       "text": "Landlord Zhou will hand over the apartment on December 1st"
+      },
+      {
+       "u": "k6",
+       "text": "Tenant will discuss with roommates and respond by Friday"
+      },
+      {
+       "u": "k7",
+       "text": "Landlord Zhou is available next Wednesday for face-to-face contract signing"
+      },
+      {
+       "u": "k8",
+       "text": "Tenant will send videos on Thursday"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about renting a 45-square-meter, one-bedroom apartment on the sixth floor of an old building without an elevator, which was recently renovated last year."
+      },
+      {
+       "u": "a2",
+       "text": "The monthly rent is 3,200 yuan with a payment term of two months' deposit and one month's rent, and utilities include 0.58 yuan per kWh for electricity, 150 yuan monthly for property fees paid by the tenant, and water at residential rates."
+      },
+      {
+       "u": "a3",
+       "text": "The apartment is located about 800 meters from the subway, taking roughly ten minutes to walk, and comes with furniture including a bed, wardrobe, fridge, washing machine, and a newly installed air conditioner."
+      },
+      {
+       "u": "a4",
+       "text": "The landlord, Ms. Zhou, is available to sign the contract in person next Wednesday, with a handover scheduled for December 1st, though earlier dates can be negotiated."
+      },
+      {
+       "u": "a5",
+       "text": "The tenant agreed to discuss with roommates and provide a response by Friday, while the agent will send additional videos on Thursday."
+      },
+      {
+       "u": "k1",
+       "text": "The apartment is 45 square meters, one bedroom, on the sixth floor without an elevator."
+      },
+      {
+       "u": "k2",
+       "text": "The monthly rent is 3,200 yuan with a deposit of two months and one month's rent."
+      },
+      {
+       "u": "k3",
+       "text": "Electricity costs 0.58 yuan per kWh, property fees are 150 yuan monthly paid by the tenant."
+      },
+      {
+       "u": "k4",
+       "text": "The unit is 800 meters from the subway, about a ten-minute walk."
+      },
+      {
+       "u": "k5",
+       "text": "The landlord, Ms. Zhou, is available to sign the contract next Wednesday."
+      },
+      {
+       "u": "k6",
+       "text": "The handover date is December 1st, with the tenant to respond by Friday."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "中介小吴向李先生确认房源为六楼无电梯的老楼，去年刚装修，面积四十五平米的一室一厅朝南户型，月租三千二，押金支付方式已更正为押二付一。"
+      },
+      {
+       "u": "a2",
+       "text": "水电费用方面，水费按民用价计算，电费五毛八元每度，物业费每月一百五十元由租客承担。"
+      },
+      {
+       "u": "a3",
+       "text": "该房源距离地铁站约八百米，步行需十来分钟，且配备床、衣柜、冰箱、洗衣机及去年新装的空调。"
+      },
+      {
+       "u": "a4",
+       "text": "房东姓周，周阿姨下周三有空，双方计划当面签订合同，李先生表示需回去与室友商量，预计周五前给出答复。"
+      },
+      {
+       "u": "a5",
+       "text": "中介小吴随后告知自己将在周四发送几个视频供李先生参考。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "李先生（李）与中介小吴就房子（位于六楼，房间为一室一厅，朝南，面积四十五平）进行沟通。"
+      },
+      {
+       "u": "a2",
+       "text": "房东周阿姨同意押二付一的租金方式，水电费用为水价民用价、电费五毛八一度，物业费每月一百五元。"
+      },
+      {
+       "u": "a3",
+       "text": "房子去年刚装修，配备床、衣柜、冰箱、洗衣机和空调（去年新装）。"
+      },
+      {
+       "u": "a4",
+       "text": "房东表示最早可以入住是十二月一号，租客可提前签约。"
+      },
+      {
+       "u": "a5",
+       "text": "房东姓周，周阿姨下周三有空可当面签合同。"
+      },
+      {
+       "u": "a6",
+       "text": "李先生回去与室友商量，并承诺周四前发视频回复。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于李先生的房子，位于六楼，没有电梯，是一套去年刚装修的四十五平一室一厅朝南的房子。"
+      },
+      {
+       "u": "a2",
+       "text": "月租是三千二，押一付三，不过后来调整为押二付一，房东同意。"
+      },
+      {
+       "u": "a3",
+       "text": "水电方面，水是民用价，电费五毛八一度，物业费每个月一百五，租客负责支付一百五。"
+      },
+      {
+       "u": "a4",
+       "text": "离地铁站大约八百米，需要十来分钟。"
+      },
+      {
+       "u": "a5",
+       "text": "家具包括床、衣柜、冰箱、洗衣机和去年新装的空调。"
+      },
+      {
+       "u": "a6",
+       "text": "最早可于十二月一号交房，房东姓周，周阿姨下周三有空可当面签合同。"
+      },
+      {
+       "u": "a7",
+       "text": "周五之前会给周五之前给答复，周四会再发几个视频。"
+      },
+      {
+       "u": "a8",
+       "text": "相关信息如水电费用和具体签合同时间仍未明确。"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

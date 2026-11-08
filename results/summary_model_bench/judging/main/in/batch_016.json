@@ -1,0 +1,808 @@
+{
+ "batch": "batch_016",
+ "conversations": [
+  {
+   "conversation": "fin-en-033",
+   "language": "en",
+   "transcript": [
+    "1. hello this is Hartwell Furniture calling for Mrs Kowalczyk about your order",
+    "2. speaking",
+    "3. your sofa and two armchairs are in and we can deliver on Wednesday the fourth between one and five",
+    "4. oh I'm at work until five can it be Saturday",
+    "5. we deliver Saturdays between eight and noon the seventh is open",
+    "6. Saturday the seventh eight to noon that works",
+    "7. okay the order number is H as in Harry four seven two nine",
+    "8. four seven two nine got it",
+    "9. the total was twenty one hundred and eighty dollars with a balance of six hundred and fifty due on delivery",
+    "10. I thought the balance was five hundred",
+    "11. no we took a deposit of fifteen hundred and thirty in August",
+    "12. okay that's right I forgot about the delivery fee",
+    "13. the delivery fee is eighty five dollars and it's included in the total",
+    "14. do you take the old sofa away",
+    "15. we can for an extra forty dollars you'd tell the driver",
+    "16. yes please do that",
+    "17. okay I'll note the removal and the driver will call thirty minutes before arriving",
+    "18. the stairs are narrow so please send two people",
+    "19. noted"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Hartwell Furniture called Mrs Kowalczyk to say her sofa and two armchairs have arrived.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "Delivery is on Saturday the seventh between 8 am and noon.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "Delivery was first offered for Wednesday the fourth between 1 and 5, but Mrs Kowalczyk works until 5, so it moved to Saturday.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f4",
+     "text": "The order number is H4729.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "The order total is $2,180, with a $650 balance due on delivery.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "A deposit of $1,530 was paid in August.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "The $85 delivery fee is included in the total.",
+     "critical": false,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "Removal of the old sofa costs an extra $40, and Mrs Kowalczyk asked for it.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f9",
+     "text": "The driver will call thirty minutes before arriving.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f10",
+     "text": "Mrs Kowalczyk asked that two people be sent because the stairs are narrow.",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The balance due on delivery is $500."
+    },
+    {
+     "id": "n2",
+     "text": "Delivery is on Wednesday."
+    },
+    {
+     "id": "n3",
+     "text": "Old sofa removal is included in the $2,180 total."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Hartwell Furniture called Mrs. Kowalczyk to confirm her order, which includes a sofa and two armchairs, and they can deliver on Wednesday the fourth between one and five."
+      },
+      {
+       "u": "a2",
+       "text": "The customer requested delivery on Saturday instead, and the assistant confirmed that Saturday the seventh from eight to noon works."
+      },
+      {
+       "u": "a3",
+       "text": "The order number is H47229, with a total of $2,180 and a $650 balance due on delivery, though the customer initially thought the balance was $500."
+      },
+      {
+       "u": "a4",
+       "text": "A deposit of $1,530 was taken in August, and the delivery fee of $85 is included in the total."
+      },
+      {
+       "u": "a5",
+       "text": "The customer also requested that the old sofa be removed for an extra $40, and the driver will be notified to send two people due to narrow stairs."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Hartwell Furniture confirmed the delivery of a sofa and two armchairs to Mrs. Kowalczyk on Saturday, the seventh, between eight and noon."
+      },
+      {
+       "u": "a2",
+       "text": "The total cost is twenty-one hundred and eighty dollars, with a balance of six hundred and fifty due upon delivery."
+      },
+      {
+       "u": "a3",
+       "text": "The customer requested the old sofa be removed for an extra forty dollars, and the driver must send two people due to narrow stairs."
+      },
+      {
+       "u": "a4",
+       "text": "The delivery fee of eighty-five dollars is already included in the total, and the driver will call thirty minutes before arrival."
+      },
+      {
+       "u": "k1",
+       "text": "The order is for a sofa and two armchairs."
+      },
+      {
+       "u": "k2",
+       "text": "Delivery is scheduled for Saturday the seventh from eight to noon."
+      },
+      {
+       "u": "k3",
+       "text": "The total is twenty-one hundred and eighty dollars with a balance of six hundred and fifty."
+      },
+      {
+       "u": "k4",
+       "text": "The old sofa will be removed for an extra forty dollars."
+      },
+      {
+       "u": "k5",
+       "text": "Two people must be sent because the stairs are narrow."
+      },
+      {
+       "u": "k6",
+       "text": "The driver will call thirty minutes before arrival."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Hartwell Furniture called Mrs. Kowalczyk to confirm that her sofa and two armchairs are in stock and scheduled for delivery on Wednesday, the fourth, between 1:00 and 5:00 PM."
+      },
+      {
+       "u": "a2",
+       "text": "After she requested a change due to her work schedule, the delivery was rescheduled to Saturday, the seventh, between 8:00 AM and noon."
+      },
+      {
+       "u": "a3",
+       "text": "The order number was confirmed as H4729, with a total cost of $2,180 and a remaining balance of $650 due upon delivery, correcting her earlier belief that the balance was $500."
+      },
+      {
+       "u": "a4",
+       "text": "Mrs. Kowalczyk agreed to have the old sofa removed for an additional $40, and she requested that two people be sent because the stairs are narrow."
+      },
+      {
+       "u": "a5",
+       "text": "The driver will call thirty minutes before arrival to coordinate the pickup and delivery."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Hartwell Furniture called Mrs. Kowalczyk to confirm a delivery of a sofa and two armchairs scheduled for Wednesday the fourth between one and five."
+      },
+      {
+       "u": "a2",
+       "text": "The customer requested Saturday delivery instead, which was confirmed for Saturday the seventh from eight to noon."
+      },
+      {
+       "u": "a3",
+       "text": "The order number is H47229 with a total of $21,380 and a $650 balance due on delivery."
+      },
+      {
+       "u": "a4",
+       "text": "A $1,500 deposit was taken in August, and an $85 delivery fee was added."
+      },
+      {
+       "u": "a5",
+       "text": "The customer agreed to have the old sofa removed for an extra $40 and requested two people to help due to narrow stairs."
+      },
+      {
+       "u": "a6",
+       "text": "The driver will call 30 minutes before arrival."
+      },
+      {
+       "u": "k1",
+       "text": "Delivery scheduled for Wednesday the fourth between one and five"
+      },
+      {
+       "u": "k2",
+       "text": "Customer requested Saturday delivery on the seventh from eight to noon"
+      },
+      {
+       "u": "k3",
+       "text": "Order number is H47229"
+      },
+      {
+       "u": "k4",
+       "text": "Total amount is $21,380 with $650 balance due on delivery"
+      },
+      {
+       "u": "k5",
+       "text": "Deposit of $1,500 was taken in August"
+      },
+      {
+       "u": "k6",
+       "text": "Delivery fee of $85 was added to the total"
+      },
+      {
+       "u": "k7",
+       "text": "Old sofa removal requested for an extra $40"
+      },
+      {
+       "u": "k8",
+       "text": "Two people needed to help due to narrow stairs"
+      },
+      {
+       "u": "k9",
+       "text": "Driver will call 30 minutes before arrival"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A person contacted Hartwell Furniture about Mrs. Kowalczyk’s order and confirmed that a sofa and two armchairs were in."
+      },
+      {
+       "u": "a2",
+       "text": "Delivery was scheduled for Wednesday the fourth between one and five, but Saturday the seventh between eight and noon was approved instead."
+      },
+      {
+       "u": "a3",
+       "text": "The order number is H-4729, and the total was twenty-one hundred eighty dollars with a balance of six hundred fifty due on delivery."
+      },
+      {
+       "u": "a4",
+       "text": "A correction clarified that the balance is not five hundred; instead, a fifteen hundred deposit was taken in August, and an eighty-five dollar delivery fee is included."
+      },
+      {
+       "u": "a5",
+       "text": "An extra forty dollar charge applies for removing the old sofa, and the driver will call thirty minutes before arrival."
+      },
+      {
+       "u": "a6",
+       "text": "The arrangement includes sending two people due to narrow stairs."
+      },
+      {
+       "u": "a7",
+       "text": "The task of noting the removal was acknowledged."
+      },
+      {
+       "u": "a8",
+       "text": "Details about the call are missing."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Mrs. Kowalczyk’s order for a sofa and two armchairs is ready for delivery on Wednesday the fourth between one and five, and Saturday the seventh between eight and noon works."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed the order number is H as in Harry four seven two nine, and the total is twenty-one hundred and eighty dollars with a balance of six hundred and fifty due on delivery, though a fifteen hundred and thirty deposit taken in August plus an eighty-five dollar delivery fee is noted."
+      },
+      {
+       "u": "a3",
+       "text": "they agreed the delivery fee is included, and the old sofa can be removed for an extra forty dollars if the driver is told, with the removal noted to happen thirty minutes before arrival."
+      },
+      {
+       "u": "a4",
+       "text": "they agreed two people are needed due to narrow stairs, and the driver will call thirty minutes before arriving."
+      },
+      {
+       "u": "a5",
+       "text": "the conversation is missing details about the stairs’ exact width or any other unspecified factors."
+      },
+      {
+       "u": "a6",
+       "text": "they agreed to proceed with the delivery and removal as discussed."
+      },
+      {
+       "u": "k1",
+       "text": "The delivery is for a sofa and two armchairs."
+      },
+      {
+       "u": "k2",
+       "text": "Delivery date options: Wednesday the fourth or Saturday the seventh."
+      },
+      {
+       "u": "k3",
+       "text": "Delivery time: Wednesday one to five or Saturday eight to noon."
+      },
+      {
+       "u": "k4",
+       "text": "Order number: H as in Harry four seven two nine."
+      },
+      {
+       "u": "k5",
+       "text": "Total: twenty-one hundred and eighty dollars, balance six hundred and fifty due."
+      },
+      {
+       "u": "k6",
+       "text": "Deposit: fifteen hundred and thirty in August, delivery fee: eighty-five dollars included."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-034",
+   "language": "en",
+   "transcript": [
+    "1. okay launch planning for the Aurora app",
+    "2. the plan says we ship on the twentieth",
+    "3. that's the beta the full release is the twenty seventh",
+    "4. no I thought they pushed the full release to November",
+    "5. who told you that",
+    "6. Hana mentioned it in the hallway but I don't think it's official",
+    "7. let's treat it as the twenty seventh until Raj confirms",
+    "8. I'll ask him today",
+    "9. okay marketing needs final screenshots by the fifteenth",
+    "10. I have eleven of the fourteen done",
+    "11. which ones are left",
+    "12. settings profile and onboarding",
+    "13. I'll take onboarding Sam can you do profile",
+    "14. sure and I can finish settings tonight",
+    "15. wait did we say the fifteenth or the fifth",
+    "16. the fifteenth the fifth was last week's deadline",
+    "17. okay",
+    "18. and the press release draft Carmen has it but she says legal review takes three days",
+    "19. so legal needs it by the twenty fourth if we ship on the twenty seventh",
+    "20. right",
+    "(speech could not be transcribed at seconds 104-110)"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The Aurora app beta ships on the twentieth and the full release is planned for the twenty seventh.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The team will treat the twenty seventh as the full release date until Raj confirms, and one speaker will ask Raj today.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "Marketing needs the final screenshots by the fifteenth (the fifth was last week's deadline).",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f4",
+     "text": "Eleven of fourteen screenshots are done; settings, profile and onboarding remain.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "One speaker will take the onboarding screenshot and Sam will do profile.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The settings screenshot will be finished tonight.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "Carmen has the press release draft; legal review takes three days, so legal needs it by the twenty fourth.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "Part of the speech could not be transcribed.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The full release is moved to November."
+    },
+    {
+     "id": "n2",
+     "text": "The beta ships on the twenty seventh."
+    },
+    {
+     "id": "n3",
+     "text": "Hana is on the legal team or has authority over the schedule (never stated)."
+    },
+    {
+     "id": "n4",
+     "text": "Screenshots are due on the fifth."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether the full release has been pushed to November is only an unofficial rumor from Hana and awaits Raj's confirmation."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team discussed the Aurora app launch timeline, confirming the beta shipment is on the twentieth and the full release is on the twenty seventh."
+      },
+      {
+       "u": "a2",
+       "text": "Marketing needs final screenshots by the fifteenth, with onboarding and settings remaining incomplete."
+      },
+      {
+       "u": "a3",
+       "text": "Hana mentioned a possible delay to the full release, but the team decided to treat the twenty seventh as the target date pending Raj's confirmation."
+      },
+      {
+       "u": "a4",
+       "text": "The press release draft is being handled by Carmen, who needs legal review by the twenty fourth to align with the full release schedule."
+      },
+      {
+       "u": "k1",
+       "text": "The beta shipment is scheduled for the twentieth."
+      },
+      {
+       "u": "k2",
+       "text": "The full release is scheduled for the twenty seventh."
+      },
+      {
+       "u": "k3",
+       "text": "Marketing needs final screenshots by the fifteenth."
+      },
+      {
+       "u": "k4",
+       "text": "Onboarding and settings screenshots are incomplete."
+      },
+      {
+       "u": "k5",
+       "text": "Hana mentioned a possible delay to the full release, but it is not official."
+      },
+      {
+       "u": "k6",
+       "text": "The team will treat the twenty seventh as the full release date pending Raj's confirmation."
+      },
+      {
+       "u": "k7",
+       "text": "Carmen has the press release draft and needs legal review by the twenty fourth."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The launch planning for the Aurora app involves shipping the beta on the twentieth and the full release on the twenty-seventh, and the plan treats the twenty-seventh as the release date until Raj confirms."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to treat the twenty-seventh as the release date despite a belief that the full release was pushed to November, with Hana mentioning the hallway mention but not official confirmation."
+      },
+      {
+       "u": "a3",
+       "text": "Marketing needs final screenshots by the fifteenth, and they have eleven of the fourteen done, leaving settings, profile, and onboarding."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed that Sam will handle the profile and they will take onboarding, with onboarding finished tonight."
+      },
+      {
+       "u": "a5",
+       "text": "They clarified the deadline is the fifteenth, not the fifth, which was last week's deadline."
+      },
+      {
+       "u": "a6",
+       "text": "The press release draft is with Carmen, but legal review takes three days, so legal needs it by the twenty-fourth if the app launches on the twenty-seventh."
+      },
+      {
+       "u": "a7",
+       "text": "Some speech could not be transcribed."
+      },
+      {
+       "u": "a8",
+       "text": "They agreed to ask Raj today, and the location for tasks is not specified."
+      },
+      {
+       "u": "a9",
+       "text": "They agreed to proceed with the current timeline."
+      },
+      {
+       "u": "a10",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a11",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a12",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a13",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a14",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a15",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a16",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a17",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a18",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a19",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a20",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a21",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a22",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a23",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a24",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a25",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a26",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a27",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a28",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a29",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a30",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a31",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a32",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a33",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a34",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a35",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a36",
+       "text": "They agreed to confirm the deadline and tasks."
+      },
+      {
+       "u": "a37",
+       "text": "They agreed to confirm the release date with Raj."
+      },
+      {
+       "u": "a38",
+       "text": "They agreed to confirm"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Launch planning for the Aurora app was discussed, with the plan stating the beta ships on the twentieth and the full release on the twenty-seventh."
+      },
+      {
+       "u": "a2",
+       "text": "A correction was made: the full release was not pushed to November, though Hana mentioned it in the hallway but it is not official."
+      },
+      {
+       "u": "a3",
+       "text": "The decision was made to treat the twenty-seventh as the release date until Raj confirms."
+      },
+      {
+       "u": "a4",
+       "text": "Marketing requires final screenshots by the fifteenth, and eleven of the fourteen are completed."
+      },
+      {
+       "u": "a5",
+       "text": "The remaining tasks are settings, profile, and onboarding, with onboarding assigned to Sam and settings to be finished tonight."
+      },
+      {
+       "u": "a6",
+       "text": "A clarification was needed regarding the deadline, confirming the fifteenth rather than the fifth."
+      },
+      {
+       "u": "a7",
+       "text": "The press release draft is with Carmen, but legal review takes three days, so legal needs it by the twenty-fourth if the release is on the twenty-seventh."
+      },
+      {
+       "u": "a8",
+       "text": "[Some speech here could not be transcribed.]"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team decided to ship the Aurora app beta on the twentieth with a full release scheduled for the twenty seventh, though Hana mentioned a possible November push that Raj needs to confirm."
+      },
+      {
+       "u": "a2",
+       "text": "Marketing requires final screenshots by the fifteenth, with eleven of the fourteen completed, leaving settings and profile for Sam and onboarding for someone else."
+      },
+      {
+       "u": "a3",
+       "text": "The press release draft held by Carmen must reach legal by the twenty fourth to allow for a three-day review before the twenty seventh launch."
+      },
+      {
+       "u": "a4",
+       "text": "Sam will finish settings tonight, and the group agreed to treat the twenty seventh as the official date until Raj confirms the November possibility."
+      },
+      {
+       "u": "k1",
+       "text": "The Aurora app beta ships on the twentieth."
+      },
+      {
+       "u": "k2",
+       "text": "The full release is scheduled for the twenty seventh."
+      },
+      {
+       "u": "k3",
+       "text": "Marketing needs final screenshots by the fifteenth."
+      },
+      {
+       "u": "k4",
+       "text": "Sam will handle the profile and settings tasks."
+      },
+      {
+       "u": "k5",
+       "text": "Carmen's press release draft needs legal review by the twenty fourth."
+      },
+      {
+       "u": "k6",
+       "text": "Raj must confirm if the full release was pushed to November."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered launch planning for the Aurora app."
+      },
+      {
+       "u": "a2",
+       "text": "The beta release is scheduled for the 20th, while the full release is planned for the 27th, though there was uncertainty about whether the full release was pushed to November; Hana mentioned it in the hallway but the speaker doubted it was official and suggested treating it as the 27th until Raj confirms."
+      },
+      {
+       "u": "a3",
+       "text": "Marketing needs final screenshots by the 15th, with 11 of 14 screenshots completed (settings profile and onboarding remaining, with the speaker taking onboarding and promising to finish settings tonight)."
+      },
+      {
+       "u": "a4",
+       "text": "The 15th is the current deadline, not the 5th (which was last week's deadline)."
+      },
+      {
+       "u": "a5",
+       "text": "The press release draft is with Carmen, who notes legal review takes three days and requires the draft by the 24th if the 27th ship date is confirmed."
+      },
+      {
+       "u": "a6",
+       "text": "A portion of the transcript could not be transcribed."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team agreed to launch the Aurora app with a beta release on the twentieth and a full release on the twenty-seventh, noting that while Hana mentioned a potential November push, this remains unconfirmed until Raj verifies it."
+      },
+      {
+       "u": "a2",
+       "text": "Marketing requires final screenshots by the fifteenth, with eleven of the fourteen completed, leaving settings, profile, and onboarding pending."
+      },
+      {
+       "u": "a3",
+       "text": "Sam will handle the profile section, while the speaker will complete settings tonight, and onboarding is still assigned to Sam."
+      },
+      {
+       "u": "a4",
+       "text": "A clarification was made regarding the deadline, confirming the fifteenth is the current deadline rather than the fifth, which was last week's deadline."
+      },
+      {
+       "u": "a5",
+       "text": "Legal needs the press release draft by the twenty-fourth to allow for a three-day review period before the twenty-seventh ship date."
+      },
+      {
+       "u": "a6",
+       "text": "The transcript includes a missing segment where some speech could not be transcribed."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

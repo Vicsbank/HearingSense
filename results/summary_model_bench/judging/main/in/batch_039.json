@@ -1,0 +1,823 @@
+{
+ "batch": "batch_039",
+ "conversations": [
+  {
+   "conversation": "fin-zh-035",
+   "language": "zh",
+   "transcript": [
+    "1. 客服部这周的情况 我先说一下",
+    "2. 投诉量比上周少了 上周是八十二件 这周六十七件",
+    "3. 主要还是物流慢 占了大概四成",
+    "4. 其次是退款慢 大概两成",
+    "5. 退款这个事 财务那边说他们周五才能批",
+    "6. 不是周五 他们说的是周四 我昨天刚问过",
+    "7. 哦 那以你问的为准 周四",
+    "8. 物流这边 我跟快递公司谈了 他们答应下周一开始加派人手",
+    "9. 他们答应了 但是没签协议 先口头的",
+    "10. 那新人培训呢 定在下周三 新来的五个人",
+    "11. 五个还是六个 人事说本来是六个 有一个不来了",
+    "12. 那就五个 小赵你负责带 培训材料周二前准备好",
+    "13. 好 我周二中午之前发给大家",
+    "14. 最后 周报我每周五下班前要看到"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "客服部本周投诉量六十七件，上周是八十二件",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f2",
+     "text": "物流慢占投诉约四成，退款慢约占两成",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "财务批退款的时间是周四，原说周五被更正",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f4",
+     "text": "快递公司口头答应下周一开始加派人手，没有签协议",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "新人培训定在下周三，新来的是五个人，原本是六个，有一个不来了",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "小赵负责带新人培训，培训材料周二之前准备好",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "周报需要在每周五下班前交给主持会议的人",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "财务周五批退款（已更正为周四）"
+    },
+    {
+     "id": "n2",
+     "text": "快递公司已经签了协议"
+    },
+    {
+     "id": "n3",
+     "text": "新人是六个人（有一个不来了）"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "快递公司加派人手只是口头答应，能否兑现未确认"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The customer service department reported that complaint volume decreased this week to 67 compared to 82 last week, with logistics delays accounting for about 40% of issues and refund delays about 20%."
+      },
+      {
+       "u": "a2",
+       "text": "They confirmed that finance stated refunds can only be processed on Thursday, not Friday, and agreed to follow that timeline."
+      },
+      {
+       "u": "a3",
+       "text": "The logistics team was told to add staff starting next Monday, though the agreement was only verbal."
+      },
+      {
+       "u": "a4",
+       "text": "The training for five new hires is scheduled for next Wednesday, with Xiao Zhao responsible for preparing materials by Tuesday noon."
+      },
+      {
+       "u": "a5",
+       "text": "The weekly report must be seen by Friday before end of day."
+      },
+      {
+       "u": "k1",
+       "text": "Complaint volume this week is 67, down from 82 last week"
+      },
+      {
+       "u": "k2",
+       "text": "Logistics delays account for approximately 40% of issues"
+      },
+      {
+       "u": "k3",
+       "text": "Refund delays account for approximately 20% of issues"
+      },
+      {
+       "u": "k4",
+       "text": "Finance stated refunds can only be processed on Thursday, not Friday"
+      },
+      {
+       "u": "k5",
+       "text": "Logistics company agreed to add staff starting next Monday (verbal agreement)"
+      },
+      {
+       "u": "k6",
+       "text": "Training for five new hires is scheduled for next Wednesday"
+      },
+      {
+       "u": "k7",
+       "text": "Xiao Zhao is responsible for preparing training materials by Tuesday noon"
+      },
+      {
+       "u": "k8",
+       "text": "Weekly report must be seen by Friday before end of day"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The complaint volume dropped to 17 this Saturday compared to 82 last week, with logistics delays accounting for 40% and slow refunds making up 20%."
+      },
+      {
+       "u": "a2",
+       "text": "While the finance department initially claimed refunds would be approved on Friday, it was confirmed that approval happens on Thursday."
+      },
+      {
+       "u": "a3",
+       "text": "Logistics will add staff starting next Monday verbally, though no formal agreement is signed."
+      },
+      {
+       "u": "a4",
+       "text": "The new five employees will begin training on Wednesday, with Xiao Zhao leading them and materials ready by Tuesday."
+      },
+      {
+       "u": "a5",
+       "text": "Training materials must be distributed to everyone before Tuesday noon, and the weekly report is due every Friday before work ends."
+      },
+      {
+       "u": "k1",
+       "text": "Complaints dropped from 82 last week to 17 this Saturday."
+      },
+      {
+       "u": "k2",
+       "text": "Logistics delays account for 40% and slow refunds account for 20% of complaints."
+      },
+      {
+       "u": "k3",
+       "text": "Refund approvals are scheduled for Thursday, not Friday."
+      },
+      {
+       "u": "k4",
+       "text": "Five new employees will start training on Wednesday led by Xiao Zhao."
+      },
+      {
+       "u": "k5",
+       "text": "Training materials must be prepared and distributed by Tuesday noon."
+      },
+      {
+       "u": "k6",
+       "text": "The weekly report is due every Friday before work ends."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "本周投诉量从上周的82件下降到67件，主要原因是物流速度慢占了约40%，退款速度慢约占20%。"
+      },
+      {
+       "u": "a2",
+       "text": "财务确认周四才有批退款权限，而非周五。"
+      },
+      {
+       "u": "a3",
+       "text": "物流方面与快递公司达成协议，承诺下周一开始加派人手，但协议尚未签署。"
+      },
+      {
+       "u": "a4",
+       "text": "培训方面，新员工人数从原定6人调整为5人，周三进行培训，小赵负责带队并于周二中午前准备培训材料。"
+      },
+      {
+       "u": "a5",
+       "text": "周报需在每周五下班前提交。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The week’s complaints dropped from eighty-two last week to sixty-seven this week, with logistics delays making up about forty percent and refunds about twenty percent."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed the finance team will process refunds on Thursday, not Wednesday, after confirming the earlier mention of Thursday."
+      },
+      {
+       "u": "a3",
+       "text": "logistics will get extra staff next week starting Monday, though no formal agreement was signed."
+      },
+      {
+       "u": "a4",
+       "text": "training for five new employees is set for next Wednesday, but one person is absent, leaving four."
+      },
+      {
+       "u": "a5",
+       "text": "small zhao is assigned to prepare training materials by Tuesday before noon, and everyone will receive them then."
+      },
+      {
+       "u": "a6",
+       "text": "the weekly report is due by Friday before closing."
+      },
+      {
+       "u": "a7",
+       "text": "the missing detail is the exact number of new hires."
+      },
+      {
+       "u": "a8",
+       "text": "someone agreed to handle the logistics staffing, but specifics are unclear."
+      },
+      {
+       "u": "a9",
+       "text": "they also said the report deadline is weekly, but no further clarification on the format or submission method was given."
+      },
+      {
+       "u": "k1",
+       "text": "complaints decreased from eighty-two to sixty-seven"
+      },
+      {
+       "u": "k2",
+       "text": "logistics delays account for forty percent of issues"
+      },
+      {
+       "u": "k3",
+       "text": "refunds delays account for twenty percent"
+      },
+      {
+       "u": "k4",
+       "text": "refunds processed on Thursday"
+      },
+      {
+       "u": "k5",
+       "text": "logistics extra staff next week Monday"
+      },
+      {
+       "u": "k6",
+       "text": "training for five new employees on next Wednesday, four attend due to one absence"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于客服部情况，投诉量比上周少，上周是八十二件，本周六十七件。"
+      },
+      {
+       "u": "a2",
+       "text": "主要问题是物流慢，占了大概四成，退款慢占了大概两成。"
+      },
+      {
+       "u": "a3",
+       "text": "退款方面，财务那边说周五才能批，不过后来说的是周四，之前问的是周五。"
+      },
+      {
+       "u": "a4",
+       "text": "物流方面，与快递公司谈过，他们答应下周一开始加人手，但没有签协议，只有口头承诺。"
+      },
+      {
+       "u": "a5",
+       "text": "新人培训定在下周三，有五个人，人事说原本是六个，但有一个不来了。"
+      },
+      {
+       "u": "a6",
+       "text": "小赵负责带培训材料，需在周二前准备好，并于周二中午前发给所有人。"
+      },
+      {
+       "u": "a7",
+       "text": "周报需在每周五下班前提交。"
+      },
+      {
+       "u": "a8",
+       "text": "相关信息如“新人培训”的人数和“周报”的时间安排仍未明确。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "客服部本周投诉量较上周的八十二件减少至十六件（原误报为十七件），主要原因为物流延迟占四成、退款缓慢占两成。"
+      },
+      {
+       "u": "a2",
+       "text": "财务部门确认退款审批将在周四完成，而非之前提到的周五。"
+      },
+      {
+       "u": "a3",
+       "text": "物流方面，快递公司口头承诺下周一增加人手，但尚未签署正式协议。"
+      },
+      {
+       "u": "a4",
+       "text": "新人培训定于下周三进行，实际参训人数为五人（原计划六人，因一人缺席），由小赵负责带领，培训材料需于周二中午前准备完毕并分发。"
+      },
+      {
+       "u": "a5",
+       "text": "此外，周报需在每周五下班前提交。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-036",
+   "language": "zh",
+   "transcript": [
+    "1. 妈 你吃饭了吗 刚吃完 你呢",
+    "2. 我也吃了 今天太忙了 吃得晚",
+    "3. 天气冷了 多穿点 知道了",
+    "4. 周末你回来吗 可能吧 看看有没有事",
+    "5. 你爸说想吃红烧肉 到时候给你做",
+    "6. 别特意弄 不用麻烦 反正也不一定回去",
+    "7. 好吧 那你自己看着办",
+    "8. 嗯 先这样 我要去洗碗了"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "母亲和孩子在聊日常，询问有没有吃饭、提醒天气冷了多穿衣服",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "母亲问周末是否回家，孩子说可能回去，要看有没有事",
+     "critical": false,
+     "kind": "uncertainty"
+    },
+    {
+     "id": "f3",
+     "text": "父亲想吃红烧肉，母亲到时候可以做",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "孩子周末一定会回家"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "周末是否回家没有确定"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于今天的时间安排，提到今天太忙，吃得晚。"
+      },
+      {
+       "u": "a2",
+       "text": "询问周末是否回来，回答是可能，但需要查看是否有事。"
+      },
+      {
+       "u": "a3",
+       "text": "提到父亲提到想吃红烧肉，到时候会做。"
+      },
+      {
+       "u": "a4",
+       "text": "请求不要特别准备，不需要麻烦，因为不确定是否会回来。"
+      },
+      {
+       "u": "a5",
+       "text": "决定是自己处理。"
+      },
+      {
+       "u": "a6",
+       "text": "决定先这样，然后要去洗碗。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容如天气和穿着建议，已确认。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The person ate and it's too busy to eat later, so they ate late."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed the weather is cold and to wear multiple layers."
+      },
+      {
+       "u": "a3",
+       "text": "Someone asked if they'll come home this weekend, and it's uncertain, but they'll check for work."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed not to make a special meal, but the person's father said they want red braised pork and will cook it."
+      },
+      {
+       "u": "a5",
+       "text": "Someone agreed to let the person handle things themselves."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed to go wash dishes."
+      },
+      {
+       "u": "a7",
+       "text": "The conversation is missing details about the person's father's name and the specific work the person's father mentioned."
+      },
+      {
+       "u": "a8",
+       "text": "They agreed to wait to see if there's work before deciding."
+      },
+      {
+       "u": "a9",
+       "text": "They agreed not to make the meal unnecessarily."
+      },
+      {
+       "u": "a10",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a11",
+       "text": "They agreed to go wash dishes."
+      },
+      {
+       "u": "a12",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a13",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a14",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a15",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a16",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a17",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a18",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a19",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a20",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a21",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a22",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a23",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a24",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a25",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a26",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a27",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a28",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a29",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a30",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a31",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a32",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a33",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a34",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a35",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a36",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a37",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a38",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a39",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a40",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a41",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a42",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a43",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a44",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a45",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a46",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a47",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a48",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a49",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a50",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a51",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a52",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a53",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a54",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a55",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a56",
+       "text": "They agreed to let the person handle the situation."
+      },
+      {
+       "u": "a57",
+       "text": "They agreed to wait."
+      },
+      {
+       "u": "a58",
+       "text": "They agreed to check."
+      },
+      {
+       "u": "a59",
+       "text": "They agreed to let"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone asked if the other person had eaten, and they replied that they finished eating late because they were too busy today."
+      },
+      {
+       "u": "a2",
+       "text": "The weather is cold, so the speaker advised them to wear more clothes, which was acknowledged."
+      },
+      {
+       "u": "a3",
+       "text": "They discussed whether the other person would return this weekend, with the possibility being conditional on having no other plans."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker's father mentioned wanting to make braised pork for the visit, but the other person declined to make a special effort since they might not be returning anyway."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to let the speaker handle the situation as they see fit before the speaker went to wash dishes."
+      },
+      {
+       "u": "k1",
+       "text": "The conversation took place after the other person finished eating late due to being busy."
+      },
+      {
+       "u": "k2",
+       "text": "The weather is cold, and the speaker advised the other person to wear more clothes."
+      },
+      {
+       "u": "k3",
+       "text": "The other person might return this weekend, depending on whether they have other plans."
+      },
+      {
+       "u": "k4",
+       "text": "The speaker's father wants to make braised pork for the visit."
+      },
+      {
+       "u": "k5",
+       "text": "The other person declined to make special efforts to cook since they might not be returning."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker agreed to let the other person handle the situation as they see fit."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone asked if the other person had eaten, and they responded that they had eaten and were busy."
+      },
+      {
+       "u": "a2",
+       "text": "The conversation turned to the weather being cold and the need to wear more clothes."
+      },
+      {
+       "u": "a3",
+       "text": "They discussed whether the other person would return from the weekend, with the other person saying their father wanted to make red braised pork and offered to prepare it."
+      },
+      {
+       "u": "a4",
+       "text": "The other person declined to be bothered and said they might not return."
+      },
+      {
+       "u": "a5",
+       "text": "Finally, the speaker said they were going to wash the dishes."
+      },
+      {
+       "u": "k1",
+       "text": "The speaker asked if the other person had eaten and mentioned they had eaten and were busy."
+      },
+      {
+       "u": "k2",
+       "text": "The conversation discussed the cold weather and the need to wear more clothing."
+      },
+      {
+       "u": "k3",
+       "text": "The other person was asked if they would return from the weekend, with uncertainty about whether they would."
+      },
+      {
+       "u": "k4",
+       "text": "The father mentioned wanting to make red braised pork and offered to prepare it for the speaker."
+      },
+      {
+       "u": "k5",
+       "text": "The speaker declined to be bothered with the offer and said they might not return."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker ended by stating they were going to wash the dishes."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place between a mother and her son."
+      },
+      {
+       "u": "a2",
+       "text": "The mother asked if he had eaten, and he replied that he had just finished eating and that today was very busy, so he had eaten late."
+      },
+      {
+       "u": "a3",
+       "text": "She noted that the weather is cold and advised him to wear more clothes."
+      },
+      {
+       "u": "a4",
+       "text": "She asked if he would return for the weekend, saying \"maybe\" and suggesting she would check if there were any matters to attend to."
+      },
+      {
+       "u": "a5",
+       "text": "The mother mentioned that his father said he wanted to eat red braised pork and would prepare it when the time came, but told him not to make it specially and not to trouble her since he might not even return."
+      },
+      {
+       "u": "a6",
+       "text": "The son agreed and said he would handle things on his own."
+      },
+      {
+       "u": "a7",
+       "text": "He then stated he was going to wash the dishes."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "在对话中，对方询问了“我”是否已吃饭，得知“我”刚吃完，而“我”因今天太忙所以吃得较晚。"
+      },
+      {
+       "u": "a2",
+       "text": "对方提醒天气变冷建议多穿点，并询问“我”周末是否会回家，表示“可能吧”但需视情况而定。"
+      },
+      {
+       "u": "a3",
+       "text": "对方提到父亲想吃红烧肉，打算届时亲手制作，但随后又表示不必特意准备，因为“我”也不一定回去。"
+      },
+      {
+       "u": "a4",
+       "text": "最终双方达成共识，由对方自行安排，而“我”则准备去洗碗。"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,645 @@
+{
+ "batch": "batch_018",
+ "conversations": [
+  {
+   "conversation": "fin-en-037",
+   "language": "en",
+   "transcript": [
+    "1. good morning eighth graders quiet please I have the field trip details",
+    "2. we're going to the Harbor Science Center on Pier Road on Thursday November thirteenth",
+    "3. the buses leave school at eight fifteen so be in homeroom by eight",
+    "4. we'll be back by three thirty so you can still catch your regular bus",
+    "5. the cost is eighteen dollars and the money is due Wednesday November fifth",
+    "6. give it to Mr Pruitt in the front office not to me",
+    "7. do we need a permission slip",
+    "8. yes the green form it's in your folder and it's due with the money",
+    "9. what about lunch",
+    "10. bring a brown bag lunch no glass bottles and nothing that needs a fridge",
+    "11. there's a planetarium show at eleven twenty and everyone has to be in the lobby by eleven ten",
+    "12. we need four parent chaperones and I only have two signed up",
+    "13. if your parents can help have them email me by Friday",
+    "14. red team goes with Ms Okonkwo and blue team with me",
+    "15. green and yellow teams are still waiting for chaperones",
+    "16. can we bring phones",
+    "17. yes but only for photos and they stay in your bag in the planetarium"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The eighth-grade field trip is to the Harbor Science Center on Pier Road on Thursday, November 13.",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f2",
+     "text": "Buses leave school at 8:15 am, students must be in homeroom by 8, and the group returns by 3:30 pm.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "The cost is $18, due Wednesday, November 5, to Mr Pruitt in the front office.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "A green permission slip is due together with the money.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "Students bring a brown bag lunch with no glass bottles and nothing needing a fridge.",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The planetarium show is at 11:20 and everyone must be in the lobby by 11:10.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "Four parent chaperones are needed and only two have signed up; parents should email the teacher by Friday.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "Red team goes with Ms Okonkwo and blue team with the teacher; green and yellow teams still need chaperones.",
+     "critical": true,
+     "kind": "name"
+    },
+    {
+     "id": "f9",
+     "text": "Phones are allowed only for photos and must stay in bags in the planetarium.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Money is paid to the teacher directly."
+    },
+    {
+     "id": "n2",
+     "text": "All four chaperones are confirmed."
+    },
+    {
+     "id": "n3",
+     "text": "The teacher is named Ms Okonkwo (she is the red team chaperone, not necessarily the speaker)."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Who will chaperone the green and yellow teams is not settled."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The field trip is to the Harbor Science Center on Pier Road on Thursday, November thirteenth, with buses leaving school at eight fifteen and arriving by three thirty, so students should be in homeroom by eight and can still catch their regular bus."
+      },
+      {
+       "u": "a2",
+       "text": "the cost is eighteen dollars, with payment due Wednesday, November fifth, given to Mr Pruitt in the front office, not to anyone else."
+      },
+      {
+       "u": "a3",
+       "text": "they agreed a permission slip is needed—the green form is in folders and due with the money—and lunch must be a brown bag with no glass bottles or perishables."
+      },
+      {
+       "u": "a4",
+       "text": "there is a planetarium show at eleven twenty, requiring everyone to be in the lobby by eleven ten, and four parent chaperones are needed, but only two are signed up; parents should email by Friday if they can help."
+      },
+      {
+       "u": "a5",
+       "text": "red team goes with Ms Okonkwo, blue team with the speaker, and green and yellow teams are still waiting for chaperones."
+      },
+      {
+       "u": "a6",
+       "text": "they agreed phones can be brought for photos but must stay in bags during the planetarium."
+      },
+      {
+       "u": "a7",
+       "text": "missing information: whether the permission slip is in the correct folder or if any other forms are required."
+      },
+      {
+       "u": "a8",
+       "text": "what team is assigned to the green and yellow groups is not yet determined."
+      },
+      {
+       "u": "k1",
+       "text": "The field trip is to the Harbor Science Center on Pier Road."
+      },
+      {
+       "u": "k2",
+       "text": "The date is Thursday, November thirteenth."
+      },
+      {
+       "u": "k3",
+       "text": "Buses leave at eight fifteen and return by three thirty."
+      },
+      {
+       "u": "k4",
+       "text": "The cost is eighteen dollars, due Wednesday, November fifth."
+      },
+      {
+       "u": "k5",
+       "text": "Payment is given to Mr Pruitt in the front office."
+      },
+      {
+       "u": "k6",
+       "text": "Lunch must be a brown bag with no glass bottles or perishables."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The field trip to the Harbor Science Center is scheduled for Thursday, November 13th, with buses departing school at 8:15 AM and returning by 3:30 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The total cost is $18, which is due by Wednesday, November 5th, to be handed to Mr. Pruitt in the front office."
+      },
+      {
+       "u": "a3",
+       "text": "Students must bring a brown bag lunch without glass bottles or refrigerated items, and there is a planetarium show at 11:20 AM requiring everyone to be in the lobby by 11:10 AM."
+      },
+      {
+       "u": "a4",
+       "text": "The school needs four parent chaperones, but only two have signed up so far, and additional chaperones are needed for the green and yellow teams."
+      },
+      {
+       "u": "a5",
+       "text": "Phone use is permitted only for photos and must be kept in the bag in the planetarium."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The class is going to the Harbor Science Center on Pier Road on Thursday, November 13th, with buses leaving at 8:15 AM and returning by 3:30 PM."
+      },
+      {
+       "u": "a2",
+       "text": "Students must bring a brown bag lunch without glass bottles or items requiring a fridge, and the cost of $18 is due by Wednesday, November 5th, to Mr. Pruitt in the front office."
+      },
+      {
+       "u": "a3",
+       "text": "A permission slip on the green form is required and must be submitted with the payment."
+      },
+      {
+       "u": "a4",
+       "text": "Lunch must be finished by 11:10 AM to catch the 11:20 AM planetarium show, and phones are allowed only for photos and must remain in bags."
+      },
+      {
+       "u": "a5",
+       "text": "Four parent chaperones are needed, with red teams assigned to Ms. Okonkwo and blue teams to the teacher, while green and yellow teams are still waiting for volunteers."
+      },
+      {
+       "u": "a6",
+       "text": "Parents who can help must email the teacher by Friday to sign up."
+      },
+      {
+       "u": "k1",
+       "text": "The field trip is on Thursday, November 13th, at the Harbor Science Center on Pier Road."
+      },
+      {
+       "u": "k2",
+       "text": "Buses leave at 8:15 AM and return by 3:30 PM."
+      },
+      {
+       "u": "k3",
+       "text": "The cost is $18, due by Wednesday, November 5th, to Mr. Pruitt in the front office."
+      },
+      {
+       "u": "k4",
+       "text": "A green permission slip is required and must be submitted with the payment."
+      },
+      {
+       "u": "k5",
+       "text": "Lunch must be in a brown bag with no glass bottles or refrigerated items."
+      },
+      {
+       "u": "k6",
+       "text": "Four parent chaperones are needed, with red teams under Ms. Okonkwo and blue teams under the teacher."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The teacher announced that eighth-grade students will attend a field trip to the Harbor Science Center on Pier Road on Thursday, November 13th, with buses departing at 8:15 AM and a return by 3:30 PM."
+      },
+      {
+       "u": "a2",
+       "text": "Each student must pay the $18 fee, which is due by Wednesday, November 5th, and must be handed to Mr. Pruitt in the front office rather than the teacher."
+      },
+      {
+       "u": "a3",
+       "text": "Students are required to bring a brown bag lunch, avoiding glass bottles or items needing refrigeration, and must be in the lobby by 11:10 AM for an 11:20 AM planetarium show."
+      },
+      {
+       "u": "a4",
+       "text": "Four parent chaperones are needed, but only two are currently signed up, with the teacher requesting that additional parents email her by Friday to assign the red team to Ms. Okonkwo and the blue team to herself."
+      },
+      {
+       "u": "a5",
+       "text": "While phones are permitted for photos only, they must remain in students' bags during the planetarium segment."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered a field trip to the Harbor Science Center on Pier Road on Thursday, November thirteenth."
+      },
+      {
+       "u": "a2",
+       "text": "Buses leave school at eight fifteen, and students must be in homeroom by eight."
+      },
+      {
+       "u": "a3",
+       "text": "Students return by three thirty, allowing time for the regular bus."
+      },
+      {
+       "u": "a4",
+       "text": "The cost is eighteen dollars, with payment due Wednesday, November fifth, given to Mr Pruitt in the front office."
+      },
+      {
+       "u": "a5",
+       "text": "A permission slip is required—the green form is in folders and due with the money."
+      },
+      {
+       "u": "a6",
+       "text": "Lunch involves a brown bag, no glass bottles, and no items needing a fridge."
+      },
+      {
+       "u": "a7",
+       "text": "A planetarium show is at eleven twenty, with a requirement to be in the lobby by eleven ten."
+      },
+      {
+       "u": "a8",
+       "text": "Four parent chaperones are needed, but only two are signed up; parents should email by Friday."
+      },
+      {
+       "u": "a9",
+       "text": "Red team goes with Ms Okonkwo, blue team with the organizer, and green and yellow teams are still waiting for chaperones."
+      },
+      {
+       "u": "a10",
+       "text": "Phones are allowed for photos but must stay in bags during the planetarium."
+      },
+      {
+       "u": "a11",
+       "text": "Details about a missing permission slip or unclear forms are missing."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The class is going to the Harbor Science Center on Thursday, November 13th."
+      },
+      {
+       "u": "a2",
+       "text": "Buses leave school at 8:15 AM from homeroom and return by 3:30 PM."
+      },
+      {
+       "u": "a3",
+       "text": "The cost is $18 and must be paid by Wednesday, November 5th to Mr. Pruitt in the front office."
+      },
+      {
+       "u": "a4",
+       "text": "A permission slip (green form) is due with the money."
+      },
+      {
+       "u": "a5",
+       "text": "Lunch should be in a brown bag without glass bottles or refrigerated items."
+      },
+      {
+       "u": "a6",
+       "text": "A planetarium show is at 11:20 AM in the lobby."
+      },
+      {
+       "u": "a7",
+       "text": "Four parent chaperones are needed, but only two are signed up; parents should email by Friday."
+      },
+      {
+       "u": "a8",
+       "text": "Red team goes with Ms. Okonkwo, blue team with the speaker, and green and yellow teams are still waiting for chaperones."
+      },
+      {
+       "u": "a9",
+       "text": "Phones are allowed only for photos and must stay in bags in the planetarium."
+      },
+      {
+       "u": "k1",
+       "text": "The field trip is to the Harbor Science Center on Thursday, November 13th."
+      },
+      {
+       "u": "k2",
+       "text": "Buses leave school at 8:15 AM from homeroom and return by 3:30 PM."
+      },
+      {
+       "u": "k3",
+       "text": "The $18 cost is due by Wednesday, November 5th to Mr. Pruitt in the front office."
+      },
+      {
+       "u": "k4",
+       "text": "A green permission slip form is required and must be submitted with the payment."
+      },
+      {
+       "u": "k5",
+       "text": "Lunch should be in a brown bag without glass bottles or refrigerated items."
+      },
+      {
+       "u": "k6",
+       "text": "A planetarium show is at 11:20 AM in the lobby."
+      },
+      {
+       "u": "k7",
+       "text": "Four parent chaperones are needed; only two are currently signed up."
+      },
+      {
+       "u": "k8",
+       "text": "Red team goes with Ms. Okonkwo, blue team with the speaker, and green/yellow teams are waiting for chaperones."
+      },
+      {
+       "u": "k9",
+       "text": "Phones are allowed only for photos and must remain in bags in the planetarium."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-038",
+   "language": "en",
+   "transcript": [
+    "1. hey how was your weekend",
+    "2. pretty quiet I mostly stayed home",
+    "3. nice I went out to my cousin's place but it was kind of a long drive",
+    "4. oh yeah",
+    "5. is there any coffee left in the pot",
+    "6. I think so maybe half a cup but it might be cold",
+    "7. that's okay",
+    "8. did you hear something about the parking lot being closed",
+    "9. someone said that but I don't know when",
+    "10. hm okay",
+    "11. well back to work I guess"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "One speaker stayed home over the weekend; the other drove a long way to a cousin's place.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "There may be about half a cup of coffee left in the pot.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "The speakers end their chat to go back to work.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The parking lot is definitely closing."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether and when the parking lot will be closed is only a rumor."
+    },
+    {
+     "id": "u2",
+     "text": "Whether the coffee in the pot is still warm is uncertain."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone asked about the weekend, and the other person mentioned staying home while their cousin went on a long drive."
+      },
+      {
+       "u": "a2",
+       "text": "They discussed whether coffee remained in the pot, with one estimating half a cup might be cold."
+      },
+      {
+       "u": "a3",
+       "text": "A question was raised about the parking lot being closed, though no specific date or time was provided."
+      },
+      {
+       "u": "a4",
+       "text": "The conversation ended with a decision to return to work."
+      },
+      {
+       "u": "k1",
+       "text": "The person mostly stayed home during their weekend."
+      },
+      {
+       "u": "k2",
+       "text": "Their cousin went to their place but took a long drive."
+      },
+      {
+       "u": "k3",
+       "text": "There might be half a cup of coffee left, but it could be cold."
+      },
+      {
+       "u": "k4",
+       "text": "The parking lot might be closed, but no date was given."
+      },
+      {
+       "u": "k5",
+       "text": "The person decided to go back to work."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A conversation took place near a person who could not hear it."
+      },
+      {
+       "u": "a2",
+       "text": "The transcript includes: “hey how was your weekend,” “pretty quiet I mostly stayed home,” “nice I went out to my cousin's place but it was kind of a long drive,” “oh yeah,” “is there any coffee left in the pot,” “I think so maybe half a cup but it might be cold,” “that's okay,” “did you hear something about the parking lot being closed,” “someone said that but I don't know when,” “hm okay,” and “well back to work I guess.” The mention of a cousin is noted, and the parking lot closure is referenced without a specific date."
+      },
+      {
+       "u": "a3",
+       "text": "The coffee quantity is estimated as “half a cup.” A request for clarification on the parking lot closure is made, but no further details are provided."
+      },
+      {
+       "u": "a4",
+       "text": "The conversation concludes with a reference to returning to work."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone asked about the weekend and shared that they went to their cousin's place for a long drive."
+      },
+      {
+       "u": "a2",
+       "text": "They inquired about coffee in the pot and mentioned the parking lot being closed."
+      },
+      {
+       "u": "a3",
+       "text": "The conversation returned to work."
+      },
+      {
+       "u": "k1",
+       "text": "The person asked about their weekend and mentioned staying home."
+      },
+      {
+       "u": "k2",
+       "text": "They went to their cousin's place for a long drive."
+      },
+      {
+       "u": "k3",
+       "text": "They inquired if there was coffee left in the pot."
+      },
+      {
+       "u": "k4",
+       "text": "They heard the parking lot was closed but didn't know when."
+      },
+      {
+       "u": "k5",
+       "text": "The conversation returned to work."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The weekend was pretty quiet and they mostly stayed home, but they went out to a cousin's place for a long drive."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed there is maybe half a cup of coffee left in the pot, though it might be cold, and that's okay."
+      },
+      {
+       "u": "a3",
+       "text": "The parking lot being closed, but they don't know when."
+      },
+      {
+       "u": "a4",
+       "text": "That's okay and they're back to work."
+      },
+      {
+       "u": "a5",
+       "text": "The conversation mentions a cousin's place and the parking lot."
+      },
+      {
+       "u": "a6",
+       "text": "The transcript is missing information about a specific time or date related to the parking lot closure."
+      },
+      {
+       "u": "k1",
+       "text": "The weekend was quiet and mostly spent at home."
+      },
+      {
+       "u": "k2",
+       "text": "Someone went out to a cousin's place for a long drive."
+      },
+      {
+       "u": "k3",
+       "text": "Half a cup of coffee might be left in the pot."
+      },
+      {
+       "u": "k4",
+       "text": "The parking lot is closed, but no specific time is given."
+      },
+      {
+       "u": "k5",
+       "text": "Someone is back to work."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place between two people who discussed their weekend activities."
+      },
+      {
+       "u": "a2",
+       "text": "One person mentioned staying home most of the time, going out to their cousin's place, which was a long drive, and asked about the coffee pot."
+      },
+      {
+       "u": "a3",
+       "text": "They also inquired about the parking lot being closed, but received no specific information about when it would be closed."
+      },
+      {
+       "u": "a4",
+       "text": "The conversation concluded with the speaker stating they are back to work."
+      },
+      {
+       "u": "a5",
+       "text": "No decisions, requests, or assigned tasks were made during this exchange."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "During a casual chat, the speaker asked how the other person's weekend went, to which the respondent replied that it was mostly quiet since they stayed home, while the speaker mentioned visiting their cousin's place despite a long drive."
+      },
+      {
+       "u": "a2",
+       "text": "The conversation then shifted to coffee, where the speaker inquired if there was any left in the pot, and the respondent estimated there might be about half a cup, though it could be cold."
+      },
+      {
+       "u": "a3",
+       "text": "Later, the speaker asked if they had heard about the parking lot being closed, noting that someone had mentioned it but the timing was unknown."
+      },
+      {
+       "u": "a4",
+       "text": "The dialogue concluded with the speaker deciding to return to work, leaving the uncertainty regarding the parking lot closure unresolved."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

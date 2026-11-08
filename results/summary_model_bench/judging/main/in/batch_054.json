@@ -1,0 +1,604 @@
+{
+ "batch": "batch_054",
+ "conversations": [
+  {
+   "conversation": "fin-mix-021",
+   "language": "mixed",
+   "transcript": [
+    "1. 诶 你 下周 的 生日 party 在 哪 办 啊",
+    "2. 我 想 在 家 办 但 我 妈 说 太 吵 所以 可能 去 bowling alley",
+    "3. bowling 好 啊 哪 家 是 Star Lanes 吗",
+    "4. 对 就是 那 家 周六 下午 三点 到 五点 我 刚 打 电话 订 了 八 个 人 的 lane",
+    "5. 八 个 人 够 吗 我 以 为 你 要 请 十 个",
+    "6. 其实 有 两 个 人 说 来 不 了 所 以 八 个 刚好",
+    "7. 谁 来 不 了 是 Sam 吗",
+    "8. 不 是 是 Tina 和 Jake 他们 要 去 比赛",
+    "9. 蛋糕 谁 买 我 可以 帮 你 去 取 在 Sweet Corner 对 吧",
+    "10. 对 我 已经 订 了 一 个 巧克力 的 十 寸 你 周六 中午 去 取 就 行",
+    "11. okay 我 一点 去 取 然后 直接 带 到 bowling alley",
+    "12. 太 好了 谢谢 你 我 到时 请 你 喝 奶茶"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The birthday party is Saturday from 3 to 5 pm at Star Lanes bowling alley.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "A lane for eight people has been booked.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "Tina and Jake cannot come because they have a competition.",
+     "critical": true,
+     "kind": "name"
+    },
+    {
+     "id": "f4",
+     "text": "A 10-inch chocolate cake is ordered at Sweet Corner.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f5",
+     "text": "The friend will pick up the cake around 1 pm on Saturday and bring it to the bowling alley.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The birthday person will buy the friend bubble tea in thanks.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The party is at the birthday person's home."
+    },
+    {
+     "id": "n2",
+     "text": "Sam cannot attend."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to hold the birthday party at Star Lanes on Saturday from 3 PM to 5 PM instead of at home due to noise concerns."
+      },
+      {
+       "u": "a2",
+       "text": "They confirmed that eight people will attend, as two guests, Tina and Jake, cannot make it despite an initial expectation of ten."
+      },
+      {
+       "u": "a3",
+       "text": "The cake, a ten-inch chocolate cake ordered from Sweet Corner, is scheduled to be picked up on Saturday at 1 PM and brought directly to the bowling alley."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker agreed to help with the cake pickup and will arrive at 1 PM, while the other person offered to treat them to milk tea afterward."
+      },
+      {
+       "u": "k1",
+       "text": "The party will be held at Star Lanes on Saturday from 3 PM to 5 PM."
+      },
+      {
+       "u": "k2",
+       "text": "Eight people are attending because Tina and Jake cannot make it."
+      },
+      {
+       "u": "k3",
+       "text": "A ten-inch chocolate cake is ordered from Sweet Corner."
+      },
+      {
+       "u": "k4",
+       "text": "The cake pickup is scheduled for Saturday at 1 PM."
+      },
+      {
+       "u": "k5",
+       "text": "The cake will be brought directly from Sweet Corner to the bowling alley."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker will help with the cake pickup and will arrive at 1 PM."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The birthday party is next week and will be held at bowling alley because the person's mom said the house would be too noisy."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed eight lanes were booked for eight people at Star Lanes on Saturday from three to five o'clock, after calling to reserve eight lanes."
+      },
+      {
+       "u": "a3",
+       "text": "they agreed eight people are enough since two people canceled—Sam, Tina, and Jake—because they're playing a game."
+      },
+      {
+       "u": "a4",
+       "text": "The cake is at Sweet Corner, where a ten-inch chocolate cake was ordered, and the person will pick it up on Saturday at noon."
+      },
+      {
+       "u": "a5",
+       "text": "they agreed to go to Sweet Corner first and then take the cake directly to the bowling alley."
+      },
+      {
+       "u": "a6",
+       "text": "they agreed to drink tea on the way."
+      },
+      {
+       "u": "a7",
+       "text": "the canceled people are Tina and Jake."
+      },
+      {
+       "u": "a8",
+       "text": "the specific canceled person named Sam is missing."
+      },
+      {
+       "u": "a9",
+       "text": "the pickup time for the cake is noon on Saturday."
+      },
+      {
+       "u": "a10",
+       "text": "the number of people booked is eight."
+      },
+      {
+       "u": "a11",
+       "text": "the number of people canceled is two."
+      },
+      {
+       "u": "k1",
+       "text": "The birthday party is next week."
+      },
+      {
+       "u": "k2",
+       "text": "The party will be at Star Lanes."
+      },
+      {
+       "u": "k3",
+       "text": "Eight lanes are booked at Star Lanes on Saturday from 3:00 PM to 5:00 PM."
+      },
+      {
+       "u": "k4",
+       "text": "Tina and Jake canceled due to a game."
+      },
+      {
+       "u": "k5",
+       "text": "The cake is at Sweet Corner."
+      },
+      {
+       "u": "k6",
+       "text": "A ten-inch chocolate cake is ordered."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place about planning a birthday party for someone's next week."
+      },
+      {
+       "u": "a2",
+       "text": "The person wants to host it at home but their mother said it would be too noisy, so they decided to go to a bowling alley instead."
+      },
+      {
+       "u": "a3",
+       "text": "They confirmed that \"Star Lanes\" is the bowling alley they will go to, scheduled for Saturday from 3:00 PM to 5:00 PM."
+      },
+      {
+       "u": "a4",
+       "text": "The original plan was for eight people, but after Tina and Jake said they would be coming to a bowling competition, the number was adjusted to eight people."
+      },
+      {
+       "u": "a5",
+       "text": "The cake will be bought from Sweet Corner, with the person already having ordered a 10-inch chocolate cake and asking to pick it up on Saturday at noon and bring it directly to the bowling alley."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker will leave at one o'clock to pick up the cake and then go directly to the bowling alley."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于下周生日派对，地点是Star Lanes，时间是周六下午三点到五点，已预约八个座位。"
+      },
+      {
+       "u": "a2",
+       "text": "最初认为需要十个座位，但修正为八个，因为有两人取消，分别是Tina和Jake，而不是Sam。"
+      },
+      {
+       "u": "a3",
+       "text": "蛋糕由Sweet Corner购买，已订购一个十寸巧克力，于周六中午取货。"
+      },
+      {
+       "u": "a4",
+       "text": "任务是去Sweet Corner取货，然后直接带到Star Lanes。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone asked about the birthday party next week and suggested going to a bowling alley instead of their home due to noise."
+      },
+      {
+       "u": "a2",
+       "text": "They confirmed the plan for Saturday afternoon from 3 to 5 PM, with eight people booked on Star Lanes."
+      },
+      {
+       "u": "a3",
+       "text": "Tina and Jake will attend the bowling match, and someone will bring cake from Sweet Corner."
+      },
+      {
+       "u": "a4",
+       "text": "The person will pick up the cake on Saturday at noon and take it directly to the bowling alley."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to meet at the bowling alley when the person arrives."
+      },
+      {
+       "u": "k1",
+       "text": "The birthday party is next week and was planned for Saturday afternoon from 3 to 5 PM at Star Lanes bowling alley."
+      },
+      {
+       "u": "k2",
+       "text": "Eight people were booked on lanes, but Tina and Jake will attend the bowling match instead."
+      },
+      {
+       "u": "k3",
+       "text": "Cake will be purchased from Sweet Corner and picked up by Saturday noon."
+      },
+      {
+       "u": "k4",
+       "text": "The person will go to the bowling alley when they arrive and will bring the cake."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "下周的生日派对计划从在家举办改为周六下午三点至五点在 Star Lanes 保龄球馆举行。"
+      },
+      {
+       "u": "a2",
+       "text": "虽然最初预订了八条车道供八人使用，但确认 Tina 和 Jake 因要去比赛而无法参加，因此实际人数确认为八人。"
+      },
+      {
+       "u": "a3",
+       "text": "蛋糕由说话者预订了一个十寸的巧克力蛋糕，并安排对方于周六中午前往 Sweet Corner 取货，随后直接送往保龄球馆。"
+      },
+      {
+       "u": "a4",
+       "text": "最后，说话者表示届时会请对方喝奶茶作为感谢。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-mix-022",
+   "language": "mixed",
+   "transcript": [
+    "1. okay robotics club 开会 今天 讨论 三 件 事",
+    "2. 第一 competition 在 十 一 月 九 号 在 Guangzhou 我们 要 十 二 月 前 报名 不 对 是 十 月 底 前",
+    "3. 报名 费 一 个 队 八百 块 谁 去 找 Mr. Ortiz 拿 经费",
+    "4. 我 去 我 明天 午饭 时间 去 找 他",
+    "5. 第二 robot 的 arm 现在 的 servo 有 问题 会 抖",
+    "6. 可能 是 电压 不 稳 Kai 你 周四 放学 后 在 lab 测 一下",
+    "7. 我 不 一定 来 得 了 周四 有 chem tutoring 如果 不 行 我 就 周五",
+    "8. 好 那 Kai 先 试 周四 不 行 再 周五 在 group chat 说 一 声",
+    "9. 第三 要 买 新 的 battery 大概 三 个 每 个 一 百 二 十 块",
+    "10. 我 看 过 网 上 有 一 个 比 较 便 宜 的 但 不 知道 质 量 好 不 好",
+    "11. 先 不 要 买 便 宜 的 等 Ortiz 老 师 的 意 见",
+    "12. 下 次 meeting 是 下 周 三 放 学 后 记得 带 laptop"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The robotics competition is on November 9 in Guangzhou.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "Registration must be completed before the end of October, not December.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f3",
+     "text": "The registration fee is 800 per team.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "One member will ask Mr. Ortiz for funding tomorrow at lunch.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "The robot arm servo shakes, possibly from unstable voltage; Kai will test it in the lab Thursday after school, or Friday if Thursday fails.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The club needs about three new batteries at 120 each.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "They will not buy the cheaper online battery until hearing Mr. Ortiz's opinion.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f8",
+     "text": "The next meeting is next Wednesday after school; bring laptops.",
+     "critical": true,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Registration is due in December (superseded)."
+    },
+    {
+     "id": "n2",
+     "text": "Kai will definitely test on Thursday."
+    },
+    {
+     "id": "n3",
+     "text": "The voltage instability is confirmed as the cause."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether the shaking servo is caused by unstable voltage is only a guess."
+    },
+    {
+     "id": "u2",
+     "text": "Whether Kai can attend on Thursday is uncertain because of tutoring."
+    },
+    {
+     "id": "u3",
+     "text": "The quality of the cheaper online battery is unknown."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The robotics club met to discuss three items: the competition on November 9th in Guangzhou requires registration by the end of October, with a fee of 800 yuan per team and Mr. Ortiz handling funding; Kai will test the robot arm's servo issue on Thursday after school and may attend Friday if needed; they decided not to buy a cheaper battery yet and wait for Mr. Ortiz's input; the next meeting is next Wednesday after classes, and they should bring laptops."
+      },
+      {
+       "u": "k1",
+       "text": "The competition is on November 9th in Guangzhou and registration is due by the end of October."
+      },
+      {
+       "u": "k2",
+       "text": "The robot arm servo is having issues with voltage instability."
+      },
+      {
+       "u": "k3",
+       "text": "Kai will test the servo on Thursday after school and may attend Friday if needed."
+      },
+      {
+       "u": "k4",
+       "text": "They decided not to buy a cheaper battery and wait for Mr. Ortiz's opinion."
+      },
+      {
+       "u": "k5",
+       "text": "The next meeting is next Wednesday after classes and laptops should be brought."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The robotics club meeting discussed three main items."
+      },
+      {
+       "u": "a2",
+       "text": "First, the competition is scheduled for November 9th in Guangzhou, with registration due by the end of October; the fee is 800 yuan per team and Mr. Ortiz needs to be contacted for funding, and the speaker plans to visit him tomorrow at lunch."
+      },
+      {
+       "u": "a3",
+       "text": "Second, the robot arm's servo is experiencing jitter due to unstable voltage, so Kai is asked to test it in the lab after school on Thursday, with a fallback to Friday if needed."
+      },
+      {
+       "u": "a4",
+       "text": "Third, new batteries are needed (approximately three units at 120-130 yuan each), but the speaker advises waiting for Professor Ortiz's opinion before purchasing a cheaper alternative."
+      },
+      {
+       "u": "a5",
+       "text": "The next meeting is scheduled for next Wednesday after classes, and attendees should bring laptops."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A meeting for the robotics club occurred today to discuss three items."
+      },
+      {
+       "u": "a2",
+       "text": "The first item involved a competition on 11 月 9 日 in Guangzhou, with registration required by 10 月 底 前, not 12 月 前."
+      },
+      {
+       "u": "a3",
+       "text": "The fee for one team is 800 块, and a request was made to find Mr. Ortiz to obtain funds."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker plans to visit Mr. Ortiz tomorrow lunch time."
+      },
+      {
+       "u": "a5",
+       "text": "The second item concerned a robot arm with a faulty servo causing shaking, and Kai was asked to test the arm on 周四 放学 后 in lab if the speaker could not attend due to 周四 having chem tutoring."
+      },
+      {
+       "u": "a6",
+       "text": "If testing on 周四 is not possible, the speaker will schedule testing on 周五 and update the group chat."
+      },
+      {
+       "u": "a7",
+       "text": "The third item was purchasing new batteries, approximately 3 units at 120 块 each, with a decision to postpone due to uncertainty about quality."
+      },
+      {
+       "u": "a8",
+       "text": "It was noted that the next meeting is 下 周 三 放 学 后, and attendees are reminded to bring a laptop."
+      },
+      {
+       "u": "a9",
+       "text": "Details about the exact arm model and the specific voltage issue are missing."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The robotics club meeting today discussed three main topics: first, the competition is scheduled for November 9th in Guangzhou, with registration required by the end of October and a fee of 800 yuan per team, and the speaker confirmed they will meet Mr. Ortiz tomorrow at lunch to secure funding."
+      },
+      {
+       "u": "a2",
+       "text": "Second, the robot arm's servo motors are experiencing shaking issues, possibly due to unstable voltage, and Kai was assigned to test the system after school on Thursday, though the speaker noted they might be unavailable due to chemistry tutoring and offered Friday as an alternative, with Kai to inform the group chat if Thursday fails."
+      },
+      {
+       "u": "a3",
+       "text": "Third, the group decided against immediately purchasing new batteries at the cheaper online price of 120 yuan each pending Mr. Ortiz's opinion on quality, while the next meeting is set for next Wednesday after school with a reminder to bring a laptop."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The robotics club meeting is today to discuss three things: first, a competition on November 9 in Guangzhou with registration by October 31; the fee for a team is 800 yuan; someone will ask Mr. Ortiz for funds; someone will meet Mr. Ortiz after lunch tomorrow; second, a robot's arm has a servo problem causing shaking, possibly due to unstable voltage; Kai is to test the arm on Thursday after school at the lab; if Thursday is not possible, Kai will test on Friday and report via group chat; third, new batteries are needed, approximately three at 1210 yuan each; the preferable option is not confirmed; the decision is to wait for Mr. Ortiz's opinion; the next meeting is next week after school; attendees are reminded to bring a laptop; someone agreed to not buy the preferable batteries yet."
+      },
+      {
+       "u": "a2",
+       "text": "Missing: details on the exact arm issue and the quality of the preferable batteries."
+      },
+      {
+       "u": "a3",
+       "text": "Missing: the name of the lab."
+      },
+      {
+       "u": "k1",
+       "text": "The meeting is today to discuss three things."
+      },
+      {
+       "u": "k2",
+       "text": "A competition is on November 9 in Guangzhou."
+      },
+      {
+       "u": "k3",
+       "text": "Registration for the competition is by October 31."
+      },
+      {
+       "u": "k4",
+       "text": "The team fee is 800 yuan."
+      },
+      {
+       "u": "k5",
+       "text": "Mr. Ortiz is involved with funding."
+      },
+      {
+       "u": "k6",
+       "text": "Kai is to test the arm on Thursday after school at the lab, or Friday if Thursday is not possible, and report via group chat."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The robotics club meeting today discussed three main topics: a competition on November 9th in Guangzhou with a registration deadline of the end of October and a fee of 800 yuan per team."
+      },
+      {
+       "u": "a2",
+       "text": "Someone decided to find Mr. Ortiz for funding, with the speaker planning to visit him tomorrow during lunch."
+      },
+      {
+       "u": "a3",
+       "text": "The group also addressed a servo motor issue in the robot arm, agreeing that Kai should test the voltage stability after school on Thursday, though the speaker may miss it due to chemistry tutoring, with a fallback plan to test on Friday if Thursday fails."
+      },
+      {
+       "u": "a4",
+       "text": "Finally, they decided not to buy cheaper batteries yet, waiting for Mr. Ortiz's opinion on quality, and scheduled the next meeting for next Wednesday after school."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker reminded everyone to bring their laptops to the next meeting."
+      },
+      {
+       "u": "k1",
+       "text": "The competition is on November 9th in Guangzhou."
+      },
+      {
+       "u": "k2",
+       "text": "Registration must be completed by the end of October."
+      },
+      {
+       "u": "k3",
+       "text": "The registration fee is 800 yuan per team."
+      },
+      {
+       "u": "k4",
+       "text": "The speaker will visit Mr. Ortiz tomorrow at lunch to discuss funding."
+      },
+      {
+       "u": "k5",
+       "text": "Kai is to test the robot arm servo on Thursday after school."
+      },
+      {
+       "u": "k6",
+       "text": "The next meeting is scheduled for next Wednesday after school."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

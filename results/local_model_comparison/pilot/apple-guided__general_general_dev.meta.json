@@ -1,0 +1,137 @@
+{
+ "model": "apple-guided",
+ "spec": {
+  "kind": "apple",
+  "mode": "guided",
+  "name": "Apple AFM 3 Core (guided generation)"
+ },
+ "task": "general",
+ "set": "general_dev",
+ "phase": "pilot",
+ "seed": 7,
+ "warmup_requests": 2,
+ "first_request_seconds_after_load": [
+  0.8330299854278564
+ ],
+ "info": {
+  "os": "Version 27.2 (Build 26B5101f)",
+  "variant": "AFM 3 Core",
+  "context_size": 4096,
+  "available": true,
+  "bridge_start_seconds": 0.03830949999974109,
+  "mode": "guided",
+  "prewarm": true,
+  "sampling": "greedy",
+  "runtime": "FoundationModels, SystemLanguageModel.default"
+ },
+ "memory": {
+  "note": "the model runs in a system service; its memory is not visible to this process"
+ },
+ "timing": {
+  "requests": 20,
+  "errors": 0,
+  "seconds_p50": 0.4267539978027344,
+  "seconds_p95": 0.8156609535217285,
+  "seconds_p99": 0.8547790050506592,
+  "seconds_mean": 0.4874958574771881,
+  "first_seconds_p50": 0.42670607566833496,
+  "output_tokens_mean": 7.9,
+  "input_tokens_mean": 109.95,
+  "decode_tps_median": null,
+  "prefill_tps_median": null,
+  "decisions_per_minute_back_to_back": 123.07796892983372
+ },
+ "score": {
+  "n": 20,
+  "right": 15,
+  "accuracy": 0.75,
+  "format_followed": 0.9,
+  "categories": {
+   "logic": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "instruction": {
+    "n": 2,
+    "right": 0,
+    "format": 2
+   },
+   "semantic": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "causal": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "negation": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "hypothetical": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "context": {
+    "n": 2,
+    "right": 1,
+    "format": 2
+   },
+   "ambiguity": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "structured": {
+    "n": 2,
+    "right": 0,
+    "format": 0
+   },
+   "summary": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   }
+  },
+  "wrong_ids": [
+   "gd03",
+   "gd04",
+   "gd13",
+   "gd17",
+   "gd18"
+  ]
+ },
+ "wall_seconds": 11.328929901123047,
+ "system_before": {
+  "memory_free_percent": 67,
+  "swap_used_mb": 12286.56,
+  "swapins": 1131544,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ },
+ "system_after_load": {
+  "memory_free_percent": 67,
+  "swap_used_mb": 12286.56,
+  "swapins": 1131544,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ },
+ "system_after": {
+  "memory_free_percent": 69,
+  "swap_used_mb": 12278.56,
+  "swapins": 1132566,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ }
+}

@@ -1,0 +1,674 @@
+{
+ "batch": "batch_002",
+ "conversations": [
+  {
+   "conversation": "fin-en-005",
+   "language": "en",
+   "transcript": [
+    "1. hi yeah I'm calling about my car the Honda",
+    "2. it's making a grinding noise when I break",
+    "3. okay can you bring it in today",
+    "4. uh I can bring it in after lunch maybe one thirty",
+    "5. we close at five so that should work",
+    "6. and it's the front brakes or the back",
+    "7. I think the front",
+    "8. is it the civic or the accord",
+    "9. the civic two thousand nineteen",
+    "10. and now in sports the Rockets beat the Hawks by six",
+    "11. sorry that's the TV",
+    "12. no problem and a name for the work order",
+    "13. it's meter M E H T A",
+    "14. meter M E H T A okay",
+    "15. yeah that's right",
+    "16. and a phone number",
+    "17. five five five oh one four two",
+    "18. five five five oh one four two okay",
+    "19. the inspection fee is forty five dollars which comes off if you do the repair with us",
+    "20. that's fine",
+    "21. we also have a free shuttle to downtown if you need it",
+    "22. oh no I'll just wait there",
+    "23. okay see you at one thirty Mr. Mehta"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The caller's Honda Civic, a 2019 model, makes a grinding noise when braking.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "The caller believes the problem is in the front brakes.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "The caller will bring the car to the shop today at about 1:30.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "The shop closes at 5.",
+     "critical": false,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "The name on the work order is Mehta, spelled M E H T A.",
+     "critical": true,
+     "kind": "name"
+    },
+    {
+     "id": "f6",
+     "text": "The caller's phone number is 555 0142.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "The inspection fee is 45 dollars and is deducted if the repair is done at the shop.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "The caller declined the free shuttle to downtown and will wait at the shop.",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f9",
+     "text": "Background sports news from a TV was picked up and is unrelated to the call.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The repair has been quoted or approved."
+    },
+    {
+     "id": "n2",
+     "text": "The problem is confirmed to be the rear brakes."
+    },
+    {
+     "id": "n3",
+     "text": "The Rockets and Hawks result is relevant to the repair appointment."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether the problem is actually in the front brakes is only the caller's guess."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Mr. Mehta called to report that his 2019 Honda Civic Sport is making a grinding noise when he breaks, and he confirmed the issue is with the front brakes."
+      },
+      {
+       "u": "a2",
+       "text": "He requested to bring the car in after lunch at 1:30 PM, which was accepted since the shop closes at 5:00 PM."
+      },
+      {
+       "u": "a3",
+       "text": "The work order was assigned the number MEHTA, and the contact number provided was 555-0142."
+      },
+      {
+       "u": "a4",
+       "text": "The inspection fee is set at $45, though Mr. Mehta noted this fee would be waived if the repair is performed in-house."
+      },
+      {
+       "u": "a5",
+       "text": "He declined the offer of a free shuttle to downtown and decided to wait for the car himself."
+      },
+      {
+       "u": "a6",
+       "text": "The conversation briefly mentioned the Rockets beating the Hawks by six, which was identified as a TV reference rather than a car detail."
+      },
+      {
+       "u": "a7",
+       "text": "The appointment is scheduled for 1:30 PM with Mr. Mehta."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The customer called to schedule a repair for their 2019 Honda Civic regarding a grinding noise in the front brakes."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to drop off the vehicle at 1:30 PM, noting that the shop closes at 5 PM."
+      },
+      {
+       "u": "a3",
+       "text": "The work order was assigned to Mr. Mehta, and the customer provided the phone number 555-0142."
+      },
+      {
+       "u": "a4",
+       "text": "The inspection fee is forty-five dollars, which will be waived if the repair is completed in-house."
+      },
+      {
+       "u": "a5",
+       "text": "The customer declined the free shuttle service and decided to wait at the shop themselves."
+      },
+      {
+       "u": "a6",
+       "text": "The conversation ended with a confirmation to see Mr. Mehta at 1:30 PM."
+      },
+      {
+       "u": "k1",
+       "text": "The car is a 2019 Honda Civic with a grinding noise in the front brakes."
+      },
+      {
+       "u": "k2",
+       "text": "The appointment is scheduled for 1:30 PM today."
+      },
+      {
+       "u": "k3",
+       "text": "The work order number is M E H T A."
+      },
+      {
+       "u": "k4",
+       "text": "The contact number is 555-0142."
+      },
+      {
+       "u": "k5",
+       "text": "The inspection fee is forty-five dollars."
+      },
+      {
+       "u": "k6",
+       "text": "The customer will wait at the shop and decline the free shuttle."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A conversation was had regarding a car, specifically a Honda, that is making a grinding noise when breaking."
+      },
+      {
+       "u": "a2",
+       "text": "The person asked if the vehicle could be brought in today, and it was agreed that it could be done after lunch around one thirty, since the shop closes at five."
+      },
+      {
+       "u": "a3",
+       "text": "The issue is identified as the front or back brakes, with a suggestion that it might be the front."
+      },
+      {
+       "u": "a4",
+       "text": "The vehicle is the Civic, model two thousand nineteen, and the work order is assigned the code M E H T A."
+      },
+      {
+       "u": "a5",
+       "text": "A phone number, five five five oh one four two, was provided."
+      },
+      {
+       "u": "a6",
+       "text": "The inspection fee is forty five dollars, which is deducted if the repair is completed with the shop."
+      },
+      {
+       "u": "a7",
+       "text": "A free shuttle to downtown is available, but the person declined and will wait there."
+      },
+      {
+       "u": "a8",
+       "text": "The person will see the technician at one thirty."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They are calling about their car, a Honda, making a grinding noise when braking, and requested to bring it in today."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to bring it in after lunch, around one thirty, since the shop closes at five."
+      },
+      {
+       "u": "a3",
+       "text": "The issue is with the front or back brakes, with a suspicion of the front, and the car is a Civic, model two thousand nineteen, in sports."
+      },
+      {
+       "u": "a4",
+       "text": "They asked if it is the Accord, and the work order name is Meter M E H T A, with the phone number five five five oh one four two."
+      },
+      {
+       "u": "a5",
+       "text": "The inspection fee is forty five dollars, which is deducted if the repair is done with the shop, and they mentioned a free shuttle to downtown, but they will wait there."
+      },
+      {
+       "u": "a6",
+       "text": "Someone agreed to see them at one thirty, Mr. Mehta."
+      },
+      {
+       "u": "k1",
+       "text": "The car is a Honda."
+      },
+      {
+       "u": "k2",
+       "text": "The issue is a grinding noise when braking."
+      },
+      {
+       "u": "k3",
+       "text": "The appointment is after lunch, around one thirty."
+      },
+      {
+       "u": "k4",
+       "text": "The shop closes at five."
+      },
+      {
+       "u": "k5",
+       "text": "The issue is with the front or back brakes, possibly the front."
+      },
+      {
+       "u": "k6",
+       "text": "The car is a Civic, model two thousand nineteen, in sports."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The caller, Mr. Mehta, reported that his 2019 Honda Civic is making a grinding noise when braking and requested an appointment for today, preferably after lunch around 1:30 PM since the shop closes at 5 PM."
+      },
+      {
+       "u": "a2",
+       "text": "He confirmed the issue is with the front brakes and provided his vehicle details."
+      },
+      {
+       "u": "a3",
+       "text": "The representative confirmed the work order number (M E H T A) and phone number (555-12-42), and noted that the $45 inspection fee will be waived if the repair is performed through the shop."
+      },
+      {
+       "u": "a4",
+       "text": "The customer declined the free shuttle service and confirmed the appointment for 1:30 PM."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The caller reported a grinding noise from their Honda Civic front brakes and requested an appointment for today."
+      },
+      {
+       "u": "a2",
+       "text": "They suggested arriving after lunch around 1:30 PM, which was confirmed."
+      },
+      {
+       "u": "a3",
+       "text": "The work order was assigned as M E H T A and the phone number 555-12-42 was provided."
+      },
+      {
+       "u": "a4",
+       "text": "The inspection fee of $45 was mentioned and the customer agreed to have the repair done with the fee applied."
+      },
+      {
+       "u": "a5",
+       "text": "A free shuttle to downtown was offered but the customer declined to use it."
+      },
+      {
+       "u": "k1",
+       "text": "The car is a Honda Civic with the front brakes making a grinding noise"
+      },
+      {
+       "u": "k2",
+       "text": "The customer requested an appointment for today after lunch around 1:30 PM"
+      },
+      {
+       "u": "k3",
+       "text": "The work order number is M E H T A"
+      },
+      {
+       "u": "k4",
+       "text": "The phone number provided is 555-12-42"
+      },
+      {
+       "u": "k5",
+       "text": "The inspection fee is $45 and will be applied if the repair is done with the shop"
+      },
+      {
+       "u": "k6",
+       "text": "A free shuttle to downtown was offered but the customer declined"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-006",
+   "language": "en",
+   "transcript": [
+    "1. man it's freezing out here",
+    "2. I know right I didn't even bring a jacket",
+    "3. you should've checked the weather",
+    "4. I did but it said like fifty",
+    "5. that's definitely not fifty",
+    "6. ha",
+    "7. is the bus always this late",
+    "8. sometimes yeah I think it depends",
+    "9. on what",
+    "10. I don't know traffic maybe",
+    "11. did you see that new show everyone's talking about",
+    "12. which one",
+    "13. the one with the lighthouse I think",
+    "14. no I've heard of it though",
+    "15. my cousin said it's really good but kind of slow",
+    "16. slow how",
+    "17. like nothing happens for a few episodes",
+    "18. hmm that doesn't sound that good",
+    "19. maybe it gets better I don't know",
+    "20. we could watch it sometime",
+    "21. yeah maybe sometime",
+    "22. my feet are totally numb",
+    "23. mine too I should've worn the boots",
+    "24. oh is that our bus",
+    "25. no that's the forty two",
+    "26. ugh",
+    "27. what time is it",
+    "28. I think almost eight or maybe ten past",
+    "29. we're gonna be late",
+    "30. it's fine it's fine"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Two people are waiting for a late bus in cold weather, and one of them did not bring a jacket.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "A cousin said the show with the lighthouse is really good but slow, with little happening for a few episodes.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "The bus that arrived was the number 42, not their bus.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The speakers decided to watch the lighthouse show together."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether they will watch the show is left open (maybe sometime)."
+    },
+    {
+     "id": "u2",
+     "text": "The current time is not known exactly (almost eight or ten past)."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "It's freezing and a jacket wasn't brought, and someone agreed it's important to check the weather."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed the bus is late, though it depends on traffic, and someone asked if the bus is the forty-two, and they agreed it is."
+      },
+      {
+       "u": "a3",
+       "text": "A new show with a lighthouse, and someone said a cousin said it's good but slow because nothing happens for a few episodes."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to watch it sometime, though they aren't sure."
+      },
+      {
+       "u": "a5",
+       "text": "Someone asked what time it is, and they said almost eight or maybe ten past, and they agreed they'll be late."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed it's fine, but they said their feet are numb and they should've worn boots."
+      },
+      {
+       "u": "a7",
+       "text": "Missing information: the name of the cousin, and the exact plot details of the show."
+      },
+      {
+       "u": "k1",
+       "text": "The weather is freezing."
+      },
+      {
+       "u": "k2",
+       "text": "A jacket wasn't brought."
+      },
+      {
+       "u": "k3",
+       "text": "The bus is late, depending on traffic."
+      },
+      {
+       "u": "k4",
+       "text": "The bus is the forty-two."
+      },
+      {
+       "u": "k5",
+       "text": "A new show with a lighthouse."
+      },
+      {
+       "u": "k6",
+       "text": "The show is slow with little happening for a few episodes."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A conversation took place near a person who could not hear it."
+      },
+      {
+       "u": "a2",
+       "text": "The person mentioned the weather was freezing and noted they did not bring a jacket."
+      },
+      {
+       "u": "a3",
+       "text": "They said the forecast showed fifty, but corrected that number was not correct."
+      },
+      {
+       "u": "a4",
+       "text": "The person asked if the bus was always late, noting it depended on traffic."
+      },
+      {
+       "u": "a5",
+       "text": "They discussed a new show with a lighthouse, mentioning a cousin said it was good but slow, with nothing happening for a few episodes."
+      },
+      {
+       "u": "a6",
+       "text": "The person suggested watching it sometime, but the timing was uncertain."
+      },
+      {
+       "u": "a7",
+       "text": "They confirmed the bus was not the forty-two, but the correct number was forty-two."
+      },
+      {
+       "u": "a8",
+       "text": "The person guessed the time was almost eight or ten past, said they would be late, and then said it was fine."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about a freezing bus ride and a new show."
+      },
+      {
+       "u": "a2",
+       "text": "The bus was late and asked about the time, which was around eight or ten."
+      },
+      {
+       "u": "a3",
+       "text": "They discussed watching a new show with a lighthouse, but the speaker hadn't heard of it."
+      },
+      {
+       "u": "a4",
+       "text": "The other person agreed to watch it sometime."
+      },
+      {
+       "u": "a5",
+       "text": "Both mentioned their feet were numb and that they should have worn boots."
+      },
+      {
+       "u": "a6",
+       "text": "The bus was identified as the 42."
+      },
+      {
+       "u": "k1",
+       "text": "The bus was late and around eight or ten past."
+      },
+      {
+       "u": "k2",
+       "text": "Their feet were numb and should have worn boots."
+      },
+      {
+       "u": "k3",
+       "text": "They discussed a new show with a lighthouse that the other person had heard of but not seen."
+      },
+      {
+       "u": "k4",
+       "text": "The other person agreed to watch the show sometime."
+      },
+      {
+       "u": "k5",
+       "text": "The bus number was identified as the 42."
+      },
+      {
+       "u": "k6",
+       "text": "The conversation included comments about the weather and being cold."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group discussed the freezing temperature where one person admitted they forgot their jacket despite checking the weather forecast for fifty degrees."
+      },
+      {
+       "u": "a2",
+       "text": "They debated the reliability of the bus schedule, noting that the forty-two bus is sometimes late due to traffic."
+      },
+      {
+       "u": "a3",
+       "text": "A new show featuring a lighthouse was mentioned, with concerns that it moves too slowly, though they agreed to watch it sometime."
+      },
+      {
+       "u": "a4",
+       "text": "Finally, they realized they are likely late because the current time is almost eight or ten past, but decided it is fine."
+      },
+      {
+       "u": "k1",
+       "text": "The weather is freezing and one person forgot their jacket."
+      },
+      {
+       "u": "k2",
+       "text": "The weather forecast incorrectly predicted fifty degrees."
+      },
+      {
+       "u": "k3",
+       "text": "The forty-two bus is sometimes late due to traffic."
+      },
+      {
+       "u": "k4",
+       "text": "A new show with a lighthouse is being discussed."
+      },
+      {
+       "u": "k5",
+       "text": "The current time is almost eight or ten past."
+      },
+      {
+       "u": "k6",
+       "text": "The group decided to watch the new show sometime."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation occurred in a setting where the speaker could not hear the speech being transcribed."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker mentioned that it was freezing and they had not brought a jacket, while the other person noted they had checked the weather and found it reported as \"like fifty\" degrees, which the speaker corrected as definitely not fifty."
+      },
+      {
+       "u": "a3",
+       "text": "They discussed whether the bus is always late, with the speaker saying it sometimes is depending on traffic."
+      },
+      {
+       "u": "a4",
+       "text": "The topic of a new show with a lighthouse was brought up, and the other person had heard of it but not seen it, while the speaker had not heard of it either."
+      },
+      {
+       "u": "a5",
+       "text": "The two considered watching the show sometime, and both mentioned their feet were numb, noting they should have worn boots."
+      },
+      {
+       "u": "a6",
+       "text": "The time was mentioned as almost eight or maybe ten past, and they acknowledged they"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group discussed the freezing weather outside, noting that while the forecast predicted fifty degrees, the actual conditions were much colder and they regret not bringing jackets."
+      },
+      {
+       "u": "a2",
+       "text": "They debated the cause of the bus's frequent lateness, with traffic being a likely factor, and briefly considered watching a new show featuring a lighthouse, though one person described it as slow-paced with little action."
+      },
+      {
+       "u": "a3",
+       "text": "When asked about the bus, it was clarified that the vehicle they saw was the forty-two, not their own bus, and the current time was estimated to be almost eight or ten past."
+      },
+      {
+       "u": "a4",
+       "text": "Despite the concern about being late, the group ultimately decided that being late was acceptable."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1757 @@
+{
+ "batch": "batch_029",
+ "results": [
+  {
+   "conversation": "fin-zh-015",
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 5,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 5,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "\"one-way ticket\" ambiguous (365 is the return fare)"
+      },
+      {
+       "u": "a3",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "partial",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "full",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f7",
+       "status": "full",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f8",
+       "status": "full",
+       "by": [
+        "a3"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "preserved"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 4,
+      "readable": 4,
+      "repetition": 5,
+      "vague": 0
+     },
+     "verbatim": false
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 6,
+       "n_unsupported": 1,
+       "n_ambiguous": 1,
+       "note": "hotel name wrong; \"car\" for the train unclear"
+      },
+      {
+       "u": "a3",
+       "n_claims": 4,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "1,156 wrong (1,160)"
+      },
+      {
+       "u": "a4",
+       "n_claims": 7,
+       "n_unsupported": 3,
+       "n_ambiguous": 1,
+       "note": "Dalian / Dalian Mountain and January 2nd wrong; \"travel cost\" vague"
+      },
+      {
+       "u": "k1",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k2",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k3",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "hotel name wrong"
+      },
+      {
+       "u": "k4",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k5",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "\"car\" for the train"
+      },
+      {
+       "u": "k6",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k7",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "1,156 wrong"
+      },
+      {
+       "u": "k8",
+       "n_claims": 3,
+       "n_unsupported": 2,
+       "n_ambiguous": 0,
+       "note": "Dalian Mountain and January 2nd wrong"
+      },
+      {
+       "u": "k9",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k10",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k11",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "which fare is not added unclear"
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1",
+        "k1",
+        "k2"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "partial",
+       "by": [
+        "a2",
+        "k3",
+        "k4"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "partial",
+       "by": [
+        "a3",
+        "k7"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a2",
+        "k5"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "full",
+       "by": [
+        "a3",
+        "k6"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "none",
+       "by": [
+        "a4",
+        "k8"
+       ]
+      },
+      {
+       "id": "f7",
+       "status": "full",
+       "by": [
+        "a4",
+        "k9"
+       ]
+      },
+      {
+       "id": "f8",
+       "status": "none",
+       "by": []
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "preserved"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 2,
+      "readable": 2,
+      "repetition": 1,
+      "vague": 0
+     },
+     "verbatim": false
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 5,
+       "n_unsupported": 1,
+       "n_ambiguous": 1,
+       "note": "hotel name \"Haikou Inn\" wrong; \"bus\" unsupported"
+      },
+      {
+       "u": "a3",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a4",
+       "n_claims": 3,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "365 is the return fare; the missing fare is the outbound one"
+      },
+      {
+       "u": "a5",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k1",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k2",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "hotel name wrong"
+      },
+      {
+       "u": "k3",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "\"bus\" unsupported"
+      },
+      {
+       "u": "k4",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k5",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k6",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "365 is not the missing fare"
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1",
+        "k1"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "partial",
+       "by": [
+        "a2",
+        "k2"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "none",
+       "by": []
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a2",
+        "k3"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "full",
+       "by": [
+        "a5"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a3",
+        "k4"
+       ]
+      },
+      {
+       "id": "f7",
+       "status": "full",
+       "by": [
+        "a3",
+        "k5"
+       ]
+      },
+      {
+       "id": "f8",
+       "status": "full",
+       "by": [
+        "a5"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "preserved"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 4,
+      "readable": 4,
+      "repetition": 3,
+      "vague": 1
+     },
+     "verbatim": false
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 0,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 3,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "21:15 wrong (22:15)"
+      },
+      {
+       "u": "a3",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a4",
+       "n_claims": 4,
+       "n_unsupported": 2,
+       "n_ambiguous": 0,
+       "note": "365 given as total for three; \"second night 160\" wrong"
+      },
+      {
+       "u": "a5",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a6",
+       "n_claims": 3,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "\"second day\" not stated"
+      },
+      {
+       "u": "a7",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "which fare is unconfirmed is vague"
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "partial",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "full",
+       "by": [
+        "a3"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "partial",
+       "by": [
+        "a4"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a4"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "none",
+       "by": [
+        "a4"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a5"
+       ]
+      },
+      {
+       "id": "f7",
+       "status": "partial",
+       "by": [
+        "a6"
+       ]
+      },
+      {
+       "id": "f8",
+       "status": "none",
+       "by": []
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "overstated"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 2,
+      "readable": 2,
+      "repetition": 4,
+      "vague": 0
+     },
+     "verbatim": false
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 5,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a3",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a4",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a5",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a6",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a7",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a8",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "full",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "full",
+       "by": [
+        "a4"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a3"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "full",
+       "by": [
+        "a3"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "full",
+       "by": [
+        "a5"
+       ]
+      },
+      {
+       "id": "f7",
+       "status": "full",
+       "by": [
+        "a6"
+       ]
+      },
+      {
+       "id": "f8",
+       "status": "full",
+       "by": [
+        "a8"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "preserved"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 3,
+      "readable": 4,
+      "repetition": 5,
+      "vague": 0
+     },
+     "verbatim": true
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 5,
+       "n_unsupported": 2,
+       "n_ambiguous": 0,
+       "note": "\"Jinguapu\" and 1,016 wrong"
+      },
+      {
+       "u": "a3",
+       "n_claims": 5,
+       "n_unsupported": 3,
+       "n_ambiguous": 0,
+       "note": "2:40 PM, 365.30 and four people wrong"
+      },
+      {
+       "u": "a4",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "1,016 wrong"
+      },
+      {
+       "u": "a5",
+       "n_claims": 3,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "\"Lianxi Mountain\" wrong"
+      },
+      {
+       "u": "a6",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a7",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "nightly cost is not missing"
+      },
+      {
+       "u": "k1",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k2",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k3",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k4",
+       "n_claims": 3,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "Jinguapu wrong"
+      },
+      {
+       "u": "k5",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "1,016 wrong"
+      },
+      {
+       "u": "k6",
+       "n_claims": 7,
+       "n_unsupported": 4,
+       "n_ambiguous": 0,
+       "note": "2:40 PM, 365.30, four people wrong; total claimed missing"
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1",
+        "k2",
+        "k3"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "partial",
+       "by": [
+        "a2",
+        "a3",
+        "k4"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "partial",
+       "by": [
+        "a2",
+        "a4",
+        "k5"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "partial",
+       "by": [
+        "a3"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "partial",
+       "by": [
+        "a3"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a5"
+       ]
+      },
+      {
+       "id": "f7",
+       "status": "full",
+       "by": [
+        "a6"
+       ]
+      },
+      {
+       "id": "f8",
+       "status": "full",
+       "by": [
+        "a7"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": true
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "preserved"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 3,
+      "readable": 2,
+      "repetition": 1,
+      "vague": 0
+     },
+     "verbatim": false
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-016",
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 11,
+       "n_unsupported": 2,
+       "n_ambiguous": 2,
+       "note": "bug stated as identified third-party issue; \"main presenter\" is a guess; \"deployment\" omits test environment; manager \"consulted\" was only planned"
+      },
+      {
+       "u": "k1",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "\"deployment\" omits test environment"
+      },
+      {
+       "u": "k2",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 1,
+       "note": "bug only preliminarily judged; \"provided a conclusion\" is future"
+      },
+      {
+       "u": "k3",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "\"main presenter\" is a guess"
+      },
+      {
+       "u": "k4",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "manager had not yet been asked"
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1",
+        "k1"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "partial",
+       "by": [
+        "a1",
+        "k1"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "full",
+       "by": [
+        "k2"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a1",
+        "k2"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "partial",
+       "by": [
+        "a1",
+        "k3"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a1",
+        "k4"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": true
+      },
+      {
+       "id": "n2",
+       "violated": false
+      },
+      {
+       "id": "n3",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "overstated"
+      },
+      {
+       "id": "u2",
+       "status": "overstated"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 3,
+      "readable": 2,
+      "repetition": 2,
+      "vague": 0
+     },
+     "verbatim": false
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 5,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 5,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a3",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a4",
+       "n_claims": 3,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "\"already consulted\" the manager is still future"
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "full",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "full",
+       "by": [
+        "a3"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a4"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": false
+      },
+      {
+       "id": "n3",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "preserved"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 4,
+      "readable": 4,
+      "repetition": 5,
+      "vague": 0
+     },
+     "verbatim": false
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a3",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "\"theme\" guessed from garbled \"主提\""
+      },
+      {
+       "u": "a4",
+       "n_claims": 3,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "\"notified relevant people\" is still future"
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "full",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "full",
+       "by": [
+        "a3"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a4"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": false
+      },
+      {
+       "id": "n3",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "overstated"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 4,
+      "readable": 4,
+      "repetition": 5,
+      "vague": 0
+     },
+     "verbatim": false
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a3",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "\"main theme\" guessed"
+      },
+      {
+       "u": "a4",
+       "n_claims": 2,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "manager contacted before the meeting ended is invented"
+      },
+      {
+       "u": "k1",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k2",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k3",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k4",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "\"main theme\" guessed"
+      },
+      {
+       "u": "k5",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k6",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1",
+        "k1"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "full",
+       "by": [
+        "a1",
+        "k6"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "full",
+       "by": [
+        "a2",
+        "k2"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a2",
+        "k3"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "full",
+       "by": [
+        "a3",
+        "k4"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a4",
+        "k5"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": false
+      },
+      {
+       "id": "n3",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "overstated"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 4,
+      "readable": 4,
+      "repetition": 3,
+      "vague": 0
+     },
+     "verbatim": false
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 4,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "\"production environment\" wrong (test environment)"
+      },
+      {
+       "u": "a2",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "loses \"preliminary\" on the third-party cause"
+      },
+      {
+       "u": "a3",
+       "n_claims": 4,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "\"agreed to inform Xiao Zhao\" is invented"
+      },
+      {
+       "u": "a4",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a5",
+       "n_claims": 3,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "nobody said they could not assign a tester; they asked if one could be borrowed"
+      },
+      {
+       "u": "a6",
+       "n_claims": 2,
+       "n_unsupported": 2,
+       "n_ambiguous": 0,
+       "note": "contacting the manager and informing everyone is future"
+      },
+      {
+       "u": "a7",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k1",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k2",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k3",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 1,
+       "note": "\"testing\" vs launching the test environment"
+      },
+      {
+       "u": "k4",
+       "n_claims": 1,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "cause shown as settled"
+      },
+      {
+       "u": "k5",
+       "n_claims": 1,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "k6",
+       "n_claims": 2,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1",
+        "k1"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "partial",
+       "by": [
+        "a1",
+        "k2",
+        "k3"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "full",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "full",
+       "by": [
+        "a2",
+        "k5"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "full",
+       "by": [
+        "a3",
+        "k6"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a5",
+        "a6"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": true
+      },
+      {
+       "id": "n2",
+       "violated": false
+      },
+      {
+       "id": "n3",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "overstated"
+      },
+      {
+       "id": "u2",
+       "status": "preserved"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 3,
+      "readable": 2,
+      "repetition": 3,
+      "vague": 1
+     },
+     "verbatim": false
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "n_claims": 4,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a2",
+       "n_claims": 3,
+       "n_unsupported": 1,
+       "n_ambiguous": 0,
+       "note": "\"gave the conclusion on Tuesday\" is future"
+      },
+      {
+       "u": "a3",
+       "n_claims": 3,
+       "n_unsupported": 0,
+       "n_ambiguous": 0,
+       "note": ""
+      },
+      {
+       "u": "a4",
+       "n_claims": 4,
+       "n_unsupported": 2,
+       "n_ambiguous": 0,
+       "note": "asking the manager and notifying colleagues is future"
+      }
+     ],
+     "facts": [
+      {
+       "id": "f1",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f2",
+       "status": "full",
+       "by": [
+        "a1"
+       ]
+      },
+      {
+       "id": "f3",
+       "status": "full",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f4",
+       "status": "partial",
+       "by": [
+        "a2"
+       ]
+      },
+      {
+       "id": "f5",
+       "status": "full",
+       "by": [
+        "a3"
+       ]
+      },
+      {
+       "id": "f6",
+       "status": "partial",
+       "by": [
+        "a4"
+       ]
+      }
+     ],
+     "must_not": [
+      {
+       "id": "n1",
+       "violated": false
+      },
+      {
+       "id": "n2",
+       "violated": false
+      },
+      {
+       "id": "n3",
+       "violated": false
+      }
+     ],
+     "uncertain": [
+      {
+       "id": "u1",
+       "status": "preserved"
+      },
+      {
+       "id": "u2",
+       "status": "preserved"
+      }
+     ],
+     "correction": "n/a",
+     "quality": {
+      "natural": 4,
+      "readable": 4,
+      "repetition": 5,
+      "vague": 0
+     },
+     "verbatim": false
+    }
+   ]
+  }
+ ]
+}

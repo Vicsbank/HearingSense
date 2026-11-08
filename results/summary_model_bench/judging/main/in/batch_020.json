@@ -1,0 +1,715 @@
+{
+ "batch": "batch_020",
+ "conversations": [
+  {
+   "conversation": "fin-en-041",
+   "language": "en",
+   "transcript": [
+    "1. okay Harbor Table opening checklist let's go",
+    "2. health inspection is October fourteenth at ten in the morning",
+    "3. so the kitchen has to be fully cleaned by the thirteenth",
+    "4. I'll have the crew do that on the Monday",
+    "5. staffing we've hired nine of the fourteen people we need",
+    "6. and training",
+    "7. October seventeenth to nineteenth the whole team",
+    "8. soft opening is the nineteenth now it was the eighteenth but the chef asked for one more day",
+    "9. how many guests",
+    "10. forty friends and family",
+    "11. and the real opening is the twenty first",
+    "12. menus we need three hundred printed by the sixteenth",
+    "13. I'll send the final file to the printer tomorrow",
+    "14. what about the liquor license",
+    "15. still pending the city said maybe next week",
+    "16. so if it doesn't come we open without alcohol",
+    "17. let's not decide that yet",
+    "18. produce deliveries are Tuesdays and Fridays before seven in the morning",
+    "19. who's signing for them",
+    "20. Lucia can do Tuesdays I'll take Fridays",
+    "21. great that's it"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The health inspection is October 14 at 10 am, and the kitchen must be fully cleaned by October 13.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The cleaning crew will clean the kitchen on Monday.",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "Nine of the fourteen needed staff have been hired.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "Whole-team training runs October 17 to 19.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "The soft opening is October 19 for about forty friends and family, moved from October 18 at the chef's request.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f6",
+     "text": "The official opening is October 21.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "Three hundred menus must be printed by October 16, and one speaker will send the final file to the printer tomorrow.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f8",
+     "text": "Produce deliveries are Tuesdays and Fridays before 7 am; Lucia signs for Tuesdays and another speaker for Fridays.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The soft opening is on October 18."
+    },
+    {
+     "id": "n2",
+     "text": "The restaurant will open without alcohol (explicitly not decided)."
+    },
+    {
+     "id": "n3",
+     "text": "The liquor license has been approved."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The liquor license is still pending, and the city only said it might come next week."
+    },
+    {
+     "id": "u2",
+     "text": "Whether the restaurant opens without alcohol if the license does not arrive was left undecided."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team is preparing the Harbor Table opening, with the health inspection scheduled for October 14th at 10:00 AM and the kitchen required to be fully cleaned by October 13th, a task the crew will complete on Monday."
+      },
+      {
+       "u": "a2",
+       "text": "Staffing is 9 out of 14 people hired, with training planned from October 17th to 19th, though the soft opening date was changed from the 18th to the 19th upon the chef's request."
+      },
+      {
+       "u": "a3",
+       "text": "The real opening is set for October 21st, with 40 friends and family guests, and 300 menus must be printed by October 16th, with the final file sent to the printer tomorrow."
+      },
+      {
+       "u": "a4",
+       "text": "Produce deliveries occur on Tuesdays and Fridays before 7:00 AM, with Lucia signing for Tuesdays and the speaker taking Fridays, while the liquor license remains pending with a potential approval next week."
+      },
+      {
+       "u": "a5",
+       "text": "If the license does not arrive, the team will open without alcohol, but this decision has not been finalized yet."
+      },
+      {
+       "u": "k1",
+       "text": "The health inspection is on October 14th at 10:00 AM."
+      },
+      {
+       "u": "k2",
+       "text": "The kitchen must be fully cleaned by October 13th."
+      },
+      {
+       "u": "k3",
+       "text": "The crew will handle the cleaning on Monday."
+      },
+      {
+       "u": "k4",
+       "text": "Training runs from October 17th to 19th."
+      },
+      {
+       "u": "k5",
+       "text": "The soft opening is on October 19th and the real opening is on October 21st."
+      },
+      {
+       "u": "k6",
+       "text": "300 menus are needed by October 16th."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The health inspection is October fourteenth at ten in the morning, so the kitchen must be fully cleaned by the thirteenth, and the crew will do that on the Monday."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed nine of the fourteen staff members have been hired, and training for October seventeenth to nineteenth will cover the whole team."
+      },
+      {
+       "u": "a3",
+       "text": "the soft opening is the nineteenth, but the chef requested one more day, making the real opening the twenty-first."
+      },
+      {
+       "u": "a4",
+       "text": "forty guests, including friends and family, are planned, and three hundred menus must be printed by the sixteenth, with the final file sent to the printer tomorrow."
+      },
+      {
+       "u": "a5",
+       "text": "the liquor license is still pending from the city, possibly next week, so opening without alcohol has not been decided."
+      },
+      {
+       "u": "a6",
+       "text": "produce deliveries are Tuesdays and Fridays before seven in the morning, with Lucia signing for Tuesdays and the speaker taking Fridays."
+      },
+      {
+       "u": "a7",
+       "text": "they agreed that’s it, but the details about who is signing for deliveries are complete."
+      },
+      {
+       "u": "a8",
+       "text": "some information is missing."
+      },
+      {
+       "u": "k1",
+       "text": "The health inspection is October fourteenth at ten in the morning."
+      },
+      {
+       "u": "k2",
+       "text": "The kitchen must be cleaned by the thirteenth."
+      },
+      {
+       "u": "k3",
+       "text": "Nine of fourteen staff members have been hired."
+      },
+      {
+       "u": "k4",
+       "text": "Training is October seventeenth to nineteenth."
+      },
+      {
+       "u": "k5",
+       "text": "The soft opening is the nineteenth, with the real opening the twenty-first."
+      },
+      {
+       "u": "k6",
+       "text": "Forty guests are planned, including friends and family."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered the Harbor Table opening checklist, noting a health inspection on October fourteenth at ten in the morning and requiring the kitchen to be fully cleaned by the thirteenth, with the crew handling that on the Monday."
+      },
+      {
+       "u": "a2",
+       "text": "Staffing showed nine of fourteen needed staff hired, with training scheduled from October seventeenth to nineteenth, and a soft opening on the nineteenth after a correction to the eighteenth requested by the chef."
+      },
+      {
+       "u": "a3",
+       "text": "The real opening is the twenty-first, and forty guests, including friends and family, are expected."
+      },
+      {
+       "u": "a4",
+       "text": "Menu printing is set for three hundred by the sixteenth, with the final file sent to the printer tomorrow."
+      },
+      {
+       "u": "a5",
+       "text": "The liquor license remains pending with the city, possibly next week, and opening without alcohol is not yet decided."
+      },
+      {
+       "u": "a6",
+       "text": "Produce deliveries occur on Tuesdays and Fridays before seven in the morning, with Lucia responsible for Tuesdays and the speaker handling Fridays."
+      },
+      {
+       "u": "a7",
+       "text": "The assigned task is to finalize the opening details, and the conversation notes that the produce deliveries are on Tuesdays and Fridays before seven in the morning."
+      },
+      {
+       "u": "a8",
+       "text": "Missing information includes who is signing for the produce deliveries."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was a recap of a meeting about Harbor Table operations."
+      },
+      {
+       "u": "a2",
+       "text": "Key decisions and facts include: the health inspection is scheduled for October 14th at 10:00 AM, requiring the kitchen to be fully cleaned by October 13th with the crew doing so on Monday; staffing involves nine of the fourteen needed employees; training is scheduled for October 17th to 19th for the whole team; the soft opening is set for October 19th (originally planned for the 18th but delayed by one day at the chef's request); the real opening is October 21st; three hundred menus must be printed by October 16th with the final file to be sent to the printer tomorrow; the liquor license is still pending with the city indicating a possible decision next week, so the team will open without alcohol if it doesn't come through; produce deliveries occur on Tuesdays and Fridays before 7:00 AM, with Lucia handling Tuesdays and the speaker handling Fridays."
+      },
+      {
+       "u": "a3",
+       "text": "No further action is required beyond these confirmations."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Harbor Table's health inspection is scheduled for October 14th at 10:00 AM, requiring the kitchen to be fully cleaned by October 13th, a task the crew will complete on Monday."
+      },
+      {
+       "u": "a2",
+       "text": "Staffing is 9 out of 14 positions filled, with training planned from October 17th to 19th, though the soft opening date was originally set for the 18th but changed to the 19th upon the chef's request for an additional day."
+      },
+      {
+       "u": "a3",
+       "text": "The real opening is set for October 21st, with 40 friends and family members invited, and 300 menus must be printed by October 16th, with the final file to be sent to the printer tomorrow."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding the liquor license, which is still pending with a possible approval next week, the team has decided not to finalize whether to open without alcohol yet."
+      },
+      {
+       "u": "a5",
+       "text": "Produce deliveries are assigned to Lucia for Tuesdays and the speaker for Fridays, both before 7:00 AM."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The health inspection is scheduled for October fourteenth at ten in the morning, requiring the kitchen to be fully cleaned by the thirteenth with the crew working on Monday."
+      },
+      {
+       "u": "a2",
+       "text": "Staffing involves nine of the fourteen needed people, with training from October seventeenth to nineteenth for the whole team."
+      },
+      {
+       "u": "a3",
+       "text": "The soft opening was moved from the eighteenth to the nineteenth due to the chef's request, and the real opening is set for the twenty-first."
+      },
+      {
+       "u": "a4",
+       "text": "Menus must be printed by the sixteenth, with the final file to be sent to the printer tomorrow."
+      },
+      {
+       "u": "a5",
+       "text": "The liquor license is still pending with a possible decision next week, so they will open without alcohol if it doesn't come."
+      },
+      {
+       "u": "a6",
+       "text": "Produce deliveries occur on Tuesdays and Fridays before seven in the morning, with Lucia handling Tuesdays and the speaker handling Fridays."
+      },
+      {
+       "u": "k1",
+       "text": "Health inspection is October fourteenth at ten in the morning"
+      },
+      {
+       "u": "k2",
+       "text": "Kitchen must be fully cleaned by the thirteenth"
+      },
+      {
+       "u": "k3",
+       "text": "Crew will clean on Monday"
+      },
+      {
+       "u": "k4",
+       "text": "Staffing: nine of fourteen needed people"
+      },
+      {
+       "u": "k5",
+       "text": "Training scheduled October seventeenth to nineteenth"
+      },
+      {
+       "u": "k6",
+       "text": "Soft opening moved to nineteenth (was eighteenth)"
+      },
+      {
+       "u": "k7",
+       "text": "Real opening is twenty-first"
+      },
+      {
+       "u": "k8",
+       "text": "Menus must be printed by sixteenth"
+      },
+      {
+       "u": "k9",
+       "text": "Final file to be sent to printer tomorrow"
+      },
+      {
+       "u": "k10",
+       "text": "Liquor license pending, may open without alcohol"
+      },
+      {
+       "u": "k11",
+       "text": "Produce deliveries Tuesdays and Fridays before seven"
+      },
+      {
+       "u": "k12",
+       "text": "Lucia signs for Tuesdays, speaker signs for Fridays"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-042",
+   "language": "en",
+   "transcript": [
+    "1. so is the bio kids still on Friday",
+    "2. I think it's the quiz yeah Friday",
+    "3. does it cover cell respiration or just photosynthesis",
+    "4. respiration too my toe con dree a and the Krebs cycle",
+    "5. ugh I hate the Krebs cycle",
+    "6. same same",
+    "7. okay Mr Lindqvist said open notes",
+    "8. no he said open book not open notes",
+    "9. wait really",
+    "10. it's what he said in class on Monday I wrote it down",
+    "11. okay then I'll bring my book",
+    "12. we should study tomorrow after school in the library",
+    "13. library closes at four on Wednesdays",
+    "14. then the cafeteria",
+    "15. okay four thirty I have to drop off my brother first",
+    "16. can you send the flashcards",
+    "17. I'll send them tonight but the last ten aren't done",
+    "18. that's fine",
+    "19. and what's the format again",
+    "20. twenty multiple choice and two short answer questions",
+    "21. how long do we get",
+    "22. thirty minutes at the start of class so don't be late",
+    "23. I'm never late",
+    "24. you were late on Tuesday",
+    "25. that was the bus"
+   ],
+   "facts": [
+    {
+     "id": "f6",
+     "text": "The quiz has twenty multiple choice questions and two short answer questions, lasts thirty minutes, and is at the start of class.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f1",
+     "text": "The biology quiz (transcribed as 'bio kids') is on Friday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The quiz covers cellular respiration (mitochondria and the Krebs cycle) in addition to photosynthesis.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "One student says Mr Lindqvist said in class on Monday that the quiz is open book, not open notes, and will bring the textbook.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "The study session is planned for tomorrow after school in the cafeteria at 4:30, because the library closes at four on Wednesdays.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f5",
+     "text": "One student will send the flashcards tonight, but the last ten are not finished.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The quiz is open notes."
+    },
+    {
+     "id": "n2",
+     "text": "The study session happens in the library."
+    },
+    {
+     "id": "n3",
+     "text": "The quiz covers only photosynthesis."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether the transcribed 'my toe con dree a' means mitochondria is probable but not certain."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group confirmed the bio quiz is on Friday and covers both respiration and the Krebs cycle."
+      },
+      {
+       "u": "a2",
+       "text": "They decided to study in the library after school, noting the library closes at four on Wednesdays and the cafeteria is an alternative option."
+      },
+      {
+       "u": "a3",
+       "text": "The test format will include twenty multiple-choice questions and two short answer questions, with thirty minutes at the start of class."
+      },
+      {
+       "u": "a4",
+       "text": "Flashcards will be sent tonight, though the last ten are not yet complete."
+      },
+      {
+       "u": "a5",
+       "text": "The quiz will be open book, not open notes, as Mr. Lindqvist instructed."
+      },
+      {
+       "u": "a6",
+       "text": "The meeting is scheduled for tomorrow after school, with a reminder that the bus was the reason for being late on Tuesday."
+      },
+      {
+       "u": "k1",
+       "text": "The bio quiz is on Friday and covers respiration, photosynthesis, and the Krebs cycle."
+      },
+      {
+       "u": "k2",
+       "text": "The test is open book with twenty multiple-choice and two short answer questions."
+      },
+      {
+       "u": "k3",
+       "text": "Study sessions are planned for tomorrow after school in the library."
+      },
+      {
+       "u": "k4",
+       "text": "Flashcards will be sent tonight, but the last ten are incomplete."
+      },
+      {
+       "u": "k5",
+       "text": "The library closes at four on Wednesdays."
+      },
+      {
+       "u": "k6",
+       "text": "Mr. Lindqvist instructed that the quiz will be open book, not open notes."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about whether the bio kids are still on Friday for the quiz, which covers cell respiration and the Krebs cycle."
+      },
+      {
+       "u": "a2",
+       "text": "Mr. Lindqvist clarified that open book is required, not open notes."
+      },
+      {
+       "u": "a3",
+       "text": "They agreed to study tomorrow after school in the library, noting the library closes at four on Wednesdays."
+      },
+      {
+       "u": "a4",
+       "text": "They need to drop off their brother before 4:30 and asked for flashcards to be sent tonight, with the last ten not yet completed."
+      },
+      {
+       "u": "a5",
+       "text": "The class format is twenty multiple choice and two short answer questions, with a thirty-minute start time."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker was late on Tuesday due to the bus."
+      },
+      {
+       "u": "k1",
+       "text": "The bio quiz is scheduled for Friday and covers cell respiration and the Krebs cycle."
+      },
+      {
+       "u": "k2",
+       "text": "Mr. Lindqvist stated that open books are required, not open notes."
+      },
+      {
+       "u": "k3",
+       "text": "The group agreed to study tomorrow after school in the library."
+      },
+      {
+       "u": "k4",
+       "text": "The library closes at four on Wednesdays."
+      },
+      {
+       "u": "k5",
+       "text": "Someone needs to send flashcards tonight, with the last ten not yet completed."
+      },
+      {
+       "u": "k6",
+       "text": "The class format includes twenty multiple choice and two short answer questions."
+      },
+      {
+       "u": "k7",
+       "text": "The class starts with thirty minutes of instruction."
+      },
+      {
+       "u": "k8",
+       "text": "The speaker was late on Tuesday due to the bus."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation centered on the bio kids quiz scheduled for Friday, with discussion about whether it covers cell respiration and photosynthesis, specifically mentioning the Krebs cycle."
+      },
+      {
+       "u": "a2",
+       "text": "Mr. Lindqvist clarified that he said \"open book not open notes\" (correcting an earlier incorrect statement that he said \"open notes\"), and the group agreed to study tomorrow after school in the library."
+      },
+      {
+       "u": "a3",
+       "text": "The library closes at four on Wednesdays, and the flashcards will be sent tonight though the last ten are not yet completed."
+      },
+      {
+       "u": "a4",
+       "text": "The class format consists of twenty multiple choice and two short answer questions, with thirty minutes allocated at the start of class."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker was noted as being late on Tuesday due to the bus."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The biology quiz is still on Friday and covers cell respiration and photosynthesis, including the Krebs cycle, though there is confusion about whether it's open book or open notes; they agreed it was mentioned in class on Monday and they will bring their book."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to study tomorrow after school in the library, but noted the library closes at four on Wednesdays, and they will go to the cafeteria at four thirty after dropping off their brother."
+      },
+      {
+       "u": "a3",
+       "text": "They have to study for twenty multiple choice and two short answer questions in thirty minutes at the start of class, despite being told they can't be late, and they mentioned being late on Tuesday due to the bus."
+      },
+      {
+       "u": "a4",
+       "text": "They can't send the flashcards yet because the last ten aren't done, but they will send them tonight."
+      },
+      {
+       "u": "a5",
+       "text": "The meeting details are missing."
+      },
+      {
+       "u": "k1",
+       "text": "The biology quiz is on Friday."
+      },
+      {
+       "u": "k2",
+       "text": "The quiz covers cell respiration and photosynthesis, including the Krebs cycle."
+      },
+      {
+       "u": "k3",
+       "text": "The format is twenty multiple choice and two short answer questions."
+      },
+      {
+       "u": "k4",
+       "text": "The time is thirty minutes at the start of class."
+      },
+      {
+       "u": "k5",
+       "text": "The library closes at four on Wednesdays."
+      },
+      {
+       "u": "k6",
+       "text": "The cafeteria is at four thirty."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation discussed the biology quiz, noting it is scheduled for Friday and covers respiration and the Krebs cycle."
+      },
+      {
+       "u": "a2",
+       "text": "A correction was made: Mr Lindqvist stated open book, not open notes, and the earlier statement about open notes was clarified."
+      },
+      {
+       "u": "a3",
+       "text": "It was confirmed that the class session on Monday included the correct information."
+      },
+      {
+       "u": "a4",
+       "text": "A study plan was agreed upon for tomorrow after school in the library, with the library closing at four on Wednesdays."
+      },
+      {
+       "u": "a5",
+       "text": "The cafeteria is mentioned afterward, and the time to drop off the brother is four thirty."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker requested flashcards, mentioning the last ten are incomplete, and confirmed they will be sent tonight."
+      },
+      {
+       "u": "a7",
+       "text": "The exam format is twenty multiple choice and two short answer questions, with thirty minutes allocated at the start of class."
+      },
+      {
+       "u": "a8",
+       "text": "The mention of being late on Tuesday was tied to the bus."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group confirmed that the bio kids quiz is on Friday, covering both respiration (including the Krebs cycle) and photosynthesis, though Mr. Lindqvist clarified that students must bring their books rather than open notes."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to study in the library after school tomorrow, noting that the library closes at 4:00 PM on Wednesdays and the cafeteria is at 4:30 PM, which is when the speaker must drop off their brother."
+      },
+      {
+       "u": "a3",
+       "text": "The quiz format will consist of twenty multiple-choice questions and two short-answer questions, with thirty minutes allocated at the start of class."
+      },
+      {
+       "u": "a4",
+       "text": "While the speaker offered to send flashcards tonight, they noted that the last ten cards are not yet finished."
+      },
+      {
+       "u": "a5",
+       "text": "The conversation ended with a reminder that the speaker was late on Tuesday due to the bus, though they insisted they are never late."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

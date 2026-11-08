@@ -1,0 +1,912 @@
+{
+ "batch": "batch_007",
+ "conversations": [
+  {
+   "conversation": "cont-022",
+   "language": "zh",
+   "transcript": [
+    "1. 各位家长 关于下个月的春游我说明一下",
+    "2. 时间是十一月八号 星期五",
+    "3. 早上七点四十在学校门口集合",
+    "4. 坐两辆大巴去森林公园",
+    "5. 一车是一班二班 另一车是三班四班",
+    "6. 费用每人一百二十元",
+    "7. 包括门票 午餐和保险",
+    "8. 请在下周二之前交给班主任",
+    "9. 可以微信转账吗",
+    "10. 可以 转给学校账户 备注写班级和姓名",
+    "11. 孩子要带水和帽子",
+    "12. 不要带零食 午餐学校统一订",
+    "13. 如果有食物过敏请提前告诉我",
+    "14. 下午四点半回到学校",
+    "15. 如果下雨呢",
+    "16. 下雨的话 改期到十一月十五号",
+    "17. 到时候我会在群里通知",
+    "18. 刚才有个数字要更正",
+    "19. 费用是每人一百五十不是一百二十",
+    "20. 因为多加了一个体验项目",
+    "21. 其他不变",
+    "22. 交钱截止时间还是下周二"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "春游定在十一月八号星期五,早上七点四十在学校门口集合。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "乘两辆大巴去森林公园,一班二班一车,三班四班另一车。",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f4",
+     "text": "费用要在下周二之前交给班主任,可以微信转账到学校账户,备注班级和姓名。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "孩子要带水和帽子,不要带零食,午餐由学校统一订。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "有食物过敏要提前告诉老师。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "下午四点半回到学校。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "如果下雨,春游改期到十一月十五号,老师会在群里通知。",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "g1",
+     "text": "费用上涨是因为多加了一个体验项目。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "c1",
+     "text": "春游费用是每人一百五十元,而不是一百二十元,其他安排不变,截止时间仍是下周二。",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "下雨时春游取消。"
+    },
+    {
+     "id": "n2",
+     "text": "一班和三班同乘一辆车。"
+    },
+    {
+     "id": "n3",
+     "text": "家长需要陪同(未提及)。"
+    },
+    {
+     "id": "m1",
+     "text": "费用仍被说成每人一百二十元。"
+    },
+    {
+     "id": "m2",
+     "text": "交费截止时间被延后。"
+    },
+    {
+     "id": "m3",
+     "text": "体验项目的具体内容被编造。"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于下个月的春游，说明时间是十一月八号星期五，早上七点四十在学校门口集合，坐两辆大巴去森林公园，一车是一班二班，另一车是三班四班。"
+      },
+      {
+       "u": "a2",
+       "text": "费用每人一百二十元，包括门票、午餐和保险，请在下周二之前交给班主任。"
+      },
+      {
+       "u": "a3",
+       "text": "可以微信转账，也可以转给学校账户，备注写班级和姓名。"
+      },
+      {
+       "u": "a4",
+       "text": "孩子要带水和帽子，不要带零食，午餐学校统一订。"
+      },
+      {
+       "u": "a5",
+       "text": "如果有食物过敏，请提前告诉。"
+      },
+      {
+       "u": "a6",
+       "text": "下午四点半回到学校，如果下雨，改期到十一月十五号，到时候会在群里通知。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容为“下周二”和“十一月十五号”，但具体日期和时间是否准确，尚不清楚。"
+      },
+      {
+       "u": "a8",
+       "text": "费用和物品清单已明确，但是否需要额外确认，尚不确定。"
+      },
+      {
+       "u": "a9",
+       "text": "The person reported that the fee is now one hundred fifty yuan per person, not one hundred twenty, because an experience project has been added, and everything else remains the same."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于下个月（11 月 8 日，星期五）的春游，家长需在 11 月 15 日（下周二）前将每人 120 元（含门票、午餐和保险）通过微信转账至学校账户，备注需写明班级和姓名。"
+      },
+      {
+       "u": "a2",
+       "text": "上午 7:40 在学校门口集合，两辆大巴分别运送一班、二班和三班、四班前往森林公园，下午 4:30 返回学校。"
+      },
+      {
+       "u": "a3",
+       "text": "每位学生需自备水和帽子，不得携带零食，午餐由学校统一订购，若有食物过敏情况需提前告知。"
+      },
+      {
+       "u": "a4",
+       "text": "若遇下雨，活动将改期至 11 月 15 日，届时将在群内另行通知。"
+      },
+      {
+       "u": "a5",
+       "text": "由于增加了一个体验项目，春游的每人费用已从一百二十元更正为一百五十元，其他安排如交款截止时间、集合时间及路线均保持不变。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于下个月（11 月 8 日，星期五）的春游，家长需在 11 月 15 日（下周二）前将每人 150 元（含门票、午餐、保险及新增体验项目）通过微信转账至学校账户，备注需写明班级和姓名。"
+      },
+      {
+       "u": "a2",
+       "text": "上午 7:40 在学校门口集合，两辆大巴分别运送一班、二班和三班、四班前往森林公园，下午 4:30 返回学校。"
+      },
+      {
+       "u": "a3",
+       "text": "每位学生需自备水和帽子，不得携带零食，午餐由学校统一订购，若有食物过敏情况需提前告知。"
+      },
+      {
+       "u": "a4",
+       "text": "若遇下雨，活动将改期至 11 月 15 日，届时将在群内另行通知。"
+      },
+      {
+       "u": "a5",
+       "text": "费用已更正为每人一百五十元，原一百二十元的金额不再适用。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "各位家长，关于下个月的春游，时间定在十一月八号星期五，早上七点四十在学校门口集合，坐两辆大巴前往森林公园，分一班二、二班、三班、四班一班。"
+      },
+      {
+       "u": "a2",
+       "text": "费用每人一百二十元，包含门票、午餐和保险，请在下周二之前交给班主任，微信转账或转给学校账户，备注需写班级和姓名。"
+      },
+      {
+       "u": "a3",
+       "text": "孩子需带水和帽子，不要带零食，午餐由学校统一订购。"
+      },
+      {
+       "u": "a4",
+       "text": "如有食物过敏，请提前告知。"
+      },
+      {
+       "u": "a5",
+       "text": "下午四点半回到学校；如下雨，改期到十一月十五号，学校将在群里通知。"
+      },
+      {
+       "u": "a6",
+       "text": "The cost per person is corrected to one hundred fifty yuan due to an additional experience item, while the rest of the details remain unchanged."
+      },
+      {
+       "u": "a7",
+       "text": "Payment must still be submitted by next Tuesday, and the school will notify the group chat if the rain delay occurs on November 15th."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于下个月的春游，说明时间是十一月八号星期五，早上七点四十在学校门口集合，坐两辆大巴去森林公园，一车是一班二班，另一车是三班四班。"
+      },
+      {
+       "u": "a2",
+       "text": "费用每人一百五十元，包括门票、午餐和保险，请在下周二之前交给班主任。"
+      },
+      {
+       "u": "a3",
+       "text": "可以微信转账，也可以转给学校账户，备注写班级和姓名。"
+      },
+      {
+       "u": "a4",
+       "text": "孩子要带水和帽子，不要带零食，午餐学校统一订。"
+      },
+      {
+       "u": "a5",
+       "text": "如果有食物过敏，请提前告诉。"
+      },
+      {
+       "u": "a6",
+       "text": "下午四点半回到学校，如果下雨，改期到十一月十五号，到时候会在群里通知。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容为“下周二”和“十一月十五号”，但具体日期和时间是否准确，尚不清楚。"
+      },
+      {
+       "u": "a8",
+       "text": "费用和物品清单已明确，但是否需要额外确认，尚不确定。"
+      },
+      {
+       "u": "a9",
+       "text": "费用是每人一百五十元，交钱截止时间还是下周二。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "<|tool_call_start|>[update_recap(previous_recap='各位家长，关于下个月的春游，时间定在十一月八号星期五，早上七点四十在学校门口集合，坐两辆大巴前往森林公园，分一班二、二班、三班、四班一班。"
+      },
+      {
+       "u": "a2",
+       "text": "费用每人一百二十元，包含门票、午餐和保险，请在下周二之前交给班主任，微信转账或转给学校账户，备注需写班级和姓名。"
+      },
+      {
+       "u": "a3",
+       "text": "孩子需带水和帽子，不要带零食，午餐由学校统一订购。"
+      },
+      {
+       "u": "a4",
+       "text": "如有食物过敏，请提前告知。"
+      },
+      {
+       "u": "a5",
+       "text": "下午四点半回到学校；如下雨，改期到十一月十五号，学校将在群里通知。"
+      },
+      {
+       "u": "a6",
+       "text": "', new_transcript='刚才有个数字要更正 费用是每人一百五十不是一百二十 因为多加了一个体验项目 其他不变 交钱截止时间还是下周二', current_recap='各位家长，关于下个月的春游，时间定在十一月八号星期五，早上七点四十在学校门口集合，坐两辆大巴前往森林公园，分一班二、二班、三班、四班一班。"
+      },
+      {
+       "u": "a7",
+       "text": "费用每人一百二十元，包含门票、午餐和保险，请在下周二之前交给班主任，微信转账或转给学校账户，备注需写班级和姓名。"
+      },
+      {
+       "u": "a8",
+       "text": "孩子需带水和帽子，不要带零食，午餐由学校统一订购。"
+      },
+      {
+       "u": "a9",
+       "text": "如有食物过敏，请提前告知。"
+      },
+      {
+       "u": "a10",
+       "text": "下午四点半回到学校；如下雨，改期到十一月十五号，学校将在群里通知。"
+      },
+      {
+       "u": "a11",
+       "text": "', new_updated_recap='各位家长，关于下个月的春游，时间定在十一月八号星期五，早上七点四十在学校门口集合，坐两辆大巴前往森林公园，分一班二、二班、三班、四班一班。"
+      },
+      {
+       "u": "a12",
+       "text": "费用每人一百五十元，包含门票、午餐、体验项目和保险，请在下周二之前交给班主任，微信转账或转"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-023",
+   "language": "zh",
+   "transcript": [
+    "1. 今天好冷啊",
+    "2. 是啊 昨天还挺暖和的",
+    "3. 我早上出门都没带外套",
+    "4. 活该",
+    "5. 哈哈",
+    "6. 听说周末会降温",
+    "7. 是吗 我没看天气预报",
+    "8. 可能吧 我也不确定",
+    "9. 反正多穿点",
+    "10. 嗯",
+    "11. 你吃早饭了吗",
+    "12. 没有 不太饿",
+    "13. 那我也不吃了",
+    "14. 走吧",
+    "15. 要上课了"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "今天很冷,比昨天冷。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "其中一人早上出门没带外套。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "两人都没吃早饭。",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "周末一定会降温。"
+    },
+    {
+     "id": "n2",
+     "text": "有人打算去买外套(未提及)。"
+    },
+    {
+     "id": "m1",
+     "text": "周末降温被说成已确定。"
+    },
+    {
+     "id": "m2",
+     "text": "新增了未提到的计划或安排。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "周末是否降温不确定,只是听说,说话人自己也不确定。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "今天很冷，昨天比较温暖，早上出门没有带外套。"
+      },
+      {
+       "u": "a2",
+       "text": "关于周末降温的信息是否准确，还有待确认。"
+      },
+      {
+       "u": "a3",
+       "text": "多穿衣服是决定。"
+      },
+      {
+       "u": "a4",
+       "text": "询问是否吃早饭，回答是没有，不太饿，所以没有吃。"
+      },
+      {
+       "u": "a5",
+       "text": "现在要上课，所以不要走。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "附近的人听到以下内容：今天很冷，昨天比较温暖，早上出门没有带外套。"
+      },
+      {
+       "u": "a2",
+       "text": "关于周末降温的信息是否准确，还有待确认。"
+      },
+      {
+       "u": "a3",
+       "text": "多穿衣服是决定。"
+      },
+      {
+       "u": "a4",
+       "text": "询问是否吃早饭，回答是没有，不太饿，所以没有吃。"
+      },
+      {
+       "u": "a5",
+       "text": "Someone was told to walk and that it was time to go to class."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "对话发生在今天早晨，两人讨论了天气变冷和未带外套的情况。"
+      },
+      {
+       "u": "a2",
+       "text": "对方指出昨天天气还比较暖和，而说话者承认自己早上出门时确实没带外套，并自嘲“活该”。"
+      },
+      {
+       "u": "a3",
+       "text": "虽然听说周末会降温，但说话者表示自己没有查看天气预报，因此对降温的具体时间持不确定态度。"
+      },
+      {
+       "u": "a4",
+       "text": "关于早餐，说话者提到自己没吃且不太饿，随后对方也决定不吃了。"
+      },
+      {
+       "u": "a5",
+       "text": "整段对话中未提及任何具体的日期、时间或地点细节。"
+      },
+      {
+       "u": "a6",
+       "text": "现在说话者表示要走了，因为要上课了。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place on a cold day, with the speaker noting that it was cold and that they had not brought a jacket when leaving in the morning."
+      },
+      {
+       "u": "a2",
+       "text": "They mentioned hearing that the weekend would be cooler and were unsure about the weather forecast, but decided to dress warmly anyway."
+      },
+      {
+       "u": "a3",
+       "text": "The other person asked if the other had eaten breakfast, and the response was that they hadn't and were not particularly hungry."
+      },
+      {
+       "u": "a4",
+       "text": "The conversation ended with the other person asking if the speaker had eaten breakfast, to which the response was that they hadn't."
+      },
+      {
+       "u": "a5",
+       "text": "No specific decisions, requests, or assignments were made beyond the mutual agreement to dress warmly and the casual exchange about breakfast."
+      },
+      {
+       "u": "a6",
+       "text": "The transcript does not contain any speech recognition errors or missing segments."
+      },
+      {
+       "u": "a7",
+       "text": "The speaker and the other person agreed to dress warmly due to the cold weather and the uncertainty about the weekend forecast."
+      },
+      {
+       "u": "a8",
+       "text": "The speaker had not eaten breakfast and was not particularly hungry."
+      },
+      {
+       "u": "a9",
+       "text": "The conversation concluded with the other person confirming that the speaker also had not eaten breakfast."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "对话发生在今天早晨，两人讨论了天气变冷和未带外套的情况。"
+      },
+      {
+       "u": "a2",
+       "text": "对方指出昨天天气还比较暖和，而说话者承认自己早上出门时确实没带外套，并自嘲“活该”。"
+      },
+      {
+       "u": "a3",
+       "text": "虽然听说周末会降温，但说话者表示自己没有查看天气预报，因此对降温的具体时间持不确定态度。"
+      },
+      {
+       "u": "a4",
+       "text": "关于早餐，说话者提到自己没吃且不太饿，随后对方也决定不吃了。"
+      },
+      {
+       "u": "a5",
+       "text": "整段对话中未提及任何具体的日期、时间或地点细节。"
+      },
+      {
+       "u": "a6",
+       "text": "说话者提议离开，因为上课时间快到了。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place on a cold day, with the speaker noting that it was cold and that they had not brought a jacket when leaving in the morning."
+      },
+      {
+       "u": "a2",
+       "text": "They mentioned hearing that the weekend would be cooler and were unsure about the weather forecast, but decided to dress warmly anyway."
+      },
+      {
+       "u": "a3",
+       "text": "The other person asked if the other had eaten breakfast, and the response was that they hadn't and were not particularly hungry."
+      },
+      {
+       "u": "a4",
+       "text": "The conversation ended with the other person asking if the speaker had eaten breakfast, to which the response was that they hadn't."
+      },
+      {
+       "u": "a5",
+       "text": "No specific decisions, requests, or assignments were made beyond the mutual agreement to dress warmly and the casual exchange about breakfast."
+      },
+      {
+       "u": "a6",
+       "text": "The transcript does not contain any speech recognition errors or missing segments."
+      },
+      {
+       "u": "a7",
+       "text": "The speaker and the other person agreed to dress warmly after noting the cold weather and the forecast."
+      },
+      {
+       "u": "a8",
+       "text": "They also had a brief exchange about breakfast, with both confirming they had not eaten it and were not particularly hungry."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-024",
+   "language": "zh",
+   "transcript": [
+    "1. 我们周六搬家的事 再确认一下",
+    "2. 搬家公司说早上九点到",
+    "3. 两个师傅 一辆四米二的车",
+    "4. 总价一千二 现金还是转账都行",
+    "5. 旧房子这边我和你哥负责打包",
+    "6. 书和厨房用品已经装好了",
+    "7. 还差卧室的衣服",
+    "8. 新房子那边钥匙谁拿",
+    "9. 房东说钥匙在物业 凭身份证领",
+    "10. 我周五下班去拿",
+    "11. 电梯要提前预约",
+    "12. 预约了 周六九点半到十一点",
+    "13. 超过时间要加钱吗",
+    "14. 不用 但是别太晚",
+    "15. 新房的网络呢",
+    "16. 师傅说下周二来装",
+    "17. 好",
+    "18. 对了 搬家公司让我们提前把大件拆好",
+    "19. 床和衣柜他们不拆",
+    "20. 我周五晚上拆"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "周六搬家,搬家公司早上九点到,派两个师傅和一辆四米二的车。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "搬家总价一千二百元,现金或转账都可以。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "旧房子里书和厨房用品已经装好,还差卧室的衣服。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "新房钥匙放在物业,凭身份证领取,有人周五下班去拿。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "电梯已预约周六九点半到十一点,超时不加钱。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "新房的网络师傅下周二来安装。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "g1",
+     "text": "搬家公司不负责拆床和衣柜,需要提前拆好。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "g2",
+     "text": "说话人周五晚上去拆床和衣柜。",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "两位说话人是夫妻(未提及)。"
+    },
+    {
+     "id": "n2",
+     "text": "电梯超时要加钱。"
+    },
+    {
+     "id": "n3",
+     "text": "钥匙已经拿到。"
+    },
+    {
+     "id": "m1",
+     "text": "搬家公司被说成会负责拆床和衣柜。"
+    },
+    {
+     "id": "m2",
+     "text": "搬家时间或价格被改动。"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于周六搬家的事，确认搬家公司早上九点到，安排两个师傅、一辆四米二的车，总价一千二，现金或转账可。"
+      },
+      {
+       "u": "a2",
+       "text": "旧房子这边，你、哥和另一个人负责打包，书和厨房用品已装好，还差卧室的衣服。"
+      },
+      {
+       "u": "a3",
+       "text": "新房子那边，钥匙在物业，凭身份证凭证去拿，周五下班去。"
+      },
+      {
+       "u": "a4",
+       "text": "电梯提前预约，预约时间为周六九点半到十一点，超过时间不加钱，但不可迟到。"
+      },
+      {
+       "u": "a5",
+       "text": "网络安装将于下周二进行。"
+      },
+      {
+       "u": "a6",
+       "text": "相关信息如“下周二”和“周六九点半到十一点”已确认。"
+      },
+      {
+       "u": "a7",
+       "text": "搬家公司要求提前把大件拆好，床和衣柜不拆，你周五晚上拆。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我们确认了周六搬家的安排，由搬家公司提供两名师傅和一辆四米二的车，总价为一千二，支付方式可以是现金或转账。"
+      },
+      {
+       "u": "a2",
+       "text": "旧房子的打包工作由我和我哥负责，目前书和厨房用品已装好，仅剩卧室的衣服待装。"
+      },
+      {
+       "u": "a3",
+       "text": "新房子钥匙需凭身份证从物业领取，我计划于周五下班后去取，并预约了周六九点半至十一点进入新房。"
+      },
+      {
+       "u": "a4",
+       "text": "关于超时是否收费，师傅表示只要不晚于十一点即可，无需额外付费。"
+      },
+      {
+       "u": "a5",
+       "text": "新房的网络安装定于下周二由师傅上门完成。"
+      },
+      {
+       "u": "a6",
+       "text": "搬家公司要求我们提前拆好大件，但床和衣柜他们不拆，我计划于周五晚上自行拆好床和衣柜。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于周六搬家的事，确认搬家公司早上九点到，安排两个师傅、一辆四米二的车，总价一千二，现金或转账可。"
+      },
+      {
+       "u": "a2",
+       "text": "旧房子这边，你、哥和另一个人负责打包，书和厨房用品已装好，还差卧室的衣服。"
+      },
+      {
+       "u": "a3",
+       "text": "新房子那边，钥匙在物业，凭身份证凭证去拿，周五下班去。"
+      },
+      {
+       "u": "a4",
+       "text": "电梯提前预约，预约时间为周六九点半到十一点，超过时间不加钱，但不可迟到。"
+      },
+      {
+       "u": "a5",
+       "text": "网络安装将于下周二进行。"
+      },
+      {
+       "u": "a6",
+       "text": "相关信息如“下周二”和“周六九点半到十一点”已确认。"
+      },
+      {
+       "u": "a7",
+       "text": "Someone reported that the moving company asked them to have large items disassembled in advance, but beds and wardrobes were not to be disassembled, and they would disassemble the furniture on Friday evening."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "周六搬家事确认，搬家公司早上九点到，两个师傅用四米二的车，总价一千二，现金或转账均行。"
+      },
+      {
+       "u": "a2",
+       "text": "旧房子书和厨房用品已打包完毕，仅差卧室衣服。"
+      },
+      {
+       "u": "a3",
+       "text": "新房子钥匙在物业，凭身份证领，周五下班去拿。"
+      },
+      {
+       "u": "a4",
+       "text": "电梯需提前预约，周六九点半到十一点，超时不加钱，但需注意不太晚。"
+      },
+      {
+       "u": "a5",
+       "text": "新房网络下周二由师傅来装。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我们确认了周六搬家的安排，由搬家公司提供两名师傅和一辆四米二的车，总价为一千二，支付方式可以是现金或转账。"
+      },
+      {
+       "u": "a2",
+       "text": "旧房子的打包工作由我和我哥负责，目前书和厨房用品已装好，仅剩卧室的衣服待装。"
+      },
+      {
+       "u": "a3",
+       "text": "新房子钥匙需凭身份证从物业领取，我计划于周五下班后去取，并预约了周六九点半至十一点进入新房。"
+      },
+      {
+       "u": "a4",
+       "text": "关于超时是否收费，师傅表示只要不晚于十一点即可，无需额外付费。"
+      },
+      {
+       "u": "a5",
+       "text": "新房的网络安装定于下周二由师傅上门完成。"
+      },
+      {
+       "u": "a6",
+       "text": "搬家公司要求我们提前拆下大件，但床和衣柜除外，我计划于周五晚上完成拆除工作。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "周六搬家事再确认一下，搬家公司说早上九点到，两个师傅用一辆四米二的车，总价一千二，现金或转账都行。"
+      },
+      {
+       "u": "a2",
+       "text": "旧房子这边我和你哥负责打包，书和厨房用品已经装好了，还差卧室的衣服。"
+      },
+      {
+       "u": "a3",
+       "text": "新房子钥匙在物业，凭身份证领，我周五下班去拿。"
+      },
+      {
+       "u": "a4",
+       "text": "电梯需要提前预约，周六九点半到十一点，超过时间不用加钱，但要注意别太晚。"
+      },
+      {
+       "u": "a5",
+       "text": "新房的网络下周二由师傅来装。"
+      },
+      {
+       "u": "a6",
+       "text": "{"
+      },
+      {
+       "u": "a7",
+       "text": "\"summary\": \"The person needs to unpack the old house on Saturday morning, with the moving company arriving at 9 AM with two workers and a four-meter-two car for a total of 1,200 yuan, accepting cash or transfer."
+      },
+      {
+       "u": "a8",
+       "text": "The old house packing is being handled by the speaker and their brother, with books and kitchen items already packed and only the bedroom clothes remaining."
+      },
+      {
+       "u": "a9",
+       "text": "The new house keys are at the property management and can be collected with ID on Friday."
+      },
+      {
+       "u": "a10",
+       "text": "The elevator requires advance reservation, and the move is scheduled from 9:30 PM to 11:00 PM on Saturday with no extra charge for being late, but they should not be too late."
+      },
+      {
+       "u": "a11",
+       "text": "The new house network will be installed by the workers next Tuesday.\","
+      },
+      {
+       "u": "a12",
+       "text": "\"keyPoints\": ["
+      },
+      {
+       "u": "a13",
+       "text": "\"Moving company will arrive Saturday at 9 AM with two workers and a four-meter-two car for 1,200 yuan, accepting cash or transfer.\","
+      },
+      {
+       "u": "a14",
+       "text": "\"Old house packing is being handled by the speaker and their brother, with books and kitchen items already packed.\","
+      },
+      {
+       "u": "a15",
+       "text": "\"New house keys are at the property management and can be collected with ID on Friday.\","
+      },
+      {
+       "u": "a16",
+       "text": "\"Elevator requires advance reservation.\","
+      },
+      {
+       "u": "a17",
+       "text": "\"Saturday move is"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

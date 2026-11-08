@@ -1,0 +1,707 @@
+{
+ "batch": "batch_004",
+ "conversations": [
+  {
+   "conversation": "fin-en-009",
+   "language": "en",
+   "transcript": [
+    "1. so are we doing Mara's party at her place or ours",
+    "2. hers I think she said her place has the bigger yard",
+    "3. wait I thought that was Nina's place that has the bigger yard",
+    "4. no Nina's is the one with the pool she can't have kids near it",
+    "5. ah okay Mara's then",
+    "6. what time",
+    "7. she said two but then he said three because of the soccer game",
+    "8. who's he",
+    "9. her husband Carlos he coaches until one thirty",
+    "10. okay so three then",
+    "11. yeah three o'clock Saturday the twelfth",
+    "12. no no it's the nineteenth the twelfth is when they're at the wedding",
+    "13. oh good catch the nineteenth",
+    "14. who's bringing the cake",
+    "15. I told Nina she could do it but she says she can't bake",
+    "16. so buy one then",
+    "17. she wants to order it from Sweet Thistle",
+    "18. okay and I'll bring the drinks and the plates",
+    "19. and he's bringing the grill so we don't need to do the burgers",
+    "20. which he",
+    "21. Carlos Carlos has the big grill",
+    "22. right okay",
+    "23. she wants us to bring a chair each",
+    "24. a folding chair got it"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The party is being held at Mara's place because it has the bigger yard.",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f2",
+     "text": "Nina's place has a pool, which is a concern because kids cannot be near it.",
+     "critical": false,
+     "kind": "place"
+    },
+    {
+     "id": "f3",
+     "text": "The party starts at 3 o'clock.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "The 3 o'clock start, rather than 2, is because Carlos coaches a soccer game until 1:30.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f5",
+     "text": "The party is on Saturday the nineteenth.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "The party date was corrected from the twelfth to the nineteenth.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f7",
+     "text": "Nina says she cannot bake, so the cake is to be bought, with Sweet Thistle mentioned as the bakery.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f8",
+     "text": "One speaker will bring the drinks and the plates.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f9",
+     "text": "Carlos is bringing the big grill, so burgers do not need to be cooked separately.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f10",
+     "text": "Guests are asked to bring a folding chair each.",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The party is on the twelfth."
+    },
+    {
+     "id": "n2",
+     "text": "The party is held at Nina's house."
+    },
+    {
+     "id": "n3",
+     "text": "Mara is turning a particular age (never stated)."
+    },
+    {
+     "id": "n4",
+     "text": "The party starts at 2 o'clock."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "It is ambiguous who exactly is ordering the cake from Sweet Thistle, although Nina is the likely person."
+    },
+    {
+     "id": "u2",
+     "text": "Who 'they' are at the wedding on the twelfth is not clearly stated."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group discussed whether Mara's party would be at her place or theirs, with Nina's place having the bigger yard."
+      },
+      {
+       "u": "a2",
+       "text": "They clarified that Mara's place is the correct location."
+      },
+      {
+       "u": "a3",
+       "text": "The party is scheduled for Saturday the nineteenth, not the twelfth."
+      },
+      {
+       "u": "a4",
+       "text": "Carlos, who coaches until one thirty, will bring the grill, so burgers are not needed."
+      },
+      {
+       "u": "a5",
+       "text": "Nina was asked to bring the cake but she cannot bake, so they decided to order it from Sweet Thistle."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker will bring drinks and plates, and a folding chair has been secured for each person."
+      },
+      {
+       "u": "k1",
+       "text": "The party is at Mara's place, not Nina's, because Nina's place has the bigger yard."
+      },
+      {
+       "u": "k2",
+       "text": "The party is scheduled for Saturday the nineteenth, not the twelfth."
+      },
+      {
+       "u": "k3",
+       "text": "Carlos will bring the grill and will coach until one thirty."
+      },
+      {
+       "u": "k4",
+       "text": "The party time is three o'clock on Saturday the nineteenth."
+      },
+      {
+       "u": "k5",
+       "text": "Nina was asked to bring the cake but she cannot bake, so they will order it from Sweet Thistle."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker will bring drinks and plates, and a folding chair has been secured for each person."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation confirmed that Mara's party will be at her place, not theirs, because her yard is bigger."
+      },
+      {
+       "u": "a2",
+       "text": "The time was initially thought to be two o'clock but was corrected to three o'clock on Saturday, the nineteenth (the twelfth is the wedding date)."
+      },
+      {
+       "u": "a3",
+       "text": "Nina was asked to bring the cake but declined due to not being able to bake, so the plan is to order it from Sweet Thistle."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker will bring drinks and plates, while Carlos (Mara's husband) is bringing the grill and will handle the burgers."
+      },
+      {
+       "u": "a5",
+       "text": "Each person is bringing a folding chair."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to host Mara's party at her home because Nina's location has a pool where children cannot play."
+      },
+      {
+       "u": "a2",
+       "text": "The event is scheduled for Saturday, the nineteenth, at three o'clock, which was the final time agreed upon after correcting an initial suggestion of two."
+      },
+      {
+       "u": "a3",
+       "text": "Nina will not bake the cake, so the group will purchase one from Sweet Thistle instead of bringing it themselves."
+      },
+      {
+       "u": "a4",
+       "text": "Carlos will bring the grill and drinks, while everyone else is responsible for bringing one folding chair each."
+      },
+      {
+       "u": "k1",
+       "text": "The party will be held at Mara's house."
+      },
+      {
+       "u": "k2",
+       "text": "The event is on Saturday, the nineteenth, at 3:00 PM."
+      },
+      {
+       "u": "k3",
+       "text": "Nina will not bake the cake, so it will be bought from Sweet Thistle."
+      },
+      {
+       "u": "k4",
+       "text": "Carlos will bring the grill and drinks."
+      },
+      {
+       "u": "k5",
+       "text": "Each person must bring one folding chair."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The party is at Mara's place because it has the bigger yard, despite confusion about Nina's place having a pool unsuitable for kids."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed on three o'clock on Saturday the nineteenth, correcting the earlier mention of the twelfth, which is for a wedding."
+      },
+      {
+       "u": "a3",
+       "text": "they decided to buy cake from Sweet Thistle because Nina can't bake, and they'll bring drinks and plates while Carlos brings the grill."
+      },
+      {
+       "u": "a4",
+       "text": "they agreed to bring a folding chair each."
+      },
+      {
+       "u": "a5",
+       "text": "the soccer game affects the timing, with Carlos coaching until one thirty."
+      },
+      {
+       "u": "a6",
+       "text": "the details left open include the full names of the guests and the final confirmation of the chair type."
+      },
+      {
+       "u": "a7",
+       "text": "missing information: the reason for the grill choice and the full list of guests."
+      },
+      {
+       "u": "k1",
+       "text": "The party is at Mara's place."
+      },
+      {
+       "u": "k2",
+       "text": "Mara's place has the bigger yard."
+      },
+      {
+       "u": "k3",
+       "text": "Nina's place has a pool unsuitable for kids."
+      },
+      {
+       "u": "k4",
+       "text": "The party time is three o'clock on Saturday the nineteenth."
+      },
+      {
+       "u": "k5",
+       "text": "The twelfth is the wedding date."
+      },
+      {
+       "u": "k6",
+       "text": "Cake is bought from Sweet Thistle."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "We are deciding whether to host Mara's party at her place or ours, with the decision leaning toward Mara's home because it has the larger yard, whereas Nina's house has a pool that is unsuitable for children."
+      },
+      {
+       "u": "a2",
+       "text": "The party is scheduled for Saturday, the nineteenth, at 3:00 PM, a time adjustment from the initially suggested 2:00 PM due to a soccer game."
+      },
+      {
+       "u": "a3",
+       "text": "Nina will not be baking the cake, so we will purchase one from Sweet Thistle, while Carlos will handle the grill and drinks, and plates will be brought by us."
+      },
+      {
+       "u": "a4",
+       "text": "Additionally, we have been assigned to bring one folding chair each."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation discussed hosting Mara's party at Mara's place or theirs."
+      },
+      {
+       "u": "a2",
+       "text": "It was clarified that Mara's place has the bigger yard, and Mara's husband Carlos coaches until one thirty."
+      },
+      {
+       "u": "a3",
+       "text": "The proposed time was two o'clock, but it was changed to three o'clock due to a soccer game."
+      },
+      {
+       "u": "a4",
+       "text": "The date was set to the nineteenth, correcting the earlier mention of the twelfth, which was reserved for a wedding."
+      },
+      {
+       "u": "a5",
+       "text": "Nina was asked to bring the cake, but she said she could not bake, so a cake from Sweet Thistle was arranged."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker agreed to bring drinks and plates, and Carlos was assigned the grill, eliminating the need to prepare burgers."
+      },
+      {
+       "u": "a7",
+       "text": "Folding chairs were agreed to be brought."
+      },
+      {
+       "u": "a8",
+       "text": "Details about who is bringing the grill were repeated, confirming Carlos has the big grill."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-010",
+   "language": "en",
+   "transcript": [
+    "1. let's talk about the office move",
+    "2. the lease at Harlow Street ends on December thirty first",
+    "3. I thought it was January fifteenth",
+    "4. that was the extension we asked for they said no",
+    "5. so December thirty first then",
+    "6. okay so we need a decision today on the new place",
+    "7. option one is the Pier Building it's eleven thousand a month",
+    "8. option two is the Weston Annex nine thousand five hundred",
+    "9. Weston is further from the train though",
+    "10. twelve minute walk versus three",
+    "11. the walk's not that bad",
+    "12. tell that to Rachel with the stroller",
+    "13. fair",
+    "14. what about parking",
+    "15. Pier has none Weston has twenty spaces",
+    "16. ok so who's in favor of Weston",
+    "17. I am",
+    "18. me too",
+    "19. I'd still prefer the Pier but I'll go with the group",
+    "20. okay Weston it is Jon can you call the broker tomorrow",
+    "21. yes I'll call tomorrow morning",
+    "22. and Alma please get quotes from two moving companies by the twentieth",
+    "23. sure which month",
+    "24. this month the twentieth of this month",
+    "25. got it"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The lease at Harlow Street ends on December 31.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "An extension to January 15 had been requested and was refused.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f3",
+     "text": "The Pier Building costs 11,000 dollars a month.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "The Weston Annex costs 9,500 dollars a month.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "Weston is a twelve-minute walk from the train versus three minutes for the Pier.",
+     "critical": false,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "The Pier has no parking and Weston has twenty spaces.",
+     "critical": false,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "The group decided to move to the Weston Annex.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f8",
+     "text": "Jon will call the broker tomorrow morning.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f9",
+     "text": "Alma will get quotes from two moving companies by the twentieth of this month.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The group chose the Pier Building."
+    },
+    {
+     "id": "n2",
+     "text": "The lease was extended to January 15."
+    },
+    {
+     "id": "n3",
+     "text": "The decision to choose Weston was unanimous (one person still preferred the Pier)."
+    },
+    {
+     "id": "n4",
+     "text": "Rachel has a baby (only a stroller is mentioned)."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation discussed the office move, noting the lease at Harlow Street ends on December thirty-first, correcting a previous belief that the extension ends on January fifteenth."
+      },
+      {
+       "u": "a2",
+       "text": "A decision on the new location is required today, with option one being the Pier Building at eleven thousand dollars per month and option two the Weston Annex at nine thousand five hundred dollars, though Weston is twelve minutes from the train versus three."
+      },
+      {
+       "u": "a3",
+       "text": "Parking is noted: Pier has none, Weston has twenty spaces."
+      },
+      {
+       "u": "a4",
+       "text": "Jon agreed to call the broker tomorrow morning, and Alma was instructed to obtain quotes from two moving companies by the twentieth of this month."
+      },
+      {
+       "u": "a5",
+       "text": "The name “Rachel” was mentioned in relation to a stroller."
+      },
+      {
+       "u": "a6",
+       "text": "Details about the walk and preferences were exchanged, but the specific person named “Jon” was confirmed for the call."
+      },
+      {
+       "u": "a7",
+       "text": "The exact timing for the call and the month for the quotes remain unspecified."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "We discussed the upcoming office move, confirming that the current lease at Harlow Street ends on December 31st, correcting my earlier incorrect belief that it would end on January 15th."
+      },
+      {
+       "u": "a2",
+       "text": "The decision on a new location must be made today, with two options presented: the Pier Building at $11,000 per month or the Weston Annex at $9,500 per month."
+      },
+      {
+       "u": "a3",
+       "text": "Although the Weston Annex is further from the train station with a twelve-minute walk compared to the Pier's three-minute walk, it offers twenty parking spaces whereas the Pier has none."
+      },
+      {
+       "u": "a4",
+       "text": "Jon agreed to call the broker tomorrow morning, and Alma was assigned to obtain quotes from two moving companies by the 20th of this month."
+      },
+      {
+       "u": "a5",
+       "text": "Rachel was also mentioned regarding the need to inform her about the stroller situation, though no specific action was assigned to her in the final summary."
+      },
+      {
+       "u": "a6",
+       "text": "Ultimately, the group decided to proceed with the Weston Annex, despite my personal preference for the Pier."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to move out of the Harlow Street lease, which ends on December 31st, rejecting a previous request for a January 15th extension."
+      },
+      {
+       "u": "a2",
+       "text": "They selected the Weston Annex over the Pier Building because it costs $9,500 per month compared to $11,000 and offers 20 parking spaces versus none."
+      },
+      {
+       "u": "a3",
+       "text": "Although the Weston Annex is a 12-minute walk from the train compared to the 3-minute walk for the Pier, the team agreed to proceed with Weston."
+      },
+      {
+       "u": "a4",
+       "text": "Jon will call the broker tomorrow morning, and Alma must obtain quotes from two moving companies by the 20th of this month."
+      },
+      {
+       "u": "a5",
+       "text": "Rachel was specifically asked to consider the move with a stroller, and the final decision was made in favor of the Weston Annex."
+      },
+      {
+       "u": "k1",
+       "text": "The lease at Harlow Street ends on December 31st."
+      },
+      {
+       "u": "k2",
+       "text": "The group chose the Weston Annex over the Pier Building."
+      },
+      {
+       "u": "k3",
+       "text": "The Weston Annex costs $9,500 per month with 20 parking spaces."
+      },
+      {
+       "u": "k4",
+       "text": "Jon will call the broker tomorrow morning."
+      },
+      {
+       "u": "k5",
+       "text": "Alma must get quotes from two moving companies by the 20th of this month."
+      },
+      {
+       "u": "k6",
+       "text": "Rachel was asked to consider the move with a stroller."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The lease at Harlow Street ends on December thirty-first, not January fifteenth, and they agreed December thirty-first is the new deadline."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed a decision on the new location is needed today, with option one being the Pier Building at eleven thousand dollars a month and option two the Weston Annex at nine thousand five hundred dollars, though Weston is twelve minutes from the train versus three."
+      },
+      {
+       "u": "a3",
+       "text": "They agreed the walk is not bad, but parking is an issue: Pier has none, Weston has twenty spaces."
+      },
+      {
+       "u": "a4",
+       "text": "To tell Rachel with the stroller about the walk, and they agreed Weston is the choice."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed Jon will call the broker tomorrow morning, and Alma will get quotes from two moving companies by the twentieth of this month."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed this month the twentieth is the deadline."
+      },
+      {
+       "u": "k1",
+       "text": "The lease at Harlow Street ends on December thirty-first."
+      },
+      {
+       "u": "k2",
+       "text": "Option one is the Pier Building at eleven thousand a month."
+      },
+      {
+       "u": "k3",
+       "text": "Option two is the Weston Annex at nine thousand five hundred."
+      },
+      {
+       "u": "k4",
+       "text": "Weston is twelve minutes from the train."
+      },
+      {
+       "u": "k5",
+       "text": "Weston has twenty parking spaces."
+      },
+      {
+       "u": "k6",
+       "text": "The deadline for moving company quotes is the twentieth of this month."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation discusses the office move and the lease expiration date of December 30th."
+      },
+      {
+       "u": "a2",
+       "text": "The group decides on the new location, with Weston Annex being selected over Pier Building due to parking availability."
+      },
+      {
+       "u": "a3",
+       "text": "Jon is assigned to call the broker tomorrow morning, and Alma is tasked with getting quotes from two moving companies by the 20th of this month."
+      },
+      {
+       "u": "k1",
+       "text": "The lease at Harlow Street ends on December 30th."
+      },
+      {
+       "u": "k2",
+       "text": "The extension to January 15th was denied."
+      },
+      {
+       "u": "k3",
+       "text": "Option one is the Pier Building at $11,000 per month."
+      },
+      {
+       "u": "k4",
+       "text": "Option two is the Weston Annex at $9,500 per month."
+      },
+      {
+       "u": "k5",
+       "text": "Weston is further from the train (12-minute walk) compared to Pier (3-minute walk)."
+      },
+      {
+       "u": "k6",
+       "text": "Rachel needs to be told about the stroller walk."
+      },
+      {
+       "u": "k7",
+       "text": "The group is in favor of Weston."
+      },
+      {
+       "u": "k8",
+       "text": "Jon will call the broker tomorrow morning."
+      },
+      {
+       "u": "k9",
+       "text": "Alma must get quotes from two moving companies by the 20th of this month."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about the office move and the lease at Harlow Street ending on December 30th, which was initially thought to be January 15th but was denied."
+      },
+      {
+       "u": "a2",
+       "text": "The group decided on the new location: Weston Annex at $9,500 per month, chosen over Pier Building at $11,000 per month because Weston is closer to the train (3-minute walk versus 12-minute walk)."
+      },
+      {
+       "u": "a3",
+       "text": "Jon was assigned to call the broker for Weston tomorrow morning, and Alma was assigned to get quotes from two moving companies by the 20th of this month."
+      },
+      {
+       "u": "a4",
+       "text": "The transcript does not contain any corrections to earlier statements."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

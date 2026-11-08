@@ -1,0 +1,1048 @@
+{
+ "batch": "batch_008",
+ "conversations": [
+  {
+   "conversation": "cont-025",
+   "language": "mixed",
+   "transcript": [
+    "1. okay 我们开始 daily standup",
+    "2. 昨天 backend 的 API 已经 deploy 到 staging 了",
+    "3. 今天 frontend 要接上这个 API",
+    "4. Kevin 你负责 login 页面对吧",
+    "5. 对 我下午三点前可以 push",
+    "6. 然后 QA 那边 Amy 会开始 test",
+    "7. 有一个 bug 就是 password reset 的 email 没发出去",
+    "8. 这个 priority 是 high",
+    "9. 谁来 fix",
+    "10. 我来 我今天就修",
+    "11. 还有 release 的日期",
+    "12. 目前定在下周五",
+    "13. client 说他们要先看 demo",
+    "14. demo 是周三下午两点",
+    "15. 地点是 client 的办公室",
+    "16. 我们要提前一天 rehearse",
+    "17. 周二下午就可以",
+    "18. 对了 demo 时间 client 刚改了",
+    "19. 是周三下午三点不是两点",
+    "20. 所以 rehearsal 还是周二",
+    "21. Amy 你把 test report 周二中午前给我"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The backend API was deployed to staging yesterday.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "Frontend connects to the API today; Kevin is responsible for the login page and can push before 3 pm.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "Amy in QA will start testing.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "The password reset email bug is high priority and one speaker will fix it today.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "The release is currently scheduled for next Friday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "A rehearsal is planned for Tuesday afternoon.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "g1",
+     "text": "Amy should deliver the test report by Tuesday noon.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "c1",
+     "text": "The demo is on Wednesday at 3 pm, not 2 pm, because the client changed it; the rehearsal stays on Tuesday.",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The password reset bug is already fixed."
+    },
+    {
+     "id": "n2",
+     "text": "The client has confirmed the release date (not stated)."
+    },
+    {
+     "id": "n3",
+     "text": "Kevin is the team lead (not stated)."
+    },
+    {
+     "id": "m1",
+     "text": "The 2 pm demo time is presented as current."
+    },
+    {
+     "id": "m2",
+     "text": "The release date has been moved."
+    },
+    {
+     "id": "m3",
+     "text": "The password reset bug has been fixed."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A daily standup took place near the person, with updates confirming backend API deployment to staging yesterday."
+      },
+      {
+       "u": "a2",
+       "text": "The frontend team is set to integrate the API today, and Kevin is assigned to handle the login page."
+      },
+      {
+       "u": "a3",
+       "text": "A decision was made to push by three o’clock this afternoon, and QA, led by Amy, will begin testing."
+      },
+      {
+       "u": "a4",
+       "text": "A high-priority bug regarding password reset emails not being sent was identified, and the person confirmed they will fix it today."
+      },
+      {
+       "u": "a5",
+       "text": "The release date is scheduled for next Friday, but the client requires a demo first."
+      },
+      {
+       "u": "a6",
+       "text": "The demo is set for Wednesday afternoon at two o’clock, and rehearsal is required the previous day, Tuesday afternoon."
+      },
+      {
+       "u": "a7",
+       "text": "The following details are missing: the person will fix the bug, Amy will send the test report Tuesday noon, and the specific rehearsal location."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "会议首先确认了昨天后端 API 已部署至 staging，今天前端需对接该接口，其中 Kevin 负责登录页面，承诺于今天下午三点前完成推送。"
+      },
+      {
+       "u": "a2",
+       "text": "QA 负责人 Amy 将开始测试，但发现一个高优先级的 bug：密码重置邮件未发送，Kevin 表示将在今日内修复。"
+      },
+      {
+       "u": "a3",
+       "text": "关于发布计划，目前定于下周五，但客户要求先观看周三下午三点的 demo，地点在客户办公室。"
+      },
+      {
+       "u": "a4",
+       "text": "团队决定提前一天于周二下午进行预演，Amy 需将测试报告于周二中午前提交。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A daily standup took place near the person, with updates confirming backend API deployment to staging yesterday."
+      },
+      {
+       "u": "a2",
+       "text": "The frontend team is set to integrate the API today, and Kevin is assigned to handle the login page."
+      },
+      {
+       "u": "a3",
+       "text": "A decision was made to push by three o’clock this afternoon, and QA, led by Amy, will begin testing."
+      },
+      {
+       "u": "a4",
+       "text": "A high-priority bug regarding password reset emails not being sent was identified, and the person confirmed they will fix it today."
+      },
+      {
+       "u": "a5",
+       "text": "The release date is scheduled for next Friday, but the client requires a demo first."
+      },
+      {
+       "u": "a6",
+       "text": "The demo is set for Wednesday afternoon at two o’clock at the client’s office, and rehearsal is required the previous day, Tuesday afternoon."
+      },
+      {
+       "u": "a7",
+       "text": "The following details are missing: who will fix the bug and the specific rehearsal location."
+      },
+      {
+       "u": "a8",
+       "text": "The demo time was changed to Wednesday afternoon at three o’clock, not two o’clock, and rehearsal is now scheduled for Tuesday afternoon."
+      },
+      {
+       "u": "a9",
+       "text": "Amy was asked to send the test report by Tuesday noon, and the bug fix was not assigned."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "会议首先确认了昨天后端 API 已部署至 staging，今天前端需对接该接口，其中 Kevin 负责登录页面，承诺于今天下午三点前完成推送。"
+      },
+      {
+       "u": "a2",
+       "text": "QA 负责人 Amy 将开始测试，但发现一个高优先级的 bug：密码重置邮件未发送，Kevin 表示将在今日内修复。"
+      },
+      {
+       "u": "a3",
+       "text": "关于发布计划，目前定于下周五，但客户要求先观看周三下午两点的 demo，地点在客户办公室。"
+      },
+      {
+       "u": "a4",
+       "text": "团队决定提前一天于周二下午进行预演，并指出会议中未提及的每日站会部分信息缺失。"
+      },
+      {
+       "u": "a5",
+       "text": "演示时间已由客户调整为周三下午三点，因此预演仍定于周二进行，同时 Amy 被要求将测试报告在周二中午前提交。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The daily standup recap has been updated with corrected timing details."
+      },
+      {
+       "u": "a2",
+       "text": "The client has adjusted the demo time to Wednesday at 3 PM (previously stated as 2 PM), and the rehearsal remains scheduled for Tuesday afternoon."
+      },
+      {
+       "u": "a3",
+       "text": "The backend API was deployed to staging yesterday, and the frontend team is now integrating with it."
+      },
+      {
+       "u": "a4",
+       "text": "Kevin is assigned to handle the login page and will push his changes by 3 PM this afternoon."
+      },
+      {
+       "u": "a5",
+       "text": "QA will begin testing with Amy starting today."
+      },
+      {
+       "u": "a6",
+       "text": "A high-priority bug regarding the password reset email has been identified and will be fixed by the speaker."
+      },
+      {
+       "u": "a7",
+       "text": "The release is currently scheduled for next Friday."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The daily standup recap: The backend API was deployed to staging yesterday, and the frontend team is now integrating with it."
+      },
+      {
+       "u": "a2",
+       "text": "Kevin is assigned to handle the login page and will push his changes by 3 PM this afternoon."
+      },
+      {
+       "u": "a3",
+       "text": "QA will begin testing with Amy starting today."
+      },
+      {
+       "u": "a4",
+       "text": "A high-priority bug regarding the password reset email has been identified and will be fixed by the speaker."
+      },
+      {
+       "u": "a5",
+       "text": "The release is currently scheduled for next Friday, with a client demo planned for Wednesday at 2 PM at the client's office, and a rehearsal is needed on Tuesday afternoon."
+      },
+      {
+       "u": "a6",
+       "text": "The demo time was updated to Wednesday at 3 PM, not 2 PM, and the rehearsal remains scheduled for Tuesday afternoon."
+      },
+      {
+       "u": "a7",
+       "text": "Amy was asked to provide the test report by Tuesday noon."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-026",
+   "language": "mixed",
+   "transcript": [
+    "1. 你 weekend 有空吗",
+    "2. 周六晚上可以",
+    "3. 我想去那家新开的 ramen shop",
+    "4. 叫什么 Ichiban 还是什么",
+    "5. Ichiran 吧 好像是",
+    "6. 在 Orchard Road 那边",
+    "7. 要排队吧",
+    "8. 应该要 我们早点去 六点半",
+    "9. 我可以先订位 他们有 online booking",
+    "10. 好 订几个人",
+    "11. 四个 Jason 和 Mei 也来",
+    "12. Jason 说他可能要加班",
+    "13. 那先订四个 来不了再取消",
+    "14. 好 我现在用 app 订",
+    "15. 你吃辣吗",
+    "16. 我不能吃太辣 mild 就好",
+    "17. OK",
+    "18. 订好了",
+    "19. 六点半 四个人"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "They plan to eat at a new ramen shop near Orchard Road on Saturday evening.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "They plan to meet at 6:30 to avoid queuing.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "One speaker will book online for four people, including Jason and Mei.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "The booking will be cancelled if Jason cannot come.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f5",
+     "text": "One speaker cannot eat very spicy food and wants mild.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "g1",
+     "text": "The booking has been made for four people at 6:30.",
+     "critical": true,
+     "kind": "decision"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Jason is definitely coming."
+    },
+    {
+     "id": "n2",
+     "text": "The booking has been confirmed (the speaker is only about to book)."
+    },
+    {
+     "id": "n3",
+     "text": "Jason and Mei are a couple (not stated)."
+    },
+    {
+     "id": "m1",
+     "text": "Jason is described as confirmed."
+    },
+    {
+     "id": "m2",
+     "text": "The booking is described as for a party size other than four or a time other than 6:30."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The shop's name is uncertain; Ichiran is only a guess."
+    },
+    {
+     "id": "u2",
+     "text": "Whether Jason can come is uncertain because he may have to work overtime."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place regarding plans to visit a new ramen shop called Ichiran located on Orchard Road."
+      },
+      {
+       "u": "a2",
+       "text": "The group agreed to go on Saturday evening, with the plan to arrive around 6:30 PM to avoid long queues."
+      },
+      {
+       "u": "a3",
+       "text": "Four people were initially booked: Jason and Mei, along with two others, though Jason later mentioned he might need to work overtime and could potentially not make it."
+      },
+      {
+       "u": "a4",
+       "text": "The booking was confirmed for four people via the app, with the understanding that the reservation could be cancelled if Jason cannot attend."
+      },
+      {
+       "u": "a5",
+       "text": "Regarding food preferences, the speaker requested a mild level of spiciness since they cannot eat very spicy food."
+      },
+      {
+       "u": "a6",
+       "text": "No further details were provided about the specific day of the week other than \"Saturday,\" and the exact time was set for 6:30 PM."
+      },
+      {
+       "u": "a7",
+       "text": "The group has now confirmed the booking for four people with an arrival time of 6:30 PM."
+      },
+      {
+       "u": "a8",
+       "text": "They are finalizing plans to visit the new ramen shop called Ichiran on Orchard Road this Saturday evening."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation concerns plans to visit the new ramen shop Ichiran on Orchard Road."
+      },
+      {
+       "u": "a2",
+       "text": "The group agreed to go on Saturday evening, arriving around 6:30 PM to avoid long queues."
+      },
+      {
+       "u": "a3",
+       "text": "Four people were initially booked: Jason and Mei, along with two others, though Jason later mentioned he might need to work overtime and could potentially not make it."
+      },
+      {
+       "u": "a4",
+       "text": "The booking was confirmed for four people via the app, with the understanding that the reservation could be cancelled if Jason cannot attend."
+      },
+      {
+       "u": "a5",
+       "text": "Regarding food preferences, the speaker requested a mild level of spiciness since they cannot eat very spicy food."
+      },
+      {
+       "u": "a6",
+       "text": "The booking is now confirmed, with the group size set to four and the time fixed at 6:30 PM."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "根据对话内容，周末约会计划已确定。"
+      },
+      {
+       "u": "a2",
+       "text": "对方询问是否有空，提议周六晚上去新开的拉面店（可能是Ichiban或Ichiran，位于Orchard Road）。"
+      },
+      {
+       "u": "a3",
+       "text": "双方决定提前6点半到达并通过App预订4人（包括说话人、Jason和Mei），因为Jason可能加班需要取消。"
+      },
+      {
+       "u": "a4",
+       "text": "关于饮食偏好，说话人表示不喜欢太辣，建议吃mild（微辣）。"
+      },
+      {
+       "u": "a5",
+       "text": "所有细节均来自转录，未发现未转录的部分。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "对话发生在一个无法听清的环境中，无法确认具体说话人。"
+      },
+      {
+       "u": "a2",
+       "text": "根据转录内容，话题是周末约会计划：对方询问是否有空，提议周六晚上去新开的拉面店（可能是Ichiban或Ichiran，位于Orchard Road）。"
+      },
+      {
+       "u": "a3",
+       "text": "双方决定提前6点半到达并通过App预订4人（包括说话人、Jason和Mei），因为Jason可能加班需要取消。"
+      },
+      {
+       "u": "a4",
+       "text": "关于饮食偏好，说话人表示不喜欢太辣，建议吃mild（微辣）。"
+      },
+      {
+       "u": "a5",
+       "text": "所有细节均来自转录，未发现未转录的部分。"
+      },
+      {
+       "u": "a6",
+       "text": "The conversation confirmed a weekend date night plan at a new ramen shop on Orchard Road, likely Ichiban or Ichiran."
+      },
+      {
+       "u": "a7",
+       "text": "Both parties agreed to arrive by 6:30 PM and booked a table for four people, including the speaker, Jason, and Mei, as Jason may need to cancel due to overtime."
+      },
+      {
+       "u": "a8",
+       "text": "The speaker also mentioned a preference for mild (not too spicy) food."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于周末行程，确认在周六晚上安排，地点为 Orchard Road 附近，目标是那家新开的 ramen shop，讨论名称时提到 Ichiban 或 Ichiran，确认需提前六点半出发并排队。"
+      },
+      {
+       "u": "a2",
+       "text": "决定预订四个座位，名单为 Jason、Mei、未提及的两个人，因 Jason 提到可能加班，决定先预订四个座位，若无法出席则取消。"
+      },
+      {
+       "u": "a3",
+       "text": "确认使用 app 预订，确认饮食偏好为 mild，无其他请求或变更。"
+      },
+      {
+       "u": "a4",
+       "text": "部分内容如“app”的使用细节和具体人数确认未明确。"
+      },
+      {
+       "u": "a5",
+       "text": "The person reported that the reservation was confirmed, mentioning the time and number of people, and stated that the app was used for the booking."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "确认在周六晚上安排，地点为 Orchard Road 附近，目标是那家新开的 ramen shop，讨论名称时提到 Ichiban 或 Ichiran，确认需提前六点半出发并排队。"
+      },
+      {
+       "u": "a2",
+       "text": "决定预订四个座位，名单为 Jason、Mei、未提及的两个人，因 Jason 提到可能加班，决定先预订四个座位，若无法出席则取消。"
+      },
+      {
+       "u": "a3",
+       "text": "确认使用 app 预订，确认饮食偏好为 mild，无其他请求或变更。"
+      },
+      {
+       "u": "a4",
+       "text": "订好了，确认六点半，四个人。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-027",
+   "language": "mixed",
+   "transcript": [
+    "1. OK 各位 先 recap 一下 project proposal",
+    "2. deadline 是下周一 midnight",
+    "3. 要 submit 到 Canvas",
+    "4. word count 不超过两千",
+    "5. Prof Lim 说 reference 用 APA format",
+    "6. 我们 section 分工先确认",
+    "7. introduction 是 Daniel",
+    "8. literature review 我来",
+    "9. methodology 给 Sofia",
+    "10. 她说她还没看过 survey data",
+    "11. 对 data 在 Google Drive 里面",
+    "12. 我等一下 share link",
+    "13. results 和 discussion 呢",
+    "14. 这个比较 heavy",
+    "15. 也许 Daniel 和 Sofia 一起做",
+    "16. Sofia 你可以吗",
+    "17. 我再想想",
+    "18. OK 那 conclusion 大家一起写",
+    "19. Drive link 我 share 了",
+    "20. Sofia 刚才 message 我了",
+    "21. 她说 results 她来做",
+    "22. 那 discussion 就是 Daniel"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The project proposal is due next Monday at midnight, submitted on Canvas.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The proposal has a word limit of two thousand and must use APA references, according to Prof Lim.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "Daniel writes the introduction, one speaker writes the literature review, and Sofia writes the methodology.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "Sofia has not yet seen the survey data, which is on Google Drive; one speaker will share the link.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "Everyone will write the conclusion together.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "g1",
+     "text": "The Google Drive link to the survey data has been shared.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "g2",
+     "text": "Sofia will write the results section and Daniel will write the discussion.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Daniel has been assigned results and discussion."
+    },
+    {
+     "id": "n2",
+     "text": "The deadline is Sunday."
+    },
+    {
+     "id": "m1",
+     "text": "Daniel is assigned results, or Sofia is assigned discussion."
+    },
+    {
+     "id": "m2",
+     "text": "The methodology section is reassigned."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Who writes results and discussion is undecided; Daniel and Sofia together was only a suggestion."
+    },
+    {
+     "id": "u2",
+     "text": "Whether Sofia agrees to take more work is unconfirmed; she said she would think about it."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The project proposal deadline is next Monday midnight, and the submission must go to Canvas."
+      },
+      {
+       "u": "a2",
+       "text": "The word count is not more than two thousand words."
+      },
+      {
+       "u": "a3",
+       "text": "Prof Lim stated the reference format is APA."
+      },
+      {
+       "u": "a4",
+       "text": "The section division is confirmed: introduction is Daniel, literature review is not specified, methodology is assigned to Sofia, and Sofia said she has not yet reviewed survey data."
+      },
+      {
+       "u": "a5",
+       "text": "Data is located in Google Drive."
+      },
+      {
+       "u": "a6",
+       "text": "The share link is pending."
+      },
+      {
+       "u": "a7",
+       "text": "Results and discussion are heavy, and the option for Daniel and Sofia to work together is considered."
+      },
+      {
+       "u": "a8",
+       "text": "Conclusion is to be written by everyone."
+      },
+      {
+       "u": "a9",
+       "text": "The reference format is not corrected."
+      },
+      {
+       "u": "a10",
+       "text": "The survey data location is not corrected."
+      },
+      {
+       "u": "a11",
+       "text": "The share link is not corrected."
+      },
+      {
+       "u": "a12",
+       "text": "The person reported sharing the Drive link and Sofia sending a message, then said that the results section is to be completed and the discussion section is assigned to Daniel."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was a project proposal recap near a person who could not hear it."
+      },
+      {
+       "u": "a2",
+       "text": "The deadline for the project proposal is next Monday midnight, and submissions must be made to Canvas with a maximum word count of 2000."
+      },
+      {
+       "u": "a3",
+       "text": "Prof Lim specified that references should be formatted in APA style."
+      },
+      {
+       "u": "a4",
+       "text": "Section assignments were confirmed: Daniel is responsible for the introduction, the speaker (Sofia) for the literature review, and Sofia for the methodology."
+      },
+      {
+       "u": "a5",
+       "text": "Sofia noted she had not yet reviewed the survey data located on Google Drive and requested the share link before proceeding."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker asked Sofia if she could handle the results and discussion sections, but Sofia responded that she would need to think about it."
+      },
+      {
+       "u": "a7",
+       "text": "Finally, the speaker indicated that the conclusion should be written."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The project proposal deadline is next Monday midnight, and the submission must go to Canvas."
+      },
+      {
+       "u": "a2",
+       "text": "The word count is not more than two thousand words."
+      },
+      {
+       "u": "a3",
+       "text": "Prof Lim stated the reference format is APA."
+      },
+      {
+       "u": "a4",
+       "text": "The section division is confirmed: introduction is Daniel, literature review is not specified, methodology is assigned to Sofia, and Sofia said she has not yet reviewed survey data."
+      },
+      {
+       "u": "a5",
+       "text": "Data is located in Google Drive."
+      },
+      {
+       "u": "a6",
+       "text": "The share link is pending."
+      },
+      {
+       "u": "a7",
+       "text": "Results and discussion are heavy, and the option for Daniel and Sofia to work together is considered."
+      },
+      {
+       "u": "a8",
+       "text": "Conclusion is to be written by everyone."
+      },
+      {
+       "u": "a9",
+       "text": "The word count is two thousand words."
+      },
+      {
+       "u": "a10",
+       "text": "Sofia said she will do the results."
+      },
+      {
+       "u": "a11",
+       "text": "The results and discussion section is to be done by Daniel."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was a project proposal recap near a person who could not hear it."
+      },
+      {
+       "u": "a2",
+       "text": "The transcript contains a series of utterances in mixed Chinese and English, with some speech recognition errors."
+      },
+      {
+       "u": "a3",
+       "text": "I need to create a detailed, accurate, natural recap of 4-8 sentences that preserves important facts: names, dates, times, numbers, places, decisions, requests, assigned tasks, and anything left open or uncertain."
+      },
+      {
+       "u": "a4",
+       "text": "I must not add details, reasons, relationships, or feelings not explicitly stated."
+      },
+      {
+       "u": "a5",
+       "text": "I should copy numbers, times, days, and names exactly."
+      },
+      {
+       "u": "a6",
+       "text": "I must keep every \"not\" and \"no\"."
+      },
+      {
+       "u": "a7",
+       "text": "If speech is unreadable, I should note that part is missing."
+      },
+      {
+       "u": "a8",
+       "text": "The language should match the conversation (Chinese and English as said)."
+      },
+      {
+       "u": "a9",
+       "text": "I will write only the recap as plain paragraph text."
+      },
+      {
+       "u": "a10",
+       "text": "Key facts from the transcript:"
+      },
+      {
+       "u": "a11",
+       "text": "- Project proposal recap was just taken"
+      },
+      {
+       "u": "a12",
+       "text": "- Deadline is next Monday midnight"
+      },
+      {
+       "u": "a13",
+       "text": "- Submission must be to Canvas"
+      },
+      {
+       "u": "a14",
+       "text": "- Word count must not exceed 2000"
+      },
+      {
+       "u": "a15",
+       "text": "- Prof Lim specified reference format should be APA"
+      },
+      {
+       "u": "a16",
+       "text": "- Section assignments: introduction is assigned to Daniel, literature review to the speaker (who is also Sofia), methodology to Sofia"
+      },
+      {
+       "u": "a17",
+       "text": "- Sofia said she hasn't looked at survey data"
+      },
+      {
+       "u": "a18",
+       "text": "- The speaker (Sofia) said they need to share the Google Drive link"
+      },
+      {
+       "u": "a19",
+       "text": "- The speaker asked Sofia if she can do the results and discussion sections"
+      },
+      {
+       "u": "a20",
+       "text": "- Sofia said \"我再想想\" (I'll think about it)"
+      },
+      {
+       "u": "a21",
+       "text": "- The speaker said \"OK 那 conclusion 大家一起写\" (OK, conclusion, everyone write together)"
+      },
+      {
+       "u": "a22",
+       "text": "- The speaker did not confirm any specific assignment for conclusion"
+      },
+      {
+       "u": "a23",
+       "text": "I need to structure this into 4-8 sentences that flow naturally while preserving all facts."
+      },
+      {
+       "u": "a24",
+       "text": "Let me draft:"
+      },
+      {
+       "u": "a25",
+       "text": "The conversation was a project proposal recap near a person who could not hear it."
+      },
+      {
+       "u": "a26",
+       "text": "The deadline for the project proposal is next Monday midnight, and submissions must be made to Canvas with a maximum word count of 2000."
+      },
+      {
+       "u": "a27",
+       "text": "Prof Lim specified that references should be formatted in APA style."
+      },
+      {
+       "u": "a28",
+       "text": "Section assignments were confirmed: Daniel is responsible for the introduction, the speaker (Sofia) for the literature review, and Sofia for the methodology."
+      },
+      {
+       "u": "a29",
+       "text": "Sofia noted she had not yet reviewed the survey data located on Google Drive and requested the share link before proceeding."
+      },
+      {
+       "u": "a30",
+       "text": "The speaker asked Sofia if she could handle the results and discussion sections, but Sofia responded that she would need to think about it."
+      },
+      {
+       "u": "a31",
+       "text": "Finally, the speaker indicated that the conclusion should be written {"
+      },
+      {
+       "u": "a32",
+       "text": "\"summary\": \"The project proposal recap was taken near a person who could not hear the conversation."
+      },
+      {
+       "u": "a33",
+       "text": "The deadline is next Monday midnight with submissions required on Canvas and a maximum word count of 2000."
+      },
+      {
+       "u": "a34",
+       "text": "Prof Lim specified that references must be formatted in APA style."
+      },
+      {
+       "u": "a35",
+       "text": "Section assignments were confirmed: Daniel will handle the introduction, the speaker (Sofia) will write the literature review, and Sofia is responsible for the methodology."
+      },
+      {
+       "u": "a36",
+       "text": "Sofia mentioned she had not yet reviewed the survey data on Google Drive and asked for the share link before proceeding."
+      },
+      {
+       "u": "a37",
+       "text": "The speaker requested that Sofia handle the results and discussion sections, but Sofia responded that she would need to think about it."
+      },
+      {
+       "u": "a38",
+       "text": "The speaker indicated that the conclusion should be written by everyone together.\","
+      },
+      {
+       "u": "a39",
+       "text": "\"keyPoints\": ["
+      },
+      {
+       "u": "a40",
+       "text": "\"The project proposal deadline is next Monday midnight with submissions required on Canvas and a maximum word count of 2000.\","
+      },
+      {
+       "u": "a41",
+       "text": "\"Prof Lim specified that references must be formatted in APA style.\","
+      },
+      {
+       "u": "a42",
+       "text": "\"Section assignments: Daniel is responsible for the introduction, the speaker (Sofia) for the literature review, and Sofia for the methodology.\","
+      },
+      {
+       "u": "a43",
+       "text": "\"Sofia stated she had not yet reviewed the survey data on Google Drive and asked for the share link.\","
+      },
+      {
+       "u": "a44",
+       "text": "\"The"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The project proposal deadline remains next Monday at midnight via Canvas, with a 2,000-word limit and APA references."
+      },
+      {
+       "u": "a2",
+       "text": "Section responsibilities are tentatively assigned: Daniel handles the introduction, I write the literature review, and Sofia is assigned the methodology section."
+      },
+      {
+       "u": "a3",
+       "text": "Sofia noted she has not yet reviewed the survey data in Google Drive, but a share link has now been provided."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding the heavy results and discussion sections, Sofia has now taken responsibility for the results section."
+      },
+      {
+       "u": "a5",
+       "text": "Consequently, Daniel is assigned to handle the discussion section."
+      },
+      {
+       "u": "a6",
+       "text": "The conclusion will still be written jointly by the entire group."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "We are recapping the project proposal deadline, which is set for next Monday at midnight, with submissions to be made via Canvas."
+      },
+      {
+       "u": "a2",
+       "text": "The document must not exceed 2,000 words, and Prof Lim has specified that references should follow APA format."
+      },
+      {
+       "u": "a3",
+       "text": "Section responsibilities have been tentatively assigned: Daniel will handle the introduction, I will write the literature review, and Sofia is assigned the methodology section, though she noted she has not yet reviewed the survey data located in Google Drive, for which a share link will be shared shortly."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding the results and discussion sections, which are considered heavy, it was suggested that Daniel and Sofia collaborate on them, pending further consideration."
+      },
+      {
+       "u": "a5",
+       "text": "Finally, the conclusion will be written jointly by the entire group."
+      },
+      {
+       "u": "a6",
+       "text": "Sofia has just messaged me, clarifying that she will take responsibility for the results section, while Daniel is to handle the discussion."
+      },
+      {
+       "u": "a7",
+       "text": "This shifts the division of labor, as the heavy sections were previously tentatively assigned to both of them jointly."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

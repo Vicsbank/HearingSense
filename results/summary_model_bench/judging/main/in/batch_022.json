@@ -1,0 +1,783 @@
+{
+ "batch": "batch_022",
+ "conversations": [
+  {
+   "conversation": "fin-zh-001",
+   "language": "zh",
+   "transcript": [
+    "1. 同学们安静一下",
+    "2. 今天班会先说三件事",
+    "3. 第一件事月考的时间调整了",
+    "4. 原来定的是这周五现在改到下周二",
+    "5. 因为周五学校要做消防演练",
+    "6. 考试科目不变还是语文数学英语物理化学这五科",
+    "7. 政治历史生物这次不考",
+    "8. 第二件事运动会报名",
+    "9. 这周四之前把名单交给体育委员李浩",
+    "10. 每个人最多报两个项目接力赛不算在里面",
+    "11. 第三件事从下周一开始早读提前",
+    "12. 七点二十就要坐进教室不是七点半",
+    "13. 有同学问手机怎么办",
+    "14. 手机还是早上交给班长考试那几天也一样",
+    "15. 有人问月考成绩什么时候出",
+    "16. 大概考完以后一个星期",
+    "17. 具体哪天还没定",
+    "18. 好了就这些下面各小组讨论一下运动会的加油口号"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "月考从原定的这周五改到下周二。",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f2",
+     "text": "月考调整的原因是周五学校要做消防演练。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "月考考语文、数学、英语、物理、化学五科。",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "政治、历史、生物这次月考不考。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f5",
+     "text": "运动会报名名单要在这周四之前交给体育委员李浩。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "每人最多报两个运动会项目，接力赛不计算在内。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "从下周一开始早读提前，七点二十就要坐进教室。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "手机仍然早上交给班长，考试那几天也一样。",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f9",
+     "text": "最后各小组要讨论运动会的加油口号。",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "月考仍然定在这周五（已改到下周二）。"
+    },
+    {
+     "id": "n2",
+     "text": "政治或历史也在月考范围内。"
+    },
+    {
+     "id": "n3",
+     "text": "运动会的举办日期已经说明（未提及）。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "月考成绩具体哪天公布没有确定，只说大概考完一周后。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "班会上提到了三件事：月考时间从这周五调整到下周二，考试科目不变；运动会报名名单已交给体育委员李浩，每人最多报两个项目；早读从下周一开始提前，教室时间调整为七点二十。"
+      },
+      {
+       "u": "a2",
+       "text": "最后各小组讨论运动会加油口号。"
+      },
+      {
+       "u": "k1",
+       "text": "月考时间从这周五调整到下周二"
+      },
+      {
+       "u": "k2",
+       "text": "考试科目不变为语文、数学、英语、物理、化学，政治和历史生物不再考"
+      },
+      {
+       "u": "k3",
+       "text": "运动会报名名单已交给体育委员李浩"
+      },
+      {
+       "u": "k4",
+       "text": "每人最多报两个项目接力赛"
+      },
+      {
+       "u": "k5",
+       "text": "早读从下周一开始提前"
+      },
+      {
+       "u": "k6",
+       "text": "教室时间调整为七点二十"
+      },
+      {
+       "u": "k7",
+       "text": "月考成绩大概在考完后一周出，但具体日期未定"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "在今天的班会上，老师首先宣布月考时间从原定本周五调整为下周二，因学校需进行消防演练，考试科目仍为语文、数学、英语、物理和化学，政治、历史及生物不再考试。"
+      },
+      {
+       "u": "a2",
+       "text": "其次，运动会报名需在周四前交给体育委员李浩，每人限报两个项目，接力赛不计入名额。"
+      },
+      {
+       "u": "a3",
+       "text": "第三项安排是从下周一起早读提前至七点二十，要求学生准时入座，手机仍按考试期间规定于早晨上交班长保管。"
+      },
+      {
+       "u": "a4",
+       "text": "关于月考成绩，预计考后一周内公布，但具体日期尚未确定。"
+      },
+      {
+       "u": "a5",
+       "text": "最后，老师要求各小组开始讨论运动会的加油口号。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The class needs quiet and today’s meeting covers three topics."
+      },
+      {
+       "u": "a2",
+       "text": "The first topic is the exam schedule: the date was changed from this Friday to next Tuesday because Friday involves a fire drill, and the exam subjects remain Chinese, math, English, physics, and chemistry—political science, history, and biology are not included."
+      },
+      {
+       "u": "a3",
+       "text": "The second topic is the sports meet registration: forms must be submitted to Li Hao before this Thursday, with each student registering for at most two events, excluding relay races."
+      },
+      {
+       "u": "a4",
+       "text": "The third topic is the early reading schedule: classes start at 7:20 next week instead of 7:30, and phones are still handed to the class leader before exams and used the same way during the exam period."
+      },
+      {
+       "u": "a5",
+       "text": "Someone asked about phone use, and someone asked about exam results—they said results will be available roughly one week after the exam, but the exact date is still undecided."
+      },
+      {
+       "u": "a6",
+       "text": "Someone agreed to discuss sports meet slogans in groups."
+      },
+      {
+       "u": "a7",
+       "text": "Missing information includes details about the exact day for results and the group discussion topic."
+      },
+      {
+       "u": "a8",
+       "text": "There is missing information about the early reading schedule timing."
+      },
+      {
+       "u": "a9",
+       "text": "There is missing information about the exact date for the early reading change."
+      },
+      {
+       "u": "a10",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a11",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a12",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a13",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a14",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a15",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a16",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a17",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a18",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a19",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a20",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a21",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a22",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a23",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a24",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a25",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a26",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a27",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a28",
+       "text": "There is missing information about the group discussion topic."
+      },
+      {
+       "u": "a29",
+       "text": "There is missing information about the exact day for the early reading change."
+      },
+      {
+       "u": "a30",
+       "text": "There is missing information"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The class meeting announced three main updates: the monthly exam schedule was changed from this Friday to next Tuesday due to a fire drill, with subjects remaining as Chinese, Math, English, Physics, and Chemistry while Politics, History, and Biology are excluded."
+      },
+      {
+       "u": "a2",
+       "text": "For the sports meeting registration, the list must be submitted to monitor Li Hao by this Thursday, noting that relay races are not included in the count."
+      },
+      {
+       "u": "a3",
+       "text": "Starting next Monday, early reading will begin at 7:20 instead of 7:30, and phones must be handed in to the monitor during exam days just as they are during the monthly exam."
+      },
+      {
+       "u": "a4",
+       "text": "The exam results are expected to be released about one week after the exams conclude, though the exact date is not yet determined."
+      },
+      {
+       "u": "a5",
+       "text": "The meeting concluded with an instruction for each group to discuss a cheer slogan for the sports meeting."
+      },
+      {
+       "u": "k1",
+       "text": "The monthly exam is rescheduled to next Tuesday instead of this Friday."
+      },
+      {
+       "u": "k2",
+       "text": "The exam subjects are Chinese, Math, English, Physics, and Chemistry only."
+      },
+      {
+       "u": "k3",
+       "text": "The sports meeting registration list must be submitted to Li Hao by this Thursday."
+      },
+      {
+       "u": "k4",
+       "text": "Early reading starts at 7:20 on Monday, not 7:30."
+      },
+      {
+       "u": "k5",
+       "text": "Phones must be handed in to the monitor during exam days."
+      },
+      {
+       "u": "k6",
+       "text": "Exam results will be released approximately one week after the exams."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "同学们安静一下，今天班会先说三件事。"
+      },
+      {
+       "u": "a2",
+       "text": "第一件事月考的时间调整了，原来定的是这周五现在改到下周二，因为周五学校要做消防演练，考试科目不变还是语文、数学、英语、物理、化学，这五科，政治和历史、生物这次不考。"
+      },
+      {
+       "u": "a3",
+       "text": "第二件事运动会报名，这周四之前把名单交给体育委员李浩，每个人最多报两个项目，接力赛不算在里面。"
+      },
+      {
+       "u": "a4",
+       "text": "第三件事从下周一开始早读提前，七点二十就要坐进教室，不是七点半。"
+      },
+      {
+       "u": "a5",
+       "text": "有同学问手机怎么办，手机还是早上交给班长，考试那几天也一样。"
+      },
+      {
+       "u": "a6",
+       "text": "有人问月考成绩什么时候出，大概考完以后一个星期，具体哪天还没定。"
+      },
+      {
+       "u": "a7",
+       "text": "好了就这些，下面各小组讨论一下运动会的加油口号。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "附近的人收到以下通知：班会第一件事是关于考试时间调整，原定为下周五，现在改到下周二，因为周五学校要做消防演练。"
+      },
+      {
+       "u": "a2",
+       "text": "考试科目仍为语文、数学、英语、物理、化学五科，政治、历史、生物这次不考。"
+      },
+      {
+       "u": "a3",
+       "text": "第二件事是运动会报名，需在下周四之前将名单交给体育委员李浩，每个人最多报两个项目，接力赛不算在内。"
+      },
+      {
+       "u": "a4",
+       "text": "第三件事是早读时间调整，从下周开始提前，七点二十就要进入教室，而不是七点半。"
+      },
+      {
+       "u": "a5",
+       "text": "关于手机，仍需早上交给班长，考试期间也一样。"
+      },
+      {
+       "u": "a6",
+       "text": "关于月考成绩，预计在考试结束后一个星期，具体日期尚未确定。"
+      },
+      {
+       "u": "a7",
+       "text": "会议结束后，各小组需讨论运动会的加油口号。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-002",
+   "language": "zh",
+   "transcript": [
+    "1. 妈你周六的聚餐定在哪儿了",
+    "2. 定了就在外婆家楼下那家湘菜馆",
+    "3. 几点",
+    "4. 六点半我订的是六点半",
+    "5. 啊不对我刚看了一下是六点",
+    "6. 他们家六点半以后要排队所以改成六点了",
+    "7. 那我哥能赶上吗他周六下午还有课",
+    "8. 他说五点下课坐地铁过来应该来得及",
+    "9. 他要是迟到就先点菜不等他",
+    "10. 舅舅他们来不来",
+    "11. 舅舅说看情况他那天可能要加班",
+    "12. 舅妈和表妹肯定来表妹还说要带她的小狗",
+    "13. 饭馆不让带狗吧",
+    "14. 那我问问老板",
+    "15. 对了外婆的生日蛋糕谁去取",
+    "16. 我去取我周六中午去店里拿",
+    "17. 记得别忘了上次你就忘了",
+    "18. 这次不会了",
+    "19. 一共几个人",
+    "20. 舅舅来的话是八个人不来就是七个人"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "周六的家庭聚餐在外婆家楼下的湘菜馆。",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f2",
+     "text": "聚餐时间最终是六点。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "聚餐时间由原先说的六点半改成了六点，因为餐馆六点半以后要排队。",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f4",
+     "text": "哥哥周六下午五点下课，打算坐地铁赶来，迟到的话先点菜不等他。",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f5",
+     "text": "舅妈和表妹肯定会来。",
+     "critical": false,
+     "kind": "relation"
+    },
+    {
+     "id": "f6",
+     "text": "有人要在周六中午去蛋糕店取外婆的生日蛋糕。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "舅舅来的话共八人，不来则共七人。",
+     "critical": true,
+     "kind": "number"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "聚餐时间仍是六点半（已改为六点）。"
+    },
+    {
+     "id": "n2",
+     "text": "舅舅已确认参加聚餐。"
+    },
+    {
+     "id": "n3",
+     "text": "餐馆已经同意表妹带小狗。"
+    },
+    {
+     "id": "n4",
+     "text": "说话人中取蛋糕的人是妈妈（未说明是谁）。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "舅舅是否能来不确定，他可能要加班。"
+    },
+    {
+     "id": "u2",
+     "text": "餐馆是否允许带狗没有确认，说话人要去问老板。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于周六的聚餐，地点已定在外婆家楼下那家湘菜馆。"
+      },
+      {
+       "u": "a2",
+       "text": "六点半已订，但调整为六点，因他们家六点半以后需排队。"
+      },
+      {
+       "u": "a3",
+       "text": "有人说弟弟周六下午有课，他预计五点下课后坐地铁来得及，但若迟到，需先点菜等待。"
+      },
+      {
+       "u": "a4",
+       "text": "舅舅表示情况待定，因可能要加班。"
+      },
+      {
+       "u": "a5",
+       "text": "舅妈和表妹肯定来，表妹还说要带她的小狗，但饭馆不许带狗，因此会询问老板。"
+      },
+      {
+       "u": "a6",
+       "text": "外婆的生日蛋糕由你去取，时间是周六中午。"
+      },
+      {
+       "u": "a7",
+       "text": "上次忘了，这次已记下。"
+      },
+      {
+       "u": "a8",
+       "text": "总共几个人，若舅舅来是八人，否则是七人。"
+      },
+      {
+       "u": "a9",
+       "text": "相关信息如迟到安排和狗的问题仍未明确。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于周六外婆家楼下湘菜馆聚餐的安排，最终确定的时间是六点而非最初说的六点半，因为该餐厅六点半后需排队。"
+      },
+      {
+       "u": "a2",
+       "text": "舅舅因下午有课，预计五点下课坐地铁前往，若迟到则先点菜等待。"
+      },
+      {
+       "u": "a3",
+       "text": "舅舅表示视加班情况决定是否参加，舅妈和表妹肯定出席，表妹还计划带小狗，但需确认老板是否允许。"
+      },
+      {
+       "u": "a4",
+       "text": "外婆生日蛋糕由“我”于周六中午到店领取，此前曾提醒对方勿再遗忘。"
+      },
+      {
+       "u": "a5",
+       "text": "若舅舅参加，届时共八人；若因加班缺席，则为七人。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "周六聚餐定在外婆家楼下那家湘菜馆，原定时间是六点半，但因为他们家六点半以后要排队，改成六点。"
+      },
+      {
+       "u": "a2",
+       "text": "哥哥周六下午还有课，说五点下课坐地铁过来，可能来得及；如果迟到则先点菜等他。"
+      },
+      {
+       "u": "a3",
+       "text": "舅舅说看情况，可能那天要加班，舅妈和表妹肯定来，表妹还说要带小狗，但饭馆不让带狗。"
+      },
+      {
+       "u": "a4",
+       "text": "外婆生日蛋糕由我周六中午去店里拿，提醒不要忘了上次我就忘了。"
+      },
+      {
+       "u": "a5",
+       "text": "总人数是八人，如果舅舅来就是八人，否则七人。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The Saturday gathering was at the restaurant downstairs from grandma's house, and the time was set for six o'clock; however, six thirty was changed to six because the restaurant requires queuing after six thirty."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed someone would check with the boss about dogs, as the restaurant doesn't allow them, and the guest's dog will be brought by the cousin."
+      },
+      {
+       "u": "a3",
+       "text": "They would pick up the birthday cake at noon on Saturday, and they remembered someone forgot to bring it last time."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed this time it wouldn't happen."
+      },
+      {
+       "u": "a5",
+       "text": "The cousin has a class in the afternoon on Saturday, and they expect them to arrive after class at five and take the subway."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed the cousin might be late, so they would order food first and wait."
+      },
+      {
+       "u": "a7",
+       "text": "The uncle might come due to possible overtime, and the aunt and cousin are confirmed to attend with the cousin bringing a small dog."
+      },
+      {
+       "u": "a8",
+       "text": "They agreed to ask the boss about the dog policy."
+      },
+      {
+       "u": "a9",
+       "text": "They calculated eight people if the uncle comes, seven if not."
+      },
+      {
+       "u": "a10",
+       "text": "They agreed to remember the previous oversight."
+      },
+      {
+       "u": "a11",
+       "text": "The part about the exact timing of the cousin's arrival is missing."
+      },
+      {
+       "u": "k1",
+       "text": "The gathering is on Saturday at six o'clock."
+      },
+      {
+       "u": "k2",
+       "text": "The restaurant is downstairs from grandma's house."
+      },
+      {
+       "u": "k3",
+       "text": "The cousin has a class in the afternoon on Saturday."
+      },
+      {
+       "u": "k4",
+       "text": "The cousin expects to arrive at five and take the subway."
+      },
+      {
+       "u": "k5",
+       "text": "The restaurant doesn't allow dogs."
+      },
+      {
+       "u": "k6",
+       "text": "The cousin will bring a small dog."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone was asked about the Saturday dinner plans, which were set for 6:30 PM at a hotpot restaurant near the grandmother's house."
+      },
+      {
+       "u": "a2",
+       "text": "The original time was 6:30 PM but was changed to 6:00 PM because the restaurant had a queue."
+      },
+      {
+       "u": "a3",
+       "text": "The brother will arrive by 5:00 PM after classes and may need to order food early if late."
+      },
+      {
+       "u": "a4",
+       "text": "The uncle is uncertain about attendance and may work late."
+      },
+      {
+       "u": "a5",
+       "text": "The niece will bring a dog, but the restaurant does not allow pets."
+      },
+      {
+       "u": "a6",
+       "text": "The grandmother's birthday cake should be picked up by the speaker at noon on Saturday, and the speaker promises not to forget as they did last time."
+      },
+      {
+       "u": "k1",
+       "text": "The dinner is scheduled for Saturday at 6:30 PM at a hotpot restaurant near the grandmother's house."
+      },
+      {
+       "u": "k2",
+       "text": "The time was changed from 6:30 PM to 6:00 PM due to a queue at the restaurant."
+      },
+      {
+       "u": "k3",
+       "text": "The brother will arrive by 5:00 PM after classes and may need to order food early if late."
+      },
+      {
+       "u": "k4",
+       "text": "The uncle is uncertain about attendance and may work late."
+      },
+      {
+       "u": "k5",
+       "text": "The niece will bring a dog, but the restaurant does not allow pets."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker will pick up the grandmother's birthday cake at noon on Saturday."
+      },
+      {
+       "u": "k7",
+       "text": "The speaker promises to remember to get the cake as they forgot last time."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to have dinner at a Xiang cuisine restaurant downstairs from the grandmother's house on Saturday at 6:00 PM instead of the originally planned 6:30 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker's brother will arrive at 5:00 PM after his class, and if he is late, the group will start ordering food without waiting for him."
+      },
+      {
+       "u": "a3",
+       "text": "The uncle's attendance is uncertain due to potential overtime, but the aunt and cousin are confirmed to attend, with the cousin bringing her small dog which the owner may not allow."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker will pick up the grandmother's birthday cake at the store on Saturday at 12:00 PM."
+      },
+      {
+       "u": "a5",
+       "text": "The final headcount will be eight people if the uncle attends, or seven if he does not."
+      },
+      {
+       "u": "k1",
+       "text": "Dinner is at the Xiang cuisine restaurant downstairs from the grandmother's house."
+      },
+      {
+       "u": "k2",
+       "text": "The meeting time is changed to 6:00 PM on Saturday."
+      },
+      {
+       "u": "k3",
+       "text": "The speaker's brother arrives at 5:00 PM and may be late."
+      },
+      {
+       "u": "k4",
+       "text": "If the brother is late, the group will not wait for him."
+      },
+      {
+       "u": "k5",
+       "text": "The uncle might be busy with overtime and attendance is uncertain."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker will pick up the birthday cake on Saturday at 12:00 PM."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

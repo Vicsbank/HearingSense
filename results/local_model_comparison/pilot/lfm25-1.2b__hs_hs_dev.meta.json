@@ -1,0 +1,223 @@
+{
+ "model": "lfm25-1.2b",
+ "spec": {
+  "kind": "mlx",
+  "repo": "lmstudio-community/LFM2.5-1.2B-Instruct-MLX-4bit",
+  "name": "LFM2.5-1.2B-Instruct",
+  "quantization": "MLX 4-bit"
+ },
+ "task": "hs",
+ "set": "hs_dev",
+ "phase": "pilot",
+ "seed": 7,
+ "warmup_requests": 2,
+ "first_request_seconds_after_load": [
+  0.5506292909849435
+ ],
+ "info": {
+  "repo": "lmstudio-community/LFM2.5-1.2B-Instruct-MLX-4bit",
+  "runtime": "mlx-lm 0.32.0, mlx 0.32.3",
+  "load_seconds": 0.4906830420077313,
+  "mlx_active_gb_after_load": 0.658503176,
+  "rss_gb_after_load": 0.875167744,
+  "template_has_thinking_switch": false,
+  "thinking": false,
+  "prefix_cache": true,
+  "sampling": "greedy (temperature 0)"
+ },
+ "memory": {
+  "mlx_peak_gb": 0.943781472,
+  "mlx_active_gb": 0.676263432,
+  "rss_gb": 0.88211456,
+  "max_rss_gb": 0.905969664
+ },
+ "timing": {
+  "requests": 20,
+  "errors": 0,
+  "seconds_p50": 0.12775099999271333,
+  "seconds_p95": 0.14066270799958147,
+  "seconds_p99": 0.1427659170003608,
+  "seconds_mean": 0.12984275219932898,
+  "first_seconds_p50": 0.053676792012993246,
+  "output_tokens_mean": 21.05,
+  "input_tokens_mean": 94.3,
+  "decode_tps_median": 301.3443920846247,
+  "prefill_tps_median": 1711.2392092412492,
+  "decisions_per_minute_back_to_back": 462.0974138617348
+ },
+ "score": {
+  "n": 20,
+  "tp": 7,
+  "fp": 13,
+  "fn": 0,
+  "tn": 0,
+  "precision": 0.35,
+  "recall": 1.0,
+  "f1": 0.5185185185185185,
+  "accuracy": 0.35,
+  "goal_accuracy_on_tp": 0.42857142857142855,
+  "implicit_recall": 1.0,
+  "important_total": 0,
+  "important_missed": 0,
+  "urgent_total": 0,
+  "urgent_flagged": 0,
+  "urgent_false_flags": 20,
+  "status": {
+   "ok": 20,
+   "repaired": 0,
+   "failed": 0,
+   "error": 0,
+   "missing": 0
+  },
+  "structured_ok_rate": 1.0,
+  "categories": {
+   "obvious": {
+    "n": 2,
+    "right": 2,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "implicit": {
+    "n": 1,
+    "right": 1,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "group_in": {
+    "n": 1,
+    "right": 1,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "third_person": {
+    "n": 2,
+    "right": 0,
+    "tp": 0,
+    "fp": 2,
+    "fn": 0,
+    "tn": 0
+   },
+   "negation": {
+    "n": 1,
+    "right": 0,
+    "tp": 0,
+    "fp": 1,
+    "fn": 0,
+    "tn": 0
+   },
+   "hypothetical": {
+    "n": 2,
+    "right": 0,
+    "tp": 0,
+    "fp": 2,
+    "fn": 0,
+    "tn": 0
+   },
+   "idiom": {
+    "n": 2,
+    "right": 0,
+    "tp": 0,
+    "fp": 2,
+    "fn": 0,
+    "tn": 0
+   },
+   "emergency_false": {
+    "n": 2,
+    "right": 0,
+    "tp": 0,
+    "fp": 2,
+    "fn": 0,
+    "tn": 0
+   },
+   "context": {
+    "n": 2,
+    "right": 0,
+    "tp": 0,
+    "fp": 2,
+    "fn": 0,
+    "tn": 0
+   },
+   "update": {
+    "n": 2,
+    "right": 2,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "about_other_relevant": {
+    "n": 1,
+    "right": 1,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0
+   },
+   "group_out": {
+    "n": 1,
+    "right": 0,
+    "tp": 0,
+    "fp": 1,
+    "fn": 0,
+    "tn": 0
+   },
+   "unrelated": {
+    "n": 1,
+    "right": 0,
+    "tp": 0,
+    "fp": 1,
+    "fn": 0,
+    "tn": 0
+   }
+  },
+  "wrong_ids": [
+   "in07",
+   "in09",
+   "in11",
+   "in13",
+   "in15",
+   "in17",
+   "do03",
+   "do05",
+   "do07",
+   "do09",
+   "do11",
+   "do13",
+   "do15"
+  ]
+ },
+ "wall_seconds": 3.9846909046173096,
+ "system_before": {
+  "memory_free_percent": 76,
+  "swap_used_mb": 12294.56,
+  "swapins": 1131336,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ },
+ "system_after_load": {
+  "memory_free_percent": 76,
+  "swap_used_mb": 12286.56,
+  "swapins": 1131524,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ },
+ "system_after": {
+  "memory_free_percent": 67,
+  "swap_used_mb": 12286.56,
+  "swapins": 1131528,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ }
+}

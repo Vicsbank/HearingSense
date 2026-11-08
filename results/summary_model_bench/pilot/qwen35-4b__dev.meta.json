@@ -1,0 +1,122 @@
+{
+ "model": "qwen35-4b",
+ "name": "Qwen3.5-4B",
+ "info": {
+  "repo": "/Users/vicwei/.cache/huggingface/hub/models--mlx-community--Qwen3.5-4B-MLX-4bit/snapshots/32f3e8ecf65426fc3306969496342d504bfa13f3",
+  "runtime": "mlx-lm 0.32.0, mlx 0.32.3",
+  "load_seconds": 2.471990125020966,
+  "mlx_active_gb_after_load": 2.367528456,
+  "rss_gb_after_load": 1.283080192,
+  "template_has_thinking_switch": true,
+  "thinking": false,
+  "prefix_cache": true,
+  "sampling": "greedy (temperature 0)",
+  "revision": "32f3e8ecf65426fc3306969496342d504bfa13f3"
+ },
+ "set": "dev",
+ "pre": {
+  "sysmon": {
+   "memory_free_percent": 57,
+   "swap_used_mb": 10628.06,
+   "swapins": 2136017,
+   "swapouts": 3481875,
+   "cpu_speed_limit": null,
+   "thermal_warning": false,
+   "other_runs": []
+  },
+  "load": [
+   11.474609375,
+   14.88037109375,
+   19.41162109375
+  ]
+ },
+ "started": "2026-10-12 14:00:56",
+ "groups": {
+  "neutral": {
+   "n": 12,
+   "wall_seconds": 57.522634983062744,
+   "mem_after": {
+    "mlx_peak_gb": 3.412618952,
+    "mlx_active_gb": 2.496126476,
+    "rss_gb": 0.820035584,
+    "max_rss_gb": 1.9263488
+   },
+   "sysmon": {
+    "memory_free_percent": 48,
+    "swap_used_mb": 10620.06,
+    "swapins": 2136388,
+    "swapouts": 3481875,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": []
+   },
+   "load": [
+    9.7470703125,
+    13.64892578125,
+    18.5654296875
+   ]
+  },
+  "prod": {
+   "n": 12,
+   "wall_seconds": 112.71258401870728,
+   "mem_after": {
+    "mlx_peak_gb": 3.41977876,
+    "mlx_active_gb": 2.496126476,
+    "rss_gb": 0.612483072,
+    "max_rss_gb": 1.9263488
+   },
+   "sysmon": {
+    "memory_free_percent": 40,
+    "swap_used_mb": 10620.06,
+    "swapins": 2136833,
+    "swapouts": 3481875,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": [
+     "29176       00:45 /bin/zsh -c source /Users/vicwei/.claude/shell-snapshots/snapshot-zsh-1791777467837-1s23g2.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB N",
+     "29177       00:45 /bin/zsh -c source /Users/vicwei/.claude/shell-snapshots/snapshot-zsh-1791777467837-1s23g2.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB N",
+     "29178       00:45 timeout 300 caffeinate -i swift run hs-semantic-eval recap --split dev",
+     "29180       00:45 .build/out/Products/Debug/hs-semantic-eval recap --split dev",
+     "29181       00:45 caffeinate -i swift run hs-semantic-eval recap --split dev"
+    ]
+   },
+   "load": [
+    11.28857421875,
+    12.95263671875,
+    17.6572265625
+   ]
+  },
+  "continue": {
+   "n": 3,
+   "wall_seconds": 48.26179265975952,
+   "mem_after": {
+    "mlx_peak_gb": 3.41977876,
+    "mlx_active_gb": 2.625052172,
+    "rss_gb": 0.61693952,
+    "max_rss_gb": 1.9263488
+   },
+   "sysmon": {
+    "memory_free_percent": 39,
+    "swap_used_mb": 10620.06,
+    "swapins": 2136881,
+    "swapouts": 3481875,
+    "cpu_speed_limit": null,
+    "thermal_warning": false,
+    "other_runs": [
+     "29176       01:33 /bin/zsh -c source /Users/vicwei/.claude/shell-snapshots/snapshot-zsh-1791777467837-1s23g2.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB N",
+     "29177       01:33 /bin/zsh -c source /Users/vicwei/.claude/shell-snapshots/snapshot-zsh-1791777467837-1s23g2.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB N",
+     "29178       01:33 timeout 300 caffeinate -i swift run hs-semantic-eval recap --split dev",
+     "29180       01:33 .build/out/Products/Debug/hs-semantic-eval recap --split dev",
+     "29181       01:33 caffeinate -i swift run hs-semantic-eval recap --split dev"
+    ]
+   },
+   "load": [
+    10.19189453125,
+    12.4033203125,
+    17.2099609375
+   ]
+  }
+ },
+ "first_request_seconds": 7.568178832996637,
+ "finished": "2026-10-12 14:04:52"
+}

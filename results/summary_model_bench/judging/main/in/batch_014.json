@@ -1,0 +1,740 @@
+{
+ "batch": "batch_014",
+ "conversations": [
+  {
+   "conversation": "fin-en-029",
+   "language": "en",
+   "transcript": [
+    "1. so who's picking up grandma on Saturday",
+    "2. I thought you were doing it",
+    "3. no I've got Theo's soccer game it's at ten at the Riverside field",
+    "4. okay then I'll do it but she doesn't like it when I'm late so I need to know when to leave",
+    "5. wait is the dinner at six or six thirty",
+    "6. Mom said six thirty at first",
+    "7. no she changed it to seven because Aunt Bea can't leave work until six",
+    "8. oh that's later than I thought so grandma lives forty minutes away",
+    "9. right so you'd leave at six then",
+    "10. and she needs her walker I don't think she's bringing it",
+    "11. she says she doesn't need it but I'll put it in the trunk anyway",
+    "12. who's she",
+    "13. grandma",
+    "14. okay and who's bringing the cake",
+    "15. I ordered it from Marlow's Bakery it's ready Friday after four I just need someone to pick it up",
+    "16. I can get it on my way home from work",
+    "17. perfect do they close at six",
+    "18. I think so but I'm not sure",
+    "19. I'll try to be there before that"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The family dinner is on Saturday at seven o'clock.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The dinner time was first six thirty and was changed to seven because Aunt Bea cannot leave work until six.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f3",
+     "text": "One speaker will pick up grandma for the dinner instead of the other, who has Theo's soccer game.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "Theo's soccer game is Saturday at ten at the Riverside field.",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f5",
+     "text": "Grandma lives forty minutes away, so the pickup driver plans to leave at six.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "Grandma says she does not need her walker, but it will be put in the trunk anyway.",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f7",
+     "text": "The cake is ordered from Marlow's Bakery and is ready Friday after four.",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f8",
+     "text": "One speaker will pick up the cake on the way home from work.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The dinner is at six thirty."
+    },
+    {
+     "id": "n2",
+     "text": "Theo is the speaker's son (never stated)."
+    },
+    {
+     "id": "n3",
+     "text": "The dinner is for Mom's birthday (the occasion is never stated)."
+    },
+    {
+     "id": "n4",
+     "text": "Grandma will bring her walker herself."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether Marlow's Bakery closes at six is unconfirmed."
+    },
+    {
+     "id": "u2",
+     "text": "Who changed the dinner to seven is not entirely clear; it was presumably Mom."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone will pick up grandma on Saturday after she changes dinner time to seven."
+      },
+      {
+       "u": "a2",
+       "text": "The person will leave at six to account for a forty-minute drive."
+      },
+      {
+       "u": "a3",
+       "text": "They will bring grandma's walker in the trunk."
+      },
+      {
+       "u": "a4",
+       "text": "The cake is ordered from Marlow's Bakery and will be picked up on Friday after four."
+      },
+      {
+       "u": "a5",
+       "text": "The person plans to arrive before the restaurant closes at six."
+      },
+      {
+       "u": "k1",
+       "text": "Grandma will be picked up on Saturday"
+      },
+      {
+       "u": "k2",
+       "text": "Dinner time was changed to seven due to Aunt Bea's work schedule"
+      },
+      {
+       "u": "k3",
+       "text": "The person will leave at six to account for a forty-minute drive"
+      },
+      {
+       "u": "k4",
+       "text": "Grandma lives forty minutes away"
+      },
+      {
+       "u": "k5",
+       "text": "The walker will be placed in the trunk despite grandma saying she doesn't need it"
+      },
+      {
+       "u": "k6",
+       "text": "The cake was ordered from Marlow's Bakery and will be picked up on Friday after four"
+      },
+      {
+       "u": "k7",
+       "text": "The person will arrive before the restaurant closes at six"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone decided they would pick up grandma on Saturday instead of the other person because the other person has Theo's soccer game at ten at the Riverside field."
+      },
+      {
+       "u": "a2",
+       "text": "The pickup time was set for six o'clock, though the dinner was moved to seven because Aunt Bea cannot leave work until then."
+      },
+      {
+       "u": "a3",
+       "text": "Grandma lives forty minutes away and requires a walker, which the speaker will put in the trunk even though grandma says she doesn't need it."
+      },
+      {
+       "u": "a4",
+       "text": "The cake ordered from Marlow's Bakery is ready Friday after four and needs to be picked up before the bakery closes at six."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker agreed to get the cake on their way home from work and will try to arrive before the bakery closes."
+      },
+      {
+       "u": "k1",
+       "text": "The pickup is on Saturday at six o'clock."
+      },
+      {
+       "u": "k2",
+       "text": "Theo's soccer game is at ten at the Riverside field."
+      },
+      {
+       "u": "k3",
+       "text": "Dinner is at seven because Aunt Bea cannot leave work until six."
+      },
+      {
+       "u": "k4",
+       "text": "Grandma lives forty minutes away and needs a walker."
+      },
+      {
+       "u": "k5",
+       "text": "The cake is from Marlow's Bakery and ready Friday after four."
+      },
+      {
+       "u": "k6",
+       "text": "The bakery likely closes at six, so the pickup must happen before then."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The speaker agreed to pick up grandma on Saturday, leaving at six since she lives forty minutes away and needs to leave on time."
+      },
+      {
+       "u": "a2",
+       "text": "Theo has a soccer game at ten at the Riverside field that day."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker will handle the cake pickup from Marlow's Bakery, which is ready Friday after four, and can collect it on their way home from work."
+      },
+      {
+       "u": "a4",
+       "text": "The dinner time was initially thought to be six or six thirty, but was changed to seven because Aunt Bea cannot leave work until six."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker plans to arrive before dinner."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation discussed who would pick up Grandma on Saturday, with a correction that the soccer game is at ten at the Riverside field, not six."
+      },
+      {
+       "u": "a2",
+       "text": "It was decided that the speaker would handle the pickup, though they noted Grandma dislikes being late."
+      },
+      {
+       "u": "a3",
+       "text": "The dinner time was clarified: six thirty was initially planned, but changed to seven because Aunt Bea cannot leave work until six."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker confirmed leaving at six, noting Grandma lives forty minutes away."
+      },
+      {
+       "u": "a5",
+       "text": "It was agreed she needs her walker, though she says she does not need it, and the speaker will place it in the trunk."
+      },
+      {
+       "u": "a6",
+       "text": "The cake order from Marlow's Bakery is set for Friday after four, and the speaker offered to pick it up on their way home from work."
+      },
+      {
+       "u": "a7",
+       "text": "It was noted that the bakery might close at six, but the speaker would attempt to arrive before that."
+      },
+      {
+       "u": "a8",
+       "text": "Details about the person named Theo and the person named Bea were confirmed."
+      },
+      {
+       "u": "a9",
+       "text": "Information about the speaker's work schedule and the exact closing time of the bakery remain missing."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone was supposed to pick up grandma on Saturday, but they had to attend Theo's soccer game at ten at the Riverside field, so they agreed to do it instead."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to leave at six because grandma doesn't like being late, but they realized she needs her walker and might not bring it, so they'll put it in the trunk."
+      },
+      {
+       "u": "a3",
+       "text": "They agreed dinner is at seven because Aunt Bea can't leave work until six, and grandma lives forty minutes away."
+      },
+      {
+       "u": "a4",
+       "text": "Someone ordered cake from Marlow's Bakery for four o'clock on Friday and said they could pick it up on their way home from work, but they weren't sure if the store closes at six."
+      },
+      {
+       "u": "a5",
+       "text": "The conversation is missing details about the walker's use and the store's closing time."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed to coordinate, but specifics are still unclear."
+      },
+      {
+       "u": "a7",
+       "text": "They agreed to handle the pickup, but they can't confirm the walker's needs or the store's hours."
+      },
+      {
+       "u": "a8",
+       "text": "They can't confirm if the walker will be used or if the store closes at six."
+      },
+      {
+       "u": "a9",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a10",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a11",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a12",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a13",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a14",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a15",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a16",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a17",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a18",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a19",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a20",
+       "text": "They agreed to pick up the cake, but they can't confirm the store's closing time."
+      },
+      {
+       "u": "a21",
+       "text": "They agreed to pick up the cake, but they can't"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "I will pick up Grandma on Saturday at seven, as the dinner time was changed from six to seven because Aunt Bea cannot leave work until then, and Grandma lives forty minutes away."
+      },
+      {
+       "u": "a2",
+       "text": "I need to leave by six to ensure I am not late, since Grandma requires her walker which I will place in the trunk even though she says she doesn't need it."
+      },
+      {
+       "u": "a3",
+       "text": "Regarding the cake ordered from Marlow's Bakery, it will be ready after four on Friday, and I plan to pick it up on my way home from work."
+      },
+      {
+       "u": "a4",
+       "text": "However, since I am unsure if Marlow's Bakery closes at six, I will make an effort to arrive before that time."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-030",
+   "language": "en",
+   "transcript": [
+    "1. hi this is Mr Adeyemi I have an appointment",
+    "2. appointment at at three",
+    "3. yes Mr Adeyemi let me see you're down for a crow fitting at three fifteen",
+    "4. a crown yes",
+    "5. no the blue folder not the green one",
+    "6. sorry about that the doctor is running about fifteen minutes behind",
+    "7. that's fine I can wait is there any coffee",
+    "8. there's water in the corner but no coffee today the machine broke",
+    "9. no problem",
+    "10. and just to confirm your insurance is still Delta Premier",
+    "11. no it changed in August it's Northstar Health now",
+    "12. Northstar okay can I see the card",
+    "13. sure here you go",
+    "14. thank you I'll copy it and hand it right back",
+    "15. the crown will take two visits the second one in two weeks",
+    "16. okay and how much is my part",
+    "17. it's probably around one forty but the billing office will confirm that",
+    "18. wait was that around one forty or one fourteen",
+    "19. one forty a hundred and forty dollars",
+    "20. okay thanks"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Mr Adeyemi has an appointment at 3:15 for a crown fitting (the transcript says 'crow', clarified as 'crown').",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The doctor is running about fifteen minutes behind.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "There is no coffee because the machine broke, but water is available.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "Mr Adeyemi's insurance changed in August from Delta Premier to Northstar Health, and the card was copied.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f5",
+     "text": "The crown requires two visits, with the second one in two weeks.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "The patient's share is probably around $140.",
+     "critical": true,
+     "kind": "number"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Mr Adeyemi's insurance is still Delta Premier."
+    },
+    {
+     "id": "n2",
+     "text": "The treatment has already started."
+    },
+    {
+     "id": "n3",
+     "text": "The patient will pay exactly $140 (the billing office will confirm)."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The exact amount of the patient's share is not final; billing will confirm it."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Mr. Adeyemi has a crown fitting appointment at 3:15 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The doctor is running about 15 minutes late, but the patient can wait."
+      },
+      {
+       "u": "a3",
+       "text": "There is no coffee available, only water."
+      },
+      {
+       "u": "a4",
+       "text": "Insurance was previously Delta Premier but has changed to Northstar Health in August."
+      },
+      {
+       "u": "a5",
+       "text": "The patient confirmed their insurance card and the crown will require two visits, with the second visit in two weeks."
+      },
+      {
+       "u": "a6",
+       "text": "The patient's out-of-pocket cost is approximately $1,140."
+      },
+      {
+       "u": "k1",
+       "text": "Appointment is at 3:15 PM for a crown fitting"
+      },
+      {
+       "u": "k2",
+       "text": "Doctor is running about 15 minutes behind schedule"
+      },
+      {
+       "u": "k3",
+       "text": "No coffee available, only water in the corner"
+      },
+      {
+       "u": "k4",
+       "text": "Insurance changed from Delta Premier to Northstar Health in August"
+      },
+      {
+       "u": "k5",
+       "text": "Crown fitting requires two visits, second in two weeks"
+      },
+      {
+       "u": "k6",
+       "text": "Estimated out-of-pocket cost is $1,140"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Mr. Adeyemi had an appointment at 3:15 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The doctor was running about fifteen minutes behind schedule, but Mr. Adeyemi was willing to wait."
+      },
+      {
+       "u": "a3",
+       "text": "He was informed that there is no coffee available (only water in the corner) due to a broken coffee machine."
+      },
+      {
+       "u": "a4",
+       "text": "His insurance was confirmed as Northstar Health (previously Delta Premier, which changed in August)."
+      },
+      {
+       "u": "a5",
+       "text": "The crown procedure will require two visits, with the second visit scheduled in two weeks."
+      },
+      {
+       "u": "a6",
+       "text": "The cost for his part is approximately $1,140 (one hundred and forty dollars), though the billing office will confirm the exact amount."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Mr. Adeyemi confirmed his appointment for a crown fitting scheduled for 3:15 PM, noting that the doctor is running about fifteen minutes late."
+      },
+      {
+       "u": "a2",
+       "text": "He was instructed to bring the blue folder, not the green one, and agreed to wait while the office staff explained that no coffee is available today because the machine broke."
+      },
+      {
+       "u": "a3",
+       "text": "Regarding his insurance, he clarified that it changed from Delta Premier to Northstar Health in August and provided his card for verification."
+      },
+      {
+       "u": "a4",
+       "text": "The procedure will require two visits, with the second visit scheduled in two weeks, and his estimated out-of-pocket cost is approximately $140, pending final confirmation from the billing office."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A person confirmed an appointment at three and then clarified it was at three fifteen."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to a crown fitting and confirmed a crown was needed."
+      },
+      {
+       "u": "a3",
+       "text": "A folder request was corrected from blue to green, though the folder type was not specified."
+      },
+      {
+       "u": "a4",
+       "text": "The doctor was reported as running about fifteen minutes behind, and water was available but no coffee was offered due to a machine break."
+      },
+      {
+       "u": "a5",
+       "text": "Insurance was confirmed as Northstar Health since August, not Delta Premier."
+      },
+      {
+       "u": "a6",
+       "text": "The crown required two visits, with the second in two weeks, and the cost was estimated at one hundred forty dollars, though one hundred fourteen was mentioned."
+      },
+      {
+       "u": "a7",
+       "text": "A card was provided, and the person agreed to copy it and return it."
+      },
+      {
+       "u": "a8",
+       "text": "Details about the exact amount and the second visit timing remained unclear."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Mr. Adeyemi confirmed his appointment for a crown fitting scheduled for three fifteen, noting the doctor is running fifteen minutes late."
+      },
+      {
+       "u": "a2",
+       "text": "He was instructed to bring the blue folder, not the green one, and agreed to wait while the doctor arrives."
+      },
+      {
+       "u": "a3",
+       "text": "The insurance changed from Delta Premier to Northstar Health in August, and Mr. Adeyemi provided his card for verification."
+      },
+      {
+       "u": "a4",
+       "text": "The crown will require two visits, with the second visit scheduled in two weeks."
+      },
+      {
+       "u": "a5",
+       "text": "His estimated financial responsibility is one hundred and forty dollars, though the billing office will confirm the final amount."
+      },
+      {
+       "u": "a6",
+       "text": "No coffee was available today as the machine broke, but water was offered in the corner."
+      },
+      {
+       "u": "k1",
+       "text": "The appointment is for a crown fitting at three fifteen."
+      },
+      {
+       "u": "k2",
+       "text": "The patient must bring the blue folder, not the green one."
+      },
+      {
+       "u": "k3",
+       "text": "The insurance has changed to Northstar Health since August."
+      },
+      {
+       "u": "k4",
+       "text": "The crown treatment will require a second visit in two weeks."
+      },
+      {
+       "u": "k5",
+       "text": "The estimated patient portion is one hundred and forty dollars."
+      },
+      {
+       "u": "k6",
+       "text": "There is no coffee available today because the machine is broken."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "There is an appointment at three for a crown fitting, and someone confirmed it is at three fifteen."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed the fitting is for a crown, but someone said no to the blue folder, only the green one."
+      },
+      {
+       "u": "a3",
+       "text": "someone apologized because the doctor is running about fifteen minutes behind, and they agreed to wait."
+      },
+      {
+       "u": "a4",
+       "text": "they agreed there is water in the corner but no coffee today because the machine broke."
+      },
+      {
+       "u": "a5",
+       "text": "they confirmed the insurance is Northstar Health, not Delta Premier, since it changed in August, and someone agreed to show the card."
+      },
+      {
+       "u": "a6",
+       "text": "they confirmed the crown will take two visits, the second in two weeks, and someone asked about the cost, saying it is around one forty or one fourteen, and they said the billing office will confirm."
+      },
+      {
+       "u": "a7",
+       "text": "the card was handed back."
+      },
+      {
+       "u": "a8",
+       "text": "the details of the conversation are missing."
+      },
+      {
+       "u": "a9",
+       "text": "the name Adeyemi was mentioned."
+      },
+      {
+       "u": "a10",
+       "text": "the number one forty was mentioned."
+      },
+      {
+       "u": "a11",
+       "text": "the number two weeks was mentioned."
+      },
+      {
+       "u": "k1",
+       "text": "The appointment is at three for a crown fitting."
+      },
+      {
+       "u": "k2",
+       "text": "The fitting is at three fifteen."
+      },
+      {
+       "u": "k3",
+       "text": "The fitting is for a crown."
+      },
+      {
+       "u": "k4",
+       "text": "The folder is the green one, not the blue one."
+      },
+      {
+       "u": "k5",
+       "text": "The doctor is running about fifteen minutes behind."
+      },
+      {
+       "u": "k6",
+       "text": "The insurance is Northstar Health, not Delta Premier, since August."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

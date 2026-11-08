@@ -1,0 +1,779 @@
+{
+ "batch": "batch_009",
+ "conversations": [
+  {
+   "conversation": "cont-028",
+   "language": "mixed",
+   "transcript": [
+    "1. 喂 我在 station 了",
+    "2. 你的 train 是 G one two three seven 对吧",
+    "3. 对 G1237 从 Beijing South 开",
+    "4. 发车 two fifty 下午",
+    "5. 现在 platform 还没有显示",
+    "6. 我看 screen 上说 check-in 在 platform five",
+    "7. 好 你 ticket 在手机里吗",
+    "8. 在 WeChat 的 twelve three oh six app",
+    "9. 要带 passport 吗",
+    "10. 要 身份证或者 passport 都可以",
+    "11. 我 bring 了 passport",
+    "12. 那到 Shanghai 是 evening 七点半",
+    "13. 我朋友 Allen 会 pick up",
+    "14. 他车是白色的 Tesla",
+    "15. 在 exit three 等",
+    "16. 你到了 text 我",
+    "17. 等一下 screen 更新了",
+    "18. 改成 platform seven 了",
+    "19. 不是 five",
+    "20. 你快点上楼",
+    "21. 还有十五分钟发车"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Train G1237 departs from Beijing South at 2:50 pm.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "The ticket is in the 12306 app, and either a national ID or a passport is accepted; the traveler has brought a passport.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "The train arrives in Shanghai at 7:30 pm.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "Allen will pick the traveler up in a white Tesla and wait at exit three.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The traveler should text Allen's contact on arrival.",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "g1",
+     "text": "About fifteen minutes remain before the train departs.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "c1",
+     "text": "The train is at platform seven, not platform five.",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Allen is a relative of the traveler (not stated)."
+    },
+    {
+     "id": "n2",
+     "text": "The train is delayed."
+    },
+    {
+     "id": "m1",
+     "text": "Platform five is presented as the current platform."
+    },
+    {
+     "id": "m2",
+     "text": "The train is described as delayed or cancelled."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The platform was not yet shown on the display when the speakers first spoke."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "I am currently at the station, and your train is confirmed as G1237 departing from Beijing South at 2:50 PM."
+      },
+      {
+       "u": "a2",
+       "text": "Although the platform display is not yet showing, the screen now indicates that check-in is located at Platform 7, correcting the previous information that it was at Platform 5."
+      },
+      {
+       "u": "a3",
+       "text": "You have your ticket in the WeChat app under the number 12306, and while you can bring either an ID card or a passport, you have already brought your passport."
+      },
+      {
+       "u": "a4",
+       "text": "The journey to Shanghai is scheduled for 7:30 PM, and your friend Allen will pick you up at Exit 3 in his white Tesla."
+      },
+      {
+       "u": "a5",
+       "text": "Please text me once you arrive, as the screen has updated and you should hurry to go upstairs since the train departs in fifteen minutes."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A person reports being at station and confirms the train is G1237."
+      },
+      {
+       "u": "a2",
+       "text": "The train departs Beijing South at two fifty in the afternoon."
+      },
+      {
+       "u": "a3",
+       "text": "The platform does not yet show information, but the screen indicates check-in is at platform five."
+      },
+      {
+       "u": "a4",
+       "text": "The person asks if the ticket is in the phone and confirms it is in the WeChat app at twelve three oh six."
+      },
+      {
+       "u": "a5",
+       "text": "It is confirmed that a passport is needed, and a passport is brought."
+      },
+      {
+       "u": "a6",
+       "text": "Arrival in Shanghai is set for evening seven thirty, with Allen picking up the person in a white Tesla at exit three."
+      },
+      {
+       "u": "a7",
+       "text": "The person is instructed to text once there."
+      },
+      {
+       "u": "a8",
+       "text": "The text is missing."
+      },
+      {
+       "u": "a9",
+       "text": "The person reported that the screen had been updated to show platform seven instead of five, was told to hurry up and go upstairs, and was informed that fifteen minutes were left before departure."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation occurred near a station where the speaker confirmed the train is G1237 departing from Beijing South at 2:50 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The platform display was not showing the check-in status, but the speaker noted that the ticket was in their WeChat app (12:36) and that a passport was required, which they had brought."
+      },
+      {
+       "u": "a3",
+       "text": "The destination is Shanghai, with an evening arrival at 7:30 PM, and the friend Allen (who has a white Tesla) is scheduled to pick them up at exit three."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker noticed the screen updated and changed to platform seven."
+      },
+      {
+       "u": "a5",
+       "text": "They were told it would be in five minutes before departure."
+      },
+      {
+       "u": "a6",
+       "text": "The friend Allen, who has a white Tesla, is scheduled to pick them up at exit three."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "I am currently at the station, and your train is confirmed as G1237 departing from Beijing South at 2:50 PM."
+      },
+      {
+       "u": "a2",
+       "text": "Although the platform display is not yet showing, the screen indicates that check-in is located at Platform 5."
+      },
+      {
+       "u": "a3",
+       "text": "You have your ticket in the WeChat app under the number 12306, and while you can bring either an ID card or a passport, you have already brought your passport."
+      },
+      {
+       "u": "a4",
+       "text": "The journey to Shanghai is scheduled for 7:30 PM, and your friend Allen will pick you up at Exit 3 in his white Tesla."
+      },
+      {
+       "u": "a5",
+       "text": "Please text me once you arrive."
+      },
+      {
+       "u": "a6",
+       "text": "The screen has been updated to show that the platform is now Platform 7, not Platform 5 as previously indicated, and you are being urged to hurry up as the train is scheduled to depart in 15 minutes."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation occurred near a station where the speaker confirmed the train is G1237 departing from Beijing South at 2:50 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The platform display was not showing the check-in status, but the speaker noted that the ticket was in their WeChat app (12:36) and that a passport was required, which they had brought."
+      },
+      {
+       "u": "a3",
+       "text": "The destination is Shanghai, with an evening arrival at 7:30 PM, and the friend Allen (who has a white Tesla) is scheduled to pick them up at exit three."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A person reports being at station and confirms the train is G1237."
+      },
+      {
+       "u": "a2",
+       "text": "The train departs Beijing South at two fifty in the afternoon."
+      },
+      {
+       "u": "a3",
+       "text": "The platform no longer shows information, but the screen now indicates check-in is at platform seven."
+      },
+      {
+       "u": "a4",
+       "text": "The person asks if the ticket is in the phone and confirms it is in the WeChat app at twelve three oh six."
+      },
+      {
+       "u": "a5",
+       "text": "It is confirmed that a passport is needed, and a passport is brought."
+      },
+      {
+       "u": "a6",
+       "text": "Arrival in Shanghai is set for evening seven thirty, with Allen picking up the person in a white Tesla at exit three."
+      },
+      {
+       "u": "a7",
+       "text": "The person is instructed to text once there."
+      },
+      {
+       "u": "a8",
+       "text": "The text is missing."
+      },
+      {
+       "u": "a9",
+       "text": "The train is fifteen minutes away from departure."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-029",
+   "language": "mixed",
+   "transcript": [
+    "1. 你看了那个 new series 吗",
+    "2. 哪个",
+    "3. 就是 Netflix 上很多人在说的",
+    "4. 我不太记得名字",
+    "5. 好像是什么 something house",
+    "6. 我还没开始看",
+    "7. 听说很好看",
+    "8. 周末我可能看吧",
+    "9. 不一定",
+    "10. 最近 work 太忙了",
+    "11. 你们那边 deadline 多吗",
+    "12. 还好 就 quarter end",
+    "13. 快了",
+    "14. 反正有空再说",
+    "15. OK"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "They discuss a popular new Netflix series whose exact name nobody recalls.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "One speaker has not started watching the series and heard it is good.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "Work is busy lately, with quarter end approaching.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The series is named House of Cards or any specific title."
+    },
+    {
+     "id": "n2",
+     "text": "The speakers are coworkers (not stated)."
+    },
+    {
+     "id": "m1",
+     "text": "A specific series title is supplied."
+    },
+    {
+     "id": "m2",
+     "text": "A weekend viewing plan is presented as confirmed."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The series' name is unknown; it may be something like 'something house'."
+    },
+    {
+     "id": "u2",
+     "text": "Whether the speaker will watch it this weekend is uncertain."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "对方询问是否看了最近网络上热议的 Netflix 新剧集，但说话者表示尚未开始观看，目前只记得片名类似\"something house\"，具体名称已无法回忆。"
+      },
+      {
+       "u": "a2",
+       "text": "虽然听说该剧很受欢迎，说话者计划可能在周末观看，但也表示这并非确定安排。"
+      },
+      {
+       "u": "a3",
+       "text": "由于最近工作繁忙，说话者提到自己所在的团队正处于季度末，截止日期临近。"
+      },
+      {
+       "u": "a4",
+       "text": "关于对方那边的截止日期频率，对方回应表示还好，目前也处于季度末阶段且时间紧迫。"
+      },
+      {
+       "u": "a5",
+       "text": "针对剧集观看的具体安排，对方表示反正有空再说，并确认了 OK。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于新系列，提到有人在 Netflix 上讨论，但名字不确定，可能涉及 “something house”。"
+      },
+      {
+       "u": "a2",
+       "text": "尚未开始观看，但听说内容不错，周末可能观看，但未确定。"
+      },
+      {
+       "u": "a3",
+       "text": "最近工作繁忙，询问对方那边 deadline，回复为 “quarter end”。"
+      },
+      {
+       "u": "a4",
+       "text": "They decided to talk again when they have time, and they agreed to watch the content on Saturday."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于新系列，提到有人在 Netflix 上讨论，但名字不确定，可能涉及 “something house”，尚未开始观看，但听说内容不错，周末可能观看，但未确定。"
+      },
+      {
+       "u": "a2",
+       "text": "最近工作繁忙，询问对方那边 deadline，回复为 “quarter end”。"
+      },
+      {
+       "u": "a3",
+       "text": "目前决定在周末观看，但具体时间尚未确定。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The speaker mentioned watching a new series called \"something house\" on Netflix and said they haven't started yet but might watch it over the weekend."
+      },
+      {
+       "u": "a2",
+       "text": "They also noted that work has been busy due to an approaching quarter-end deadline that is coming quickly."
+      },
+      {
+       "u": "a3",
+       "text": "No specific dates, times, or additional decisions were confirmed in the conversation."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker confirmed they have free time to watch a new series called 'something house' on Netflix over the weekend, despite not having started yet."
+      },
+      {
+       "u": "a5",
+       "text": "They also mentioned that work has been busy due to an approaching quarter-end deadline that is coming quickly."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "对方询问是否看了最近网络上热议的 Netflix 新剧集，但说话者表示尚未开始观看，目前只记得片名类似\"something house\"，具体名称已无法回忆。"
+      },
+      {
+       "u": "a2",
+       "text": "虽然听说该剧很受欢迎，说话者计划可能在周末观看，但也表示这并非确定安排。"
+      },
+      {
+       "u": "a3",
+       "text": "由于最近工作繁忙，说话者提到自己所在的团队正处于季度末，截止日期临近。"
+      },
+      {
+       "u": "a4",
+       "text": "关于对方那边的截止日期频率，对方回应表示还好，目前也处于季度末阶段且时间紧迫。"
+      },
+      {
+       "u": "a5",
+       "text": "说话者表示既然现在有空闲时间，那就等有空时再观看该剧，并确认了对方已同意这一安排。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The speaker mentioned watching a new series called \"something house\" on Netflix and said they haven't started yet but might watch it over the weekend."
+      },
+      {
+       "u": "a2",
+       "text": "They also noted that work has been busy due to an approaching quarter-end deadline that is coming quickly."
+      },
+      {
+       "u": "a3",
+       "text": "No specific dates, times, or additional decisions were confirmed in the conversation."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-030",
+   "language": "mixed",
+   "transcript": [
+    "1. OK 我说一下下周的 team dinner",
+    "2. 时间是周四晚上六点半",
+    "3. 地点在 Bugis 的 Lao Hou 餐厅",
+    "4. 我订了十二个位置",
+    "5. 每人 budget 大概 sixty dollars",
+    "6. 公司会出一半",
+    "7. 剩下的自己 AA",
+    "8. 有 vegetarian 的同事要告诉我",
+    "9. Rachel 是 vegetarian 对吧",
+    "10. 对 她还不吃 egg",
+    "11. OK 我 note 一下",
+    "12. 还有 Tom 说他周四要去 airport",
+    "13. 所以他可能会晚到",
+    "14. 晚多久",
+    "15. 他说大概七点半到",
+    "16. 好 那我们先点 appetizer",
+    "17. 另外请大家周三之前回复我有没有来",
+    "18. 对了 餐厅要 deposit",
+    "19. deposit 是一百块 我已经付了",
+    "20. 他们也有 vegetarian set menu",
+    "21. 每人五十块"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The team dinner is next Thursday at 6:30 pm at Lao Hou restaurant in Bugis.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "Twelve seats have been reserved.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "The budget is about sixty dollars per person; the company pays half and the rest is split.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "Vegetarian colleagues should tell the organizer; Rachel is vegetarian and also does not eat egg.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "Tom has to go to the airport on Thursday and expects to arrive around 7:30.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "The group will order appetizers first.",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f7",
+     "text": "Everyone should reply by Wednesday on whether they are coming.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "g1",
+     "text": "The restaurant required a one hundred dollar deposit, which the organizer has paid.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "g2",
+     "text": "The restaurant has a vegetarian set menu at fifty dollars per person.",
+     "critical": false,
+     "kind": "number"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The company pays the full cost."
+    },
+    {
+     "id": "n2",
+     "text": "Rachel is vegan (only vegetarian and no egg were stated)."
+    },
+    {
+     "id": "n3",
+     "text": "Tom is flying out or flying in (only an airport trip was stated)."
+    },
+    {
+     "id": "m1",
+     "text": "The deposit is described as unpaid or as a different amount."
+    },
+    {
+     "id": "m2",
+     "text": "The vegetarian set menu is said to be required for all."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于下周的 team dinner，时间定为周四晚上六点半，地点在 Bugis 的 Lao Hou 餐厅，并预订了十二个位置。"
+      },
+      {
+       "u": "a2",
+       "text": "每人预算大约六十美元，公司负责一半费用，其余由个人承担。"
+      },
+      {
+       "u": "a3",
+       "text": "同事需要确认 Rachel 是 vegetarian，且她不吃蛋。"
+      },
+      {
+       "u": "a4",
+       "text": "Tom 表示周四要去 airport，预计大约七点半到达，可能晚到。"
+      },
+      {
+       "u": "a5",
+       "text": "决定先点 appetizer，并要求大家周三之前回复是否会来。"
+      },
+      {
+       "u": "a6",
+       "text": "有提到 AA，但具体情况未明确。"
+      },
+      {
+       "u": "a7",
+       "text": "餐厅需要 deposit 一百块，已支付，他们也有 vegetarian set menu，每人五十块。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于下周的 team dinner，时间定为周四晚上六点半，地点在 Bugis 的 Lao Hou 餐厅，并预订了十二个位置。"
+      },
+      {
+       "u": "a2",
+       "text": "每人预算大约六十美元，公司负责一半费用，其余由个人承担。"
+      },
+      {
+       "u": "a3",
+       "text": "同事需要确认 Rachel 是 vegetarian，且她不吃蛋。"
+      },
+      {
+       "u": "a4",
+       "text": "Tom 表示周四要去 airport，预计大约七点半到达，可能晚到。"
+      },
+      {
+       "u": "a5",
+       "text": "决定先点 appetizer，并要求大家周三之前回复是否会来。"
+      },
+      {
+       "u": "a6",
+       "text": "有提到 AA，但具体情况未明确。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容如“晚多久”和“还有谁”的信息缺失。"
+      },
+      {
+       "u": "a8",
+       "text": "Someone mentioned that the restaurant requires a deposit of one hundred dollars, which has already been paid, and that they offer a vegetarian set menu costing fifty dollars per person."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "下周的团队聚餐定于周四晚上六点半在 Bugis 的 Lao Hou 餐厅举行，共预订了十二个位置。"
+      },
+      {
+       "u": "a2",
+       "text": "每人预算约为六十美元，公司将承担一半费用，其余部分由同事自行分摊。"
+      },
+      {
+       "u": "a3",
+       "text": "Rachel 是素食主义者且不吃鸡蛋，而 Tom 因周四需前往机场，预计会晚至七点半到达。"
+      },
+      {
+       "u": "a4",
+       "text": "大家需在周三前回复是否参加，同时请确认是否有其他素食同事。"
+      },
+      {
+       "u": "a5",
+       "text": "现在餐厅要求支付一百美元押金，该费用已由我支付。"
+      },
+      {
+       "u": "a6",
+       "text": "餐厅提供素食套餐，每人费用为五十美元。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "下周的团队聚餐定于周四晚上六点半在 Bugis 的 Lao Hou 餐厅举行，共预订了十二个位置。"
+      },
+      {
+       "u": "a2",
+       "text": "每人预算约为六十美元，公司将承担一半费用，其余部分由同事自行分摊。"
+      },
+      {
+       "u": "a3",
+       "text": "Rachel 是素食主义者且不吃鸡蛋，而 Tom 因周四需前往机场，预计会晚至七点半到达。"
+      },
+      {
+       "u": "a4",
+       "text": "大家需在周三前回复是否参加，同时请确认是否有其他素食同事。"
+      },
+      {
+       "u": "a5",
+       "text": "Rachel 指出餐厅要求支付押金，金额为一百美元，她已代为支付；此外，餐厅提供素食套餐，每人收费五十美元。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team dinner is scheduled for next Thursday at 6:30 PM at Bugis's Lao Hou restaurant, with twelve seats reserved and a budget of approximately $60 per person, where the company will cover half of the cost and attendees will pay the remainder."
+      },
+      {
+       "u": "a2",
+       "text": "Rachel is noted as a vegetarian who does not eat eggs, and the restaurant has a vegetarian set menu available."
+      },
+      {
+       "u": "a3",
+       "text": "Tom has mentioned he will be at the airport on Thursday and may arrive late around 7:30 PM."
+      },
+      {
+       "u": "a4",
+       "text": "The organizer has asked everyone to confirm their attendance by Wednesday."
+      },
+      {
+       "u": "a5",
+       "text": "The deposit of one hundred yuan has been paid, and the remaining balance will be handled accordingly."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team dinner is scheduled for next Thursday at 6:30 PM at Bugis's Lao Hou restaurant."
+      },
+      {
+       "u": "a2",
+       "text": "Twelve seats have been reserved, with a budget of approximately $60 per person, and the company will cover half of the cost while the remainder is to be paid by the attendees."
+      },
+      {
+       "u": "a3",
+       "text": "Rachel is noted as a vegetarian who does not eat eggs."
+      },
+      {
+       "u": "a4",
+       "text": "Tom has mentioned he will be at the airport on Thursday and may arrive late, around 7:30 PM."
+      },
+      {
+       "u": "a5",
+       "text": "The organizer has asked everyone to confirm their attendance by Wednesday."
+      },
+      {
+       "u": "a6",
+       "text": "The restaurant requires a deposit of one hundred yuan, which has already been paid."
+      },
+      {
+       "u": "a7",
+       "text": "A vegetarian set menu is available for those who need it."
+      },
+      {
+       "u": "a8",
+       "text": "Each person's cost is five hundred yuan."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,642 @@
+{
+ "batch": "batch_024",
+ "conversations": [
+  {
+   "conversation": "fin-zh-005",
+   "language": "zh",
+   "transcript": [
+    "1. 好我们开始吧今天主要三件事",
+    "2. 第一个上个月的销售数据小刘你先说",
+    "3. 上个月总共成交了一百二十八单比前一个月多了十五单",
+    "4. 主要是华东这边增长比较明显",
+    "5. 华南有点下滑",
+    "6. 下滑的原因你们查了吗",
+    "7. 还在查我这周五之前给大家一个说明",
+    "8. 好第二个新产品发布会",
+    "9. 定在十一月十二号在苏州",
+    "10. 场地我已经联系好了预算是八万",
+    "11. 八万够吗去年是六万五",
+    "12. 今年加了直播所以多了一部分",
+    "13. 行预算批了请小陈负责嘉宾邀请名单下周三之前给我",
+    "14. 好的",
+    "15. 第三个新人入职培训",
+    "16. 下个月三号开始为期三天",
+    "17. 培训室被财务占了所以要换到五楼会议室",
+    "18. 好谁通知新人",
+    "19. 我来通知",
+    "20. 那今天就这样散会"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "上个月销售成交一百二十八单，比前一个月多十五单。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f2",
+     "text": "华东地区增长明显，华南有所下滑。",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "华南下滑的原因还在调查，要在本周五前给出说明。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "新产品发布会定在十一月十二日，地点在苏州。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "发布会预算八万元，去年是六万五，今年因增加直播而增多。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "发布会预算已获批准。",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f7",
+     "text": "小陈负责嘉宾邀请，名单要在下周三之前交给主持人。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f8",
+     "text": "新人入职培训从下个月三号开始，为期三天。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f9",
+     "text": "因培训室被财务占用，培训改到五楼会议室。",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f10",
+     "text": "有一个人表示由自己通知新人参加培训。",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "小刘是销售部门负责人（只说被请先汇报）。"
+    },
+    {
+     "id": "n2",
+     "text": "华南下滑的原因已查明。"
+    },
+    {
+     "id": "n3",
+     "text": "通知新人的人是小陈（未说明是谁）。"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The meeting covered three main topics: last month's sales data showed 128 total orders, a 15-unit increase from the previous month, with growth in the East China region and a decline in the South China region that is still being investigated."
+      },
+      {
+       "u": "a2",
+       "text": "A new product launch is scheduled for November 12th in Suzhou with a budget of 80,000 yuan, which was approved, and Xiao Chen is responsible for inviting guests with a deadline of next Wednesday."
+      },
+      {
+       "u": "a3",
+       "text": "The new employee training starts on the 3rd of next month for three days in the 5th-floor conference room after the finance department's room was taken, and Xiao Li will notify the new hires."
+      },
+      {
+       "u": "k1",
+       "text": "Last month's sales totaled 128 orders, up by 15 from the previous month."
+      },
+      {
+       "u": "k2",
+       "text": "Sales grew in East China but declined in South China."
+      },
+      {
+       "u": "k3",
+       "text": "The new product launch is on November 12th in Suzhou."
+      },
+      {
+       "u": "k4",
+       "text": "The approved budget for the launch is 80,000 yuan."
+      },
+      {
+       "u": "k5",
+       "text": "Xiao Chen must submit the guest list by next Wednesday."
+      },
+      {
+       "u": "k6",
+       "text": "New employee training begins on the 3rd of next month in the 5th-floor conference room."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation concluded with three main decisions: a review of last month’s sales data, noting that one hundred twenty-eight deals were closed, which was fifteen more than the previous month, with growth in the Huáxiāng region and a slight decline in the Huánan area."
+      },
+      {
+       "u": "a2",
+       "text": "A clarification was made that the cause of the decline was still under investigation, and an explanation was scheduled for the week of Friday."
+      },
+      {
+       "u": "a3",
+       "text": "The new product launch was set for November twelfth in Suzhou, with an eight-ten thousand yuan budget, which was confirmed sufficient despite last year’s six thousand five hundred yuan and additional costs for live streaming."
+      },
+      {
+       "u": "a4",
+       "text": "The task of finalizing the guest invitation list was assigned to Xiao Chen by Wednesday before the meeting."
+      },
+      {
+       "u": "a5",
+       "text": "A new employee onboarding program began on the third of the following month for three days, but the training room was unavailable, so the session moved to the fifth floor conference room."
+      },
+      {
+       "u": "a6",
+       "text": "The person responsible for notifying new hires was confirmed, and the meeting was adjourned."
+      },
+      {
+       "u": "a7",
+       "text": "Some information is missing regarding the reasons for the decline."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The meeting covered three main topics: sales data showing a 15-unit increase last month with growth in the east and decline in the south, a new product launch on November 12 in Suzhou with an 80,000 budget, and a new hire training program starting November 3 that was moved to the 5th floor meeting room due to a room conflict."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker agreed to notify the new hires by Wednesday and asked for confirmation on the budget."
+      },
+      {
+       "u": "k1",
+       "text": "Last month's sales totaled 128 units, up 15 units from the previous month, with growth in the east and decline in the south."
+      },
+      {
+       "u": "k2",
+       "text": "The new product launch is scheduled for November 12 in Suzhou with an 80,000 budget."
+      },
+      {
+       "u": "k3",
+       "text": "The new hire training starts November 3 and was relocated to the 5th floor meeting room due to a room conflict."
+      },
+      {
+       "u": "k4",
+       "text": "The speaker agreed to notify the new hires by Wednesday."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The meeting would start with three main topics: sales, a new product launch, and new employee training."
+      },
+      {
+       "u": "a2",
+       "text": "for sales, it was noted that last month’s 128 deals were 15 more than the previous month, with strong growth in the Huazhong region and a slight decline in the Huinan region—though the cause was still under review."
+      },
+      {
+       "u": "a3",
+       "text": "they agreed to provide an update before Friday, and for the new product launch, the event was set for November 12 in Suzhou, with a venue already secured and a budget of 80,000 yuan, which was confirmed sufficient despite last year’s 65,000 yuan and additional costs for live streaming."
+      },
+      {
+       "u": "a4",
+       "text": "they assigned small chen to handle guest invitations by Wednesday, and for new employee training, sessions would begin on November 3 for three days in the fifth-floor conference room, since the training room was taken by finance."
+      },
+      {
+       "u": "a5",
+       "text": "they agreed to notify new hires personally, and the meeting was adjourned."
+      },
+      {
+       "u": "a6",
+       "text": "the name small liu was mentioned, and the name small chen was mentioned."
+      },
+      {
+       "u": "a7",
+       "text": "the details for the training room and the budget were confirmed, but the exact cause of the sales decline was not clarified."
+      },
+      {
+       "u": "a8",
+       "text": "missing information includes the specific names of the new employees and the final confirmation of the training schedule."
+      },
+      {
+       "u": "k1",
+       "text": "last month’s sales totaled 128 deals, up 15 from last month."
+      },
+      {
+       "u": "k2",
+       "text": "the Huazhong region saw growth, while the Huinan region declined."
+      },
+      {
+       "u": "k3",
+       "text": "an update on the sales decline is due before Friday."
+      },
+      {
+       "u": "k4",
+       "text": "the new product launch is on November 12 in Suzhou."
+      },
+      {
+       "u": "k5",
+       "text": "the budget for the launch is 80,000 yuan, up from 65,000."
+      },
+      {
+       "u": "k6",
+       "text": "new employee training starts on November 3 for three days in the fifth-floor conference room."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "会议首先讨论了上个月的销售数据，确认总成交数为 128 单，较上月增加 15 单，其中华东地区增长显著而华南出现下滑，小刘承诺将在本周五前提供下滑原因说明。"
+      },
+      {
+       "u": "a2",
+       "text": "接着确定了新产品发布会定于 11 月 12 日在苏州举行，预算为 8 万元（去年为 6.5 万元），该预算已获批，小陈负责嘉宾邀请名单，并需在周三前提交。"
+      },
+      {
+       "u": "a3",
+       "text": "最后关于下个月 3 日开始为期三天的新人入职培训，因原培训室被财务占用，决定改至五楼会议室，由小刘负责通知新人。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "今天的会议主要讨论了三件事。"
+      },
+      {
+       "u": "a2",
+       "text": "首先，上个月的销售数据显示总成交量为128单，比上个月增加了15单，主要增长在华东地区，而华南地区则出现了下滑，下滑原因需要在本周五之前查清楚。"
+      },
+      {
+       "u": "a3",
+       "text": "其次，关于新产品发布会，定于11月12日在苏州举行，场地已联系，预算为8万元（去年为6.5万元，今年增加了直播带来的额外部分），预算已批准，小陈负责嘉宾邀请名单，需在下周三前提交。"
+      },
+      {
+       "u": "a4",
+       "text": "最后，关于新人入职培训，下个月3日开始为期三天，但培训室被财务占用，需改到5楼会议室，通知新人由我负责。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-006",
+   "language": "zh",
+   "transcript": [
+    "1. 数学作业你做完了吗",
+    "2. 还没有最后一道大题我不会",
+    "3. 是第几页的",
+    "4. 第五十六页第八题",
+    "5. 那个要先画辅助线",
+    "6. 连接对角线然后用全等三角形",
+    "7. 啊我懂了",
+    "8. 英语作业呢",
+    "9. 英语是背单词加一篇作文",
+    "10. 作文题目是我最喜欢的一位老师",
+    "11. 要写一百二十个词",
+    "12. 什么时候交",
+    "13. 周四早上交给课代表",
+    "14. 数学是明天交",
+    "15. 啊那今晚得熬夜了",
+    "16. 语文的读书笔记呢",
+    "17. 语文老师说下周一再交",
+    "18. 不过老师说还要抄五百字摘抄",
+    "19. 我先去写数学了你写完了借我对一下答案",
+    "20. 行不过别全抄",
+    "21. 放心我就对一下最后那道大题",
+    "22. 你要是还有不懂的明早到教室我再给你讲一遍",
+    "23. 好谢谢你我先去吃饭了"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "数学作业最后一道大题是第五十六页第八题，提示是先画辅助线。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f2",
+     "text": "解题思路是连接对角线并使用全等三角形。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "英语作业是背单词加一篇作文，题目是“我最喜欢的一位老师”。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "英语作文要写一百二十个词。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "英语作业周四早上交给课代表。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "数学作业明天交。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "语文读书笔记下周一交。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "语文老师还要求抄五百字的摘抄。",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "任何一方已经完成了数学作业。"
+    },
+    {
+     "id": "n2",
+     "text": "语文摘抄的交期已经说明（未说明）。"
+    },
+    {
+     "id": "n3",
+     "text": "借答案的一方已同意让对方完全抄袭（只说别全抄）。"
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于数学作业，你尚未完成第五十六页第八题，该题要求先连接对角线再利用全等三角形求解，需在今晚熬夜完成并于明天交给课代表。"
+      },
+      {
+       "u": "a2",
+       "text": "英语作业包括背诵单词和一篇题为“我最喜欢的一位老师”的作文，字数要求为一百二十词，同样需在周四早上交给课代表。"
+      },
+      {
+       "u": "a3",
+       "text": "语文方面的读书笔记原定下周一提交，但老师额外要求抄写五百字摘抄。"
+      },
+      {
+       "u": "a4",
+       "text": "你计划先自行完成数学作业，完成后借给我核对答案，但需确保不全部抄写，仅核对最后那道大题。"
+      },
+      {
+       "u": "a5",
+       "text": "若仍有疑问，我承诺会在明早到教室为你讲解一遍，随后你将先去吃饭。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "对话涉及数学作业和英语作业的讨论。"
+      },
+      {
+       "u": "a2",
+       "text": "以下是对对话的总结："
+      },
+      {
+       "u": "a3",
+       "text": "1."
+      },
+      {
+       "u": "a4",
+       "text": "数学作业：对方表示数学作业还没有完成，特别是第56页的第八题需要先画辅助线并连接对角线，然后用全等三角形来解决。"
+      },
+      {
+       "u": "a5",
+       "text": "对方表示理解并表示会熬夜完成。"
+      },
+      {
+       "u": "a6",
+       "text": "2."
+      },
+      {
+       "u": "a7",
+       "text": "英语作业：英语作业包括背单词和写一篇作文，作文题目是\"我最喜欢的一位老师\"，要求写120词。"
+      },
+      {
+       "u": "a8",
+       "text": "作文需要周四早上交给课代表，否则明天就要交。"
+      },
+      {
+       "u": "a9",
+       "text": "3."
+      },
+      {
+       "u": "a10",
+       "text": "语文作业：语文作业是读书笔记，下周一再交，但老师还要求抄500字摘抄。"
+      },
+      {
+       "u": "a11",
+       "text": "对方表示会先完成数学作业，然后借阅答案，最后检查数学作业的最后一道大题。"
+      },
+      {
+       "u": "a12",
+       "text": "4."
+      },
+      {
+       "u": "a13",
+       "text": "后续安排：对方建议如果有不懂的概念，明早到教室可以讲解。"
+      },
+      {
+       "u": "a14",
+       "text": "对方表示感谢并说自己先去吃饭了。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The student couldn't hear the conversation and missed the last math problem on page 56, question 8, which requires drawing an auxiliary line and using congruent triangles."
+      },
+      {
+       "u": "a2",
+       "text": "They also mentioned the English assignment involves 120 words on a favorite teacher and a composition due Thursday morning, with the math assignment due tomorrow."
+      },
+      {
+       "u": "a3",
+       "text": "The student agreed to review the last math problem and asked to borrow the answer key."
+      },
+      {
+       "u": "a4",
+       "text": "They also noted that if they have any remaining questions, they can come to the classroom early the next morning."
+      },
+      {
+       "u": "k1",
+       "text": "The student missed the last math problem on page 56, question 8, which requires drawing an auxiliary line and using congruent triangles."
+      },
+      {
+       "u": "k2",
+       "text": "The English assignment consists of 120 words on a favorite teacher and a composition due Thursday morning."
+      },
+      {
+       "u": "k3",
+       "text": "Math is due tomorrow, so the student needs to review the last problem before then."
+      },
+      {
+       "u": "k4",
+       "text": "The student agreed to borrow the answer key and review the last math problem."
+      },
+      {
+       "u": "k5",
+       "text": "If the student has any remaining questions, they can come to the classroom early the next morning."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于数学作业，确认是否已完成；确认最后一道题无法解答；确认该题位于第五十六页第八题；确认步骤包括画辅助线、连接对角线、使用全等三角形；确认英语作业包含背单词、写一篇含一百二十字作文的文章，主题是“我最喜欢的一位老师”；确认作业于周四早上交给课代表，数学作业于明天交；确认语文读书笔记于下周一提交，但需抄五百字摘抄；确认需于明天早上到教室获取解答；确认需确认答案，但禁止全抄；确认今晚需熬夜。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Math homework is done, but the last large problem isn't solved, and they need help with page 56, question 8, which requires drawing auxiliary lines and using congruent triangles."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed to check the answer but not copy it completely, and they'll help with the last problem tomorrow morning."
+      },
+      {
+       "u": "a3",
+       "text": "for English, they need to memorize words and write a 120-word essay about their favorite teacher, and they'll submit it on Thursday morning to the class representative."
+      },
+      {
+       "u": "a4",
+       "text": "math is due the next day, and someone said they'll have to stay up late."
+      },
+      {
+       "u": "a5",
+       "text": "for Chinese, the reading notes are due next Monday, but they also need to write a 500-word summary."
+      },
+      {
+       "u": "a6",
+       "text": "To go eat first, and details are missing about the essay topic and the exact wording of the Chinese assignment."
+      },
+      {
+       "u": "k1",
+       "text": "Math homework is done, but the last large problem is not solved."
+      },
+      {
+       "u": "k2",
+       "text": "Page 56, question 8, requires drawing auxiliary lines and using congruent triangles."
+      },
+      {
+       "u": "k3",
+       "text": "English requires memorizing words and writing a 120-word essay about their favorite teacher."
+      },
+      {
+       "u": "k4",
+       "text": "English is due Thursday morning to the class representative."
+      },
+      {
+       "u": "k5",
+       "text": "Math is due tomorrow."
+      },
+      {
+       "u": "k6",
+       "text": "Chinese reading notes are due next Monday, plus a 500-word summary is needed."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone asked if the math homework was finished, noting the last problem is on page 56, question 8, requiring a diagonal to connect for congruent triangles."
+      },
+      {
+       "u": "a2",
+       "text": "The English assignment involves memorizing words and writing an essay titled 'My Favorite Teacher' with exactly 120 words."
+      },
+      {
+       "u": "a3",
+       "text": "Math must be turned in tomorrow, while the Chinese reading note is due next Monday with an additional 500 words to copy."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to check the last math problem together, but not to copy the entire assignment, and the speaker will explain any remaining doubts the next morning."
+      },
+      {
+       "u": "k1",
+       "text": "The last math problem is on page 56, question 8."
+      },
+      {
+       "u": "k2",
+       "text": "The math essay must be written in 120 words."
+      },
+      {
+       "u": "k3",
+       "text": "Math homework is due tomorrow."
+      },
+      {
+       "u": "k4",
+       "text": "Chinese reading notes are due next Monday."
+      },
+      {
+       "u": "k5",
+       "text": "An extra 500 words must be copied for the Chinese assignment."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker will explain unclear math problems the next morning."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

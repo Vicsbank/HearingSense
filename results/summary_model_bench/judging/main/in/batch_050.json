@@ -1,0 +1,726 @@
+{
+ "batch": "batch_050",
+ "conversations": [
+  {
+   "conversation": "fin-mix-013",
+   "language": "mixed",
+   "transcript": [
+    "1. the sprint plan 好 那 今天 先 说 mobile team 的 status",
+    "2. push notification 那个 功能 已经 在 TestFlight 了 build number 是 四 一 二",
+    "3. 还有 一个 crash 在 iPad 上 是 因为 layout",
+    "4. 他 说 什么 我 没 听清 是 说 周五 fix 吗",
+    "5. 对 周五 之前 fix 然后 周一 submit 到 App Store review",
+    "6. 嗯嗯 android 呢 android 那边 就 嗯 就 嗯 还在 做 dark mode",
+    "7. 预计 下 周 三 完成 但是 design 的 mockup 还 缺 settings 页面",
+    "8. 这个 我 去 催 Vivian 她 说 说 今天 下班 前 给",
+    "9. 那个 coffee machine 又 坏 了 谁 去 报修",
+    "10. 哈哈 off topic 我 去 好 了",
+    "11. backend 的 部分 API rate limit 要 改成 每 分钟 一百 次",
+    "12. 现在 是 六十 次 对 因为 mobile 刷新 太 频繁",
+    "13. 这个 change 要 在 周 四 deploy 对 周 四 晚上 低峰 的 时候",
+    "14. okay 那 今天 就 到 这里 记得 更新 Jira"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The push notification feature is on TestFlight as build 412.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f2",
+     "text": "An iPad crash caused by layout will be fixed by Friday, with App Store review submission on Monday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "Android dark mode is expected to be done next Wednesday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "The design mockup for the Android settings page is missing; a speaker will chase Vivian, who promised it before end of day today.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "The API rate limit will change from 60 to 100 requests per minute because mobile refreshes frequently.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f6",
+     "text": "The rate limit change will be deployed Thursday night during low traffic.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "Someone volunteered to report the broken coffee machine.",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "f8",
+     "text": "Everyone should update Jira.",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The Android dark mode feature is already finished."
+    },
+    {
+     "id": "n2",
+     "text": "The iPad crash is already fixed."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The iPad crash fix timing was partly misheard; Friday is the confirmed answer."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The mobile team's status was discussed, noting that push notifications are in TestFlight with build number 412, while an iPad crash caused by a layout issue needs fixing by Friday with a Monday App Store submission."
+      },
+      {
+       "u": "a2",
+       "text": "The Android team is working on dark mode, expected to finish next Wednesday, but the design mockup is missing the settings page, which Vivian promised to address before her end of day."
+      },
+      {
+       "u": "a3",
+       "text": "A backend API rate limit change from 60 to 100 requests per minute is required for deployment on Thursday evening during low traffic."
+      },
+      {
+       "u": "a4",
+       "text": "Additionally, a coffee machine broke, and someone asked who would report the repair, though this was marked as off-topic."
+      },
+      {
+       "u": "a5",
+       "text": "The meeting concluded with a reminder to update Jira."
+      },
+      {
+       "u": "k1",
+       "text": "Push notifications are in TestFlight with build number 412."
+      },
+      {
+       "u": "k2",
+       "text": "An iPad crash due to layout must be fixed by Friday."
+      },
+      {
+       "u": "k3",
+       "text": "Android dark mode is expected to finish next Wednesday."
+      },
+      {
+       "u": "k4",
+       "text": "Vivian will handle the missing settings page mockup."
+      },
+      {
+       "u": "k5",
+       "text": "API rate limit increases from 60 to 100 requests per minute."
+      },
+      {
+       "u": "k6",
+       "text": "Backend changes must be deployed on Thursday evening."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The mobile team status was discussed, including a crash on iPad due to layout that was mentioned as needing a fix on Friday before submitting to App Store review."
+      },
+      {
+       "u": "a2",
+       "text": "Android work is ongoing with dark mode expected by next Wednesday but missing design mockup settings page, which was assigned to Vivian to handle before end of day."
+      },
+      {
+       "u": "a3",
+       "text": "The backend API rate limit was changed from 60 to 100 requests per minute, with the change scheduled for deployment on Thursday evening during low traffic."
+      },
+      {
+       "u": "a4",
+       "text": "The conversation ended with a reminder to update Jira."
+      },
+      {
+       "u": "k1",
+       "text": "Mobile team status was reviewed, including a crash on iPad due to layout that was mentioned as needing a fix on Friday before App Store review submission."
+      },
+      {
+       "u": "k2",
+       "text": "Android work is ongoing with dark mode expected by next Wednesday but design mockup is missing the settings page."
+      },
+      {
+       "u": "k3",
+       "text": "The design mockup issue was assigned to Vivian to resolve before end of day."
+      },
+      {
+       "u": "k4",
+       "text": "Backend API rate limit was changed from 60 to 100 requests per minute."
+      },
+      {
+       "u": "k5",
+       "text": "The rate limit change is scheduled for deployment on Thursday evening during low traffic."
+      },
+      {
+       "u": "k6",
+       "text": "The conversation concluded with a reminder to update Jira."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "今天会议首先讨论了移动团队的状况，指出推送通知功能已在 TestFlight 上线，构建号为 412，同时 iPad 上因布局问题出现了一个崩溃。"
+      },
+      {
+       "u": "a2",
+       "text": "关于修复时间，确认需在周五前解决崩溃问题，并于周一提交至 App Store 审核。"
+      },
+      {
+       "u": "a3",
+       "text": "Android 方面，Dark Mode 预计下周三完成，但设计 Mockup 仍缺少设置页面，Vivian 承诺在今天下班前提供相关信息。"
+      },
+      {
+       "u": "a4",
+       "text": "此外，后端 API 的速率限制将从每分钟 60 次调整为每分钟 100 次，该变更计划于周四晚间的低峰期部署。"
+      },
+      {
+       "u": "a5",
+       "text": "最后，会议决定今日到此结束，并提醒记得更新 Jira。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The sprint plan was discussed, beginning with the mobile team’s status."
+      },
+      {
+       "u": "a2",
+       "text": "A push notification feature was noted to be in TestFlight with build number 四一二."
+      },
+      {
+       "u": "a3",
+       "text": "A crash on iPad was reported due to layout issues."
+      },
+      {
+       "u": "a4",
+       "text": "It was stated that fixes were planned for 周五, with a submission to App Store review by 周一."
+      },
+      {
+       "u": "a5",
+       "text": "Android development included ongoing dark mode work, expected to be completed by 下周三, though design mockups lacked a settings page."
+      },
+      {
+       "u": "a6",
+       "text": "A request was made to Vivian to address a coffee machine issue before 下班."
+      },
+      {
+       "u": "a7",
+       "text": "Backend changes were approved: API rate limit to 每分钟一百次, replacing the current 每分钟六十次 due to frequent mobile refreshes."
+      },
+      {
+       "u": "a8",
+       "text": "The change was scheduled for deployment on 周四晚上低峰时间."
+      },
+      {
+       "u": "a9",
+       "text": "The plan was marked as complete, and Jira updates were noted."
+      },
+      {
+       "u": "a10",
+       "text": "Details about Vivian’s task and the crash cause remain unclear."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The sprint plan was discussed, starting with the mobile team's status, including push notifications being in TestFlight with build number 412, and a crash on iPad due to layout."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed to fix issues by Friday, submit to App Store review by Monday, and noted Android dark mode is ongoing with an estimated completion by next Wednesday, though design mockups are incomplete."
+      },
+      {
+       "u": "a3",
+       "text": "they instructed Vivian to report before 5 PM today about a coffee machine issue."
+      },
+      {
+       "u": "a4",
+       "text": "backend API rate limit will change from 60 to 100 per minute, effective Thursday evening during low-peak hours."
+      },
+      {
+       "u": "a5",
+       "text": "they agreed to update Jira today."
+      },
+      {
+       "u": "a6",
+       "text": "the transcript is missing details about a specific issue and a name mentioned."
+      },
+      {
+       "u": "a7",
+       "text": "they agreed to move on from the topic."
+      },
+      {
+       "u": "a8",
+       "text": "missing information includes the name of the person to report the coffee machine issue and the exact nature of the missing issue."
+      },
+      {
+       "u": "a9",
+       "text": "they agreed to proceed with the plan."
+      },
+      {
+       "u": "a10",
+       "text": "they agreed to the timeline for the changes."
+      },
+      {
+       "u": "a11",
+       "text": "they agreed to the deployment schedule."
+      },
+      {
+       "u": "a12",
+       "text": "they agreed to the update requirement."
+      },
+      {
+       "u": "a13",
+       "text": "they agreed to the status report."
+      },
+      {
+       "u": "a14",
+       "text": "they agreed to the timeline for the Android dark mode completion."
+      },
+      {
+       "u": "a15",
+       "text": "they agreed to the timeline for the API change."
+      },
+      {
+       "u": "a16",
+       "text": "they agreed to the deployment timing."
+      },
+      {
+       "u": "a17",
+       "text": "they agreed to the update frequency."
+      },
+      {
+       "u": "a18",
+       "text": "they agreed to the status of the push notification feature."
+      },
+      {
+       "u": "a19",
+       "text": "they agreed to the crash on iPad."
+      },
+      {
+       "u": "a20",
+       "text": "they agreed to the timeline for the crash fix."
+      },
+      {
+       "u": "a21",
+       "text": "they agreed to the timeline for the App Store review."
+      },
+      {
+       "u": "a22",
+       "text": "they agreed to the dark mode progress."
+      },
+      {
+       "u": "a23",
+       "text": "they agreed to the mockup status."
+      },
+      {
+       "u": "a24",
+       "text": "they agreed to the mockup missing pages."
+      },
+      {
+       "u": "a25",
+       "text": "they agreed to the coffee machine report."
+      },
+      {
+       "u": "a26",
+       "text": "they agreed to the API rate limit change."
+      },
+      {
+       "u": "a27",
+       "text": "they agreed to the deployment timing."
+      },
+      {
+       "u": "a28",
+       "text": "they agreed to the update requirement."
+      },
+      {
+       "u": "a29",
+       "text": "they agreed to the topic shift."
+      },
+      {
+       "u": "a30",
+       "text": "they agreed to the timeline for the API change."
+      },
+      {
+       "u": "a31",
+       "text": "they agreed to the deployment schedule."
+      },
+      {
+       "u": "a32",
+       "text": "they agreed to the update frequency."
+      },
+      {
+       "u": "a33",
+       "text": "they agreed to the status of the push notification feature."
+      },
+      {
+       "u": "a34",
+       "text": "they agreed to the crash on iPad."
+      },
+      {
+       "u": "a35",
+       "text": "they agreed to the timeline for the crash fix."
+      },
+      {
+       "u": "a36",
+       "text": "they agreed to the timeline for the App Store review."
+      },
+      {
+       "u": "a37",
+       "text": "they agreed to the dark mode progress."
+      },
+      {
+       "u": "a38",
+       "text": "they agreed to the mockup progress."
+      },
+      {
+       "u": "a39",
+       "text": "they agreed to the mockup missing pages."
+      },
+      {
+       "u": "a40",
+       "text": "they agreed to the coffee machine report."
+      },
+      {
+       "u": "a41",
+       "text": "they agreed to the API rate limit change."
+      },
+      {
+       "u": "a42",
+       "text": "they agreed to the deployment timing."
+      },
+      {
+       "u": "a43",
+       "text": "they agreed to the update requirement."
+      },
+      {
+       "u": "a44",
+       "text": "they agreed to the topic shift."
+      },
+      {
+       "u": "a45",
+       "text": "they agreed to"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The mobile team's status was reviewed, noting that the feature has been released to TestFlight with build number 4.2."
+      },
+      {
+       "u": "a2",
+       "text": "A crash on iPad was reported due to a layout issue, with a request to fix it before Friday, followed by submission to App Store review on Monday."
+      },
+      {
+       "u": "a3",
+       "text": "Android development is ongoing, specifically working on dark mode with an expected completion by next Wednesday, though the design mockup is missing the settings page and Vivian was asked to help before end of day."
+      },
+      {
+       "u": "a4",
+       "text": "The backend API rate limit needs to be changed from 60 to 100 requests per minute, with the change scheduled for deployment on Thursday during low-peak hours in the evening."
+      },
+      {
+       "u": "a5",
+       "text": "Finally, the team agreed to update Jira with today's notes."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-mix-014",
+   "language": "mixed",
+   "transcript": [
+    "1. 嗯 今天 好 累 啊",
+    "2. 我 也 是 刚 下 课 还 要 去 gym",
+    "3. 你 还 去 gym 我 想 直接 回家 躺 着",
+    "4. 哈哈 我 也 想 不 过 答应 了 朋友",
+    "5. 哪 个 朋友 啊 是 上次 那个 吗",
+    "6. 嗯 差 不 多 吧 再 看 看 要 不 要 去",
+    "7. 好 吧 你 决定 了 告诉 我"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Both speakers said they were tired after class.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "One speaker promised a friend to go to the gym but is still unsure whether to go.",
+     "critical": false,
+     "kind": "uncertainty"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The speaker has decided to go to the gym."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether the speaker will go to the gym is undecided."
+    },
+    {
+     "id": "u2",
+     "text": "Whether the friend is the same one as last time is unclear."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Today was very tiring and they had just finished class and still needed to go to gym, but they wanted to go home and rest."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed to go to gym because they promised a friend, but weren't sure which friend since it was the same friend as last time."
+      },
+      {
+       "u": "a3",
+       "text": "someone agreed to decide and tell the other person, and they decided to wait to decide whether to go."
+      },
+      {
+       "u": "a4",
+       "text": "the conversation mentions gym, but the specific location, time, or any other details about the gym are missing."
+      },
+      {
+       "u": "a5",
+       "text": "the transcript is missing information about the friend's identity or any other personal identifiers."
+      },
+      {
+       "u": "k1",
+       "text": "today was very tiring"
+      },
+      {
+       "u": "k2",
+       "text": "someone had just finished class"
+      },
+      {
+       "u": "k3",
+       "text": "someone wanted to go home and rest"
+      },
+      {
+       "u": "k4",
+       "text": "someone promised a friend to go to gym"
+      },
+      {
+       "u": "k5",
+       "text": "someone is unsure which friend to go to"
+      },
+      {
+       "u": "k6",
+       "text": "someone decided to wait to decide whether to go to gym"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They are tired after class and want to go to the gym, but the other person prefers to go home and rest."
+      },
+      {
+       "u": "a2",
+       "text": "They discussed whether the other person also goes to the gym, and the second person mentioned they agreed to go to the gym with a friend from a previous meeting."
+      },
+      {
+       "u": "a3",
+       "text": "They decided to confirm if it is the same friend from last time, with the second person saying it is probably the same person."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to let the first person decide and asked them to tell them their final decision."
+      },
+      {
+       "u": "k1",
+       "text": "The first person is tired after class and wants to go to the gym."
+      },
+      {
+       "u": "k2",
+       "text": "The second person wants to go home and rest instead."
+      },
+      {
+       "u": "k3",
+       "text": "The second person agreed to go to the gym with a friend."
+      },
+      {
+       "u": "k4",
+       "text": "They are unsure if the friend is the same person from last time."
+      },
+      {
+       "u": "k5",
+       "text": "The second person asked the first person to make the final decision."
+      },
+      {
+       "u": "k6",
+       "text": "The first person will inform the second person of their decision."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Being tired after school and wanting to go to the gym, but they also wanted to go home and rest."
+      },
+      {
+       "u": "a2",
+       "text": "They were unsure about a friend's invitation and asked which friend it was, referencing the previous one."
+      },
+      {
+       "u": "a3",
+       "text": "They decided to tell the other person their decision after checking."
+      },
+      {
+       "u": "k1",
+       "text": "The speaker was tired after school and wanted to go to the gym."
+      },
+      {
+       "u": "k2",
+       "text": "They considered going home and resting instead."
+      },
+      {
+       "u": "k3",
+       "text": "They were unsure about a friend's invitation and asked which friend it was."
+      },
+      {
+       "u": "k4",
+       "text": "The friend mentioned the previous one, and the speaker decided to tell them their decision."
+      },
+      {
+       "u": "k5",
+       "text": "The conversation was about whether to go to the gym or rest, and the friend's identity was unclear."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was a brief exchange between two people discussing plans."
+      },
+      {
+       "u": "a2",
+       "text": "The first person greeted the other, mentioned they were tired after class and wanted to go to the gym and then go home to rest."
+      },
+      {
+       "u": "a3",
+       "text": "They also said they had already decided to go to the gym and wanted to tell the other person."
+      },
+      {
+       "u": "a4",
+       "text": "The second person asked which friend they were referring to, and the first person confirmed it was the same friend from the previous time, noting it wasn't much of a delay."
+      },
+      {
+       "u": "a5",
+       "text": "The second person agreed to the decision and told the first person to inform them."
+      },
+      {
+       "u": "a6",
+       "text": "No specific names, dates, or times were mentioned beyond the general context of the conversation."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A conversation took place near a person who could not hear it."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker mentioned today was tiring and that they had just finished class and still needed to go to gym."
+      },
+      {
+       "u": "a3",
+       "text": "They expressed wanting to go home and rest but also wanted to agree with a friend."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker asked which friend it was, noting it was the one from the last time."
+      },
+      {
+       "u": "a5",
+       "text": "They estimated the decision would be made soon, but the exact timing was uncertain."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker agreed to let the other person decide and inform them."
+      },
+      {
+       "u": "a7",
+       "text": "The conversation included missing information about the friend’s name."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "说话人表示今天刚下课还要去健身房，感到十分疲惫，而对方则想直接回家休息。"
+      },
+      {
+       "u": "a2",
+       "text": "虽然对方答应要去健身房，但具体是上次提到的那位朋友还是其他人尚不确定，需要进一步确认。"
+      },
+      {
+       "u": "a3",
+       "text": "最终，说话人表示“差不多吧”，并决定再看一看是否要去。"
+      },
+      {
+       "u": "a4",
+       "text": "作为回应，对方要求说话人一旦做出决定就告知自己。"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

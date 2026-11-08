@@ -1,0 +1,760 @@
+{
+ "batch": "batch_003",
+ "conversations": [
+  {
+   "conversation": "fin-en-007",
+   "language": "en",
+   "transcript": [
+    "1. okay committee let's go through the fall fair logistics",
+    "2. date is Saturday November second doors open at ten",
+    "3. booths are in the main hall and the overflow goes to gym B",
+    "4. how many booths do we have signed up",
+    "5. thirty four so far and the cap is forty",
+    "6. the bake sale table fee is fifteen dollars everything else is twenty five",
+    "7. Hannah you're handling the vendor contracts right",
+    "8. yes I'll send them out by this Friday and need them back by the twenty fifth",
+    "9. the sound system",
+    "10. I called Brightwave Audio they quoted four hundred and eighty for the day",
+    "11. that's over budget the limit was four fifty",
+    "12. I'll ask if they'll do four fifty if we skip the second speaker",
+    "13. good and for the raffle we have six prizes confirmed",
+    "14. the big one is a tablet donated by Corbin Electronics",
+    "15. tickets are two dollars each or five for eight",
+    "16. oh wait it's three for five not five for eight",
+    "17. three for five thanks Omar",
+    "18. volunteers we need twenty five and we have eighteen",
+    "19. I'll email the parent list tonight",
+    "20. setup is Friday the first from four to seven",
+    "21. and cleanup Saturday after the close at three thirty",
+    "22. ok next meeting Tuesday the twenty ninth at seven in room one fourteen"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The fall fair is on Saturday November 2 and doors open at 10.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "Booths are in the main hall with overflow in gym B.",
+     "critical": false,
+     "kind": "place"
+    },
+    {
+     "id": "f3",
+     "text": "Thirty-four booths are signed up and the cap is forty.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "The bake sale table fee is 15 dollars and all other booths pay 25 dollars.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "Hannah will send vendor contracts out by this Friday and needs them back by the twenty-fifth.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "Brightwave Audio quoted 480 dollars for the sound system, above the 450 dollar limit.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "Six raffle prizes are confirmed, the biggest being a tablet donated by Corbin Electronics.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "Raffle tickets are three for five dollars.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f9",
+     "text": "The raffle ticket price was corrected from five for eight dollars to three for five dollars.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f10",
+     "text": "Twenty-five volunteers are needed and eighteen have signed up; one speaker will email the parent list tonight.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f11",
+     "text": "Setup is Friday the first from 4 to 7 and cleanup is Saturday after the 3:30 close.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f12",
+     "text": "The next meeting is Tuesday the twenty-ninth at 7 in room 114.",
+     "critical": true,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Raffle tickets cost five for eight dollars."
+    },
+    {
+     "id": "n2",
+     "text": "Brightwave Audio has agreed to 450 dollars."
+    },
+    {
+     "id": "n3",
+     "text": "The volunteer target of 25 has been reached."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether Brightwave Audio will lower the price to 450 dollars if the second speaker is skipped is not yet known."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The committee confirmed the fall fair is on Saturday, November 2nd, with doors opening at 10:00 AM in the main hall and overflow in gym B."
+      },
+      {
+       "u": "a2",
+       "text": "Thirty-four booths are signed up with a capacity of 40, while vendor contracts for Hannah must be sent out by this Friday and received back by the 25th."
+      },
+      {
+       "u": "a3",
+       "text": "The sound system quote from Brightwave Audio is $480, exceeding the $450 limit, so they will ask to reduce the price by skipping the second speaker."
+      },
+      {
+       "u": "a4",
+       "text": "Raffle tickets are priced at $2 each or $5 for 8, though a correction clarified the deal is actually 3 for $5, with six prizes confirmed including a tablet from Corbin Electronics."
+      },
+      {
+       "u": "a5",
+       "text": "Volunteers are needed by 25, with setup scheduled for Friday, November 1st from 4:00 PM to 7:00 PM, and cleanup on Saturday after closing at 3:30 PM."
+      },
+      {
+       "u": "a6",
+       "text": "Omar confirmed the raffle pricing, and the next meeting is set for Tuesday, November 29th at 7:00 PM in room 114."
+      },
+      {
+       "u": "k1",
+       "text": "The fair is on Saturday, November 2nd, at 10:00 AM in the main hall."
+      },
+      {
+       "u": "k2",
+       "text": "Hannah must send vendor contracts out by this Friday and receive them back by the 25th."
+      },
+      {
+       "u": "k3",
+       "text": "The sound system quote of $480 exceeds the $450 budget limit."
+      },
+      {
+       "u": "k4",
+       "text": "Raffle tickets are $2 each or $5 for 8, corrected to 3 for $5."
+      },
+      {
+       "u": "k5",
+       "text": "Setup is Friday, November 1st from 4:00 PM to 7:00 PM."
+      },
+      {
+       "u": "k6",
+       "text": "The next meeting is on Tuesday, November 29th at 7:00 PM in room 114."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The committee reviewed fall fair logistics including dates, booth counts, fees, vendor contracts, sound system costs, raffle prizes, and volunteer needs."
+      },
+      {
+       "u": "a2",
+       "text": "They confirmed 34 booths signed up with a cap of 40, set booth fees at $15 and $25, and noted the sound system quote of $480 exceeds the $450 limit."
+      },
+      {
+       "u": "a3",
+       "text": "The big raffle prize is a tablet from Corbin Electronics with corrected ticket pricing of $3 for 5."
+      },
+      {
+       "u": "a4",
+       "text": "Volunteers need 25 but only 18 are available, and setup/cleanup times were specified."
+      },
+      {
+       "u": "a5",
+       "text": "The next meeting is Tuesday the 29th at 7 in room 14."
+      },
+      {
+       "u": "k1",
+       "text": "The meeting was held on Saturday November second with doors opening at ten."
+      },
+      {
+       "u": "k2",
+       "text": "There are 34 booths signed up out of a cap of 40."
+      },
+      {
+       "u": "k3",
+       "text": "Booth fees are $15 and $25, with the sound system quoted at $480 exceeding the $450 limit."
+      },
+      {
+       "u": "k4",
+       "text": "The big raffle prize is a tablet from Corbin Electronics."
+      },
+      {
+       "u": "k5",
+       "text": "Ticket pricing was corrected to $3 for 5."
+      },
+      {
+       "u": "k6",
+       "text": "Volunteer count is 18 out of a needed 25."
+      },
+      {
+       "u": "k7",
+       "text": "Setup is Friday the first from 4 to 7 and cleanup is Saturday after close at 3:30."
+      },
+      {
+       "u": "k8",
+       "text": "The next meeting is Tuesday the 29th at 7 in room 14."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "To review fall fair logistics, including the date being Saturday, November second, with doors opening at ten and booths in the main hall and overflow in gym B."
+      },
+      {
+       "u": "a2",
+       "text": "They reported thirty-four signed-up booths out of a forty cap, with bake sale tables costing fifteen dollars and other items twenty-five dollars."
+      },
+      {
+       "u": "a3",
+       "text": "Hannah is handling vendor contracts, which will be sent out by this Friday and due by the twenty-fifth, and the sound system quote of four hundred and eighty dollars from Brightwave Audio is over the four fifty budget, so they will ask if four fifty is possible if the second speaker is skipped."
+      },
+      {
+       "u": "a4",
+       "text": "For the raffle, six prizes are confirmed, including a tablet donated by Corbin Electronics, with tickets priced at three for five."
+      },
+      {
+       "u": "a5",
+       "text": "They noted a pricing error: three for five, not five for eight, and volunteers are needed twenty-five, with eighteen currently available; an email to the parent list will be sent tonight."
+      },
+      {
+       "u": "a6",
+       "text": "Setup is Friday the first from four to seven, and cleanup is Saturday after the close at three thirty."
+      },
+      {
+       "u": "a7",
+       "text": "The next meeting is Tuesday the twenty-ninth at seven in room one fourteen."
+      },
+      {
+       "u": "a8",
+       "text": "Missing information: the name of the person who requested the volunteer email, and the exact raffle prize descriptions beyond the tablet."
+      },
+      {
+       "u": "k1",
+       "text": "The meeting is on Saturday, November second, at ten."
+      },
+      {
+       "u": "k2",
+       "text": "Thirty-four booths are signed up, cap is forty."
+      },
+      {
+       "u": "k3",
+       "text": "The bake sale table fee is fifteen dollars."
+      },
+      {
+       "u": "k4",
+       "text": "Vendor contracts are due by the twenty-fifth."
+      },
+      {
+       "u": "k5",
+       "text": "The sound system budget limit is four fifty."
+      },
+      {
+       "u": "k6",
+       "text": "Six raffle prizes are confirmed, including a tablet from Corbin Electronics."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The committee met to review fall fair logistics for Saturday, November 2nd, with doors opening at 10:00 AM."
+      },
+      {
+       "u": "a2",
+       "text": "There are 34 booths signed up out of a capacity of 40, and the bake sale table fee is $15 while all other booths charge $25."
+      },
+      {
+       "u": "a3",
+       "text": "Hannah is responsible for vendor contracts, which must be sent by this Friday and returned by the 25th."
+      },
+      {
+       "u": "a4",
+       "text": "The sound system was quoted at $480 by Brightwave Audio, exceeding the $450 limit, and the group will inquire about reducing it to $450 if the second speaker is skipped."
+      },
+      {
+       "u": "a5",
+       "text": "There are six raffle prizes, with the top prize being a tablet from Corbin Electronics, and ticket pricing is $3 for five or $5 for eight."
+      },
+      {
+       "u": "a6",
+       "text": "The volunteer count is 18 out of the needed 25, and the parent list will be emailed tonight."
+      },
+      {
+       "u": "a7",
+       "text": "Setup occurs Friday, November 1st from 4:00-7:00 PM, with cleanup on Saturday after closing at 3:30 PM."
+      },
+      {
+       "u": "a8",
+       "text": "The next meeting is Tuesday, November 29th at 7:00 PM in room 14."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation reviewed fall fair logistics, noting the date is Saturday November second with doors opening at ten."
+      },
+      {
+       "u": "a2",
+       "text": "Booths are in the main hall and overflow in gym B; thirty-four booths are signed up, with a cap of forty."
+      },
+      {
+       "u": "a3",
+       "text": "The bake sale table fee is fifteen dollars, and other fees are twenty-five dollars."
+      },
+      {
+       "u": "a4",
+       "text": "The vendor contracts are assigned to Hannah, who will send them by this Friday and need return by the twenty-fifth."
+      },
+      {
+       "u": "a5",
+       "text": "A sound system quote from Brightwave Audio is four hundred and eighty dollars, exceeding the four-fifty budget; the option to reduce to four-fifty by skipping the second speaker is discussed."
+      },
+      {
+       "u": "a6",
+       "text": "Six raffle prizes are confirmed, including a tablet donated by Corbin Electronics."
+      },
+      {
+       "u": "a7",
+       "text": "Ticket prices are three for five, corrected from three for five, and volunteers needed are twenty-five, with eighteen currently available."
+      },
+      {
+       "u": "a8",
+       "text": "Setup is Friday the first from four to seven, and cleanup is Saturday after close at three-thirty."
+      },
+      {
+       "u": "a9",
+       "text": "The next meeting is Tuesday the twenty-ninth at seven in room one fourteen."
+      },
+      {
+       "u": "a10",
+       "text": "Missing information includes the corrected number of volunteers and the exact wording of the raffle prize confirmation."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The committee discussed the Fall Fair logistics scheduled for Saturday, November 2nd, with doors opening at 10:00 AM in the main hall, while overflow space is assigned to gym B."
+      },
+      {
+       "u": "a2",
+       "text": "Thirty-four booths are currently signed up against a capacity of forty, with fees set at fifteen dollars for the bake sale table and twenty-five dollars for everything else."
+      },
+      {
+       "u": "a3",
+       "text": "Hannah confirmed she will send vendor contracts by this Friday and requires them back by the 25th, while the sound system quote from Brightwave Audio for four hundred and eighty is over the four hundred and fifty limit, prompting a request to see if they can reduce the cost by skipping the second speaker."
+      },
+      {
+       "u": "a4",
+       "text": "The raffle includes six confirmed prizes, including a tablet from Corbin Electronics, with ticket pricing corrected from five for eight to three for five."
+      },
+      {
+       "u": "a5",
+       "text": "Volunteer staffing is short by seven, requiring twenty-five total with eighteen currently available, and the plan is to email the parent list tonight to fill the gap."
+      },
+      {
+       "u": "a6",
+       "text": "Setup is scheduled for Friday, the first, from 4:00 PM to 7:00 PM, followed by cleanup on Saturday after closing at 3:30 PM."
+      },
+      {
+       "u": "a7",
+       "text": "The next meeting is set for Tuesday, the 29th, at 7:00 PM in room 1-14."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-008",
+   "language": "en",
+   "transcript": [
+    "1. okay quiet down quiet down",
+    "2. for for tomorrow read chapter nine chapter nine",
+    "3. and answer the questions at the end the odd numbers only",
+    "4. somebody's phone is ringing",
+    "5. sorry",
+    "6. the essay on the mag in a car ta is due is due on the for the fifth",
+    "7. it should be two pages double spaced",
+    "8. no more than two pages please last year I got eight",
+    "9. sir can we use Wikipedia",
+    "10. you can use it to find sources but not as a source",
+    "11. I'm serious about that",
+    "12. also the quiz on Friday will cover chapters seven and eight",
+    "13. chapters seven and ate",
+    "14. seven and eight yes",
+    "15. bring a blue or black pen no pencil",
+    "16. hey did you see the game last night",
+    "17. did you get the notes from Tuesday",
+    "18. I did I'll send them",
+    "19. okay moving on to the map activity",
+    "20. get into groups of four",
+    "21. each group gets one map and one marker",
+    "22. you have fifteen minutes",
+    "23. when I say stop markers down"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "For tomorrow, students must read chapter nine and answer the odd-numbered questions at the end.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f2",
+     "text": "An essay on the Magna Carta (transcribed as 'mag in a car ta') is due soon, and it should be two pages double spaced with no more than two pages.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "Wikipedia may be used to find sources but not cited as a source.",
+     "critical": false,
+     "kind": "decision"
+    },
+    {
+     "id": "f4",
+     "text": "The quiz on Friday covers chapters seven and eight.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "Students must use a blue or black pen for the quiz, not a pencil.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The map activity is done in groups of four with one map and one marker per group, for fifteen minutes.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "Some background conversation about a game and Tuesday's notes was picked up and is unrelated to the lesson.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The essay is due on the fourth."
+    },
+    {
+     "id": "n2",
+     "text": "The quiz covers chapter nine."
+    },
+    {
+     "id": "n3",
+     "text": "All questions at the end of chapter nine must be answered."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The essay due date is garbled in the transcript and could be the fourth or the fifth."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covers assignment deadlines, quiz topics, and classroom activities."
+      },
+      {
+       "u": "a2",
+       "text": "Students are reminded to read chapter nine and answer odd-numbered questions."
+      },
+      {
+       "u": "a3",
+       "text": "The essay on the mag in a car is due on Friday, two pages double-spaced."
+      },
+      {
+       "u": "a4",
+       "text": "The quiz on Friday will cover chapters seven and eight."
+      },
+      {
+       "u": "a5",
+       "text": "Students are instructed to bring a blue or black pen and to use Wikipedia only for finding sources."
+      },
+      {
+       "u": "a6",
+       "text": "A map activity is scheduled with groups of four, each receiving a map and marker for fifteen minutes."
+      },
+      {
+       "u": "k1",
+       "text": "The essay on the mag in a car is due on Friday, two pages double-spaced."
+      },
+      {
+       "u": "k2",
+       "text": "The quiz on Friday will cover chapters seven and eight."
+      },
+      {
+       "u": "k3",
+       "text": "Students must bring a blue or black pen, no pencil."
+      },
+      {
+       "u": "k4",
+       "text": "Wikipedia can be used to find sources but not as a source."
+      },
+      {
+       "u": "k5",
+       "text": "A map activity will begin with groups of four, each getting one map and one marker for fifteen minutes."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group was reminded to read Chapter Nine and answer only the odd-numbered questions for tomorrow, while a phone call was interrupted."
+      },
+      {
+       "u": "a2",
+       "text": "Regarding the essay on the map activity in a car, it is due on the fifth, must be no more than two pages double-spaced, and Wikipedia can be used for sources but not as a primary source."
+      },
+      {
+       "u": "a3",
+       "text": "The Friday quiz will cover Chapters Seven and Eight, and students must bring a blue or black pen, not a pencil."
+      },
+      {
+       "u": "a4",
+       "text": "For the map activity, participants will form groups of four, receive one map and one marker each, and have fifteen minutes to complete the task."
+      },
+      {
+       "u": "k1",
+       "text": "Read Chapter Nine and answer odd-numbered questions for tomorrow."
+      },
+      {
+       "u": "k2",
+       "text": "The map essay is due on the fifth, max two pages double-spaced."
+      },
+      {
+       "u": "k3",
+       "text": "Wikipedia is allowed for sources but not as a source."
+      },
+      {
+       "u": "k4",
+       "text": "The Friday quiz covers Chapters Seven and Eight."
+      },
+      {
+       "u": "k5",
+       "text": "Bring a blue or black pen, no pencil."
+      },
+      {
+       "u": "k6",
+       "text": "Map activity groups of four have fifteen minutes with one map and marker."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "To quiet down and read chapter nine and answer the odd-numbered questions at the end, and someone's phone is ringing."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed the essay on the magazine in a car tab is due on the fifth and should be two pages double spaced, no more than two pages, and last year the grade was eight."
+      },
+      {
+       "u": "a3",
+       "text": "Wikipedia can be used to find sources but not as a source, and the quiz on Friday will cover chapters seven and eight."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to bring a blue or black pen, no pencil, and to get into groups of four for the map activity, with each group getting one map and one marker."
+      },
+      {
+       "u": "a5",
+       "text": "They'll send notes from Tuesday, and they have fifteen minutes before stopping and putting markers down."
+      },
+      {
+       "u": "a6",
+       "text": "The conversation mentions the game from last night and the odd numbers."
+      },
+      {
+       "u": "a7",
+       "text": "The time is missing, and the location is missing."
+      },
+      {
+       "u": "a8",
+       "text": "The notes from Tuesday are missing."
+      },
+      {
+       "u": "k1",
+       "text": "Read chapter nine and answer odd-numbered questions."
+      },
+      {
+       "u": "k2",
+       "text": "Essay on the magazine in a car tab due on the fifth."
+      },
+      {
+       "u": "k3",
+       "text": "Essay should be two pages double spaced, no more than two pages, last year grade eight."
+      },
+      {
+       "u": "k4",
+       "text": "Use Wikipedia to find sources, not as a source."
+      },
+      {
+       "u": "k5",
+       "text": "Quiz on Friday covers chapters seven and eight."
+      },
+      {
+       "u": "k6",
+       "text": "Bring a blue or black pen, no pencil. Get into groups of four for the map activity, each group gets one map and one marker."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A person is instructed to read chapter nine and answer the questions at the end, specifically the odd numbers."
+      },
+      {
+       "u": "a2",
+       "text": "The essay on the magazine in a car tab is due on the fifth and should be two pages double spaced, no more than two pages, with a reference to last year’s eight pages."
+      },
+      {
+       "u": "a3",
+       "text": "It is clarified that Wikipedia may be used to find sources but not as a source."
+      },
+      {
+       "u": "a4",
+       "text": "The quiz on Friday will cover chapters seven and eight."
+      },
+      {
+       "u": "a5",
+       "text": "A group activity requires participants to form groups of four, each receiving one map and one marker, with a fifteen-minute timeframe."
+      },
+      {
+       "u": "a6",
+       "text": "A correction is noted: the group activity is moving on to the map activity, not the previous mention."
+      },
+      {
+       "u": "a7",
+       "text": "The note about the game and Tuesday’s notes is acknowledged but not acted upon."
+      },
+      {
+       "u": "a8",
+       "text": "Some parts are missing."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation began with a request to quiet down before discussing homework for tomorrow, which involves reading Chapter Nine and answering only the odd-numbered questions at the end."
+      },
+      {
+       "u": "a2",
+       "text": "A separate assignment regarding an essay on \"mag in a car ta\" is due on the fifth, requiring no more than two double-spaced pages, though the speaker noted they received eight pages last year."
+      },
+      {
+       "u": "a3",
+       "text": "Regarding the quiz on Friday covering Chapters Seven and Eight, the instructor emphasized that while Wikipedia can be used to find sources, it cannot serve as a source itself."
+      },
+      {
+       "u": "a4",
+       "text": "For the upcoming map activity, students are to form groups of four, receive one map and one marker each, and have fifteen minutes to complete the task until the instructor says \"stop.\" The speaker also asked if anyone saw the game last night or received the notes from Tuesday, promising to send them if needed."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place near a person who could not hear it, so the transcript contains speech recognizer errors and missing speaker attribution."
+      },
+      {
+       "u": "a2",
+       "text": "The speaker instructed someone to read chapter nine and answer the odd-numbered questions at the end."
+      },
+      {
+       "u": "a3",
+       "text": "A phone was ringing in the background."
+      },
+      {
+       "u": "a4",
+       "text": "The essay on the mag in a car is due on the fifth day, and it should be two pages double-spaced with no more than two pages."
+      },
+      {
+       "u": "a5",
+       "text": "The quiz on Friday will cover chapters seven and eight."
+      },
+      {
+       "u": "a6",
+       "text": "Attendees were told to bring a blue or black pen and not to use pencil."
+      },
+      {
+       "u": "a7",
+       "text": "Someone asked about the game from last night and whether notes from Tuesday were received, with a promise to send them."
+      },
+      {
+       "u": "a8",
+       "text": "For the map activity, groups of four were formed, each receiving one map and one marker for fifteen minutes, with the task"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

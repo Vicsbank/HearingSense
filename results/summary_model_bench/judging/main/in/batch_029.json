@@ -1,0 +1,635 @@
+{
+ "batch": "batch_029",
+ "conversations": [
+  {
+   "conversation": "fin-zh-015",
+   "language": "zh",
+   "transcript": [
+    "1. 元旦去青岛的行程我订好了",
+    "2. 十二月三十号晚上的火车二十二点十五分出发",
+    "3. 三十一号早上七点二十到青岛",
+    "4. 酒店在栈桥附近叫海岸客栈住两晚",
+    "5. 一月二号退房",
+    "6. 回程是二号下午四点四十的车",
+    "7. 回程车票一个人三百六十五三个人一共一千零九十五",
+    "8. 酒店一晚五百八十两晚一千一百六",
+    "9. 元旦当天打算去崂山门票一人一百二十",
+    "10. 崂山那天要早起七点就得出发",
+    "11. 还有一天去海边吃海鲜预算每人两百",
+    "12. 总预算多少",
+    "13. 我算了一下大概五千出头",
+    "14. 具体还没算准因为去程车票我还没加",
+    "15. 哦对去程票价我晚点发给你"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "去青岛的火车十二月三十日晚上二十二点十五分出发，三十一日早上七点二十到达。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "酒店是栈桥附近的海岸客栈，住两晚，一月二日退房。",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f3",
+     "text": "酒店每晚五百八十元，两晚共一千一百六十元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "回程火车一月二日下午四点四十出发。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "回程车票每人三百六十五元，三人共一千零九十五元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "元旦当天去崂山，门票每人一百二十元，早上七点出发。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "另有一天去海边吃海鲜，预算每人两百元。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "去程票价说话人晚点再发给对方。",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "出行总费用已经精确算出为五千元。"
+    },
+    {
+     "id": "n2",
+     "text": "一共有四个人出行（说的是三个人）。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "总预算只是大概五千出头，因为去程车票未计入，具体数字没有确定。"
+    },
+    {
+     "id": "u2",
+     "text": "去海边吃海鲜是哪一天没有说明。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "我确认了元旦去青岛的行程：十二月三十日二十二点十五分出发，三十一日七点二十抵达青岛，入住栈桥附近的海岸客栈两晚（一月二号退房），并安排回程车于二号下午四点四十发车。"
+      },
+      {
+       "u": "a2",
+       "text": "交通费用方面，单程车票每人三百六十五元，三人共一千零九十五元；酒店两晚共一千一百六元，崂山门票每人一百二十元，另预留每人两百元用于海边吃海鲜。"
+      },
+      {
+       "u": "a3",
+       "text": "总预算初步估算为五千多元，但尚未最终确认，因为去程车票费用暂未计入，且说话人表示稍后会发送具体的去程票价明细。"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The person booked a trip to Qingdao for New Year's, departing by train on December 30th at 22:15 and arriving on the 31st at 7:20."
+      },
+      {
+       "u": "a2",
+       "text": "They stayed at Haikang Hostel near Stack Bridge for two nights, checked out on January 2nd, and returned by car on the 2nd at 16:40."
+      },
+      {
+       "u": "a3",
+       "text": "Return car tickets were for one person at 365 and three people at 1,095, while the hotel cost 580 for one night and 1,156 for two nights."
+      },
+      {
+       "u": "a4",
+       "text": "For Dalian, they planned to visit Dalian Mountain on January 2nd at 7:00 AM and go to the beach for seafood with a budget of 200 per person, estimating a total budget of around 5,000 but noting the travel cost was not yet added."
+      },
+      {
+       "u": "k1",
+       "text": "New Year's trip to Qingdao booked with train departure on December 30th at 22:15"
+      },
+      {
+       "u": "k2",
+       "text": "Arrived in Qingdao on December 31st at 7:20"
+      },
+      {
+       "u": "k3",
+       "text": "Stayed at Haikang Hostel near Stack Bridge for two nights"
+      },
+      {
+       "u": "k4",
+       "text": "Checked out of hotel on January 2nd"
+      },
+      {
+       "u": "k5",
+       "text": "Returned by car on January 2nd at 16:40"
+      },
+      {
+       "u": "k6",
+       "text": "Return car tickets: one person at 365, three people at 1,095"
+      },
+      {
+       "u": "k7",
+       "text": "Hotel cost: 580 for one night, 1,156 for two nights"
+      },
+      {
+       "u": "k8",
+       "text": "Planned Dalian Mountain visit on January 2nd at 7:00 AM"
+      },
+      {
+       "u": "k9",
+       "text": "Seafood outing budget: 200 per person"
+      },
+      {
+       "u": "k10",
+       "text": "Total budget estimate: around 5,000"
+      },
+      {
+       "u": "k11",
+       "text": "Travel cost not yet added to total budget"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone confirmed that the New Year trip to Qingdao is booked with a train departing on December 30th at 22:15 and arriving in Qingdao on December 31st at 07:20."
+      },
+      {
+       "u": "a2",
+       "text": "The stay at Haikou Inn near Zhanqiao is for two nights, with check-out on January 2nd, followed by a return bus at 16:40."
+      },
+      {
+       "u": "a3",
+       "text": "The itinerary includes a visit to Laoshan on New Year's Day with a 07:00 departure time, plus a day trip to the seaside for seafood with a per-person budget of 200 yuan."
+      },
+      {
+       "u": "a4",
+       "text": "The total estimated budget is around 5,000 yuan, though the exact figure is pending the addition of the one-way ticket cost of 365 yuan per person."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker agreed to send the exact ticket price later, and the group consists of three people with a total return ticket cost of 1,095 yuan."
+      },
+      {
+       "u": "k1",
+       "text": "The train departs on December 30th at 22:15 and arrives in Qingdao on December 31st at 07:20."
+      },
+      {
+       "u": "k2",
+       "text": "The group stays at Haikou Inn near Zhanqiao for two nights, checking out on January 2nd."
+      },
+      {
+       "u": "k3",
+       "text": "The return bus departs on January 2nd at 16:40."
+      },
+      {
+       "u": "k4",
+       "text": "Laoshan is visited on New Year's Day with a 07:00 departure time."
+      },
+      {
+       "u": "k5",
+       "text": "The per-person budget for seafood at the seaside is 200 yuan."
+      },
+      {
+       "u": "k6",
+       "text": "The estimated total budget is around 5,000 yuan, pending the addition of the 365 yuan per person ticket cost."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "以下是对对话的回顾："
+      },
+      {
+       "u": "a2",
+       "text": "用户已订定元旦前往青岛的行程，出发时间为十二月三十号晚21:15乘火车，抵达青岛时间为十二月三十一号早上7:20。"
+      },
+      {
+       "u": "a3",
+       "text": "酒店预订在栈桥附近的海岸客栈，住两晚，一月二号退房。"
+      },
+      {
+       "u": "a4",
+       "text": "回程乘车时间为二号下午16:40，回程车票共三百六十五三人，酒店预算一晚五百八，第二天一晚一百六。"
+      },
+      {
+       "u": "a5",
+       "text": "元旦当天计划前往崂山，需早起7:00出发。"
+      },
+      {
+       "u": "a6",
+       "text": "第二天还要去海边吃海鲜，预算每人两百。"
+      },
+      {
+       "u": "a7",
+       "text": "用户提到总预算大概五千，但具体数额尚未确定，因为出行车票价格尚未确认。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "元旦去青岛的行程已订好，十二月三十号晚上的火车二十二点十五分出发，三十一号早上七点二十到达青岛。"
+      },
+      {
+       "u": "a2",
+       "text": "酒店位于栈桥附近叫海岸客栈，住两晚，一月二号退房。"
+      },
+      {
+       "u": "a3",
+       "text": "回程是二号下午四点四十的车，车票一个人三百六十五，三人共一千零九十五。"
+      },
+      {
+       "u": "a4",
+       "text": "酒店一晚五百八十，两晚一千一百六。"
+      },
+      {
+       "u": "a5",
+       "text": "元旦当天打算去崂山，门票一人一百二十，崂山当天需七点出发。"
+      },
+      {
+       "u": "a6",
+       "text": "还有一天去海边吃海鲜，预算每人两百。"
+      },
+      {
+       "u": "a7",
+       "text": "总预算大概五千，具体尚未确定，因为去程车票尚未加。"
+      },
+      {
+       "u": "a8",
+       "text": "去程票价晚点发给你。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A New Year trip to Qingdao was booked, with the train departing December 30th at 10:15 PM and arriving in Qingdao on December 31st at 7:20 AM."
+      },
+      {
+       "u": "a2",
+       "text": "The hotel is Coast Guest House near Jinguapu, with two nights costing 1,016 yuan total, and the room rate is 580 yuan per night."
+      },
+      {
+       "u": "a3",
+       "text": "Check-out is on January 2nd, and the return train is on January 2nd at 2:40 PM, with a ticket price of 365.30 yuan for one person and 1,095 yuan for four people."
+      },
+      {
+       "u": "a4",
+       "text": "The cost for one night is 580 yuan, and the total for two nights is 1,016 yuan."
+      },
+      {
+       "u": "a5",
+       "text": "Entrance to Lianxi Mountain is 120 yuan per person, and the hike requires an early start at 7:00 AM."
+      },
+      {
+       "u": "a6",
+       "text": "A day at the beach eating seafood costs 200 yuan per person, and the estimated total budget is approximately 5,000 yuan, though the exact amount is not yet determined because train tickets have not been added."
+      },
+      {
+       "u": "a7",
+       "text": "The train ticket prices will be sent later, and a cost for one night at the hotel is missing."
+      },
+      {
+       "u": "k1",
+       "text": "The trip is for New Year to Qingdao."
+      },
+      {
+       "u": "k2",
+       "text": "Train departs December 30th at 10:15 PM."
+      },
+      {
+       "u": "k3",
+       "text": "Arrival in Qingdao is December 31st at 7:20 AM."
+      },
+      {
+       "u": "k4",
+       "text": "Hotel: Coast Guest House near Jinguapu, two nights."
+      },
+      {
+       "u": "k5",
+       "text": "Cost: 580 yuan per night, 1,016 yuan total."
+      },
+      {
+       "u": "k6",
+       "text": "Check-out is January 2nd, return train January 2nd at 2:40 PM, tickets 365.30 yuan per person, 1,095 yuan for four people, and one night at the hotel costs 580 yuan but the total is missing."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-016",
+   "language": "zh",
+   "transcript": [
+    "1. 好我们开始今天的需求评审",
+    "2. 第一个是登录页面的改版",
+    "3. 设计稿周三已经出来了",
+    "4. 开发预计需要五天",
+    "5. 下周五前上线测试环境",
+    "6. 第二个是那个推送的bug",
+    "7. 就是用户收不到通知的问题",
+    "8. 初步判断是第三方服务的缺勤",
+    "9. 小赵负责排查周二给结论",
+    "10. 好的我周二上午给",
+    "11. 第三个是下个月的活动页面",
+    "12. 运营那边说还没确定主提",
+    "13. 所以先不排期",
+    "14. 嗯嗯嗯",
+    "15. 好还有一个问题测试同学人手不够",
+    "16. 能不能从隔壁组借一个人",
+    "17. 我去问问王经理",
+    "18. 问到了通知大家",
+    "19. 好今天先到这里"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "登录页面改版的设计稿周三已经出来。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "登录页面改版开发预计需要五天，下周五前上线测试环境。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "用户收不到推送通知的问题被作为bug提出。",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "小赵负责排查推送bug，周二给出结论。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "下个月的活动页面暂不排期，因为运营方面还有事项没确定。",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f6",
+     "text": "测试人手不够，有人要去问王经理能否从隔壁组借一个人，问到后通知大家。",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "推送bug的根因已经确认是第三方服务。"
+    },
+    {
+     "id": "n2",
+     "text": "活动页面已经排期。"
+    },
+    {
+     "id": "n3",
+     "text": "隔壁组已经同意借人。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "推送bug的初步原因被识别为“第三方服务的缺勤”，原话不清楚，可能指第三方服务的某个问题，不能确定。"
+    },
+    {
+     "id": "u2",
+     "text": "运营还没确定的东西被识别为“主提”，可能是“主题”，不能确定。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team reviewed three items: the login page redesign with a design draft ready by Wednesday and a five-day development timeline with deployment by next Friday; the push notification bug was identified as a third-party service issue, with Xiao Zhao concluding on Tuesday after checking in the morning; the next month's activity page was not scheduled because the main presenter was not yet confirmed; and a request was made to borrow a tester from another group, with the manager being consulted."
+      },
+      {
+       "u": "k1",
+       "text": "The login page redesign has a design draft ready by Wednesday and requires five days of development, with deployment planned for next Friday."
+      },
+      {
+       "u": "k2",
+       "text": "The push notification bug was diagnosed as a third-party service issue, and Xiao Zhao provided a conclusion on Tuesday morning."
+      },
+      {
+       "u": "k3",
+       "text": "The next month's activity page was not scheduled because the main presenter had not been confirmed."
+      },
+      {
+       "u": "k4",
+       "text": "A request was made to borrow a tester from another group, and the manager was consulted."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "需求评审开始，第一个项目是登录页面的改版，设计稿周三已出，开发预计五天，下周五前上线测试环境。"
+      },
+      {
+       "u": "a2",
+       "text": "第二个项目是推送的bug，用户无法收到通知，初步判断是第三方服务的问题，小赵负责周二排查并给出结论，周二上午完成。"
+      },
+      {
+       "u": "a3",
+       "text": "第三个项目是下个月的活动页面，运营未确定主提，暂时不排期。"
+      },
+      {
+       "u": "a4",
+       "text": "测试团队人手不足，请求从隔壁组借人，已向王经理咨询。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "今天的需求评审首先讨论了登录页面改版，设计稿已于周三定稿，开发预计耗时五天，计划在下周五前上线测试环境。"
+      },
+      {
+       "u": "a2",
+       "text": "针对用户收不到推送通知的 bug，初步判断为第三方服务缺勤，小赵负责排查并承诺于周二上午给出结论。"
+      },
+      {
+       "u": "a3",
+       "text": "关于下个月的活动页面，因运营方尚未确定主题，因此决定暂不排期。"
+      },
+      {
+       "u": "a4",
+       "text": "此外，为解决测试人手不足的问题，已安排向王经理申请从隔壁组借调人员，随后通知了相关人员。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team reviewed three main items: the login page redesign, which has a design ready by Wednesday with a five-day development estimate and a test environment launch by next Friday."
+      },
+      {
+       "u": "a2",
+       "text": "A bug regarding users not receiving push notifications is suspected to be caused by a third-party service, with Xiao Zhao tasked to investigate and provide a conclusion by Tuesday morning."
+      },
+      {
+       "u": "a3",
+       "text": "The activity page for next month is on hold because the main theme is undecided by operations, so no scheduling is planned yet."
+      },
+      {
+       "u": "a4",
+       "text": "Additionally, a request was made to borrow a tester from another group, and Wang Manager was contacted to facilitate this arrangement before the meeting concluded."
+      },
+      {
+       "u": "k1",
+       "text": "The login page redesign is ready by Wednesday with a five-day development estimate."
+      },
+      {
+       "u": "k2",
+       "text": "The push notification bug is suspected to be a third-party service issue."
+      },
+      {
+       "u": "k3",
+       "text": "Xiao Zhao must provide a conclusion on the bug by Tuesday morning."
+      },
+      {
+       "u": "k4",
+       "text": "The activity page for next month is on hold until the main theme is decided."
+      },
+      {
+       "u": "k5",
+       "text": "A tester is being requested from another group via Wang Manager."
+      },
+      {
+       "u": "k6",
+       "text": "The test environment for the login page will be launched by next Friday."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Today's requirements review began with a login page redesign, whose design draft was ready on Wednesday and development would take five days, with testing in the production environment before next Friday."
+      },
+      {
+       "u": "a2",
+       "text": "They also discussed a bug where users didn't receive notifications, attributing it to a third-party service's unavailability, with small zhao assigned to investigate on Tuesday and a conclusion expected then."
+      },
+      {
+       "u": "a3",
+       "text": "On Tuesday morning, they agreed to inform small zhao, and they noted the third item was a next month's activity page, which wasn't yet finalized by operations, so scheduling wasn't done."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to postpone decisions on that item."
+      },
+      {
+       "u": "a5",
+       "text": "Additionally, they agreed they couldn't assign a tester from the adjacent team due to staffing issues and decided to ask wang manager."
+      },
+      {
+       "u": "a6",
+       "text": "They contacted wang manager and informed everyone."
+      },
+      {
+       "u": "a7",
+       "text": "The meeting concluded today."
+      },
+      {
+       "u": "k1",
+       "text": "The login page redesign design was ready on Wednesday."
+      },
+      {
+       "u": "k2",
+       "text": "Development for the login page redesign will take five days."
+      },
+      {
+       "u": "k3",
+       "text": "Testing for the login page redesign will be done before next Friday."
+      },
+      {
+       "u": "k4",
+       "text": "The notification bug is due to a third-party service's unavailability."
+      },
+      {
+       "u": "k5",
+       "text": "small zhao is responsible for investigating the notification bug on Tuesday."
+      },
+      {
+       "u": "k6",
+       "text": "The next month's activity page hasn't been finalized by operations, so scheduling isn't done yet."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "今天的需求评审会议上，首先讨论了登录页面的改版，设计稿已在周三交付，开发预计需要五天时间，下周五前上线测试环境。"
+      },
+      {
+       "u": "a2",
+       "text": "其次，关于推送通知的问题，初步判断是第三方服务缺勤，小赵在周二给出了结论。"
+      },
+      {
+       "u": "a3",
+       "text": "第三，运营方面提到下个月的活动页面主提尚未确定，因此暂未排期。"
+      },
+      {
+       "u": "a4",
+       "text": "最后，测试团队面临人手不足的问题，想从隔壁组借人手，并已向王经理询问并通知了相关同事。"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

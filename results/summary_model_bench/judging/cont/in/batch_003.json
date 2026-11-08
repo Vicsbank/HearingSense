@@ -1,0 +1,875 @@
+{
+ "batch": "batch_003",
+ "conversations": [
+  {
+   "conversation": "cont-010",
+   "language": "en",
+   "transcript": [
+    "1. thanks for coming to the tenants meeting",
+    "2. three things tonight",
+    "3. first the boiler",
+    "4. the landlord says the replacement will happen on the twentieth of November",
+    "5. heat will be off from nine to four that day",
+    "6. second the rent increase",
+    "7. the notice says four percent starting January first",
+    "8. we think that's too high and we're drafting a letter",
+    "9. Hannah has agreed to write the first draft",
+    "10. please send her your comments by next Friday",
+    "11. third the parking",
+    "12. there's a new permit system for the back lot",
+    "13. permits cost sixty dollars a year",
+    "14. you apply at the office on the ground floor",
+    "15. the office is open Tuesdays and Thursdays only",
+    "16. any questions",
+    "17. yes will the roof leak be fixed too",
+    "18. I don't know I'll ask",
+    "19. sorry I misread the notice",
+    "20. the increase is three percent not four",
+    "21. three percent from January first",
+    "22. so the letter should say three",
+    "23. Hannah will you adjust that",
+    "24. sure"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The boiler replacement will happen on November 20.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "Heat will be off from nine to four on the day of the boiler replacement.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "The tenants think the increase is too high and are drafting a letter.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f5",
+     "text": "Hannah will write the first draft of the letter and tenants should send comments by next Friday.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "Back-lot parking permits cost sixty dollars a year; apply at the ground floor office, open Tuesdays and Thursdays only.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "g1",
+     "text": "Hannah agreed to adjust the draft letter to say three percent.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "c1",
+     "text": "The rent increase is three percent starting January first, not four percent.",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The letter has already been sent."
+    },
+    {
+     "id": "n2",
+     "text": "The roof leak will be fixed (the speaker does not know)."
+    },
+    {
+     "id": "n3",
+     "text": "Parking permits are free."
+    },
+    {
+     "id": "m1",
+     "text": "The four percent increase is presented as current."
+    },
+    {
+     "id": "m2",
+     "text": "The letter has been sent to the landlord."
+    },
+    {
+     "id": "m3",
+     "text": "The roof leak repair is confirmed."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether the roof leak will be fixed is unknown; the speaker will ask."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was a tenants meeting where three main topics were discussed: the boiler replacement scheduled for November 20th with heat off from 9 AM to 4 PM, a rent increase of four percent starting January 1st for which the group is drafting a letter with Hannah handling the first draft and requesting comments by next Friday, and a new parking permit system costing $60 per year that requires application at the ground-floor office on Tuesdays and Thursdays only."
+      },
+      {
+       "u": "a2",
+       "text": "A question about whether the roof leak would be fixed was asked, but the speaker did not know and said they would ask for clarification."
+      },
+      {
+       "u": "a3",
+       "text": "The transcript does not contain any speaker names, and all points are stated without correction."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker corrected the boiler replacement date to November 20th with heat off from 9 AM to 4 PM, clarified that the rent increase is three percent starting January 1st rather than four percent, and confirmed that Hannah should adjust the letter to reflect the three percent increase."
+      },
+      {
+       "u": "a5",
+       "text": "The speaker also noted that the parking permit system costs $60 per year and requires applications at the ground-floor office on Tuesdays and Thursdays only."
+      },
+      {
+       "u": "a6",
+       "text": "A question about the roof leak was raised but the speaker did not know the answer and said they would ask for clarification."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "At the tenants' meeting, the landlord announced three key items: the boiler replacement scheduled for November 20th, with heat shut off from 9 to 4 that day; a 4% rent increase effective January 1st, which the tenants plan to address by drafting a letter with Hannah, who will write the first draft and send comments by next Friday; and a new parking permit system for the back lot costing $60 annually, where applications are submitted at the ground-floor office, which is open only on Tuesdays and Thursdays."
+      },
+      {
+       "u": "a2",
+       "text": "The tenants also asked if the roof leak would be fixed, but the landlord admitted they did not know and would have to ask further."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker realized they misread the notice and clarified that the rent increase is actually three percent, not four, effective January 1st, so the letter must reflect this corrected figure."
+      },
+      {
+       "u": "a4",
+       "text": "Hannah agreed to adjust the draft accordingly."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was a tenants meeting where three main topics were discussed: the boiler replacement scheduled for November 20th with heat off from 9 AM to 4 PM, a rent increase of three percent starting January 1st for which the group is drafting a letter with Hannah handling the first draft and requesting comments by next Friday, and a new parking permit system costing $60 per year that requires application at the ground-floor office on Tuesdays and Thursdays only."
+      },
+      {
+       "u": "a2",
+       "text": "A question about whether the roof leak would be fixed was asked, but the speaker did not know and said they would ask for clarification."
+      },
+      {
+       "u": "a3",
+       "text": "The transcript does not contain any speaker names, and all points are stated without correction."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "At the tenants' meeting, the landlord announced three key items: the boiler replacement scheduled for November 20th, with heat shut off from 9 to 4 that day; a 3% rent increase effective January 1st, which the tenants plan to address by drafting a letter with Hannah, who will write the first draft and send comments by next Friday; and a new parking permit system for the back lot costing $60 annually, where applications are submitted at the ground-floor office, which is open only on Tuesdays and Thursdays."
+      },
+      {
+       "u": "a2",
+       "text": "The tenants also asked if the roof leak would be fixed, but the landlord admitted they did not know and would have to ask further."
+      },
+      {
+       "u": "a3",
+       "text": "The landlord clarified that the rent increase is three percent, not four percent, and instructed Hannah to adjust the letter to reflect this correct figure."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A discussion occurred near a person who could not hear it, covering three topics."
+      },
+      {
+       "u": "a2",
+       "text": "The boiler replacement is scheduled for the twentieth of November, with heat off from nine to four that day."
+      },
+      {
+       "u": "a3",
+       "text": "The rent increase is three percent from January first, and a letter is being drafted with Hannah agreeing to write the first draft."
+      },
+      {
+       "u": "a4",
+       "text": "Comments are requested by next Friday."
+      },
+      {
+       "u": "a5",
+       "text": "A new parking permit system is available for the back lot, costing sixty dollars a year, and applications are accepted at the office on the ground floor on Tuesdays and Thursdays only."
+      },
+      {
+       "u": "a6",
+       "text": "The roof leak is not confirmed, and the speaker will ask."
+      },
+      {
+       "u": "a7",
+       "text": "Details on the permit system and office hours were confirmed."
+      },
+      {
+       "u": "a8",
+       "text": "The request for comments remains open."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A discussion occurred near a person who could not hear it, covering three topics."
+      },
+      {
+       "u": "a2",
+       "text": "The boiler replacement is scheduled for the twentieth of November, with heat off from nine to four that day."
+      },
+      {
+       "u": "a3",
+       "text": "The rent increase is four percent starting January first, and a letter is being drafted with Hannah agreeing to write the first draft."
+      },
+      {
+       "u": "a4",
+       "text": "Comments are requested by next Friday."
+      },
+      {
+       "u": "a5",
+       "text": "A new parking permit system is available for the back lot, costing sixty dollars a year, and applications are accepted at the office on the ground floor on Tuesdays and Thursdays only."
+      },
+      {
+       "u": "a6",
+       "text": "The roof leak is not confirmed, and the speaker will ask."
+      },
+      {
+       "u": "a7",
+       "text": "Details on the permit system and office hours were confirmed."
+      },
+      {
+       "u": "a8",
+       "text": "The request for comments remains open."
+      },
+      {
+       "u": "a9",
+       "text": "The speaker apologized for misreading the notice, clarified that the increase is three percent starting January first, and asked Hannah to adjust the wording in the letter."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-011",
+   "language": "en",
+   "transcript": [
+    "1. so tomorrow we meet in room twelve",
+    "2. room twelve right",
+    "3. not the library the library's closed for the floor thing",
+    "4. ok",
+    "5. and the quiz is on fractions",
+    "6. fractions and decimals",
+    "7. can I get a large fries",
+    "8. can I get a large fries and a",
+    "9. sorry what",
+    "10. I said the quiz is on fractions and decimals",
+    "11. ok and what time",
+    "12. lunch break twelve forty",
+    "13. twelve forty to one ten",
+    "14. is Omar coming",
+    "15. he said he might",
+    "16. I'll text him",
+    "17. bring your worksheets from chapter four",
+    "18. chapter four section two",
+    "19. okay",
+    "20. oh and the quiz is Friday",
+    "21. I forgot to say that",
+    "22. Omar texted back he's coming",
+    "23. great"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The study group meets tomorrow in room twelve.",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f2",
+     "text": "The library is closed because of floor work.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "The quiz is on fractions and decimals.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "The study group meets during lunch break, 12:40 to 1:10.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "Participants should bring their chapter four, section two worksheets.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "One speaker will text Omar.",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "g1",
+     "text": "The quiz is on Friday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "g2",
+     "text": "Omar texted back that he is coming.",
+     "critical": true,
+     "kind": "name"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The quiz is tomorrow (the quiz date was not stated)."
+    },
+    {
+     "id": "n2",
+     "text": "Omar has confirmed he is coming."
+    },
+    {
+     "id": "n3",
+     "text": "The large fries order is part of the study group plan (it is background speech)."
+    },
+    {
+     "id": "m1",
+     "text": "The quiz is said to be tomorrow."
+    },
+    {
+     "id": "m2",
+     "text": "Omar is said to be not coming or still unsure."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether Omar is coming is unconfirmed; he said he might."
+    },
+    {
+     "id": "u2",
+     "text": "The date of the quiz was not stated."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A meeting is scheduled for tomorrow in room twelve, not the library, which is closed for a floor matter."
+      },
+      {
+       "u": "a2",
+       "text": "The quiz is Friday, and lunch break is at twelve forty."
+      },
+      {
+       "u": "a3",
+       "text": "The time is confirmed as twelve forty to one ten."
+      },
+      {
+       "u": "a4",
+       "text": "Omar is confirmed to be attending, and a text will be sent."
+      },
+      {
+       "u": "a5",
+       "text": "A request is made to bring worksheets from chapter four, section two."
+      },
+      {
+       "u": "a6",
+       "text": "The phrase “large fries” is requested, but the exact wording is unclear."
+      },
+      {
+       "u": "a7",
+       "text": "The text is missing regarding a specific clarification."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place near a person who could not hear it, so some transcriptions contain errors."
+      },
+      {
+       "u": "a2",
+       "text": "The speakers agreed to meet tomorrow in room twelve, clarifying that this is not the library which is closed for a floor thing."
+      },
+      {
+       "u": "a3",
+       "text": "The quiz will cover fractions and decimals, and there is a request for large fries."
+      },
+      {
+       "u": "a4",
+       "text": "Participants are asked to bring worksheets from chapter four, section two."
+      },
+      {
+       "u": "a5",
+       "text": "Lunch break is scheduled from twelve forty to one ten, and Omar is asked if he is coming, with a promise to text him."
+      },
+      {
+       "u": "a6",
+       "text": "The transcript indicates that the quiz is on Friday, Omar texted back confirming he is coming, and the meeting is set for tomorrow in room twelve."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Tomorrow, the group will meet in room twelve, not the library which is closed for a floor event."
+      },
+      {
+       "u": "a2",
+       "text": "The quiz will cover fractions and decimals, and the lunch break is scheduled for 12:40 PM."
+      },
+      {
+       "u": "a3",
+       "text": "Regarding the order, the speaker initially asked for large fries but then corrected themselves, stating they did not specify a second item."
+      },
+      {
+       "u": "a4",
+       "text": "Omar may or may not be coming, and the speaker plans to text him to confirm."
+      },
+      {
+       "u": "a5",
+       "text": "You are assigned to bring worksheets from chapter four, specifically section two."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker clarified that the quiz is actually on Friday, not the day previously mentioned, and added that they had forgotten to include this detail."
+      },
+      {
+       "u": "a7",
+       "text": "Omar confirmed he is coming by texting back, which resolves the uncertainty about his attendance."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Tomorrow, the group will meet in room twelve, not the library which is closed for a floor event."
+      },
+      {
+       "u": "a2",
+       "text": "The quiz will cover fractions and decimals and is scheduled for Friday."
+      },
+      {
+       "u": "a3",
+       "text": "The lunch break is still scheduled for 12:40 PM."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding the order, the speaker initially asked for large fries but then corrected themselves, stating they did not specify a second item."
+      },
+      {
+       "u": "a5",
+       "text": "Omar has confirmed he is coming via text."
+      },
+      {
+       "u": "a6",
+       "text": "You are assigned to bring worksheets from chapter four, specifically section two."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A meeting is scheduled for tomorrow in room twelve, not the library, which is closed for a floor matter."
+      },
+      {
+       "u": "a2",
+       "text": "The quiz covers fractions and decimals, and lunch break is at twelve forty."
+      },
+      {
+       "u": "a3",
+       "text": "The time is confirmed as twelve forty to one ten."
+      },
+      {
+       "u": "a4",
+       "text": "Omar is mentioned as possibly attending, and a text will be sent."
+      },
+      {
+       "u": "a5",
+       "text": "A request is made to bring worksheets from chapter four, section two."
+      },
+      {
+       "u": "a6",
+       "text": "The phrase “large fries” is requested, but the exact wording is unclear."
+      },
+      {
+       "u": "a7",
+       "text": "The text is missing regarding a specific clarification."
+      },
+      {
+       "u": "a8",
+       "text": "The quiz is now scheduled for Friday, and Omar texted back saying he is coming."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place near a person who could not hear it, so some transcriptions contain errors."
+      },
+      {
+       "u": "a2",
+       "text": "The speakers agreed to meet tomorrow in room twelve, clarifying that this is not the library which is closed for a floor thing."
+      },
+      {
+       "u": "a3",
+       "text": "The quiz will cover fractions and decimals, and there is a request for large fries."
+      },
+      {
+       "u": "a4",
+       "text": "Participants are asked to bring worksheets from chapter four, section two."
+      },
+      {
+       "u": "a5",
+       "text": "Lunch break is scheduled from twelve forty to one ten, and Omar is asked if he is coming, with a promise to text him."
+      },
+      {
+       "u": "a6",
+       "text": "The quiz is scheduled for Friday, and Omar has confirmed he is coming."
+      },
+      {
+       "u": "a7",
+       "text": "The group was reminded to bring worksheets from chapter four, section two, and lunch will be served from twelve forty to one ten."
+      },
+      {
+       "u": "a8",
+       "text": "The location for the quiz is room twelve, not the library which is closed for a floor thing."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "cont-012",
+   "language": "en",
+   "transcript": [
+    "1. listen up team",
+    "2. away game against Fairview this Saturday",
+    "3. the bus leaves from the school gym at six thirty AM",
+    "4. kickoff is at nine",
+    "5. we're playing at Fairview Park field two",
+    "6. wear the white jerseys",
+    "7. bring water and your own cleats no borrowing",
+    "8. parents can drive separately if they want",
+    "9. they need to sign the form by Thursday",
+    "10. captain this week is Ethan",
+    "11. and Zoe is in goal",
+    "12. since Mia's out with the ankle",
+    "13. any questions",
+    "14. what if it rains",
+    "15. we play unless the referee cancels",
+    "16. I'll send a message by seven the night before",
+    "17. okay hands in",
+    "18. one change",
+    "19. bus leaves at six fifteen not six thirty",
+    "20. traffic on the highway",
+    "21. so be at the gym by six",
+    "22. and Mia's coming along to cheer"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The team plays an away game against Fairview on Saturday at Fairview Park field two, with kickoff at nine.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "Players should wear the white jerseys.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "Players should bring water and their own cleats; borrowing is not allowed.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "Parents may drive separately but must sign the form by Thursday.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "Ethan is captain this week.",
+     "critical": true,
+     "kind": "name"
+    },
+    {
+     "id": "f7",
+     "text": "Zoe is in goal because Mia is out with an ankle injury.",
+     "critical": true,
+     "kind": "name"
+    },
+    {
+     "id": "f8",
+     "text": "If it rains the game is played unless the referee cancels, and the coach will send a message by seven the night before.",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "g1",
+     "text": "Players should be at the gym by six.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "g2",
+     "text": "Mia is coming along to cheer.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "c1",
+     "text": "The bus leaves at 6:15 AM, not 6:30, because of highway traffic.",
+     "critical": true,
+     "kind": "change"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The game is cancelled if it rains."
+    },
+    {
+     "id": "n2",
+     "text": "Mia's injury is serious or will keep her out for a long time."
+    },
+    {
+     "id": "n3",
+     "text": "Parents are required to drive."
+    },
+    {
+     "id": "m1",
+     "text": "The 6:30 departure is presented as current."
+    },
+    {
+     "id": "m2",
+     "text": "Mia is playing in the game."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A team meeting was held regarding an away game against Fairview this Saturday."
+      },
+      {
+       "u": "a2",
+       "text": "The bus departs from the school gym at six fifteen AM, with kickoff at nine, and the match takes place at Fairview Park field two."
+      },
+      {
+       "u": "a3",
+       "text": "Participants are instructed to wear white jerseys, bring water and their own cleats, and not borrow cleats."
+      },
+      {
+       "u": "a4",
+       "text": "Parents may drive separately if desired and must sign the form by Thursday."
+      },
+      {
+       "u": "a5",
+       "text": "This week’s captain is Ethan, and Zoe is in goal because Mia is out with an ankle."
+      },
+      {
+       "u": "a6",
+       "text": "The game continues unless the referee cancels, and a message is sent by seven the night before."
+      },
+      {
+       "u": "a7",
+       "text": "A form is missing, and questions are open."
+      },
+      {
+       "u": "a8",
+       "text": "Mia is coming along to cheer, and traffic on the highway requires being at the gym by six."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team is preparing for their away game against Fairview this Saturday, with the bus departing from the school gym at 6:30 AM and kickoff scheduled for 9:00 AM at Fairview Park Field Two."
+      },
+      {
+       "u": "a2",
+       "text": "Players must wear white jerseys and bring their own water and cleats, as borrowing is not permitted, while parents who drive separately are required to sign a form by Thursday."
+      },
+      {
+       "u": "a3",
+       "text": "Captain this week is Ethan, with Zoe assigned to goal, noting that Mia is unavailable due to an ankle injury."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding weather concerns, the team will play unless the referee cancels the event, and Ethan plans to send a message by 7:00 PM the night before to confirm any changes."
+      },
+      {
+       "u": "a5",
+       "text": "The team has decided to change the departure time to 6:15 AM instead of 6:30 AM, with a request to be at the gym by 6:00 AM to account for highway traffic, and it was confirmed that Mia will be joining the group to cheer them on despite her previous injury."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A team meeting was held regarding an away game against Fairview this Saturday."
+      },
+      {
+       "u": "a2",
+       "text": "The bus departs from the school gym at six thirty AM, with kickoff at nine, and the match takes place at Fairview Park field two."
+      },
+      {
+       "u": "a3",
+       "text": "Participants are instructed to wear white jerseys, bring water and their own cleats, and not borrow cleats."
+      },
+      {
+       "u": "a4",
+       "text": "Parents may drive separately if desired and must sign the form by Thursday."
+      },
+      {
+       "u": "a5",
+       "text": "This week’s captain is Ethan, and Zoe is in goal because Mia is out with an ankle."
+      },
+      {
+       "u": "a6",
+       "text": "The game continues unless the referee cancels, and a message is sent by seven the night before."
+      },
+      {
+       "u": "a7",
+       "text": "A form is missing, and questions are open."
+      },
+      {
+       "u": "a8",
+       "text": "The bus is now scheduled to leave at six fifteen instead of six thirty, and the person was advised to be at the gym by six due to traffic on the highway."
+      },
+      {
+       "u": "a9",
+       "text": "Additionally, it was mentioned that Mia is coming along to cheer."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The bus departs from the school gym at 6:15 AM (not 6:30 AM) and players should be at the gym by 6:00 AM."
+      },
+      {
+       "u": "a2",
+       "text": "Traffic on the highway has been reported, so everyone should be at the gym by 6:00 AM."
+      },
+      {
+       "u": "a3",
+       "text": "Mia is coming along to cheer."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team was briefed about the away game against Fairview this Saturday, with the bus departing from the school gym at 6:30 AM and kickoff scheduled for 9:00 AM at Fairview Park field two."
+      },
+      {
+       "u": "a2",
+       "text": "Players were instructed to wear white jerseys, bring water and their own cleats (no borrowing), and parents may drive separately if they wish, needing to sign a form by Thursday."
+      },
+      {
+       "u": "a3",
+       "text": "Ethan was confirmed as captain this week, Zoe was assigned to goal, and Mia was noted as being out with an ankle."
+      },
+      {
+       "u": "a4",
+       "text": "The team was told they would play regardless of weather, with a cancellation only if the referee did so, and a message would be sent by 7:00 PM the night before."
+      },
+      {
+       "u": "a5",
+       "text": "The briefing concluded with a request for everyone to hand in."
+      },
+      {
+       "u": "a6",
+       "text": "The bus departure time was updated to six fifteen AM, and traffic on the highway was noted, so everyone should be at the gym by six."
+      },
+      {
+       "u": "a7",
+       "text": "Mia is now coming along to cheer for the team."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team is preparing for their away game against Fairview this Saturday, with the bus departing from the school gym at 6:15 AM instead of the previously planned 6:30 AM, and kickoff scheduled for 9:00 AM at Fairview Park Field Two."
+      },
+      {
+       "u": "a2",
+       "text": "Players must wear white jerseys and bring their own water and cleats, as borrowing is not permitted, while parents who drive separately are required to sign a form by Thursday."
+      },
+      {
+       "u": "a3",
+       "text": "Captain this week is Ethan, with Zoe assigned to goal, noting that Mia is unavailable due to an ankle injury, although Mia is now coming along to cheer."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding weather concerns, the team will play unless the referee cancels the event, and Ethan plans to send a message by 7:00 PM the night before to confirm any changes."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

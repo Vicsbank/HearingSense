@@ -1,0 +1,738 @@
+{
+ "batch": "batch_034",
+ "conversations": [
+  {
+   "conversation": "fin-zh-025",
+   "language": "zh",
+   "transcript": [
+    "1. 国庆去青岛 机票我看了 九月三十号晚上七点的 还剩四张",
+    "2. 三十号晚上我加班 到不了 有没有第二天早上的",
+    "3. 十月一号早上六点四十的 比较早 不过便宜 一百二",
+    "4. 一百二是单程吗 对 单程 来回大概三百",
+    "5. 那我跟小静坐一号早上那班 阿哲你呢",
+    "6. 我也坐早上那班 反正我也没别的事",
+    "7. 那就订一号早上的 四个人 我现在就买",
+    "8. 等一下 他不一定能请假 要不要先别买",
+    "9. 谁啊 阿哲吗 他刚才不是说没别的事吗",
+    "10. 不是阿哲 我说的是小周 他还要问他领导",
+    "11. 哦 小周啊 那我们先订三张 小周等他消息",
+    "12. 民宿呢 我看中了一家 在八大关附近 一晚四百八 两间房",
+    "13. 四百八是一间还是两间的 一间 两间就是九百六",
+    "14. 住两晚 一共一千九百二 四个人分 一人四百八",
+    "15. 行 回程十月三号下午 你们再看看"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "计划国庆期间去青岛，共四个人（小周能否去尚未确定）",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "因为要加班，说话者无法乘坐九月三十日晚上七点的航班",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f3",
+     "text": "选定十月一日早上六点四十的航班，单程一百二十元，来回约三百元",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "小静与另一位说话者、阿哲都打算坐十月一日早上的航班",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f5",
+     "text": "决定先订三张机票，等小周的消息再定第四张",
+     "critical": true,
+     "kind": "decision"
+    },
+    {
+     "id": "f6",
+     "text": "不能确定请假的人是小周，不是阿哲，小周还要问领导",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f7",
+     "text": "看中的民宿在八大关附近，每间每晚四百八十元，订两间房",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "住两晚共一千九百二十元，四个人分摊，每人四百八十元",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f9",
+     "text": "回程时间初步是十月三日下午",
+     "critical": true,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "阿哲没有办法请假（实际上是小周还要问领导）"
+    },
+    {
+     "id": "n2",
+     "text": "机票已经买好了"
+    },
+    {
+     "id": "n3",
+     "text": "四个人都已经确定可以出发"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "小周能否请到假、是否同行尚未确定"
+    },
+    {
+     "id": "u2",
+     "text": "十月三日下午的回程航班大家还要再看，未最终确认"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The trip to Qingdao is on National Day, with flights on September 30 at 7 PM and four seats available, but someone agreed they couldn't attend due to overtime on that evening."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to check October 1 at 6:40 AM, noting it's cheaper but only available as a round trip costing 1,100 yuan, while a single trip is 1,000 yuan."
+      },
+      {
+       "u": "a3",
+       "text": "They decided to book seat 1 for October 1 at 6 AM for four people, but someone said to wait because someone named Xiao Jing might not be able to take time off."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to book three seats initially and wait for Xiao Jing's response."
+      },
+      {
+       "u": "a5",
+       "text": "Someone found a guesthouse near Eight Mile Garden costing 480 yuan per night for one room or 960 yuan for two rooms, totaling 1,920 yuan for two nights for four people."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed to return on October 3 at 4 PM, and someone suggested checking again."
+      },
+      {
+       "u": "a7",
+       "text": "The name Ar Zhang was mentioned, but no details were provided."
+      },
+      {
+       "u": "a8",
+       "text": "The phrase '阿哲' was mentioned, but no further context was given."
+      },
+      {
+       "u": "a9",
+       "text": "The phrase '小静' was mentioned, but no further context was given."
+      },
+      {
+       "u": "a10",
+       "text": "The phrase '小周' was mentioned, but no further context was given."
+      },
+      {
+       "u": "a11",
+       "text": "The phrase '阿哲' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a12",
+       "text": "The phrase '小周' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a13",
+       "text": "The phrase '小周' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a14",
+       "text": "The phrase '阿哲' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a15",
+       "text": "The phrase '小周' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a16",
+       "text": "The phrase '阿哲' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a17",
+       "text": "The phrase '小周' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a18",
+       "text": "The phrase '阿哲' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a19",
+       "text": "The phrase '小周' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a20",
+       "text": "The phrase '阿哲' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a21",
+       "text": "The phrase '小周' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a22",
+       "text": "The phrase '阿哲' was mentioned again, but no further context was given."
+      },
+      {
+       "u": "a23",
+       "text": "The phrase"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group decided to travel to Qingdao on October 1st, with three people taking the 6:40 AM flight while Xiao Zhou waits for permission before joining."
+      },
+      {
+       "u": "a2",
+       "text": "They booked three one-way tickets at 120 RMB each, estimating a round-trip cost of 300 RMB per person, and will finalize the purchase after confirming Xiao Zhou's availability."
+      },
+      {
+       "u": "a3",
+       "text": "For accommodation, they selected a two-room suite near Badaguan for two nights at 480 RMB per room, totaling 960 RMB for the stay."
+      },
+      {
+       "u": "a4",
+       "text": "The return flight is scheduled for October 3rd in the afternoon, with the group to review options before booking."
+      },
+      {
+       "u": "a5",
+       "text": "Everyone agreed to proceed with the three tickets immediately, pending Xiao Zhou's final confirmation."
+      },
+      {
+       "u": "k1",
+       "text": "The trip is to Qingdao from October 1st to October 3rd."
+      },
+      {
+       "u": "k2",
+       "text": "Three people will take the October 1st morning flight at 6:40 AM."
+      },
+      {
+       "u": "k3",
+       "text": "Xiao Zhou is waiting for his leader's permission to join the trip."
+      },
+      {
+       "u": "k4",
+       "text": "The accommodation is a two-room suite near Badaguan for two nights."
+      },
+      {
+       "u": "k5",
+       "text": "The total estimated cost for three people is 1920 RMB including flights and hotel."
+      },
+      {
+       "u": "k6",
+       "text": "The return flight is to be reviewed on October 3rd in the afternoon."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于国庆期间前往青岛的安排，已确定于九月三十号晚上七点有一张机票，但因加班无法乘坐，于是考虑九月三十号晚上是否还有其他航班，以及十月一号早上六点四十的航班，费用为一百二百元单程。"
+      },
+      {
+       "u": "a2",
+       "text": "已决定安排四人乘坐早上一号的航班，其中一人是阿哲，另一人是小静，但有人提到阿哲之前没有其他安排。"
+      },
+      {
+       "u": "a3",
+       "text": "关于住宿，已选定一家位于八大关附近的民宿，费用为每晚四百八元，并确认为两间房，总价为一千九百二元，四人共用。"
+      },
+      {
+       "u": "a4",
+       "text": "还讨论了回程日期为十月三号下午，并建议后续确认。"
+      },
+      {
+       "u": "a5",
+       "text": "民宿的房间类型有争议，确认为两间。"
+      },
+      {
+       "u": "a6",
+       "text": "目前没有明确指定具体的人员，但提到小周需要确认领导情况，因此暂时安排订三张床位。"
+      },
+      {
+       "u": "a7",
+       "text": "相关信息如住宿细节和航班时间仍在讨论中。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A flight to Qingdao on September 30th at 7 PM with four tickets remaining."
+      },
+      {
+       "u": "a2",
+       "text": "They discussed taking the 10:40 AM train on October 1st, noting it was early but cheap at 132 yuan one-way."
+      },
+      {
+       "u": "a3",
+       "text": "They decided to book three seats on the 1st morning train and asked whether to buy tickets before the person might call in sick."
+      },
+      {
+       "u": "a4",
+       "text": "They clarified the accommodation choice near Daheling for two nights at 498 yuan per night for two rooms, totaling 1,192 yuan for four people, with each person paying 498 yuan."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed to check on Xiao Jing's message and then proceed with booking."
+      },
+      {
+       "u": "k1",
+       "text": "Flight to Qingdao scheduled for September 30th at 7 PM with four tickets remaining"
+      },
+      {
+       "u": "k2",
+       "text": "Return flight on October 3rd afternoon"
+      },
+      {
+       "u": "k3",
+       "text": "Accommodation near Daheling for two nights at 498 yuan per night"
+      },
+      {
+       "u": "k4",
+       "text": "Total cost for two rooms is 1,192 yuan, four people sharing"
+      },
+      {
+       "u": "k5",
+       "text": "Decision to book three seats on October 1st morning train"
+      },
+      {
+       "u": "k6",
+       "text": "Tickets are 132 yuan one-way"
+      },
+      {
+       "u": "k7",
+       "text": "Someone asked if they should buy tickets before the person might call in sick"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place near a person who could not hear it, so the transcript contains speech recognition errors."
+      },
+      {
+       "u": "a2",
+       "text": "The speakers discussed travel plans to Qingdao for the National Day holiday."
+      },
+      {
+       "u": "a3",
+       "text": "The user mentioned they checked tickets for September 30th at 7 PM and there are four remaining tickets."
+      },
+      {
+       "u": "a4",
+       "text": "They worked late on September 30th and could not make it, so they asked about September 1st at 6:40 AM, which is early but cheap at 112 RMB for a one-way ticket."
+      },
+      {
+       "u": "a5",
+       "text": "The group decided to book three tickets for the 1 AM train on September 1st."
+      },
+      {
+       "u": "a6",
+       "text": "They also discussed a homestay near Dagang (八大关) for two nights at 498 RMB per night for two rooms, totaling 1,192 RMB for four people."
+      },
+      {
+       "u": "a7",
+       "text": "The return trip is planned for September 3rd in the afternoon."
+      },
+      {
+       "u": "a8",
+       "text": "The speaker noted that the other person might not be able to take leave and suggested not buying tickets until confirmation."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "国庆期间，计划前往青岛，已查看到九月三十日（晚上七点）剩余四张机票，但小周因加班无法当日出行，因此决定改为十月一日早上六点四十的航班，单程一百二，往返共三百。"
+      },
+      {
+       "u": "a2",
+       "text": "阿哲和小静均确认乘坐十月一日早班机，而小周需先向领导请假，故目前先预订三张票，待小周确认消息后再定。"
+      },
+      {
+       "u": "a3",
+       "text": "住宿方面看中了一家位于八大关附近的民宿，一晚四百八（两间房共九百六），住两晚总价一千九百二，四人分摊每人四百八。"
+      },
+      {
+       "u": "a4",
+       "text": "回程机票暂定十月三号下午，届时再行查看。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-026",
+   "language": "zh",
+   "transcript": [
+    "1. 服务员 点菜 俩位",
+    "2. 好的 先生想吃点什么 我们这边招牌是红烧排骨",
+    "3. 来一个公报鸡丁 一份鱼香肉丝 少放辣",
+    "4. 再来一个妈婆豆腐 不要乡菜 不要乡菜",
+    "5. 妈妈你看那个气球 别跑 过来吃饭",
+    "6. 好的 宫保鸡丁 鱼香肉丝 麻婆豆腐 不放香菜 还要别的吗",
+    "7. 汤有什么 例汤是紫菜蛋花汤 也可以点西湖牛肉羹 二十八",
+    "8. 那来一个西湖牛肉羹 米饭两碗",
+    "9. 饮料呢 有酸梅汤 一壶十八块",
+    "10. 来一壶酸梅汤 先上饮料",
+    "11. 好 一共三个菜一个汤 菜大概二十分钟 请稍等",
+    "12. 哎 等一下 那个鱼香肉丝能不能换成青椒肉丝",
+    "13. 可以的 青椒肉丝 价钱一样",
+    "14. 买单的时候能用微信吗 可以 扫桌上的二维码就行"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "两位客人在餐厅点菜",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "点了宫保鸡丁、麻婆豆腐，都不放香菜",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "点了西湖牛肉羹，价格二十八元",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "点了两碗米饭和一壶酸梅汤，酸梅汤一壶十八元，先上饮料",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "鱼香肉丝后来被换成青椒肉丝，价钱不变",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f6",
+     "text": "菜大约二十分钟上齐",
+     "critical": false,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "可以用微信扫桌上的二维码买单",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "客人点了招牌红烧排骨（服务员只是介绍了，客人没有点）"
+    },
+    {
+     "id": "n2",
+     "text": "鱼香肉丝仍然在点菜单上（已换成青椒肉丝）"
+    },
+    {
+     "id": "n3",
+     "text": "客人点的是紫菜蛋花汤"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "鱼香肉丝是否少放辣，在换菜之后没有再提，青椒肉丝的辣度未说明"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone ordered two portions of signature dishes including Kung Pao Chicken, Fish-Flavored Shredded Pork, and Mapo Tofu, requesting no chili or cilantro."
+      },
+      {
+       "u": "a2",
+       "text": "They also selected West Lake Beef Soup for 28 yuan and ordered two bowls of rice plus a pot of sour plum soup for 18 yuan."
+      },
+      {
+       "u": "a3",
+       "text": "A substitution request changed the Fish-Flavored Shredded Pork to Green Pepper Shredded Pork with the same price, and the total order includes three dishes and one soup."
+      },
+      {
+       "u": "a4",
+       "text": "The server noted the food would take about twenty minutes, and the customer confirmed payment via WeChat by scanning the table's QR code."
+      },
+      {
+       "u": "k1",
+       "text": "The order includes Kung Pao Chicken, Fish-Flavored Shredded Pork, Mapo Tofu, and West Lake Beef Soup."
+      },
+      {
+       "u": "k2",
+       "text": "No chili or cilantro was requested in the dishes."
+      },
+      {
+       "u": "k3",
+       "text": "The West Lake Beef Soup costs 28 yuan and the sour plum soup costs 18 yuan."
+      },
+      {
+       "u": "k4",
+       "text": "Two bowls of rice were ordered."
+      },
+      {
+       "u": "k5",
+       "text": "The Fish-Flavored Shredded Pork was changed to Green Pepper Shredded Pork."
+      },
+      {
+       "u": "k6",
+       "text": "Payment will be made via WeChat by scanning the table's QR code."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They ordered two people's meals, including red-braised pig ribs, a dish of reported chicken pieces, a serving of fish-flavored minced pork with little heat, and a serving of woman-grandmother style tofu, with the request to avoid local dishes."
+      },
+      {
+       "u": "a2",
+       "text": "they also requested a dish of reported chicken pieces, fish-flavored minced pork, and woman-grandmother style tofu without coriander, asking for something else, and a bowl of purple-seaweed egg flower soup or west lake beef soup, priced at twenty-eight."
+      },
+      {
+       "u": "a3",
+       "text": "they ordered a west lake beef soup and two servings of steamed rice, and a drink of sour plum soup costing eighteen yuan."
+      },
+      {
+       "u": "a4",
+       "text": "they ordered a jug of sour plum soup first, then the drink, and the total was three dishes and one soup, with the food expected in about twenty minutes, requesting to wait."
+      },
+      {
+       "u": "a5",
+       "text": "someone asked if the fish-flavored minced pork could be replaced with green-pepper minced pork, and they agreed, noting the price would stay the same."
+      },
+      {
+       "u": "a6",
+       "text": "they asked if they could use WeChat to pay, and they confirmed they could scan the code on the table."
+      },
+      {
+       "u": "a7",
+       "text": "the relevant menu item is missing."
+      },
+      {
+       "u": "k1",
+       "text": "two people ordered food."
+      },
+      {
+       "u": "k2",
+       "text": "red-braised pig ribs were ordered."
+      },
+      {
+       "u": "k3",
+       "text": "a dish of reported chicken pieces was ordered."
+      },
+      {
+       "u": "k4",
+       "text": "fish-flavored minced pork with little heat was ordered."
+      },
+      {
+       "u": "k5",
+       "text": "woman-grandmother style tofu was ordered, avoiding local dishes."
+      },
+      {
+       "u": "k6",
+       "text": "a dish of reported chicken pieces and fish-flavored minced pork without coriander was ordered, with an additional request for something else, and woman-grandmother style tofu without coriander was ordered, too, but the menu item is missing for that part of the request and the relevant menu item is missing overall for the order details provided in the transcript."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "服务员向两位顾客确认点菜需求，并介绍了招牌菜红烧排骨。"
+      },
+      {
+       "u": "a2",
+       "text": "顾客点了宫保鸡丁（后更正为青椒肉丝，价格不变）、鱼香肉丝、麻婆豆腐，并特别要求不放香菜和乡菜，同时加点了西湖牛肉羹作为例汤。"
+      },
+      {
+       "u": "a3",
+       "text": "饮品方面，顾客选择了一壶酸梅汤，总价十八元，并确认米饭两碗。"
+      },
+      {
+       "u": "a4",
+       "text": "顾客询问是否可用微信支付，服务员告知只需扫描桌上的二维码即可。"
+      },
+      {
+       "u": "a5",
+       "text": "最后顾客提到气球，提醒孩子不要跑，随后要求先上饮料，预计菜品二十分钟内上桌。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "四位客人点菜，请求一份红烧排骨、一份公报鸡丁、一份鱼香肉丝、一份少辣、一份妈婆豆腐、一份宫保鸡丁、一份鱼香肉丝、一份麻婆豆腐、一份西湖牛肉羹、一份紫菜蛋花汤、一份西湖牛肉羹、一份米饭两碗、一份酸梅汤。"
+      },
+      {
+       "u": "a2",
+       "text": "请求不放香菜，并询问是否需要其他饮品。"
+      },
+      {
+       "u": "a3",
+       "text": "西湖牛肉羹的价格为二十八元。"
+      },
+      {
+       "u": "a4",
+       "text": "决定先饮用一份酸梅汤，然后上菜。"
+      },
+      {
+       "u": "a5",
+       "text": "请求确认鱼香肉丝可换成青椒肉丝，并确认价钱不变。"
+      },
+      {
+       "u": "a6",
+       "text": "购买时可使用微信，扫描桌上的二维码。"
+      },
+      {
+       "u": "a7",
+       "text": "汤品选项中，西湖牛肉羹的价格为二十八元。"
+      },
+      {
+       "u": "a8",
+       "text": "相关信息部分缺失。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place at a restaurant where the staff took orders from two customers."
+      },
+      {
+       "u": "a2",
+       "text": "The first customer ordered the signature dish of braised red bone, a chicken and ginger stir-fry (公报鸡丁), fish-crisp stir-fry (鱼香肉丝) with less spiciness, and mapo tofu (麻婆豆腐) without wild vegetables (乡菜)."
+      },
+      {
+       "u": "a3",
+       "text": "The second customer requested a king of chicken (宫保鸡丁), fish-crisp stir-fry, and mapo tofu without cilantro (香菜)."
+      },
+      {
+       "u": "a4",
+       "text": "They also ordered a Xichu beef congee (西湖牛肉羹) with two bowls of rice and a pomegranate tea (酸梅汤) for one pot at 18 yuan."
+      },
+      {
+       "u": "a5",
+       "text": "The total order included three dishes and one soup, with an estimated preparation time of 20 minutes."
+      },
+      {
+       "u": "a6",
+       "text": "The staff confirmed the order and asked for payment via the QR code on the table."
+      },
+      {
+       "u": "a7",
+       "text": "No further requests were made after the order was confirmed."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation was about placing a meal order at a restaurant."
+      },
+      {
+       "u": "a2",
+       "text": "The server suggested the signature dish of braised red croaker and offered options including a public report chicken with chicken pung, fish-crisp with shredded pork, and mama's tofu."
+      },
+      {
+       "u": "a3",
+       "text": "The customer requested modifications such as no chili for the fish-crisp and no wild vegetables for the tofu."
+      },
+      {
+       "u": "a4",
+       "text": "They also asked about the balloons and were directed to the dining area."
+      },
+      {
+       "u": "a5",
+       "text": "The final order included braised red croaker, fish-crisp, fish-crisp (changed to bell pepper), and mapo tofu without cilantro, with a total of three dishes and one soup."
+      },
+      {
+       "u": "a6",
+       "text": "The customer confirmed a one-pot Western Xiao Gu (cow meat soup) and two bowls of rice, plus a 18-block bottle of acid-meju tea."
+      },
+      {
+       "u": "a7",
+       "text": "They agreed to pay via WeChat using the QR code on the table."
+      },
+      {
+       "u": "k1",
+       "text": "The server suggested braised red croaker as the signature dish and offered fish-crisp with shredded pork and mama's tofu as alternatives."
+      },
+      {
+       "u": "k2",
+       "text": "The customer requested no chili for the fish-crisp and no wild vegetables for the tofu."
+      },
+      {
+       "u": "k3",
+       "text": "The final menu included braised red croaker, fish-crisp, fish-crisp (changed to bell pepper), and mapo tofu without cilantro."
+      },
+      {
+       "u": "k4",
+       "text": "The order consisted of three dishes and one soup (Western Xiao Gu), with two bowls of rice."
+      },
+      {
+       "u": "k5",
+       "text": "The customer agreed to pay using WeChat via the QR code on the table."
+      },
+      {
+       "u": "k6",
+       "text": "The conversation was interrupted by a request to see balloons, which was addressed briefly."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

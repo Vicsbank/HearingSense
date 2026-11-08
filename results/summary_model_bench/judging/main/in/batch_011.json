@@ -1,0 +1,672 @@
+{
+ "batch": "batch_011",
+ "conversations": [
+  {
+   "conversation": "fin-en-023",
+   "language": "en",
+   "transcript": [
+    "1. Willow Creek Family Clinic this is Dana how can I help",
+    "2. Hi I'd like to book a flu shot for my father his name is Harold Pitts",
+    "3. Sure let me look the earliest I have is Tuesday October twentieth at nine forty",
+    "4. Oh that's a bit early for him is there anything in the afternoon",
+    "5. We have Thursday the twenty second at two fifteen or Friday the twenty third at four o'clock",
+    "6. Thursday at two fifteen is good",
+    "7. Okay and does he have any allergies eggs anything like that",
+    "8. No allergies but he takes a blood thinner it's called warfarin",
+    "9. Alright I'll put that in the nurse will go over it with him",
+    "10. The shot is free with his Medicare card so he needs to bring the card",
+    "11. Do I need to fill in any forms beforehand",
+    "12. You can do them online I'll text the link to the number we have ending in four four seven one",
+    "13. That's my cell yes",
+    "14. Great we're at two eighteen Alder Street suite B and the parking is behind the building",
+    "15. Is it still on the second floor",
+    "16. No we moved to the ground floor in September so there are no stairs",
+    "17. Oh good he'll appreciate that",
+    "18. Please arrive ten minutes early and if you need to cancel call at least twenty four hours ahead",
+    "19. Okay will do thank you Dana",
+    "20. You're welcome have a good day"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "A flu shot appointment was booked for Harold Pitts on Thursday October 22 at 2:15 pm.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The caller is booking the appointment for his or her father, Harold Pitts.",
+     "critical": true,
+     "kind": "relation"
+    },
+    {
+     "id": "f3",
+     "text": "Harold Pitts has no allergies but takes the blood thinner warfarin, and the nurse will go over it with him.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f4",
+     "text": "The flu shot is free with Harold's Medicare card, so he needs to bring the card.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f5",
+     "text": "Forms can be filled in online, and the link will be texted to the caller's cell number ending in 4471.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The clinic is at 218 Alder Street, suite B, with parking behind the building.",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f7",
+     "text": "The clinic moved to the ground floor in September, so there are no stairs.",
+     "critical": false,
+     "kind": "change"
+    },
+    {
+     "id": "f8",
+     "text": "Patients should arrive ten minutes early and cancel at least 24 hours in advance.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f9",
+     "text": "Other offered slots were Tuesday October 20 at 9:40 and Friday October 23 at 4:00 pm, but the Thursday slot was chosen.",
+     "critical": false,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "Harold is allergic to eggs (he has no allergies)."
+    },
+    {
+     "id": "n2",
+     "text": "The appointment is on Tuesday morning at 9:40."
+    },
+    {
+     "id": "n3",
+     "text": "Dana is a nurse (only said to be the person answering the phone)."
+    },
+    {
+     "id": "n4",
+     "text": "The clinic is still on the second floor."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The appointment for Harold Pitts' flu shot has been scheduled for Thursday, October 22nd at 2:15 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The clinic will require him to bring his Medicare card, and the nurse will review his warfarin medication with him before the shot."
+      },
+      {
+       "u": "a3",
+       "text": "He should arrive ten minutes early, and cancellations should be made at least twenty-four hours in advance."
+      },
+      {
+       "u": "a4",
+       "text": "The clinic is located at Alder Street suite B on the ground floor (they moved from the second floor in September), and parking is available behind the building."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Dana scheduled a flu shot for Harold Pitts at Willow Creek Family Clinic, noting his warfarin medication and lack of allergies."
+      },
+      {
+       "u": "a2",
+       "text": "The selected appointment is on Thursday, October 22nd at 2:15 PM in room 204 on the ground floor."
+      },
+      {
+       "u": "a3",
+       "text": "Harold must bring his Medicare card, and forms will be sent via text to his number ending in 4471."
+      },
+      {
+       "u": "a4",
+       "text": "He should arrive ten minutes early and call at least 24 hours ahead if he needs to cancel."
+      },
+      {
+       "u": "a5",
+       "text": "The clinic is located at 2:18 Alder Street, Suite B, with parking behind the building."
+      },
+      {
+       "u": "k1",
+       "text": "The appointment is on Thursday, October 22nd at 2:15 PM."
+      },
+      {
+       "u": "k2",
+       "text": "The location is Willow Creek Family Clinic at 2:18 Alder Street, Suite B."
+      },
+      {
+       "u": "k3",
+       "text": "Harold Pitts has no allergies but takes warfarin."
+      },
+      {
+       "u": "k4",
+       "text": "He must bring his Medicare card for the free shot."
+      },
+      {
+       "u": "k5",
+       "text": "Forms will be sent to his number ending in 4471."
+      },
+      {
+       "u": "k6",
+       "text": "Cancellations must be made at least 24 hours in advance."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "{ \"title\": \"Flu shot appointment booking for Harold Pitts\", \"summary\": \"Dana at Willow Creek Family Clinic booked a flu shot for Harold Pitts."
+      },
+      {
+       "u": "a2",
+       "text": "The earliest available slot was Tuesday October twentieth at nine forty, but the patient requested an afternoon appointment."
+      },
+      {
+       "u": "a3",
+       "text": "Thursday the twenty second at two fifteen and Friday the twenty third at four o'clock were alternative options, with Thursday at two fifteen being selected."
+      },
+      {
+       "u": "a4",
+       "text": "The patient has no allergies but takes warfarin, so the nurse will review this with him."
+      },
+      {
+       "u": "a5",
+       "text": "The flu shot is free with his Medicare card, and forms can be completed online via a text link."
+      },
+      {
+       "u": "a6",
+       "text": "The appointment is at Alder Street suite B on the ground floor (no stairs), and the patient should arrive ten minutes early."
+      },
+      {
+       "u": "a7",
+       "text": "Cancellations require at least twenty-four hours notice.\", \"keyPoints\": [ \"Harold Pitts is the patient for the flu shot appointment\", \"Tuesday October twentieth at nine forty was the earliest available slot\", \"Thursday the twenty second at two fifteen was selected as the appointment time\", \"Friday the twenty third at four o'clock was an alternative option\", \"The patient has no allergies but takes warfarin\", \"The flu shot is free with his Medicare card\", \"Online forms can be completed via a text link\", \"The appointment is at Alder Street suite B on the ground floor\", \"The patient should arrive ten minutes early\", \"Cancellations require at least twenty-four hours notice\" ], \"transcript\": \"Willow Creek Family Clinic this is Dana how can I help\\nHi I'd like to book a flu shot for my father his name is Harold Pitts\\nSure let me look the earliest I have is Tuesday October twentieth at nine forty\\nOh that's a bit early for him is there anything in the afternoon\\nWe have Thursday the twenty second at two fifteen or Friday the twenty third at four o'clock\\nThursday at two fifteen is good\\nOkay and does he have any allergies eggs anything like that\\nNo allergies but he takes a blood thinner it's called warfarin\\nAlright I'll put that in the nurse will go over it with him\\nThe shot is free with his Medicare card so he needs to bring the card\\nDo I need to fill in any forms beforehand\\nYou can do them online I'll text the link to the number we have ending in four four seven one\\nThat's my cell yes\\nGreat we're"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Dana from Willow Creek Family Clinic booked a flu shot for Harold Pitts, noting that while the earliest available slot was Tuesday, October 20th at 9:40, the family selected Thursday, October 22nd at 2:15 PM."
+      },
+      {
+       "u": "a2",
+       "text": "The appointment includes a reminder that Harold takes warfarin, a blood thinner, and has no allergies, so the nurse will review the medication with him before the shot."
+      },
+      {
+       "u": "a3",
+       "text": "Patients must bring their Medicare card, as the shot is free with it, and can complete any required forms online via a text message link ending in 4471."
+      },
+      {
+       "u": "a4",
+       "text": "The clinic is located at 2:18 Alder Street, Suite B, with parking behind the building on the ground floor since they moved there in September, and patients are asked to arrive ten minutes early or call at least 24 hours before canceling."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They wanted to book a flu shot for Harold Pitts at Willow Creek Family Clinic."
+      },
+      {
+       "u": "a2",
+       "text": "The earliest available time is Tuesday, October 20th at 9:40, but Thursday, October 22nd at 2:15 or Friday, October 23rd at 4:00 was chosen."
+      },
+      {
+       "u": "a3",
+       "text": "Harold has no allergies but takes a blood thinner called warfarin, and the nurse will discuss this with him."
+      },
+      {
+       "u": "a4",
+       "text": "The shot is free with Medicare, so Harold needs to bring his card."
+      },
+      {
+       "u": "a5",
+       "text": "Forms can be completed online with a link ending in 4471, and the address is 218 Alder Street, Suite B, with parking behind the building."
+      },
+      {
+       "u": "a6",
+       "text": "The clinic moved to the ground floor in September, so there are no stairs."
+      },
+      {
+       "u": "a7",
+       "text": "Someone agreed to arrive 10 minutes early and call at least 24 hours ahead if canceling."
+      },
+      {
+       "u": "a8",
+       "text": "The location is missing from the recap, and details about the parking lot are unclear."
+      },
+      {
+       "u": "a9",
+       "text": "Missing information includes the exact number for the online form and whether the appointment is confirmed."
+      },
+      {
+       "u": "a10",
+       "text": "They agreed to proceed but no final confirmation was given."
+      },
+      {
+       "u": "a11",
+       "text": "The text ends with a thank you, but no further action is specified."
+      },
+      {
+       "u": "k1",
+       "text": "Appointment for flu shot for Harold Pitts."
+      },
+      {
+       "u": "k2",
+       "text": "Tuesday, October 20th at 9:40 is the earliest available time."
+      },
+      {
+       "u": "k3",
+       "text": "Thursday, October 22nd at 2:15 or Friday, October 23rd at 4:00 is selected."
+      },
+      {
+       "u": "k4",
+       "text": "Harold takes a blood thinner called warfarin."
+      },
+      {
+       "u": "k5",
+       "text": "The shot is free with Medicare."
+      },
+      {
+       "u": "k6",
+       "text": "Address: 218 Alder Street, Suite B, ground floor, no stairs due to relocation in September."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A conversation near Willow Creek Family Clinic recorded on Tuesday, October twentieth, involved requesting a flu shot for Harold Pitts."
+      },
+      {
+       "u": "a2",
+       "text": "The earliest available appointment was Tuesday, October twentieth, at nine forty, but Thursday, October twenty-second, at two fifteen, or Friday, October twenty-third, at four o’clock, was selected."
+      },
+      {
+       "u": "a3",
+       "text": "Harold takes a blood thinner called warfarin and has no allergies."
+      },
+      {
+       "u": "a4",
+       "text": "The shot is free with a Medicare card, and the provider will contact the nurse to review the case."
+      },
+      {
+       "u": "a5",
+       "text": "Forms can be completed online with a link sent via text to the number ending in four four seven one."
+      },
+      {
+       "u": "a6",
+       "text": "The clinic is at two eighteen Alder Street, suite B, and parking is behind the building; the location is now on the ground floor since September, eliminating stairs."
+      },
+      {
+       "u": "a7",
+       "text": "Attendees are instructed to arrive ten minutes early and cancel at least twenty-four hours ahead if needed."
+      },
+      {
+       "u": "a8",
+       "text": "Details about the text message number are missing."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-024",
+   "language": "en",
+   "transcript": [
+    "1. okay let's get started we've got three things today the scanner rollout the invoice backlog and the holiday schedule",
+    "2. scanner rollout first Marcus where are we",
+    "3. so we received forty of the sixty handhelds the other twenty are delayed until November fourteenth",
+    "4. can we start training with the forty",
+    "5. yes I'd say start next Monday with the night shift because they're the biggest group",
+    "6. okay Priya can you set up the training sessions",
+    "7. I can do that I'll send out the sign up sheet by Thursday",
+    "8. good second item the invoice backlog",
+    "9. we're down from about nine hundred open invoices to about three hundred and fifty",
+    "10. that's great what's holding up the rest",
+    "11. mostly vendors that haven't sent purchase order numbers we've emailed them twice already",
+    "12. let's have Tom call the top five by phone this week",
+    "13. sure I'll take the top five by dollar value",
+    "14. third thing holiday schedule HR wants everyone's requests in by November sixth",
+    "15. is that deadline firm",
+    "16. that's what they told me but they might stretch it a day or two I really don't know",
+    "17. alright I'd treat it as the sixth then",
+    "18. any other business",
+    "19. just that the fire drill is sometime next week there's no date yet",
+    "20. okay thanks everybody"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "Forty of the sixty handheld scanners have arrived; the other twenty are delayed until November 14.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f2",
+     "text": "Scanner training will start next Monday with the night shift, the biggest group.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "Priya will set up the training sessions and send out the sign-up sheet by Thursday.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "Open invoices are down from about 900 to about 350.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f5",
+     "text": "The remaining invoices are mostly held up by vendors who have not sent purchase order numbers, despite two emails.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f6",
+     "text": "Tom will phone the top five vendors by dollar value this week.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "HR wants holiday schedule requests by November 6, and the team agreed to treat that as the deadline.",
+     "critical": true,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "All sixty scanners will be used in the first training week."
+    },
+    {
+     "id": "n2",
+     "text": "The invoice backlog has been fully cleared."
+    },
+    {
+     "id": "n3",
+     "text": "Marcus is the manager running the meeting (never stated)."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether HR will extend the November 6 holiday request deadline by a day or two is unknown."
+    },
+    {
+     "id": "u2",
+     "text": "The date of next week's fire drill has not been set."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered three items: the scanner rollout, the invoice backlog, and the holiday schedule."
+      },
+      {
+       "u": "a2",
+       "text": "For the scanner rollout, forty of the sixty handhelds were received, and the other twenty were delayed until November fourteenth."
+      },
+      {
+       "u": "a3",
+       "text": "Training was scheduled to start next Monday with the night shift, and Priya was tasked with setting up sessions and sending out the sign-up sheet by Thursday."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding the invoice backlog, the number of open invoices dropped from about nine hundred to about three hundred and fifty, and Tom was instructed to call the top five by phone this week due to vendors not providing purchase order numbers."
+      },
+      {
+       "u": "a5",
+       "text": "The holiday schedule deadline was set for November sixth, though HR might extend it by a day or two."
+      },
+      {
+       "u": "a6",
+       "text": "It was noted that the fire drill date was not yet determined."
+      },
+      {
+       "u": "a7",
+       "text": "The fire drill was scheduled for sometime next week."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team discussed three priorities for the day: the scanner rollout, the invoice backlog, and the holiday schedule."
+      },
+      {
+       "u": "a2",
+       "text": "Regarding the scanner rollout, Marcus confirmed that while forty of the sixty handhelds have been received, the remaining twenty are delayed until November 14th, and training with the forty units will begin next Monday during the night shift."
+      },
+      {
+       "u": "a3",
+       "text": "Priya agreed to handle the training setup and will distribute the sign-up sheet by Thursday."
+      },
+      {
+       "u": "a4",
+       "text": "On the invoice backlog, the count dropped from approximately nine hundred open invoices to about three hundred and fifty, with the remainder stalled because vendors have not yet submitted purchase order numbers despite two prior email attempts."
+      },
+      {
+       "u": "a5",
+       "text": "Tom volunteered to call the top five vendors by dollar value this week to resolve the outstanding invoices."
+      },
+      {
+       "u": "a6",
+       "text": "For the holiday schedule, HR requested all requests by November 6th, though the deadline might be flexible by one or two days, so the team decided to treat it as the sixth."
+      },
+      {
+       "u": "a7",
+       "text": "Finally, it was noted that a fire drill is scheduled sometime next week, but no specific date has been set yet."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They'd start the scanner rollout training with the forty handhelds received, starting next Monday with the night shift, and the other twenty are delayed until November fourteenth."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to have Priya set up the training sessions and send out the sign-up sheet by Thursday."
+      },
+      {
+       "u": "a3",
+       "text": "Regarding the invoice backlog, the number of open invoices dropped from about nine hundred to about three hundred and fifty, and they'll have Tom call the top five vendors by phone this week because most haven't sent purchase order numbers."
+      },
+      {
+       "u": "a4",
+       "text": "For the holiday schedule, HR wants requests by November sixth, and someone said to treat it as the sixth, though it might stretch a day or two."
+      },
+      {
+       "u": "a5",
+       "text": "They agreed the fire drill is sometime next week with no date yet."
+      },
+      {
+       "u": "a6",
+       "text": "The transcript is missing information about the exact timing or location of the fire drill."
+      },
+      {
+       "u": "a7",
+       "text": "They agreed to proceed with the tasks but no final decisions were made on the fire drill details."
+      },
+      {
+       "u": "k1",
+       "text": "Thirty-four of the sixty handheld scanners are ready for training."
+      },
+      {
+       "u": "k2",
+       "text": "Forty handhelds are delayed until November fourteenth."
+      },
+      {
+       "u": "k3",
+       "text": "Training will start next Monday with the night shift."
+      },
+      {
+       "u": "k4",
+       "text": "Priya will set up training sessions and send the sign-up sheet by Thursday."
+      },
+      {
+       "u": "k5",
+       "text": "The number of open invoices decreased from nine hundred to three hundred and fifty."
+      },
+      {
+       "u": "k6",
+       "text": "Tom will call the top five vendors by phone this week due to missing purchase order numbers."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team discussed three main topics: the scanner rollout, the invoice backlog, and the holiday schedule."
+      },
+      {
+       "u": "a2",
+       "text": "Marcus confirmed that forty of sixty handheld scanners have arrived, with training starting next Monday on the night shift for the largest group."
+      },
+      {
+       "u": "a3",
+       "text": "Priya agreed to send out a sign-up sheet by Thursday for these sessions."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding invoices, the count dropped from nine hundred to three hundred and fifty, pending vendor purchase orders, and Tom will call the top five vendors by dollar value this week."
+      },
+      {
+       "u": "a5",
+       "text": "HR requests all holiday schedule requests by November sixth, though the deadline might be stretched by a day or two, so the group will treat it as the sixth."
+      },
+      {
+       "u": "a6",
+       "text": "Finally, it was noted that a fire drill is scheduled sometime next week, but no specific date has been set yet."
+      },
+      {
+       "u": "k1",
+       "text": "Scanner training starts next Monday on the night shift with forty units."
+      },
+      {
+       "u": "k2",
+       "text": "Priya will send the sign-up sheet by Thursday."
+      },
+      {
+       "u": "k3",
+       "text": "Tom will call the top five vendors by dollar value this week."
+      },
+      {
+       "u": "k4",
+       "text": "Holiday schedule requests are due by November sixth."
+      },
+      {
+       "u": "k5",
+       "text": "The fire drill is scheduled sometime next week with no specific date."
+      },
+      {
+       "u": "k6",
+       "text": "Invoice backlog reduced to three hundred and fifty pending vendor responses."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The team discussed three agenda items: scanner rollout, invoice backlog, and holiday schedule."
+      },
+      {
+       "u": "a2",
+       "text": "For the scanner rollout, 40 of 60 handhelds were received and training will start next Monday with the night shift."
+      },
+      {
+       "u": "a3",
+       "text": "The invoice backlog has decreased from 900 to 350 open invoices, and Tom will call the top five vendors by dollar value."
+      },
+      {
+       "u": "a4",
+       "text": "The holiday schedule requires all requests by November 6th, which is treated as firm despite potential flexibility."
+      },
+      {
+       "u": "k1",
+       "text": "Scanner rollout: 40 of 60 handhelds received, training starts next Monday with night shift"
+      },
+      {
+       "u": "k2",
+       "text": "Invoice backlog: reduced from 900 to 350 open invoices, Tom will call top five vendors by dollar value"
+      },
+      {
+       "u": "k3",
+       "text": "Holiday schedule: all requests due by November 6th, treated as firm deadline"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation covered three main items: scanner rollout, invoice backlog, and the holiday schedule."
+      },
+      {
+       "u": "a2",
+       "text": "For the scanner rollout, 40 of the 60 handhelds were received, with the remaining 20 delayed until November 14th, and training is planned to start next Monday with the night shift."
+      },
+      {
+       "u": "a3",
+       "text": "For the invoice backlog, the number of open invoices decreased from about 900 to about 350, and Tom is assigned to call the top five invoices by dollar value."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding the holiday schedule, HR requires all requests by November 6th, which is being treated as firm, though there is uncertainty about whether it might be extended by a day or two."
+      },
+      {
+       "u": "a5",
+       "text": "The fire drill is mentioned as occurring sometime next week but with no specific date yet."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

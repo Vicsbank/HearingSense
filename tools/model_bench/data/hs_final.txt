@@ -1,0 +1,320 @@
+# Hearing Sense local model benchmark — semantic relevance, FINAL held-out set.
+# Synthetic, written for this benchmark (October 2026) before any model was run on it; no real conversation.
+# DO NOT tune request texts, parsing or settings on this file. It is run once per frozen configuration.
+# Its profiles and sentences occur in no earlier Hearing Sense set (W4, W6, W6.1, W6.2, W6.3) and not in hs_dev.txt.
+# Format: see hs_dev.txt. The goal "safety" exists for every profile.
+# Limits: one author (the same assistant that wrote the request text); English only; about half of the sentences
+# are relevant, far more than in real surroundings, so precision here is higher than it would be in daily use.
+@profile | student | about | My name is Theo. I am a second-year student. I take chemistry with Ms. Okafor and history with Mr. Brandt. In chemistry I am in lab group B.
+@profile | student | goal | grades | Notify me about anything that could affect my grades.
+@profile | student | goal | schedule | Tell me when one of my classes, exams or deadlines is moved or cancelled.
+st01|student|obvious|relevant|schedule|||The final exam in chemistry has been postponed to the twentieth.|an exam of the listener moved
+st02|student|unrelated|irrelevant||||The cafeteria finally has decent coffee.|small talk
+st03|student|implicit|relevant|grades|||Ms. Okafor says lab reports handed in after Friday lose a full letter.|a penalty that touches the grade
+st04|student|third_person|irrelevant||||My brother nearly failed physics at his school last year.|someone else, elsewhere
+st05|student|group_in|relevant|grades,schedule|||Group B, your titration is graded and you only get one attempt, on Tuesday.|the listener's lab group
+st06|student|group_out|irrelevant||||Group D, you'll redo the titration next week.|another lab group
+st07|student|implicit|relevant|grades|||Brandt just said the essay now counts for forty percent instead of twenty.|weighting changed in the listener's class
+st08|student|negation|irrelevant||||The history deadline is still the same, nothing has changed.|nothing changes
+st09|student|hypothetical|irrelevant||||If they cancelled the chemistry final I would throw a party.|only imagined
+st10|student|past|irrelevant||||Two years ago they moved every exam online for a whole term.|the past
+st11|student|idiom|irrelevant||||That quiz absolutely murdered me, I'm dead.|exaggeration
+st12|student|addressed_other|irrelevant||||Nadia, your French oral is moved to Thursday.|another student, another subject
+st13|student|overheard_relevant|relevant|schedule|||Nadia, tell your friends in Okafor's class there's no chemistry on Monday, she's at a conference.|said to someone else, cancels the listener's class
+st14|student|about_other_relevant|relevant|schedule,grades|||Mr. Brandt broke his leg, so a substitute is taking history and the test is off for now.|about the teacher, changes the listener's test
+st15|student|context|relevant|grades||Which classes had the grading mistake? // All of Okafor's chemistry groups.|You should check your mark online, some of them went down.|earlier lines make it the listener's class
+st16|student|context|irrelevant|||Which classes had the grading mistake? // Only the first-year biology groups.|You should check your mark online, some of them went down.|not the listener's class
+st17|student|emergency|relevant|safety|important,urgent||Acid spill, everybody away from the benches right now!|danger, act now
+st18|student|emergency_false|irrelevant||||I'd rather set myself on fire than sit through another assembly.|exaggeration with danger words
+st19|student|duplicate|irrelevant|||The final exam in chemistry has been postponed to the twentieth.|So yeah, the chem final is on the twentieth now, like she said.|repeats
+st20|student|update|relevant|schedule||The final exam in chemistry has been postponed to the twentieth.|Correction, the chemistry final is the twenty-second, not the twentieth.|a new date
+st21|student|implicit|relevant|grades|||Anyone who misses more than three labs can't pass the course.|a rule that decides passing
+st22|student|unrelated|irrelevant||||Are you going to the concert on Saturday?|small talk
+st23|student|negation_news|relevant|grades|||Okafor is not dropping the lowest quiz score this term after all.|the not is the news
+st24|student|third_person|irrelevant||||The seniors get their history papers back tomorrow.|another year
+st25|student|implicit|relevant|schedule|||The chemistry rooms are being fumigated on Wednesday, so nothing is happening in there that day.|the listener's class cannot take place
+st26|student|unrelated|irrelevant||||My phone battery dies by noon these days.|small talk
+st27|student|obvious|relevant|grades|||Your history grade will include class participation from now on, Theo.|by name, names the grade
+st28|student|hypothetical|irrelevant||||Maybe one day they'll let us retake any exam we want.|a wish
+st29|student|idiom|irrelevant||||Oh sure, because Brandt is famous for his generous grading.|sarcasm, no news
+st30|student|past|irrelevant||||I heard the chemistry final used to be oral, ages ago.|the past
+st31|student|implicit|relevant|grades|||There's an extra-credit problem set for second-year chemistry, due next Friday.|a chance to change the grade
+st32|student|group_out|irrelevant||||First-years, your orientation quiz doesn't count for anything.|another year
+st33|student|addressed_other|irrelevant||||Sir, could I hand in my art portfolio a day late?|another student's request, another subject
+st34|student|negation|irrelevant||||No, the lab is at the usual time this week.|nothing changes
+st35|student|unrelated|irrelevant||||They're repainting the gym, it smells awful in there.|not about classes or grades
+st36|student|obvious|relevant|schedule|||History is cancelled this afternoon.|a class of the listener cancelled
+@profile | orchestra | about | My name is Ana. I play cello in the city youth orchestra. My stand partner is Mina. The conductor is Mr. Vogel.
+@profile | orchestra | goal | rehearsal | Tell me about important rehearsal changes.
+@profile | orchestra | goal | me | Let me know when the conductor wants something from the cellos or from me.
+or01|orchestra|obvious|relevant|rehearsal|||Thursday's rehearsal starts an hour earlier, at five.|a rehearsal change
+or02|orchestra|unrelated|irrelevant||||I love your new case, where did you get it?|small talk
+or03|orchestra|group_in|relevant|me|||Cellos, stay behind for ten minutes after the break.|the listener's section
+or04|orchestra|group_out|irrelevant||||Basses, stay behind for ten minutes after the break.|another section
+or05|orchestra|implicit|relevant|rehearsal|||The hall is booked for a wedding on Saturday, so we're in the church basement that day.|place changes without the word rehearsal
+or06|orchestra|third_person|irrelevant||||My old orchestra in Graz rehearsed three times a week.|another orchestra
+or07|orchestra|implicit|relevant|me|||Mr. Vogel wants the low strings to play the opening without vibrato.|cellos are low strings
+or08|orchestra|negation|irrelevant||||Rehearsal on Monday is as planned.|nothing changes
+or09|orchestra|hypothetical|irrelevant||||If we rehearsed in the mornings I would quit.|only imagined
+or10|orchestra|past|irrelevant||||Last season we had to rehearse in a school gym for a month.|the past
+or11|orchestra|idiom|irrelevant||||The brass nearly blew the roof off in that last bar.|figure of speech
+or12|orchestra|addressed_other|irrelevant||||Felix, you need to mark the bowings in the second violin part.|another player, another section
+or13|orchestra|overheard_relevant|relevant|me|||Mina, tell Ana she has the solo in bar forty tonight.|said to the stand partner, for the listener
+or14|orchestra|about_other_relevant|relevant|rehearsal|||Mr. Vogel's train is stuck, so we start with sectionals and the full run-through comes later.|about the conductor, changes the rehearsal
+or15|orchestra|context|relevant|me||Which stand had the wrong notes in the Dvorak? // The second stand of the cellos, Mina's stand.|Vogel wants to hear them alone before we go on.|the listener sits at that stand
+or16|orchestra|context|irrelevant|||Which stand had the wrong notes in the Dvorak? // The back stand of the violas.|Vogel wants to hear them alone before we go on.|not the listener's stand
+or17|orchestra|emergency|relevant|safety|important,urgent||The lighting rig is coming loose, get off the stage now!|danger, act now
+or18|orchestra|emergency_false|irrelevant||||That finale is a train wreck every single time.|figure of speech
+or19|orchestra|duplicate|irrelevant|||Thursday's rehearsal starts an hour earlier, at five.|Don't forget, five o'clock on Thursday, not six.|repeats
+or20|orchestra|update|relevant|rehearsal||Thursday's rehearsal starts an hour earlier, at five.|Scratch that, Thursday is cancelled completely, the heating is broken.|a new change
+or21|orchestra|implicit|relevant|rehearsal|||We're adding a run-through on Sunday morning before the concert.|an extra rehearsal
+or22|orchestra|unrelated|irrelevant||||Does anyone have a spare phone charger?|small talk
+or23|orchestra|negation_news|relevant|rehearsal|||There is no break today, we play straight through to eight.|the not is the news
+or24|orchestra|group_out|irrelevant||||Percussion, please move your stands back a row.|another section
+or25|orchestra|implicit|relevant|me|||Ana, a bit more sound from you at the pickup, please.|a request to the listener, no goal words
+or26|orchestra|third_person|irrelevant||||The choir next door got a new director.|another group
+or27|orchestra|obvious|relevant|me|||Cellos, the conductor wants you to take the repeat in the second movement.|names the cellos
+or28|orchestra|hypothetical|irrelevant||||Suppose the concert got moved outdoors, we'd freeze.|only imagined
+or29|orchestra|idiom|irrelevant||||Great, another three hours of tuning, exactly what I dreamed of.|sarcasm
+or30|orchestra|past|irrelevant||||Vogel made the cellos stay late every week back in spring.|the past
+or31|orchestra|unrelated|irrelevant||||My bus was twenty minutes late again.|small talk
+or32|orchestra|implicit|relevant|rehearsal|||Bring the Brahms on Thursday instead of the Dvorak, we're swapping the order of the pieces.|what is rehearsed changes
+or33|orchestra|addressed_other|irrelevant||||Madam, the box office opens at six for ticket holders.|said to a visitor
+or34|orchestra|negation|irrelevant||||No changes to the seating, everyone sits where they sat last week.|nothing changes
+or35|orchestra|group_in|relevant|rehearsal|||Strings only tomorrow, winds and brass have the evening off.|strings include the listener; rehearsal changes
+or36|orchestra|unrelated|irrelevant||||I think it's going to rain all weekend.|weather
+@profile | nurse | about | My name is Kim. I am a nurse on ward 5 and I work the night shift this week. My patients are in rooms 12 to 16.
+@profile | nurse | goal | patients | Tell me when one of my patients needs something.
+@profile | nurse | goal | shift | Let me know about changes to my shifts or to who is working on the ward with me.
+nu01|nurse|obvious|relevant|patients|||The patient in room 14 is asking for something for the pain.|a patient of the listener
+nu02|nurse|unrelated|irrelevant||||The vending machine ate my coins again.|small talk
+nu03|nurse|implicit|relevant|patients|||The drip in thirteen has run dry and the pump is beeping.|room 13 is the listener's
+nu04|nurse|third_person|irrelevant||||Room 22 wants another blanket.|not the listener's room
+nu05|nurse|implicit|relevant|shift|||Marta called in sick, so it's just two of us on five tonight.|staffing on the listener's ward
+nu06|nurse|group_out|irrelevant||||Day shift, your handover moves to seven thirty from next week.|the listener works nights
+nu07|nurse|group_in|relevant|shift|||Night staff on ward 5, you start at nine instead of ten for the rest of the week.|the listener's shift
+nu08|nurse|negation|irrelevant||||The rota for next week is unchanged.|nothing changes
+nu09|nurse|hypothetical|irrelevant||||If they ever gave us a third night nurse I'd faint.|only imagined
+nu10|nurse|past|irrelevant||||When I trained, we did twelve nights in a row.|the past
+nu11|nurse|idiom|irrelevant||||My feet are killing me tonight.|figure of speech
+nu12|nurse|addressed_other|irrelevant||||Doctor Reyes, the lab results for ward 3 are in your inbox.|for someone else, another ward
+nu13|nurse|overheard_relevant|relevant|patients|||Doctor, the lady in sixteen has been confused since midnight and keeps pulling at her line.|said to the doctor, about the listener's patient
+nu14|nurse|about_other_relevant|relevant|shift|||Jonas is being moved to ward 2 from tomorrow, so he won't be on nights with you anymore.|about a colleague, changes who is on the ward
+nu15|nurse|context|relevant|patients||Whose patient is Mr. Adler? // He's in fifteen.|His daughter is at the desk and wants to speak to his nurse.|room 15 is the listener's
+nu16|nurse|context|irrelevant|||Whose patient is Mr. Adler? // He's in twenty-one.|His daughter is at the desk and wants to speak to his nurse.|not the listener's room
+nu17|nurse|emergency|relevant|safety|important,urgent||Oxygen leak in the corridor, nobody switch anything on, clear the area!|danger, act now
+nu18|nurse|emergency_false|irrelevant||||That series about the hospital fire was so unrealistic.|a programme
+nu19|nurse|duplicate|irrelevant|||The patient in room 14 is asking for something for the pain.|Fourteen is still waiting for that painkiller he asked for.|repeats the same request
+nu20|nurse|update|relevant|patients||The patient in room 14 is asking for something for the pain.|Now fourteen says his chest feels tight and he can't breathe properly.|a new and worse need
+nu21|nurse|implicit|relevant|patients|important||The man in twelve just fell next to his bed.|a patient of the listener needs help
+nu22|nurse|unrelated|irrelevant||||I still haven't booked anything for the summer.|small talk
+nu23|nurse|negation_news|relevant|shift|||You are not on nights next week after all, Kim, they put you on earlies.|the not is the news
+nu24|nurse|third_person|irrelevant||||The children's ward got two new nurses this month.|another ward
+nu25|nurse|implicit|relevant|patients|||Bed two in room 15 pressed the call button three times already.|a patient of the listener calls
+nu26|nurse|unrelated|irrelevant||||Parking was a nightmare this evening.|small talk
+nu27|nurse|obvious|relevant|shift|||Kim, your Friday night shift has been swapped to Saturday.|by name, shift change
+nu28|nurse|hypothetical|irrelevant||||I wish room 12 would just sleep through for once.|a wish, nothing needed
+nu29|nurse|idiom|irrelevant||||Oh wonderful, the printer is jammed again, my favourite.|sarcasm, not a patient or shift matter
+nu30|nurse|past|irrelevant||||The patient who was in 13 last week kept asking for tea all night.|a past patient
+nu31|nurse|group_out|irrelevant||||Ward 6 staff, your fire training is on Tuesday.|another ward
+nu32|nurse|implicit|relevant|shift|||The agency nurse who was meant to help us tonight isn't coming.|who works with the listener changes
+nu33|nurse|addressed_other|irrelevant||||Sir, visiting hours ended at eight, I'm afraid.|said to a visitor
+nu34|nurse|negation|irrelevant||||Room 16 says she doesn't need anything, she's fine.|no need
+nu35|nurse|unrelated|irrelevant||||They changed the soup in the canteen and it's worse.|small talk
+nu36|nurse|about_other_relevant|relevant|patients|||The wife of the man in 13 says he hasn't had his evening tablets yet.|about a visitor's report; the listener's patient needs something
+@profile | barista | about | My name is Jo. I work the espresso machine at a cafe and make all the drinks. Luis takes the orders at the till and handles the food.
+@profile | barista | goal | orders | Tell me when a drink order comes in that I have to make or fix.
+@profile | barista | goal | supplies | Let me know when we are running out of something.
+ba01|barista|obvious|relevant|orders|||Two flat whites and an oat cappuccino for table six, Jo.|a drink order, by name
+ba02|barista|unrelated|irrelevant||||It's so windy out there, my umbrella turned inside out.|small talk
+ba03|barista|implicit|relevant|supplies|||That was the last carton of oat milk in the fridge.|running out, no goal words
+ba04|barista|third_person|irrelevant||||The bakery across the road ran out of bread by ten.|another shop
+ba05|barista|implicit|relevant|orders|||This latte was supposed to be decaf, the customer just brought it back.|a drink to fix
+ba06|barista|addressed_other|irrelevant||||Luis, can you warm up a cheese toastie for the lady by the window?|food, for the colleague
+ba07|barista|overheard_relevant|relevant|orders|||Luis, tell whoever's on the machine that I asked for an extra shot in this.|said to the colleague, a drink to fix
+ba08|barista|negation|irrelevant||||We've got plenty of beans, the delivery came this morning.|not running out
+ba09|barista|hypothetical|irrelevant||||If we ever ran out of espresso beans there'd be a riot in here.|only imagined
+ba10|barista|past|irrelevant||||Yesterday we ran out of lids by lunchtime.|the past
+ba11|barista|idiom|irrelevant||||I could murder a coffee right now.|figure of speech, not an order
+ba12|barista|group_out|irrelevant||||Kitchen staff, the soup of the day is tomato.|not the listener's job
+ba13|barista|group_in|relevant|supplies|||Everyone behind the counter, we're down to one sleeve of takeaway cups.|running out, said to the counter staff
+ba14|barista|about_other_relevant|relevant|orders|||Luis got the order wrong for table three, they wanted iced, not hot.|about the colleague's mistake, a drink to remake
+ba15|barista|context|relevant|orders||What did table four order? // Just drinks, a mocha and two teas.|They've been waiting fifteen minutes and are getting annoyed.|a drink order is overdue
+ba16|barista|context|irrelevant|||What did table four order? // Just food, the soup and a salad.|They've been waiting fifteen minutes and are getting annoyed.|food is the colleague's
+ba17|barista|emergency|relevant|safety|important,urgent||The toaster's on fire, get back, get the extinguisher!|danger, act now
+ba18|barista|emergency_false|irrelevant||||These new chili flakes are fire, you have to try them.|slang
+ba19|barista|duplicate|irrelevant|||That was the last carton of oat milk in the fridge.|As I said, no more oat milk in the fridge.|repeats
+ba20|barista|update|relevant|supplies||That was the last carton of oat milk in the fridge.|And now the regular milk is nearly gone too, one bottle left.|a new shortage
+ba21|barista|implicit|relevant|orders|||Can I get a large americano to go, please?|a customer orders a drink
+ba22|barista|unrelated|irrelevant||||Did you watch that baking show last night?|small talk
+ba23|barista|negation_news|relevant|supplies|||The supplier isn't delivering syrup this week, so what's on the shelf is all we have.|the not is the news; supply will run short
+ba24|barista|third_person|irrelevant||||My flatmate works at a place where they roast their own beans.|someone else
+ba25|barista|implicit|relevant|supplies|||The grinder hopper is almost empty.|beans running out at the machine
+ba26|barista|unrelated|irrelevant||||Do you know if the number nine bus still stops here?|a question about buses
+ba27|barista|obvious|relevant|supplies|||We're running out of chocolate powder.|names running out
+ba28|barista|hypothetical|irrelevant||||I'd love a hot chocolate, but I'm trying to cut down on sugar.|not ordered
+ba29|barista|idiom|irrelevant||||Oh great, another person who wants to pay with a hundred, lovely.|sarcasm, about paying
+ba30|barista|past|irrelevant||||I ordered a cappuccino here last week and it was perfect.|the past, no order now
+ba31|barista|addressed_other|irrelevant||||Luis, the card reader is frozen again.|the till is the colleague's
+ba32|barista|implicit|relevant|orders|||Actually, make that cappuccino with soy instead, sorry.|a change to a drink order
+ba33|barista|negation|irrelevant||||No, nothing to drink for me, thanks, just the muffin.|no drink order
+ba34|barista|unrelated|irrelevant||||Is there a socket somewhere I can plug my laptop in?|not an order or supplies
+ba35|barista|group_out|irrelevant||||Delivery drivers, please use the back entrance.|not the listener
+ba36|barista|implicit|relevant|orders|||The gentleman at the bar says his espresso is stone cold.|a drink to fix
+@profile | commuter | about | I am on the 7:42 train to Harbor Street and I sit in car 3. At Harbor Street I change to bus 12 to get to work.
+@profile | commuter | goal | trip | Tell me about anything that delays or changes my trip.
+@profile | commuter | goal | stop | Let me know when my stop is next.
+co01|commuter|obvious|relevant|trip|||This train is delayed by about fifteen minutes because of a signal failure.|a delay
+co02|commuter|unrelated|irrelevant||||I can't believe how expensive the monthly pass is now.|small talk
+co03|commuter|implicit|relevant|stop|||Next station, Harbor Street.|the listener's stop
+co04|commuter|third_person|irrelevant||||Next station, Mill Lane.|not the listener's stop
+co05|commuter|implicit|relevant|trip|||Bus 12 isn't running today, the drivers are on strike.|the listener's connection
+co06|commuter|group_out|irrelevant||||Passengers for the airport line, please change at Central.|not the listener's route
+co07|commuter|group_in|relevant|trip|||Passengers in cars 3 and 4, please move forward, these cars will be uncoupled at the next station.|the listener's car
+co08|commuter|negation|irrelevant||||We are running on time this morning.|nothing changes
+co09|commuter|hypothetical|irrelevant||||If this line ever ran on time I'd fall off my seat.|only imagined
+co10|commuter|past|irrelevant||||Yesterday the whole line was shut for two hours.|the past
+co11|commuter|idiom|irrelevant||||This commute is going to be the end of me.|figure of speech
+co12|commuter|addressed_other|irrelevant||||Excuse me, sir, your ticket is only valid in second class.|said to another passenger
+co13|commuter|overheard_relevant|relevant|trip|||I'm telling you, mum, they just said nothing goes past Harbor Street bridge, the road is flooded, so no buses from the station.|a phone call nearby, about the listener's connection
+co14|commuter|about_other_relevant|relevant|trip|||The driver has been taken ill, so we're waiting here until a replacement arrives.|about the driver, delays the listener
+co15|commuter|context|relevant|trip||Which trains are affected by the broken points? // Everything towards Harbor Street.|They're saying at least forty minutes.|the listener's direction
+co16|commuter|context|irrelevant|||Which trains are affected by the broken points? // Only the ones going north to Pine Hill.|They're saying at least forty minutes.|another direction
+co17|commuter|emergency|relevant|safety|important,urgent||Smoke in this carriage, pull the handle and move to the next car!|danger, act now
+co18|commuter|emergency_false|irrelevant||||My boss is going to explode when he sees these numbers.|figure of speech
+co19|commuter|duplicate|irrelevant|||This train is delayed by about fifteen minutes because of a signal failure.|Once again, we are about fifteen minutes behind because of the signal fault.|repeats
+co20|commuter|update|relevant|trip||This train is delayed by about fifteen minutes because of a signal failure.|We apologise, this train will now terminate at Central and not continue to Harbor Street.|a bigger change
+co21|commuter|implicit|relevant|trip|||This service will not be calling at Harbor Street today.|the train skips the listener's stop
+co22|commuter|unrelated|irrelevant||||Is this seat taken?|small talk
+co23|commuter|negation_news|relevant|trip|||The doors in car 3 will not open at the next three stations.|the not is the news, the listener's car
+co24|commuter|third_person|irrelevant||||My sister's tram in Lyon is always packed too.|elsewhere
+co25|commuter|implicit|relevant|stop|||We will shortly be arriving at Harbor Street, please mind the gap.|the listener's stop is next
+co26|commuter|unrelated|irrelevant||||I think I left the oven on.|small talk
+co27|commuter|obvious|relevant|trip|||Bus 12 is diverted this week and leaves from the other side of the station.|a change to the listener's trip
+co28|commuter|hypothetical|irrelevant||||They should really build a second track here one day.|a wish
+co29|commuter|idiom|irrelevant||||Oh brilliant, a window seat next to the toilet, lucky me.|sarcasm
+co30|commuter|past|irrelevant||||The 7:42 was cancelled three times last month.|the past
+co31|commuter|group_out|irrelevant||||First class passengers, breakfast is served in car 1.|not the listener
+co32|commuter|implicit|relevant|trip|||There's a tree on the line ahead and we'll be held here for a while.|a delay without the word
+co33|commuter|addressed_other|irrelevant||||Mum, I'll be home by six, don't wait with dinner.|someone's phone call
+co34|commuter|negation|irrelevant||||Bus 12 is running as normal, I checked.|nothing changes
+co35|commuter|unrelated|irrelevant||||These new seats are harder than the old ones.|small talk
+co36|commuter|third_person|irrelevant||||The 8:15 to Pine Hill is cancelled.|another train
+@profile | parent | about | I am Mr. Hale. I am waiting at the school gate for my daughter Lena, who is in class 3B. Her teacher is Mr. Abel.
+@profile | parent | goal | lena | Tell me anything about Lena or her class.
+@profile | parent | goal | pickup | Let me know about changes to the pickup time or place.
+pa01|parent|obvious|relevant|lena|||Lena scraped her knee at break, she's with the school nurse.|about the listener's daughter
+pa02|parent|unrelated|irrelevant||||Traffic on the ring road was terrible today.|small talk
+pa03|parent|implicit|relevant|pickup|||The children are coming out through the side door on Elm Street today because of the building work.|pickup place changes
+pa04|parent|third_person|irrelevant||||My nephew's school in Bristol finishes at two on Fridays.|another school
+pa05|parent|group_in|relevant|lena|||Parents of 3B, the class trip to the farm needs a signed form by Wednesday.|the daughter's class
+pa06|parent|group_out|irrelevant||||Parents of 5A, swimming starts next week, please pack a towel.|another class
+pa07|parent|implicit|relevant|lena|||Mr. Abel's group is staying in ten more minutes to finish their play.|the daughter's class, without naming it
+pa08|parent|negation|irrelevant||||Pickup is at the usual time and the usual gate.|nothing changes
+pa09|parent|hypothetical|irrelevant||||If school started at ten, mornings would be so much easier.|only imagined
+pa10|parent|past|irrelevant||||When we were kids nobody picked us up, we just walked.|the past
+pa11|parent|idiom|irrelevant||||My two are little monsters before breakfast.|figure of speech
+pa12|parent|addressed_other|irrelevant||||Mrs. Novak, could Tomas bring his recorder tomorrow?|another parent and child
+pa13|parent|overheard_relevant|relevant|lena|||Mrs. Novak, Tomas and Lena had a bit of a fight at lunch, Mr. Abel wants a word with both families.|said to another parent, concerns the daughter
+pa14|parent|about_other_relevant|relevant|lena|||Mr. Abel is leaving at Christmas, so 3B gets a new teacher in January.|about the teacher, affects the class
+pa15|parent|context|relevant|pickup||Which classes are back late from the museum? // The third years, both classes.|The bus won't be here before four.|3B is a third-year class
+pa16|parent|context|irrelevant|||Which classes are back late from the museum? // Just the sixth years.|The bus won't be here before four.|not the daughter's year
+pa17|parent|emergency|relevant|safety|important,urgent||That car is rolling backwards, get the kids off the pavement!|danger, act now
+pa18|parent|emergency_false|irrelevant||||The bake sale was a bloodbath, the brownies were gone in a minute.|figure of speech
+pa19|parent|duplicate|irrelevant|||The children are coming out through the side door on Elm Street today because of the building work.|So it's the Elm Street door today, as they said.|repeats
+pa20|parent|update|relevant|pickup||The children are coming out through the side door on Elm Street today because of the building work.|No, they've changed it again, everyone comes out through the sports hall.|a new place
+pa21|parent|implicit|relevant|lena|||There's a case of head lice in 3B, check your child tonight.|the daughter's class
+pa22|parent|unrelated|irrelevant||||Do you know a good dentist around here?|small talk
+pa23|parent|negation_news|relevant|pickup|||There is no after-school club today, so all children have to be collected at three.|the not is the news
+pa24|parent|third_person|irrelevant||||The girl who won the spelling contest is in the other third-year class, 3A.|another class
+pa25|parent|implicit|relevant|lena|||Are you Lena's dad? She left her lunchbox in the hall.|asks for the listener, about the daughter
+pa26|parent|unrelated|irrelevant||||I need to get petrol on the way home.|small talk
+pa27|parent|obvious|relevant|pickup|||Pickup is moved to half past three all this week.|pickup time changes
+pa28|parent|hypothetical|irrelevant||||I keep thinking we should move Lena's cousin to this school someday.|a thought about someone else
+pa29|parent|idiom|irrelevant||||Oh sure, homework in the holidays, the kids will be thrilled.|sarcasm, not about the class
+pa30|parent|past|irrelevant||||Last year 3B had a different classroom, the one by the stairs.|the past
+pa31|parent|group_out|irrelevant||||Year six parents, the secondary school open evening is on Thursday.|another year
+pa32|parent|implicit|relevant|lena|||Mr. Abel's class did best in the whole school in the reading test.|news about the daughter's class
+pa33|parent|addressed_other|irrelevant||||Tomas, zip up your coat, it's freezing.|said to another child
+pa34|parent|negation|irrelevant||||No, the gate opens at three like every day.|nothing changes
+pa35|parent|unrelated|irrelevant||||These parking wardens are everywhere this week.|small talk
+pa36|parent|about_other_relevant|relevant|pickup|||The caretaker has locked the main gate by mistake and gone home, so we all have to go round to the back.|about the caretaker, changes the pickup place
+@profile | traveler | about | My name is Sam Ortega. I am at gate B14 waiting for flight KL 482 to Lisbon. I have checked in one suitcase.
+@profile | traveler | goal | flight | Tell me about anything that affects my flight.
+@profile | traveler | goal | called | Let me know if I am being called or looked for.
+tr01|traveler|obvious|relevant|flight|||Flight KL 482 to Lisbon is delayed by forty minutes.|the listener's flight
+tr02|traveler|unrelated|irrelevant||||Eleven euros for a sandwich, can you believe it?|small talk
+tr03|traveler|implicit|relevant|flight|||Passengers for Lisbon, your departure gate has changed to B22.|the listener's destination, gate change
+tr04|traveler|third_person|irrelevant||||Flight KL 428 to Lyon is now boarding at gate C3.|a similar number, another flight
+tr05|traveler|obvious|relevant|called|||Passenger Sam Ortega, please come to the desk at gate B14.|the listener is called
+tr06|traveler|addressed_other|irrelevant||||Passenger Sara Ortiz, please contact the information desk.|a similar name, someone else
+tr07|traveler|group_in|relevant|flight|||All passengers at gate B14, please have your passport and boarding pass ready, boarding starts in five minutes.|the listener's gate
+tr08|traveler|group_out|irrelevant||||Passengers at gate B16, your flight to Oslo is ready for boarding.|another gate
+tr09|traveler|negation|irrelevant||||The Lisbon flight is on time, no changes.|nothing changes
+tr10|traveler|hypothetical|irrelevant||||If they cancel on us I'm renting a car and driving.|only imagined
+tr11|traveler|past|irrelevant||||Last time I flew to Lisbon we sat on the runway for two hours.|the past
+tr12|traveler|idiom|irrelevant||||This layover is killing me.|figure of speech
+tr13|traveler|overheard_relevant|relevant|flight|||I just asked at the desk, the crew for the Lisbon flight is still stuck in Paris, they have no idea when we leave.|another passenger talking, about the listener's flight
+tr14|traveler|about_other_relevant|relevant|flight|||The captain of KL 482 has reported a technical fault and engineers are on their way to the aircraft.|about the captain, affects the flight
+tr15|traveler|context|relevant|flight||Which flights are hit by the baggage belt breakdown? // Everything leaving from the B gates.|Checked bags may not make it onto the plane.|the listener is at a B gate with a checked bag
+tr16|traveler|context|irrelevant|||Which flights are hit by the baggage belt breakdown? // Only arrivals in terminal 2.|Checked bags may not make it onto the plane.|not the listener's flight
+tr17|traveler|emergency|relevant|safety|important,urgent||Evacuate the terminal immediately, leave your bags and walk to the nearest exit!|danger, act now
+tr18|traveler|emergency_false|irrelevant||||The film on the way over was a total disaster.|figure of speech
+tr19|traveler|duplicate|irrelevant|||Flight KL 482 to Lisbon is delayed by forty minutes.|As announced, KL 482 is running forty minutes late.|repeats
+tr20|traveler|update|relevant|flight||Flight KL 482 to Lisbon is delayed by forty minutes.|We regret to announce that flight KL 482 to Lisbon has been cancelled.|a new, bigger change
+tr21|traveler|implicit|relevant|flight|||Lisbon airport has closed its runway because of fog.|the destination, no flight number
+tr22|traveler|unrelated|irrelevant||||Do you know if there's a pharmacy after security?|small talk
+tr23|traveler|negation_news|relevant|flight|||There will be no meal service on today's flight to Lisbon.|the not is the news
+tr24|traveler|third_person|irrelevant||||My colleague's bag went to Madrid instead of Milan last month.|someone else, the past
+tr25|traveler|implicit|relevant|called|||Is there a Mr. Ortega here? We found a suitcase with your name on it.|the listener is looked for
+tr26|traveler|unrelated|irrelevant||||I always forget to charge my headphones.|small talk
+tr27|traveler|implicit|relevant|flight|||The flight is overbooked and we are looking for two volunteers at B14 to travel tomorrow.|affects the listener's flight
+tr28|traveler|hypothetical|irrelevant||||Wouldn't it be great if there was a direct train to Lisbon?|a wish
+tr29|traveler|idiom|irrelevant||||Oh perfect, a middle seat, just what I always wanted.|sarcasm
+tr30|traveler|past|irrelevant||||KL 482 was cancelled twice in August, my neighbour told me.|the past
+tr31|traveler|group_out|irrelevant||||Passengers travelling to Lisbon, Ohio, with connecting bus service, please see the ground transport desk.|a different place of the same name, not the flight
+tr32|traveler|implicit|relevant|flight|||We need to weigh all hand luggage at B14 before boarding, anything over eight kilos goes in the hold.|a rule at the listener's gate
+tr33|traveler|addressed_other|irrelevant||||Excuse me, madam, you dropped your scarf.|said to someone else
+tr34|traveler|negation|irrelevant||||No gate change for us, it's still B14.|nothing changes
+tr35|traveler|unrelated|irrelevant||||The wifi here only works for thirty minutes.|small talk
+tr36|traveler|third_person|irrelevant||||The Porto flight has been waiting for a pilot for an hour.|another flight
+@profile | lab | about | My name is Ravi. I am a PhD student in the Meyer lab. I use the confocal microscope, and my samples are in freezer 2.
+@profile | lab | goal | equipment | Tell me when equipment I use is broken, booked or free.
+@profile | lab | goal | samples | Warn me about anything that could harm my samples.
+@profile | lab | goal | meeting | Let me know when a group meeting is moved.
+la01|lab|obvious|relevant|equipment|||The confocal is broken, the laser won't start.|equipment the listener uses
+la02|lab|unrelated|irrelevant||||Someone keeps stealing my yoghurt from the kitchen fridge.|small talk
+la03|lab|implicit|relevant|samples|||Freezer 2 has been beeping and the display says minus fifty.|the listener's freezer is warming
+la04|lab|third_person|irrelevant||||Freezer 5 is being defrosted on Friday.|another freezer
+la05|lab|implicit|relevant|meeting|||Meyer is travelling on Tuesday, so we'll all sit together on Wednesday at ten instead.|group meeting moved without the word
+la06|lab|group_out|irrelevant||||Schmidt lab people, your journal club is cancelled.|another lab
+la07|lab|group_in|relevant|samples|||Everyone with boxes in freezers 1 to 3, there's a power cut in that room tonight from eight.|the listener's freezer
+la08|lab|negation|irrelevant||||The microscope booking system works the same as before.|nothing changes
+la09|lab|hypothetical|irrelevant||||If the confocal died the week before my deadline I would cry.|only imagined
+la10|lab|past|irrelevant||||The old freezer broke down in 2019 and people lost years of work.|the past
+la11|lab|idiom|irrelevant||||Reviewer two is going to tear this paper to pieces.|figure of speech
+la12|lab|addressed_other|irrelevant||||Lin, your sequencing results are back.|for someone else
+la13|lab|overheard_relevant|relevant|equipment|||Lin, I've booked the confocal for the whole of tomorrow, tell the others.|said to someone else, the listener's microscope is booked
+la14|lab|about_other_relevant|relevant|samples|||The technician moved everything from the top shelf of freezer 2 onto the bench an hour ago and forgot about it.|about the technician, the listener's samples are thawing
+la15|lab|context|relevant|equipment||Which microscope is the service engineer taking apart this afternoon? // The confocal in room three.|It'll be out of action until Monday.|the listener's microscope
+la16|lab|context|irrelevant|||Which microscope is the service engineer taking apart this afternoon? // The old electron microscope in the basement.|It'll be out of action until Monday.|not the listener's
+la17|lab|emergency|relevant|safety|important,urgent||Nitrogen tank is venting, get out of the room and shut the door!|danger, act now
+la18|lab|emergency_false|irrelevant||||My experiment blew up in my face again, three weeks wasted.|figure of speech
+la19|lab|duplicate|irrelevant|||The confocal is broken, the laser won't start.|Yeah, the confocal laser still won't come on, same as before.|repeats
+la20|lab|update|relevant|equipment||The confocal is broken, the laser won't start.|The confocal is working again, they replaced the fuse.|free again
+la21|lab|implicit|relevant|equipment|||Nobody showed up for the two o'clock slot on the confocal, so it's sitting there unused.|the microscope is free
+la22|lab|unrelated|irrelevant||||Are you coming to the barbecue on Saturday?|small talk
+la23|lab|negation_news|relevant|samples|||The backup generator does not cover the freezer room anymore.|the not is the news, a risk for the samples
+la24|lab|third_person|irrelevant||||A lab in Zurich lost all their cell lines when their incubator failed.|elsewhere
+la25|lab|implicit|relevant|samples|||Somebody left the door of freezer 2 open, there's frost all over the top shelf.|the listener's freezer
+la26|lab|unrelated|irrelevant||||The coffee machine on this floor needs descaling.|not the listener's equipment goal
+la27|lab|obvious|relevant|meeting|||Group meeting is moved from Monday to Thursday this week.|names the group meeting
+la28|lab|hypothetical|irrelevant||||One day we'll have a second confocal and nobody will fight over it.|a wish
+la29|lab|idiom|irrelevant||||Oh yes, because the plate reader has never let anyone down, ever.|sarcasm, not the listener's equipment
+la30|lab|past|irrelevant||||The confocal was booked solid all of last month.|the past
+la31|lab|group_out|irrelevant||||Undergraduates, your safety quiz is due on Friday.|not the listener
+la32|lab|implicit|relevant|equipment|||The cooling water for the laser room is being shut off for maintenance at noon.|the confocal cannot run
+la33|lab|addressed_other|irrelevant||||Professor Meyer, the dean is on the phone for you.|for someone else
+la34|lab|negation|irrelevant||||Freezer 2 is fine, I just checked, minus eighty.|nothing wrong
+la35|lab|third_person|irrelevant||||The centrifuge on the fourth floor is out of order.|equipment the listener does not use
+la36|lab|unrelated|irrelevant||||I need to renew my library card.|small talk

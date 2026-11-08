@@ -1,0 +1,725 @@
+{
+ "batch": "batch_035",
+ "conversations": [
+  {
+   "conversation": "fin-zh-027",
+   "language": "zh",
+   "transcript": [
+    "1. 陈医生 我这两天一直咳嗽 还发烧",
+    "2. 量过体温吗 昨天晚上量的 三十八度二",
+    "3. 嗓子疼不疼 有一点 咳了三天了",
+    "4. 张嘴我看看 嗯 咽喉有点红 肺部听着还可以",
+    "5. 先去抽个血 二楼检验科 八点半以前去 不用空腹",
+    "6. 哦对 抽血要空腹 不对不对 这个不用空腹 我说错了",
+    "7. 拿到结果后你再来找我",
+    "8. 开三种药 头孢克肟 一天两次 每次一粒 饭后吃",
+    "9. 退烧药布洛芬 烧到三十八度五以上才吃 一次一片",
+    "10. 还有止咳糖浆 一天三次 一次十毫升",
+    "11. 药吃五天 如果三天后还发烧 就要马上回来",
+    "12. 下周二上午再来复诊 挂我的号",
+    "13. 挂号费多少钱 十五块 在一楼缴费窗口交"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "患者咳嗽发烧，昨晚体温三十八度二，已咳嗽三天",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f2",
+     "text": "医生看诊后说咽喉有点红，肺部听着还可以",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "需要去二楼检验科抽血，八点半以前去，不需要空腹",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "医生先说抽血要空腹，随后更正为不需要空腹",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f5",
+     "text": "头孢克肟一天两次，每次一粒，饭后吃",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f6",
+     "text": "布洛芬在体温达到三十八度五以上才吃，一次一片",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f7",
+     "text": "止咳糖浆一天三次，一次十毫升",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "药物共吃五天，三天后如果还发烧要马上回医院",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f9",
+     "text": "下周二上午复诊，挂陈医生的号",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f10",
+     "text": "挂号费十五元，在一楼缴费窗口交",
+     "critical": false,
+     "kind": "number"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "抽血需要空腹（已被更正）"
+    },
+    {
+     "id": "n2",
+     "text": "医生确诊为肺炎（医生没有给出诊断）"
+    },
+    {
+     "id": "n3",
+     "text": "头孢克肟一天吃三次（三次的是止咳糖浆）"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "咳嗽发烧的具体原因要等抽血结果，尚未确定"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "You have been coughing and have a fever, with a temperature of thirty-eight point two degrees last night, and your throat is somewhat sore after three days of coughing."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed you should go to the second floor, inspection department, before eight thirty, to get blood drawn, but then corrected that you do not need to fast."
+      },
+      {
+       "u": "a3",
+       "text": "they said you should take three types of medication: cephalexin one tablet twice daily after meals, ibuprofen one tablet once when temperature reaches thirty-eight point five degrees or higher, and expectorant one tablespoon three times daily, for five days."
+      },
+      {
+       "u": "a4",
+       "text": "if fever persists after three days, you must return immediately."
+      },
+      {
+       "u": "a5",
+       "text": "follow-up is scheduled for eight thirty on Tuesday next week, and an appointment fee of fifteen dollars is due at the first floor payment window."
+      },
+      {
+       "u": "a6",
+       "text": "they said to come back after receiving results, but the exact timing is missing."
+      },
+      {
+       "u": "a7",
+       "text": "the name mentioned is 陈医生, and the location is eight thirty inspection department."
+      },
+      {
+       "u": "a8",
+       "text": "they agreed to no further questions about the process."
+      },
+      {
+       "u": "a9",
+       "text": "they agreed to no further changes to the treatment plan."
+      },
+      {
+       "u": "a10",
+       "text": "they agreed to no further requests for clarification."
+      },
+      {
+       "u": "a11",
+       "text": "they agreed to no further requests for exceptions."
+      },
+      {
+       "u": "k1",
+       "text": "You have a cough and fever with a temperature of thirty-eight point two degrees."
+      },
+      {
+       "u": "k2",
+       "text": "You should go to the second floor, inspection department, before eight thirty to get blood drawn."
+      },
+      {
+       "u": "k3",
+       "text": "You do not need to fast for the blood draw."
+      },
+      {
+       "u": "k4",
+       "text": "You should take cephalexin one tablet twice daily after meals."
+      },
+      {
+       "u": "k5",
+       "text": "You should take ibuprofen one tablet when temperature is thirty-eight point five degrees or higher."
+      },
+      {
+       "u": "k6",
+       "text": "You should take expectorant one tablespoon three times daily for five days."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "陈医生是一位医生，患者陈述自己两天来咳嗽并发发烧，昨晚体温量过为38度2。"
+      },
+      {
+       "u": "a2",
+       "text": "医生检查嗓子红、肺部情况正常，建议抽血并在二楼检验科八点半前前往。"
+      },
+      {
+       "u": "a3",
+       "text": "医生强调抽血需空腹，但患者误以为不需要空腹，医生纠正并确认空腹要求。"
+      },
+      {
+       "u": "a4",
+       "text": "拿到血检结果后应再来就诊。"
+      },
+      {
+       "u": "a5",
+       "text": "开具三种药：头孢克肟一日两次，每次一粒饭后服用；退烧药布洛芬仅在体温超过38度5时一次一片服用；止咳糖浆一日三次，每次十毫升。"
+      },
+      {
+       "u": "a6",
+       "text": "服药五天，若三天后仍发烧需立即回诊。"
+      },
+      {
+       "u": "a7",
+       "text": "下周二上午复诊，挂号费十五块在一楼缴费窗口。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The patient reported a three-day cough with fever and sore throat, and the doctor confirmed a temperature of 38.2°C and red throat while noting clear lungs."
+      },
+      {
+       "u": "a2",
+       "text": "The patient was instructed to get blood work done at the second-floor lab before 8:30 AM, which does not require fasting despite an initial correction."
+      },
+      {
+       "u": "a3",
+       "text": "The doctor prescribed Cefixime twice daily after meals, Ibuprofen only if the fever exceeds 38.5°C, and cough syrup three times daily for five days."
+      },
+      {
+       "u": "a4",
+       "text": "If the fever persists after three days, the patient must return immediately, and the follow-up appointment is scheduled for next Tuesday morning."
+      },
+      {
+       "u": "a5",
+       "text": "The visit cost 15 yuan, which must be paid at the first-floor payment window."
+      },
+      {
+       "u": "k1",
+       "text": "The patient has a 3-day cough, fever, and sore throat."
+      },
+      {
+       "u": "k2",
+       "text": "Blood test is required at the 2nd-floor lab before 8:30 AM."
+      },
+      {
+       "u": "k3",
+       "text": "Blood test does not require fasting."
+      },
+      {
+       "u": "k4",
+       "text": "Prescription includes Cefixime, Ibuprofen, and cough syrup for 5 days."
+      },
+      {
+       "u": "k5",
+       "text": "Return immediately if fever persists after 3 days."
+      },
+      {
+       "u": "k6",
+       "text": "Follow-up appointment is next Tuesday morning."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "陈医生指出患者近两天出现咳嗽和发烧症状，体温计显示昨晚测量为三十八度二，咽喉微红但肺部听诊尚可。"
+      },
+      {
+       "u": "a2",
+       "text": "医生要求患者于本周二上午挂其号复诊，并安排先前往二楼检验科在八点半前抽血，同时明确告知抽血无需空腹（此前误说需空腹已更正）。"
+      },
+      {
+       "u": "a3",
+       "text": "处方包括头孢克肟，每日两次、每次一粒、饭后服用；布洛芬仅在体温超过三十八度五时服用，每日一次一片；以及止咳糖浆，每日三次、每次十毫升，疗程为五天。"
+      },
+      {
+       "u": "a4",
+       "text": "若服药三天后仍发烧，需立即返回就诊，复诊时挂号费为十五元，在一楼缴费窗口缴纳。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The patient reports two days of coughing and fever, with a temperature of 38.2°C yesterday night."
+      },
+      {
+       "u": "a2",
+       "text": "The doctor examined the throat and lungs, found them normal, and instructed the patient to get blood work from the second-floor lab before 8:30 PM."
+      },
+      {
+       "u": "a3",
+       "text": "The doctor prescribed three medications: Ceftriaxone and Colistin (one tablet twice daily), ibuprofen for fever (one tablet at 38.5°C or higher), and an expectorant syrup (10 mL three times daily)."
+      },
+      {
+       "u": "a4",
+       "text": "The patient should take the medications for five days, and if fever persists after three days, they should return immediately."
+      },
+      {
+       "u": "a5",
+       "text": "An appointment for follow-up is scheduled for next Tuesday morning, and the consultation fee is 15 yuan payable at the first-floor billing window."
+      },
+      {
+       "u": "k1",
+       "text": "Patient has been coughing and feverish for two days with a temperature of 38.2°C yesterday night"
+      },
+      {
+       "u": "k2",
+       "text": "Doctor examined throat and lungs, found them normal"
+      },
+      {
+       "u": "k3",
+       "text": "Blood test required from second-floor lab before 8:30 PM"
+      },
+      {
+       "u": "k4",
+       "text": "Prescribed: Ceftriaxone and Colistin (one tablet twice daily), ibuprofen (one tablet at 38.5°C+), expectorant syrup (10 mL three times daily)"
+      },
+      {
+       "u": "k5",
+       "text": "Medication course lasts five days"
+      },
+      {
+       "u": "k6",
+       "text": "Follow-up appointment scheduled for next Tuesday morning"
+      },
+      {
+       "u": "k7",
+       "text": "Consultation fee is 15 yuan, payable at first-floor billing window"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于陈医生的情况，这两天一直咳嗽并发烧，昨天晚上测量体温为三十八度二。"
+      },
+      {
+       "u": "a2",
+       "text": "嗓子疼有一点，已经咳了三天，咽喉有点红，肺部听着还可以。"
+      },
+      {
+       "u": "a3",
+       "text": "决定先去抽血，时间为八点半前，地点在二楼检验科。"
+      },
+      {
+       "u": "a4",
+       "text": "之前提到抽血需要空腹，但现在明确说不需要空腹，拿到结果后会再次联系。"
+      },
+      {
+       "u": "a5",
+       "text": "开了一种包含头孢克肟、退烧药布洛芬和止咳糖浆的方案，头孢克肟一天两次，每次一粒，饭后服用；退烧药布洛芬烧到三十八度五以上才吃一次一片；止咳糖浆一天三次，每次十毫升。"
+      },
+      {
+       "u": "a6",
+       "text": "药吃五天，如果三天后仍有发烧症状，需立即回来。"
+      },
+      {
+       "u": "a7",
+       "text": "下周二上午会进行复诊，挂号费为十五块，在一楼缴费窗口支付。"
+      },
+      {
+       "u": "a8",
+       "text": "相关信息如“下周二”和“八点半”未变。"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-028",
+   "language": "zh",
+   "transcript": [
+    "1. 好 人到齐了 开始 今天主要讲发布会的准备",
+    "2. 发布会定在十一月八号 地点是海岸酒店三楼宴会厅",
+    "3. 预计到场一百五十人 其中媒体大概三十个",
+    "4. 预算原来是八十万 现在调整到九十二万 多出来的十二万主要给现场搭建",
+    "5. 王磊 测试报告你负责 这周三之前交给我",
+    "6. 好 周三之前没问题",
+    "7. 张敏 你去联系供应商 要三家报价 十月二十号前汇总",
+    "8. 三家报价 十月二十号前 记下了",
+    "9. 邀请函呢 谁来发 我来 名单我这周五之前发给大家确认",
+    "10. 嗯 还有一个事 样机的数量 现在只有二十台 展台要四十台",
+    "11. 工厂那边说最快十一月一号能补二十台 不过还没有书面确认",
+    "12. 那这个事让采购再跟一下 下周一开会我要听结果",
+    "13. 好 今天就到这里 散会"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "发布会定于十一月八日在海岸酒店三楼宴会厅举行",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "预计到场一百五十人，其中媒体约三十人",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f3",
+     "text": "预算由八十万调整为九十二万，增加的十二万主要用于现场搭建",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f4",
+     "text": "王磊负责测试报告，本周三之前交给主持人",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "张敏负责联系供应商，取得三家报价，十月二十日前汇总",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "有人负责发邀请函，名单本周五之前发给大家确认",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "目前样机只有二十台，展台需要四十台",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f8",
+     "text": "工厂说最快十一月一日能补二十台样机",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f9",
+     "text": "采购继续跟进样机补货，下周一开会要汇报结果",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "工厂已经书面确认十一月一日交付二十台样机"
+    },
+    {
+     "id": "n2",
+     "text": "预算仍是八十万（已调整为九十二万）"
+    },
+    {
+     "id": "n3",
+     "text": "媒体到场人数有一百五十人（一百五十是总人数）"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "工厂十一月一日补二十台样机的承诺还没有书面确认"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The meeting covered the upcoming November 8th launch event at the Coastal Hotel's three-floor banquet hall with 150 attendees and a revised budget of 920,000 yuan."
+      },
+      {
+       "u": "a2",
+       "text": "Wang Le was assigned to deliver test reports by Wednesday."
+      },
+      {
+       "u": "a3",
+       "text": "Zhang Min was tasked with contacting three suppliers for quotes by October 20th and sending the invitation list by Friday."
+      },
+      {
+       "u": "a4",
+       "text": "The current inventory has only 20 units of the prototype while the exhibition needs 40 units, with a factory able to supply 20 more by November 1st pending written confirmation."
+      },
+      {
+       "u": "a5",
+       "text": "The procurement team will follow up with the supplier, and the meeting will reconvene next Monday to hear the results."
+      },
+      {
+       "u": "k1",
+       "text": "The launch event is scheduled for November 8th at the Coastal Hotel's three-floor banquet hall."
+      },
+      {
+       "u": "k2",
+       "text": "The budget was adjusted to 920,000 yuan, with 120,000 yuan allocated for on-site setup."
+      },
+      {
+       "u": "k3",
+       "text": "Wang Le is responsible for test reports to be delivered by Wednesday."
+      },
+      {
+       "u": "k4",
+       "text": "Zhang Min must contact three suppliers for quotes and send the invitation list by Friday."
+      },
+      {
+       "u": "k5",
+       "text": "There are only 20 prototype units available but 40 are needed for the exhibition."
+      },
+      {
+       "u": "k6",
+       "text": "The factory can supply 20 additional units by November 1st pending written confirmation."
+      },
+      {
+       "u": "k7",
+       "text": "Procurement will follow up with the supplier and the meeting will reconvene next Monday."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Today’s focus is preparing for a press conference, which is set for November 8 at the third-floor banquet hall at Coast Hotel, with an estimated 150 attendees including about 30 media."
+      },
+      {
+       "u": "a2",
+       "text": "The budget was adjusted from 800,000 to 920,000, with the extra 120,000 for on-site setup."
+      },
+      {
+       "u": "a3",
+       "text": "they assigned wang lei to test reports and said they’ll receive them by Wednesday; they agreed Wednesday is fine."
+      },
+      {
+       "u": "a4",
+       "text": "they asked zhang min to contact three suppliers for quotes by October 20, which will be summarized then."
+      },
+      {
+       "u": "a5",
+       "text": "they’ll send invitations via the list, with distribution by Friday; they’ll confirm who handles the distribution."
+      },
+      {
+       "u": "a6",
+       "text": "they noted 20 prototype units are available but 40 are needed for the booth, with a factory estimate of 20 by November 1, pending written confirmation."
+      },
+      {
+       "u": "a7",
+       "text": "they’ll have procurement review the matter again and meet next Monday to review results."
+      },
+      {
+       "u": "a8",
+       "text": "they agreed today is the end of the meeting and they’ll adjourn."
+      },
+      {
+       "u": "k1",
+       "text": "The press conference is on November 8 at the third-floor banquet hall at Coast Hotel."
+      },
+      {
+       "u": "k2",
+       "text": "The budget is 920,000, with 120,000 for setup."
+      },
+      {
+       "u": "k3",
+       "text": "wang lei is responsible for test reports by Wednesday."
+      },
+      {
+       "u": "k4",
+       "text": "zhan gao is to contact three suppliers for quotes by October 20."
+      },
+      {
+       "u": "k5",
+       "text": "invitations will be sent by Friday."
+      },
+      {
+       "u": "k6",
+       "text": "20 prototype units are available, but 40 are needed for the booth."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "今天发布会定于十一月八号在海岸酒店三楼宴会厅举行，预计有150人到场，其中约30人为媒体。"
+      },
+      {
+       "u": "a2",
+       "text": "预算原为80万元，已调整至92万元，多出的12万元主要用于现场搭建。"
+      },
+      {
+       "u": "a3",
+       "text": "王磊负责测试报告，需在本周三前交给他。"
+      },
+      {
+       "u": "a4",
+       "text": "张敏需联系三家供应商并在十月二十日前汇总报价。"
+      },
+      {
+       "u": "a5",
+       "text": "邀请函由张敏负责，名单需在本周五前发给大家确认。"
+      },
+      {
+       "u": "a6",
+       "text": "样机数量当前仅有20台，而展台需40台，工厂表示十一月一号最快可补20台，但尚未获得书面确认，采购需在下周一开会听取结果。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "会议确认发布会定于十一月八日在海岸酒店三楼宴会厅举行，预计一百五十人到场，预算从八十万调整为九十二万，其中十二万用于现场搭建。"
+      },
+      {
+       "u": "a2",
+       "text": "王磊负责测试报告，需在周三前提交；张敏需在十月二十号前汇总三家供应商报价。"
+      },
+      {
+       "u": "a3",
+       "text": "邀请函由会议主持人在本周五前发出名单确认，同时指出样机目前仅二十台，需在下周一开会前解决至四十台的缺口。"
+      },
+      {
+       "u": "a4",
+       "text": "采购部门需跟进工厂十一月一号补货事宜，并确认书面文件。"
+      },
+      {
+       "u": "k1",
+       "text": "发布会定于十一月八日在海岸酒店三楼宴会厅举行"
+      },
+      {
+       "u": "k2",
+       "text": "预算调整为九十二万，其中十二万用于现场搭建"
+      },
+      {
+       "u": "k3",
+       "text": "王磊需在周三前提交测试报告"
+      },
+      {
+       "u": "k4",
+       "text": "张敏需在十月二十号前汇总三家供应商报价"
+      },
+      {
+       "u": "k5",
+       "text": "邀请函名单需在周五前确认"
+      },
+      {
+       "u": "k6",
+       "text": "样机需在下周一开会前从二十台补至四十台"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "发布会定在十一月八号，地点是海岸酒店三楼宴会厅，预计到场一百五十人，其中媒体大概三十个。"
+      },
+      {
+       "u": "a2",
+       "text": "预算调整到九十二万，多出来的十二万主要用于现场搭建。"
+      },
+      {
+       "u": "a3",
+       "text": "王磊 测试报告，这周三之前交给我。"
+      },
+      {
+       "u": "a4",
+       "text": "张敏 需联系供应商，要三家报价，十月二十号前汇总。"
+      },
+      {
+       "u": "a5",
+       "text": "邀请函由我发，名单我这周五之前发给大家确认。"
+      },
+      {
+       "u": "a6",
+       "text": "样机数量现在只有二十台，展台需要四十台，工厂说最快十一月一号能补二十台，不过还没有书面确认。"
+      },
+      {
+       "u": "a7",
+       "text": "这件事让采购再跟进，下周一开会我要听结果。"
+      },
+      {
+       "u": "a8",
+       "text": "今天就到这里，散会。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "会议确认发布会定于十一月八日在海岸酒店三楼宴会厅举行，预计一百五十人到场，其中媒体约三十人。"
+      },
+      {
+       "u": "a2",
+       "text": "预算已从原定的八十万调整为九十二万，新增的十二万将用于现场搭建。"
+      },
+      {
+       "u": "a3",
+       "text": "王磊负责测试报告，需在周三前提交；张敏需在十月二十日前联系三家供应商并汇总报价。"
+      },
+      {
+       "u": "a4",
+       "text": "邀请函由会议主持人发送，名单需在周五前确认。"
+      },
+      {
+       "u": "a5",
+       "text": "关于样机数量，目前仅有二十台，但展台需要四十台，工厂承诺最快于十一月一号补货二十台，不过该补货安排尚未获得书面确认。"
+      },
+      {
+       "u": "a6",
+       "text": "采购人员需跟进补货事宜，下周一开会时汇报结果。"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,881 @@
+{
+ "batch": "batch_000",
+ "conversations": [
+  {
+   "conversation": "fin-en-001",
+   "language": "en",
+   "transcript": [
+    "1. okay everyone settle down please I have a few announcements before we start",
+    "2. first the unit three test that was scheduled for Tuesday the fourteenth is now on Thursday the sixteenth",
+    "3. so you get two extra days to study that's the good news",
+    "4. it will be in room two twelve not the gym and it starts at nine fifteen",
+    "5. second your lab reports on the pendulum experiment are due Monday the twentieth by four p.m.",
+    "6. turn them in to the box outside Mr. Okafor's office not to me",
+    "7. um is it okay if we email it",
+    "8. no paper copies only and please staple them",
+    "9. third the field trip to the Harbor Science Center is on October twenty eighth",
+    "10. the bus leaves at seven forty five sharp from the front entrance",
+    "11. permission slips need to be signed by next Friday and the fee is eighteen dollars",
+    "12. if the fee is a problem talk to Ms. Delgado in the counseling office she can help",
+    "13. also bring a packed lunch there's no cafeteria there",
+    "14. what time do we get back",
+    "15. around three thirty maybe a little later if traffic is bad",
+    "16. last thing study group for chapter seven is Wednesday after school in the library",
+    "17. Priya is leading it so bring your questions to her",
+    "18. okay that's everything now open your books to page one forty two",
+    "19. we're starting with problem set B on pendulum period"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The unit three test is now on Thursday the sixteenth.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The unit three test was originally scheduled for Tuesday the fourteenth and was moved.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f3",
+     "text": "The unit three test is in room 212 and starts at 9:15.",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f4",
+     "text": "Pendulum lab reports are due Monday the twentieth by 4 p.m.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "Lab reports must be handed in as stapled paper copies to the box outside Mr. Okafor's office, not emailed.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "The field trip to the Harbor Science Center is on October 28th.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f7",
+     "text": "The field trip bus leaves at 7:45 sharp from the front entrance.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "Permission slips must be signed by next Friday and the field trip fee is 18 dollars.",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f9",
+     "text": "Students who cannot afford the fee can talk to Ms. Delgado in the counseling office.",
+     "critical": false,
+     "kind": "name"
+    },
+    {
+     "id": "f10",
+     "text": "Students should bring a packed lunch because there is no cafeteria at the field trip site.",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "f11",
+     "text": "The chapter seven study group is Wednesday after school in the library and Priya is leading it.",
+     "critical": true,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The unit three test is still on Tuesday the fourteenth."
+    },
+    {
+     "id": "n2",
+     "text": "Lab reports can be submitted by email."
+    },
+    {
+     "id": "n3",
+     "text": "The test will be held in the gym."
+    },
+    {
+     "id": "n4",
+     "text": "The 18 dollar fee includes lunch."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The exact return time from the field trip is not fixed; it is around 3:30 or later if traffic is bad."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "To settle down and the unit three test originally scheduled for Tuesday the fourteenth is now on Thursday the sixteenth, giving two extra days to study, and it will be in room two twelve starting at nine fifteen."
+      },
+      {
+       "u": "a2",
+       "text": "They also said lab reports on the pendulum experiment are due Monday the twentieth by four p.m., to be submitted in a box outside Mr. Okafor's office—no paper copies, only emailed, and stapled—and that the field trip to the Harbor Science Center is on October twenty eighth with a bus leaving at seven forty five sharp from the front entrance, permission slips due by next Friday, a fee of eighteen dollars, and a packed lunch since there's no cafeteria."
+      },
+      {
+       "u": "a3",
+       "text": "They agreed that the return time is around three thirty, possibly later if traffic is bad, and the study group for chapter seven is Wednesday after school in the library led by Priya, with questions to bring."
+      },
+      {
+       "u": "a4",
+       "text": "To open books to page one forty two and start with problem set B on pendulum period."
+      },
+      {
+       "u": "a5",
+       "text": "Missing information: the exact return time if traffic is not bad, and the content of the study group meeting."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed that the bus leaves at seven forty five sharp, and the fee is eighteen dollars."
+      },
+      {
+       "u": "k1",
+       "text": "The unit three test is on Thursday the sixteenth."
+      },
+      {
+       "u": "k2",
+       "text": "The unit three test starts at nine fifteen in room two twelve."
+      },
+      {
+       "u": "k3",
+       "text": "Lab reports on the pendulum experiment are due Monday the twentieth by four p.m."
+      },
+      {
+       "u": "k4",
+       "text": "Lab reports must be emailed, not submitted in person, and stapled."
+      },
+      {
+       "u": "k5",
+       "text": "The field trip to the Harbor Science Center is on October twenty eighth."
+      },
+      {
+       "u": "k6",
+       "text": "The bus leaves at seven forty five sharp from the front entrance for the field trip."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The instructor announced that the Unit 3 test, originally scheduled for Tuesday the fourteenth, has been moved to Thursday the sixteenth, giving students two extra days to study in Room 212 starting at 9:15."
+      },
+      {
+       "u": "a2",
+       "text": "Lab reports on the pendulum experiment are due Monday the twentieth by 4 p.m., and students must submit only paper copies stapled in the box outside Mr. Okafor's office, not emailed."
+      },
+      {
+       "u": "a3",
+       "text": "The field trip to the Harbor Science Center on October twenty eighth requires signed permission slips by next Friday, an eighteen-dollar fee (with Ms. Delgado in the counseling office available to assist), and a packed lunch since there is no cafeteria; the bus departs at 7:45 sharp from the front entrance with an expected return around 3:30, though this may be later if traffic is bad."
+      },
+      {
+       "u": "a4",
+       "text": "Finally, a study group for Chapter 7 is scheduled for Wednesday after school in the library, led by Priya, and the class will begin Problem Set B on pendulum period on page 142."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The unit three test was moved from Tuesday the fourteenth to Thursday the sixteenth, now in room two twelve starting at nine fifteen."
+      },
+      {
+       "u": "a2",
+       "text": "Lab reports on the pendulum experiment are due Monday the twentieth by four p.m."
+      },
+      {
+       "u": "a3",
+       "text": "and must be turned in to the box outside Mr. Okafor's office without paper copies and stapled."
+      },
+      {
+       "u": "a4",
+       "text": "The field trip to the Harbor Science Center is on October twenty eighth with the bus leaving at seven forty five sharp from the front entrance; permission slips are due next Friday with an eighteen dollar fee, and students should bring a packed lunch."
+      },
+      {
+       "u": "a5",
+       "text": "The study group for chapter seven meets Wednesday after school in the library, led by Priya, and the class is now starting with problem set B on pendulum period."
+      },
+      {
+       "u": "k1",
+       "text": "The unit three test was rescheduled from Tuesday the fourteenth to Thursday the sixteenth."
+      },
+      {
+       "u": "k2",
+       "text": "The test will be in room two twelve starting at nine fifteen."
+      },
+      {
+       "u": "k3",
+       "text": "Lab reports on the pendulum experiment are due Monday the twentieth by four p.m."
+      },
+      {
+       "u": "k4",
+       "text": "Lab reports must be turned in to the box outside Mr. Okafor's office, not as paper copies, and must be stapled."
+      },
+      {
+       "u": "k5",
+       "text": "The field trip to the Harbor Science Center is on October twenty eighth."
+      },
+      {
+       "u": "k6",
+       "text": "The bus leaves at seven forty five sharp from the front entrance."
+      },
+      {
+       "u": "k7",
+       "text": "Permission slips are due next Friday with an eighteen dollar fee."
+      },
+      {
+       "u": "k8",
+       "text": "Students should bring a packed lunch as there is no cafeteria."
+      },
+      {
+       "u": "k9",
+       "text": "The study group for chapter seven meets Wednesday after school in the library."
+      },
+      {
+       "u": "k10",
+       "text": "Priya is leading the study group."
+      },
+      {
+       "u": "k11",
+       "text": "The class is now starting with problem set B on pendulum period."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The unit three test originally scheduled for Tuesday the fourteenth has been rescheduled to Thursday the sixteenth, giving students two extra days to study and moving the location to room two twelve at nine fifteen."
+      },
+      {
+       "u": "a2",
+       "text": "Lab reports on the pendulum experiment are due Monday the twentieth by four p.m."
+      },
+      {
+       "u": "a3",
+       "text": "and must be turned in to the box outside Mr. Okafor's office, not directly to the speaker, with no paper copies allowed and stapled copies required."
+      },
+      {
+       "u": "a4",
+       "text": "The field trip to the Harbor Science Center is set for October twenty eighth, with the bus departing at seven forty five sharp from the front entrance; permission slips must be signed by next Friday and the fee is eighteen dollars, with Ms. Delgado available to help if the fee is a problem and a packed lunch is required since there is no cafeteria."
+      },
+      {
+       "u": "a5",
+       "text": "The study group for chapter seven will meet Wednesday after school in the library, led by Priya, and the class is now starting with problem set B on pendulum period."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A few announcements were made before starting."
+      },
+      {
+       "u": "a2",
+       "text": "The unit three test originally scheduled for Tuesday the fourteenth is now on Thursday the sixteenth, and it will be in room two twelve at nine fifteen."
+      },
+      {
+       "u": "a3",
+       "text": "Lab reports on the pendulum experiment are due Monday the twentieth by four p.m., submitted only as paper copies stapled and dropped off at the box outside Mr. Okafor's office—no email."
+      },
+      {
+       "u": "a4",
+       "text": "The field trip to the Harbor Science Center is on October twenty-eighth; the bus departs at seven forty-five sharp from the front entrance, with permission slips due by next Friday and a fee of eighteen dollars."
+      },
+      {
+       "u": "a5",
+       "text": "A packed lunch is required since there is no cafeteria."
+      },
+      {
+       "u": "a6",
+       "text": "The return time is around three thirty, possibly later if traffic is bad."
+      },
+      {
+       "u": "a7",
+       "text": "A study group for chapter seven is on Wednesday after school in the library, led by Priya, and participants are asked to bring questions."
+      },
+      {
+       "u": "a8",
+       "text": "The session begins with problem set B on pendulum period."
+      },
+      {
+       "u": "a9",
+       "text": "Missing: unspecified instructions regarding the study group."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The instructor announced that the Unit 3 test, originally scheduled for Tuesday the fourteenth, has been moved to Thursday the sixteenth in Room 212 starting at 9:15."
+      },
+      {
+       "u": "a2",
+       "text": "Lab reports on the pendulum experiment are due Monday the twentieth by 4 p.m."
+      },
+      {
+       "u": "a3",
+       "text": "to the box outside Mr. Okafor's office, with paper copies only stapled together, and no email submissions accepted."
+      },
+      {
+       "u": "a4",
+       "text": "The field trip to the Harbor Science Center on October twenty eighth requires signed permission slips by next Friday, an eighteen dollar fee payable via Ms. Delgado in the counseling office, and a packed lunch since there is no cafeteria."
+      },
+      {
+       "u": "a5",
+       "text": "The bus departs at 7:45 from the front entrance with an expected return around 3:30, though this time may be delayed by traffic."
+      },
+      {
+       "u": "a6",
+       "text": "A study group for Chapter Seven is scheduled for Wednesday after school in the library, led by Priya, where students should bring their questions."
+      },
+      {
+       "u": "a7",
+       "text": "The class will now begin with Problem Set B on pendulum period from page 142."
+      },
+      {
+       "u": "k1",
+       "text": "The Unit 3 test is moved to Thursday the sixteenth in Room 212 at 9:15."
+      },
+      {
+       "u": "k2",
+       "text": "Pendulum lab reports are due Monday the twentieth by 4 p.m. to Mr. Okafor's office box."
+      },
+      {
+       "u": "k3",
+       "text": "Field trip permission slips must be signed by next Friday with an eighteen dollar fee."
+      },
+      {
+       "u": "k4",
+       "text": "The Harbor Science Center bus leaves at 7:45 with an expected return around 3:30."
+      },
+      {
+       "u": "k5",
+       "text": "The Chapter 7 study group is Wednesday after school in the library led by Priya."
+      },
+      {
+       "u": "k6",
+       "text": "The class will start with Problem Set B on pendulum period from page 142."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-en-002",
+   "language": "en",
+   "transcript": [
+    "1. did you remember to call the plumber",
+    "2. I did he's coming Thursday between ten and noon",
+    "3. ugh I have that dentist thing Thursday morning",
+    "4. oh right can you move it",
+    "5. I'll try but they only had Thursday or the following Tuesday",
+    "6. then let mom be here she's home all day anyway",
+    "7. she said she might go to Aunt Rosa's though",
+    "8. hmm well text her and ask",
+    "9. okay I'll do it after this",
+    "10. also we're almost out of milk and eggs",
+    "11. and the dog food the big bag the twenty pound one",
+    "12. I can stop at Greenfield Market on the way home from work",
+    "13. get the oat milk too the kind Jonah likes",
+    "14. is he still doing the oat milk thing I thought he switched to almond",
+    "15. no he hated the almond one he said it tasted like chalk",
+    "16. ha okay oat it is",
+    "17. what about Saturday are we still going to the lake",
+    "18. if the weather's good Dad wants to leave around eight",
+    "19. eight is early for a Saturday",
+    "20. I know I told him that",
+    "21. we can bring sandwiches so we don't have to stop",
+    "22. I'll make turkey ones and Jonah can pick the chips",
+    "23. deal"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The plumber is coming Thursday between 10 a.m. and noon.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "One speaker has a dentist appointment on Thursday morning, which conflicts with the plumber visit.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "The dentist only offered Thursday or the following Tuesday for the appointment.",
+     "critical": false,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "One speaker will stop at Greenfield Market on the way home from work.",
+     "critical": true,
+     "kind": "place"
+    },
+    {
+     "id": "f5",
+     "text": "The household needs milk, eggs, the twenty pound bag of dog food and oat milk.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "Jonah prefers oat milk and disliked the almond milk because it tasted like chalk.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f7",
+     "text": "Dad wants to leave for the lake around 8 a.m. on Saturday if the weather is good.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "The family plans to bring sandwiches to the lake; one speaker will make turkey sandwiches and Jonah will pick the chips.",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The dentist appointment has already been moved to Tuesday."
+    },
+    {
+     "id": "n2",
+     "text": "Jonah is the speakers' son (his relationship is never stated)."
+    },
+    {
+     "id": "n3",
+     "text": "The lake trip on Saturday is definitely happening."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "Whether mom will be home on Thursday for the plumber is not confirmed because she might go to Aunt Rosa's."
+    },
+    {
+     "id": "u2",
+     "text": "Whether the dentist appointment will be moved is not settled."
+    },
+    {
+     "id": "u3",
+     "text": "Whether the weather will allow the Saturday lake trip is unknown."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "I asked if you remembered to call the plumber, and you confirmed he is scheduled to come on Thursday between ten and noon, though you noted a conflict with a dentist appointment that same morning."
+      },
+      {
+       "u": "a2",
+       "text": "You mentioned that while the dentist might go to Aunt Rosa's, you will text her to confirm the plan after this call."
+      },
+      {
+       "u": "a3",
+       "text": "We also discussed running errands for milk, eggs, and a twenty-pound bag of dog food, with a plan to stop at Greenfield Market on the way home to also pick up oat milk since Jonah dislikes almond milk which he described as tasting like chalk."
+      },
+      {
+       "u": "a4",
+       "text": "Regarding the Saturday lake trip, you stated that Dad wants to leave around eight if the weather is good, and you agreed we can bring sandwiches so Jonah can select the chips."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "To call the plumber, and they agreed they'd call on Thursday between ten and noon, though they have a dentist appointment Thursday morning."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to move something but noted only Thursday or the following Tuesday were available, so they'll let mom stay home since she's home all day, though she might go to Aunt Rosa's; they'll text her."
+      },
+      {
+       "u": "a3",
+       "text": "They agreed to check for milk, eggs, and the twenty-pound dog food, and they'll stop at Greenfield Market on the way home from work to get oat milk, the kind Jonah likes, because he hates almond."
+      },
+      {
+       "u": "a4",
+       "text": "They agreed to go to the lake on Saturday if the weather's good, with Dad wanting to leave around eight, and they'll bring sandwiches—turkey ones and chips for Jonah."
+      },
+      {
+       "u": "a5",
+       "text": "Someone agreed to make the sandwiches and let Jonah pick the chips."
+      },
+      {
+       "u": "a6",
+       "text": "They agreed to do this after this."
+      },
+      {
+       "u": "a7",
+       "text": "They noted they're almost out of milk and eggs, and the twenty-pound dog food is needed."
+      },
+      {
+       "u": "a8",
+       "text": "The twenty-pound bag is mentioned, and the dog food is specified."
+      },
+      {
+       "u": "a9",
+       "text": "The conversation is missing details about the exact timing or location of the dog food purchase."
+      },
+      {
+       "u": "a10",
+       "text": "The dog food is the big bag."
+      },
+      {
+       "u": "a11",
+       "text": "The dog food is twenty pounds."
+      },
+      {
+       "u": "a12",
+       "text": "The dog food is for the dog."
+      },
+      {
+       "u": "a13",
+       "text": "The dog food is needed."
+      },
+      {
+       "u": "a14",
+       "text": "The dog food is the big bag."
+      },
+      {
+       "u": "a15",
+       "text": "The dog food is twenty pounds."
+      },
+      {
+       "u": "a16",
+       "text": "The dog food is for the dog."
+      },
+      {
+       "u": "a17",
+       "text": "The dog food is needed."
+      },
+      {
+       "u": "a18",
+       "text": "The dog food is the big bag."
+      },
+      {
+       "u": "a19",
+       "text": "The dog food is twenty pounds."
+      },
+      {
+       "u": "a20",
+       "text": "The dog food is for the dog."
+      },
+      {
+       "u": "a21",
+       "text": "The dog food is needed."
+      },
+      {
+       "u": "a22",
+       "text": "The dog food is the big bag."
+      },
+      {
+       "u": "a23",
+       "text": "The dog food is twenty pounds."
+      },
+      {
+       "u": "a24",
+       "text": "The dog food is for the dog."
+      },
+      {
+       "u": "a25",
+       "text": "The dog food is needed."
+      },
+      {
+       "u": "a26",
+       "text": "The dog food is the big bag."
+      },
+      {
+       "u": "a27",
+       "text": "The dog food is twenty pounds."
+      },
+      {
+       "u": "a28",
+       "text": "The dog food is for the dog."
+      },
+      {
+       "u": "a29",
+       "text": "The dog food is needed."
+      },
+      {
+       "u": "a30",
+       "text": "The dog food is the big bag."
+      },
+      {
+       "u": "a31",
+       "text": "The dog food is twenty pounds."
+      },
+      {
+       "u": "a32",
+       "text": "The dog food is for the dog."
+      },
+      {
+       "u": "a33",
+       "text": "The dog food is needed."
+      },
+      {
+       "u": "a34",
+       "text": "The dog food is the big bag."
+      },
+      {
+       "u": "a35",
+       "text": "The dog food is twenty pounds."
+      },
+      {
+       "u": "a36",
+       "text": "The dog food is for the dog."
+      },
+      {
+       "u": "a37",
+       "text": "The dog food is needed."
+      },
+      {
+       "u": "a38",
+       "text": "The dog food is the big bag."
+      },
+      {
+       "u": "a39",
+       "text": "The dog food is twenty pounds."
+      },
+      {
+       "u": "a40",
+       "text": "The dog food is for the dog."
+      },
+      {
+       "u": "a41",
+       "text": "The dog food is needed."
+      },
+      {
+       "u": "a42",
+       "text": "The dog food is the big bag"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone asked if the plumber appointment was remembered, and it was scheduled for Thursday between ten and noon, though the dentist appointment is also on Thursday morning."
+      },
+      {
+       "u": "a2",
+       "text": "They decided to text their mom to confirm if she will go to Aunt Rosa's, and the speaker will do this after the current call."
+      },
+      {
+       "u": "a3",
+       "text": "The group also planned to stop at Greenfield Market on the way home to buy milk, eggs, twenty-pound dog food, and oat milk that Jonah prefers."
+      },
+      {
+       "u": "a4",
+       "text": "They confirmed Jonah still hates almond milk because it tastes like chalk, so oat milk will be purchased."
+      },
+      {
+       "u": "a5",
+       "text": "The family is still going to the lake on Saturday if the weather is good, with Dad planning to leave around eight o'clock."
+      },
+      {
+       "u": "a6",
+       "text": "Someone offered to make turkey sandwiches for the trip, and Jonah will select the chips."
+      },
+      {
+       "u": "k1",
+       "text": "The plumber is coming Thursday between ten and noon."
+      },
+      {
+       "u": "k2",
+       "text": "The dentist appointment is also on Thursday morning."
+      },
+      {
+       "u": "k3",
+       "text": "The speaker will text mom to confirm her plans with Aunt Rosa."
+      },
+      {
+       "u": "k4",
+       "text": "Greenfield Market will be stopped at for milk, eggs, dog food, and oat milk."
+      },
+      {
+       "u": "k5",
+       "text": "Jonah prefers oat milk because he dislikes almond milk."
+      },
+      {
+       "u": "k6",
+       "text": "The family is going to the lake on Saturday if the weather is good."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A conversation occurred about scheduling and errands."
+      },
+      {
+       "u": "a2",
+       "text": "It was decided that a plumber would arrive Thursday between ten and noon, and a dentist appointment was set for Thursday morning."
+      },
+      {
+       "u": "a3",
+       "text": "A request to move something was acknowledged, but it was noted that options were limited to Thursday or the following Tuesday."
+      },
+      {
+       "u": "a4",
+       "text": "Arrangements were made for a parent to stay home all day, though they might visit Aunt Rosa’s."
+      },
+      {
+       "u": "a5",
+       "text": "A text to confirm plans was assigned."
+      },
+      {
+       "u": "a6",
+       "text": "Supplies were low, and it was agreed to stop at Greenfield Market on the way home from work for milk, eggs, dog food, and oat milk, as a dog food bag weighing twenty pounds was mentioned."
+      },
+      {
+       "u": "a7",
+       "text": "It was confirmed that a dog disliked almond oat milk, so oat milk would be used."
+      },
+      {
+       "u": "a8",
+       "text": "Plans for a Saturday trip to the lake were confirmed, with a departure around eight, and sandwiches would be brought instead of stopping."
+      },
+      {
+       "u": "a9",
+       "text": "Details about Jonah’s snack preferences were noted, and the agreement was finalized."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone reminded them to call the plumber who is coming Thursday between ten and noon."
+      },
+      {
+       "u": "a2",
+       "text": "They discussed moving a dentist appointment from Thursday morning to either Thursday or the following Tuesday."
+      },
+      {
+       "u": "a3",
+       "text": "They also planned to text their mom to have her come home and possibly visit Aunt Rosa's."
+      },
+      {
+       "u": "a4",
+       "text": "They noted they are running low on milk, eggs, and dog food and will stop at Greenfield Market on the way home to get oat milk (which Jonah likes) and turkey sandwiches for Saturday."
+      },
+      {
+       "u": "a5",
+       "text": "Dad wants to leave around eight in the morning on Saturday, and they will bring sandwiches."
+      },
+      {
+       "u": "a6",
+       "text": "The conversation ended with a deal to make turkey sandwiches and have Jonah pick the chips."
+      },
+      {
+       "u": "k1",
+       "text": "The plumber is scheduled to arrive Thursday between ten and noon."
+      },
+      {
+       "u": "k2",
+       "text": "The dentist appointment was moved to Thursday or the following Tuesday."
+      },
+      {
+       "u": "k3",
+       "text": "The mom was told to come home and possibly visit Aunt Rosa's."
+      },
+      {
+       "u": "k4",
+       "text": "They are low on milk, eggs, and dog food (twenty pound bag)."
+      },
+      {
+       "u": "k5",
+       "text": "They will stop at Greenfield Market on the way home to get oat milk and turkey sandwiches."
+      },
+      {
+       "u": "k6",
+       "text": "Dad plans to leave around eight in the morning on Saturday."
+      },
+      {
+       "u": "k7",
+       "text": "They will bring sandwiches to the lake on Saturday."
+      },
+      {
+       "u": "k8",
+       "text": "Jonah likes oat milk and disliked almond milk."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place near a person who could not hear the speech, so some transcription errors were present."
+      },
+      {
+       "u": "a2",
+       "text": "A plumber was called and is scheduled to arrive on Thursday between 10 AM and noon."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker has a dentist appointment on Thursday morning but requested to move it to either Thursday or the following Tuesday."
+      },
+      {
+       "u": "a4",
+       "text": "The mother will be home all day and may go to Aunt Rosa's."
+      },
+      {
+       "u": "a5",
+       "text": "On the way home from work, the speaker plans to stop at Greenfield Market to pick up milk, eggs, and a 20-pound bag of dog food, including oat milk (Jonah prefers oat milk over almond)."
+      },
+      {
+       "u": "a6",
+       "text": "Regarding Saturday, the group is still planning to go to the lake with Dad leaving around 8 AM, though this was noted as early for a Saturday."
+      },
+      {
+       "u": "a7",
+       "text": "Sandwiches will be brought, and Jonah will pick the chips."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

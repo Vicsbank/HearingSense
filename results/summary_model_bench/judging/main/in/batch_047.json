@@ -1,0 +1,794 @@
+{
+ "batch": "batch_047",
+ "conversations": [
+  {
+   "conversation": "fin-mix-007",
+   "language": "mixed",
+   "transcript": [
+    "1. 妈 我今天 晚点回来 要 stay 在学校 做 CAS 的 project",
+    "2. 又要 晚啊 几点 啦 我煮饭 你吃不吃",
+    "3. 大概 seven thirty 吧 你们先吃 不用等我",
+    "4. 哎 你 等一下 那个 手机 卡卡 的",
+    "5. 喂 喂 听得到吗 我说 七点半",
+    "6. 听到了 七点半 那你 带 水果 回来 没有 家里 没 apple 了",
+    "7. okay 我 去 Walmart 不 去 Trust Mart 买 苹果 和 牛奶",
+    "8. 还有 你爸爸 说 周六 要 去 奶奶 家 你 别 排 活动",
+    "9. 周六 我 有 piano lesson 在 上午十点",
+    "10. 那 lesson 结束 再 去 下午 两点 出发",
+    "11. 好 对了 小 姨 那个 生日 是 下 个 月 吗",
+    "12. 是 十一月 十二 号 你 记得 买 礼物 好 吗",
+    "13. background 一个 广播 请 乘客 前往 三号 登机口",
+    "14. 哎 你 在 哪 怎么 有 广播 声",
+    "15. 我 在 地铁 站 啦 好 我 要 上车 了 bye",
+    "16. 诶 等 一下 你 记得 带 伞 听 说 今天 晚上 会 下雨 我 看 了 weather app",
+    "17. 知道 啦 我 书包 里 有 一把 折叠 伞 不 用 担心 回来 再 说"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The child will stay at school for a CAS project and come home around 7:30.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "The mother will cook; the child told them to eat first and not wait.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "The child will buy apples and milk on the way home.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f4",
+     "text": "The family will visit grandmother on Saturday, leaving at 2 pm after the child's 10 am piano lesson.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f5",
+     "text": "The aunt's birthday is on November 12 and the child is reminded to buy a gift.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f6",
+     "text": "The child is on the metro and is about to board a train.",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The apples will be bought at Walmart (the speaker corrected to Trust Mart)."
+    },
+    {
+     "id": "n2",
+     "text": "The child's father will drive on Saturday (not stated)."
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "The store name is garbled in the transcript; it appears to be Trust Mart after a self-correction from Walmart."
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The project is due late and the person will stay at school, and they need to decide what time to return, with a mention of seven thirty."
+      },
+      {
+       "u": "a2",
+       "text": "they agreed the person will cook and ask if someone will eat, and someone said to wait for a phone call about a card."
+      },
+      {
+       "u": "a3",
+       "text": "Seven thirty-five, and the person will bring fruit because there are no apples at home."
+      },
+      {
+       "u": "a4",
+       "text": "someone agreed the person will buy apples and milk at Walmart instead of Trust Mart, and they will go to grandma’s house on Saturday for an activity."
+      },
+      {
+       "u": "a5",
+       "text": "The person has a piano lesson at ten in the morning on Saturday, and the lesson ends at two in the afternoon, after which they will leave."
+      },
+      {
+       "u": "a6",
+       "text": "someone asked if the birthday is in November or December, and they said November twelfth."
+      },
+      {
+       "u": "a7",
+       "text": "The person should remember to buy a gift."
+      },
+      {
+       "u": "a8",
+       "text": "someone is at the subway station and says they need to take a train, and someone mentioned a weather app warning of rain in the evening."
+      },
+      {
+       "u": "a9",
+       "text": "They have a foldable umbrella in their backpack and there is no need to worry."
+      },
+      {
+       "u": "a10",
+       "text": "missing information: the exact time the project is due, the name of the birthday person, and the name of the subway station."
+      },
+      {
+       "u": "a11",
+       "text": "someone agreed to wait for a phone call about the card, and someone agreed to buy apples and milk at Walmart."
+      },
+      {
+       "u": "a12",
+       "text": "someone agreed to attend the piano lesson and the activity."
+      },
+      {
+       "u": "a13",
+       "text": "someone agreed to buy a gift for the birthday."
+      },
+      {
+       "u": "a14",
+       "text": "someone agreed to bring an umbrella."
+      },
+      {
+       "u": "a15",
+       "text": "someone agreed to wait for the phone call about the card."
+      },
+      {
+       "u": "a16",
+       "text": "someone agreed to buy apples and milk at Walmart."
+      },
+      {
+       "u": "a17",
+       "text": "someone agreed to attend the piano lesson and the activity."
+      },
+      {
+       "u": "a18",
+       "text": "someone agreed to buy a gift for the birthday."
+      },
+      {
+       "u": "a19",
+       "text": "someone agreed to bring an umbrella."
+      },
+      {
+       "u": "a20",
+       "text": "someone agreed to wait for the phone call about the card."
+      },
+      {
+       "u": "a21",
+       "text": "someone agreed to buy apples and milk at Walmart."
+      },
+      {
+       "u": "a22",
+       "text": "someone agreed to attend the piano lesson and the activity."
+      },
+      {
+       "u": "a23",
+       "text": "someone agreed to buy a gift for the birthday."
+      },
+      {
+       "u": "a24",
+       "text": "someone agreed to bring an umbrella."
+      },
+      {
+       "u": "a25",
+       "text": "someone agreed to wait for the phone call about the card."
+      },
+      {
+       "u": "a26",
+       "text": "someone agreed to buy apples and milk at Walmart."
+      },
+      {
+       "u": "a27",
+       "text": "someone agreed to attend the piano lesson and the activity."
+      },
+      {
+       "u": "a28",
+       "text": "someone agreed to buy a gift for the birthday."
+      },
+      {
+       "u": "a29",
+       "text": "someone agreed to bring an umbrella."
+      },
+      {
+       "u": "a30",
+       "text": "someone agreed to wait for the phone call about the card."
+      },
+      {
+       "u": "a31",
+       "text": "someone agreed to buy apples and milk at Walmart."
+      },
+      {
+       "u": "a32",
+       "text": "someone agreed to attend the piano lesson and the activity."
+      },
+      {
+       "u": "a33",
+       "text": "someone agreed to buy a"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "A person near a person who could not hear it received information about a project at school and a request to stay there."
+      },
+      {
+       "u": "a2",
+       "text": "The person was told to stay until seven thirty, and it was clarified that seven thirty was the correct time."
+      },
+      {
+       "u": "a3",
+       "text": "A phone call mentioned a time of seven thirty-five, which was corrected to seven thirty-five."
+      },
+      {
+       "u": "a4",
+       "text": "Plans were made to buy apples and milk at Walmart instead of Trust Mart, and it was noted that a parent mentioned an outing to a grandparent’s home on Saturday."
+      },
+      {
+       "u": "a5",
+       "text": "A piano lesson at ten in the morning on Saturday was confirmed, with a two-hour departure at two in the afternoon."
+      },
+      {
+       "u": "a6",
+       "text": "A birthday for someone named 小姨 was mentioned as occurring on November twelfth, with a request to buy a gift."
+      },
+      {
+       "u": "a7",
+       "text": "A background announcement directed passengers to gate three, and the person was located at a subway station."
+      },
+      {
+       "u": "a8",
+       "text": "It was confirmed that a foldable umbrella was in the bag, despite a warning of rain in the evening."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "妈妈告知她今天晚点回来，因为要在学校做 CAS 项目，预计七点半到家，并询问是否要煮饭，对方表示不用等。"
+      },
+      {
+       "u": "a2",
+       "text": "她提到手机卡住，确认了七点半的时间，并安排去 Walmart 购买苹果和牛奶，同时提醒爸爸周六要去奶奶家，因此她周六上午十点的钢琴课结束后才出发。"
+      },
+      {
+       "u": "a3",
+       "text": "关于小姨的生日，确认日期为下个月十一月十二日，需要记得买礼物。"
+      },
+      {
+       "u": "a4",
+       "text": "对话中插入了机场广播提示前往三号登机口，随后对方解释自己在地铁站，因听到广播声而意识到即将上车。"
+      },
+      {
+       "u": "a5",
+       "text": "最后对方提醒记得带伞，因为天气预报显示今晚会下雨，但对方书包里已有折叠伞，表示无需担心。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The mother and child had a conversation near the child's home."
+      },
+      {
+       "u": "a2",
+       "text": "The mother said she would return later in the evening to stay at school working on a CAS project and asked the child to come eat first."
+      },
+      {
+       "u": "a3",
+       "text": "The child confirmed they would be back around seven-thirty and requested fruit since they didn't have apples at home."
+      },
+      {
+       "u": "a4",
+       "text": "The child agreed to go to Walmart to buy apples and milk."
+      },
+      {
+       "u": "a5",
+       "text": "The mother reminded the child that their father said they need to go to grandma's house on Saturday, and the child confirmed they have a piano lesson on Saturday morning at ten o'clock, with plans to leave after the lesson and depart at two o'clock in the afternoon."
+      },
+      {
+       "u": "a6",
+       "text": "The mother also asked about the child's birthday, which was confirmed to be on November 12th, and reminded the child to buy a gift."
+      },
+      {
+       "u": "a7",
+       "text": "The child mentioned hearing a train announcement about boarding at gate three, and the mother asked where the child was."
+      },
+      {
+       "u": "a8",
+       "text": "The child was on the subway station and said they were about to board."
+      },
+      {
+       "u": "a9",
+       "text": "The mother then reminded the child to bring an umbrella because it was going to rain that evening, noting the child had a folded umbrella in their backpack."
+      },
+      {
+       "u": "a10",
+       "text": "The conversation ended with the child saying they would mention it"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They will return late from school to work on their CAS project and asked if the other person wants to eat dinner early."
+      },
+      {
+       "u": "a2",
+       "text": "They agreed to eat at seven-thirty without waiting for the speaker, who then mentioned a phone issue while confirming the time."
+      },
+      {
+       "u": "a3",
+       "text": "The speaker decided to go to Walmart to buy apples and milk since there are no apples at home, while the other person noted their father's plan to visit their grandmother's house on Saturday."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker has a piano lesson at ten in the morning on Saturday and must leave for the afternoon at two o'clock after the lesson ends."
+      },
+      {
+       "u": "a5",
+       "text": "They confirmed the aunt's birthday is on November 12th and asked the other person to remember to buy a gift."
+      },
+      {
+       "u": "a6",
+       "text": "They are at a subway station and will take the train, noting that the weather app predicted rain tonight."
+      },
+      {
+       "u": "a7",
+       "text": "They agreed to bring an umbrella since the speaker already has one in their bag."
+      },
+      {
+       "u": "k1",
+       "text": "The speaker will stay at school late for a CAS project."
+      },
+      {
+       "u": "k2",
+       "text": "Dinner is scheduled for seven-thirty without waiting for the speaker."
+      },
+      {
+       "u": "k3",
+       "text": "The speaker will go to Walmart to buy apples and milk."
+      },
+      {
+       "u": "k4",
+       "text": "The family visits the grandmother's house on Saturday."
+      },
+      {
+       "u": "k5",
+       "text": "The speaker has a piano lesson at ten in the morning on Saturday."
+      },
+      {
+       "u": "k6",
+       "text": "The aunt's birthday is on November 12th."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Someone will return late to school for a CAS project and is running late."
+      },
+      {
+       "u": "a2",
+       "text": "They ask if the other person is eating and suggest waiting before they eat."
+      },
+      {
+       "u": "a3",
+       "text": "The other person agrees to go to Walmart to buy apples and milk, and mentions their father's plan to visit grandma on Saturday."
+      },
+      {
+       "u": "a4",
+       "text": "They also note a piano lesson at 10 AM on Saturday and a departure at 2 PM."
+      },
+      {
+       "u": "a5",
+       "text": "The conversation shifts to a birthday on November 12th and a reminder to bring an umbrella because it will rain tonight."
+      },
+      {
+       "u": "a6",
+       "text": "The speaker is on the subway and confirms they have a folded umbrella in their backpack."
+      },
+      {
+       "u": "k1",
+       "text": "The speaker will return late to school for a CAS project."
+      },
+      {
+       "u": "k2",
+       "text": "They are running late and ask if the other person is eating."
+      },
+      {
+       "u": "k3",
+       "text": "The other person agrees to go to Walmart to buy apples and milk."
+      },
+      {
+       "u": "k4",
+       "text": "The father mentioned a visit to grandma on Saturday."
+      },
+      {
+       "u": "k5",
+       "text": "There is a piano lesson at 10 AM on Saturday."
+      },
+      {
+       "u": "k6",
+       "text": "The group plans to leave at 2 PM after the lesson."
+      },
+      {
+       "u": "k7",
+       "text": "The birthday is on November 12th."
+      },
+      {
+       "u": "k8",
+       "text": "The speaker is on the subway and has a folded umbrella in their backpack."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-mix-008",
+   "language": "mixed",
+   "transcript": [
+    "1. today we continue 微积分 chapter six 先 review 一下 integration by parts",
+    "2. formula 是 u dv 等于 u v 减 integral v du",
+    "3. 那 怎么 选 u 用 LIATE 这个 口诀 对 对 就是 log inverse trig algebra",
+    "4. trig 之后 是 exponential",
+    "5. homework 是 page 三百一十二 第 十五 到 第 三十 题 只 做 奇数",
+    "6. quiz 在 下 周 二 不 是 下 周 三 就 chapter five 和 six",
+    "7. 可以 用 calculator 但是 不 可以 用 CAS 那 种 的",
+    "8. 同学 问 一下 homework 要 交 吗",
+    "9. 不 用 交 但 我 会 抽 查 下 次 上课 随机 叫 三个 人 上来 写",
+    "10. 还有 一个 事 Mr. Dawson 的 tutoring 每 周 一 放学 后 在 Room 212",
+    "11. 听不清 后面 那个 后面 那个 同学 请 安静",
+    "12. okay then 最后 一个 提醒 final exam 的 date 已经 出来 了 是 十二 月 十 号",
+    "13. time 是 早上 九点 在 gym 具体 的 seating chart 之后 post"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "The class reviewed integration by parts and the LIATE mnemonic for choosing u.",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "Homework is page 312, odd-numbered problems 15 to 30; it is not collected but will be spot-checked.",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f3",
+     "text": "The quiz covers chapters five and six and is next Wednesday.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f4",
+     "text": "The quiz date was corrected from next Tuesday to next Wednesday.",
+     "critical": true,
+     "kind": "change"
+    },
+    {
+     "id": "f5",
+     "text": "Calculators are allowed on the quiz but CAS-type calculators are not.",
+     "critical": true,
+     "kind": "other"
+    },
+    {
+     "id": "f6",
+     "text": "Three students will be randomly called to write homework solutions at the next class.",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "Mr. Dawson tutors every Monday after school in Room 212.",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f8",
+     "text": "The final exam is on December 10 at 9 am in the gym; the seating chart will be posted later.",
+     "critical": true,
+     "kind": "date_time"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "The quiz is next Tuesday (superseded)."
+    },
+    {
+     "id": "n2",
+     "text": "Homework must be handed in."
+    }
+   ],
+   "uncertain": [],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The class began by reviewing the integration by parts formula, stating that u dv equals u v minus the integral of v du, and confirmed the LIATE mnemonic rule for selecting u."
+      },
+      {
+       "u": "a2",
+       "text": "Homework is assigned from page 312, problems 15 through 30, but only odd-numbered ones, and the quiz is scheduled for next Tuesday, not Wednesday, covering chapters five and six."
+      },
+      {
+       "u": "a3",
+       "text": "Students may use a calculator but are prohibited from using a Computer Algebra System (CAS), and while the homework does not need to be submitted, the instructor will randomly call three students up to solve problems during the next class."
+      },
+      {
+       "u": "a4",
+       "text": "Mr. Dawson's tutoring sessions are held every Monday after school in Room 212, and the instructor requested the class to be quiet so they could hear the next part of the announcement."
+      },
+      {
+       "u": "a5",
+       "text": "Finally, the instructor announced that the final exam date is December 10th at 9:00 AM in the gym, with the specific seating chart to be posted later."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The class continued with a review of integration by parts and the LIATE mnemonic for choosing u."
+      },
+      {
+       "u": "a2",
+       "text": "The homework assignment is on page 3112, questions 15-30, with only odd-numbered questions due."
+      },
+      {
+       "u": "a3",
+       "text": "The next quiz is scheduled for next Tuesday (not Wednesday) covering chapters five and six."
+      },
+      {
+       "u": "a4",
+       "text": "Students were reminded that calculators can be used but CAS cannot, and that Mr. Dawson's tutoring occurs weekly after school in Room 212."
+      },
+      {
+       "u": "a5",
+       "text": "The final exam date has been announced as December 10th at 9:00 AM in the gym."
+      },
+      {
+       "u": "k1",
+       "text": "The class reviewed integration by parts and the LIATE mnemonic for selecting u."
+      },
+      {
+       "u": "k2",
+       "text": "Homework is on page 3112, questions 15-30, with only odd-numbered questions due."
+      },
+      {
+       "u": "k3",
+       "text": "The next quiz is on Tuesday covering chapters five and six."
+      },
+      {
+       "u": "k4",
+       "text": "Calculators are allowed but CAS is not."
+      },
+      {
+       "u": "k5",
+       "text": "Mr. Dawson's tutoring is weekly after school in Room 212."
+      },
+      {
+       "u": "k6",
+       "text": "The final exam is scheduled for December 10th at 9:00 AM in the gym."
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation reviewed 微积分 chapter six, beginning with a review of integration by parts formula: u dv equals u v减 integral v du."
+      },
+      {
+       "u": "a2",
+       "text": "The selection of u followed the LIATE sequence: log inverse trig algebra, trig, exponential."
+      },
+      {
+       "u": "a3",
+       "text": "Homework was assigned to pages 三百一十二, questions 十五 to 三十, with only odd-numbered questions to complete."
+      },
+      {
+       "u": "a4",
+       "text": "A quiz was scheduled for 下周二, not 下周三, covering chapter five and six."
+      },
+      {
+       "u": "a5",
+       "text": "Calculators were permitted, but CAS was not."
+      },
+      {
+       "u": "a6",
+       "text": "Homework was not to be submitted, though three students would be randomly called to write during the next class."
+      },
+      {
+       "u": "a7",
+       "text": "Mr. Dawson offered tutoring every Sunday after class in Room 212."
+      },
+      {
+       "u": "a8",
+       "text": "The final exam date was confirmed as 十二月十, at 九点 in the gym, with details to follow in the post."
+      },
+      {
+       "u": "a9",
+       "text": "Missing: information about the student who requested quiet."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The class continued with a review of integration by parts and the integration by parts formula (u dv = u v - ∫v du)."
+      },
+      {
+       "u": "a2",
+       "text": "The LIATE mnemonic (log, inverse trig, algebra, trig, exponential, trigonometric) was explained for choosing u."
+      },
+      {
+       "u": "a3",
+       "text": "Homework is due on page 3112, problems 15 to 30, but only odd-numbered problems need to be submitted."
+      },
+      {
+       "u": "a4",
+       "text": "The next quiz is scheduled for next Tuesday (not Wednesday) and will cover chapters five and six."
+      },
+      {
+       "u": "a5",
+       "text": "Students are reminded that calculators may be used but computer algebra systems (CAS) cannot."
+      },
+      {
+       "u": "a6",
+       "text": "A student inquired about the homework deadline, and the instructor clarified that it is not due for submission but will be checked randomly during the next class."
+      },
+      {
+       "u": "a7",
+       "text": "Additionally, Mr. Dawson offers tutoring every week after school in Room 212, and the final exam date has been announced as December 10th at 9:00 AM in the gym, with the seating chart already posted."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The instructor reviewed integration by parts using the LIATE rule and assigned homework from page 312, questions 15 to 30, to be completed on odd numbers only."
+      },
+      {
+       "u": "a2",
+       "text": "A quiz is scheduled for next Tuesday, not Wednesday, covering chapters five and six, where calculators are allowed but Computer Algebra Systems are prohibited."
+      },
+      {
+       "u": "a3",
+       "text": "Homework does not need to be submitted, but the instructor will randomly call three students up to solve problems during the next class."
+      },
+      {
+       "u": "a4",
+       "text": "Mr. Dawson's tutoring occurs every Monday after school in Room 212, and the final exam is set for December 12th at 9:00 AM in the gym."
+      },
+      {
+       "u": "a5",
+       "text": "The seating chart for the final exam will be posted later, and the instructor asked students to be quiet as they were having trouble hearing."
+      },
+      {
+       "u": "k1",
+       "text": "Homework is page 312, questions 15 to 30, odd numbers only."
+      },
+      {
+       "u": "k2",
+       "text": "Quiz is next Tuesday, not Wednesday, for chapters five and six."
+      },
+      {
+       "u": "k3",
+       "text": "Calculators are allowed but CAS is not allowed on the quiz."
+      },
+      {
+       "u": "k4",
+       "text": "Homework does not need to be submitted but will be checked."
+      },
+      {
+       "u": "k5",
+       "text": "Mr. Dawson tutors Mondays after school in Room 212."
+      },
+      {
+       "u": "k6",
+       "text": "Final exam is December 12th at 9:00 AM in the gym."
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "They'll continue 微积分 chapter six, reviewing integration by parts formula: u dv equals u v minus integral v du."
+      },
+      {
+       "u": "a2",
+       "text": "They'll use the LIATE mnemonic (log, inverse trig, algebra, trig, exponential) for u selection."
+      },
+      {
+       "u": "a3",
+       "text": "Homework is on page 312, problems 15 to 30, only odd-numbered ones."
+      },
+      {
+       "u": "a4",
+       "text": "Quiz is next week Tuesday, not Wednesday, covering chapters five and six."
+      },
+      {
+       "u": "a5",
+       "text": "Calculators are allowed, but CAS is not."
+      },
+      {
+       "u": "a6",
+       "text": "Homework is not required, but three students will be randomly called to write it next class."
+      },
+      {
+       "u": "a7",
+       "text": "Mr. Dawson offers tutoring weekly after class in Room 212."
+      },
+      {
+       "u": "a8",
+       "text": "The final exam is December 12 at 9 AM in the gym, with details in the seating chart post."
+      },
+      {
+       "u": "a9",
+       "text": "The schedule is unclear for one student."
+      },
+      {
+       "u": "a10",
+       "text": "Missing information: specific seating chart details and the exact nature of the unclear student's question."
+      },
+      {
+       "u": "k1",
+       "text": "The meeting includes integration by parts review."
+      },
+      {
+       "u": "k2",
+       "text": "LIATE mnemonic is used for u selection."
+      },
+      {
+       "u": "k3",
+       "text": "Homework is page 312, problems 15 to 30, odd numbers only."
+      },
+      {
+       "u": "k4",
+       "text": "Quiz is next Tuesday, covering chapters five and six."
+      },
+      {
+       "u": "k5",
+       "text": "Calculators allowed, CAS not allowed."
+      },
+      {
+       "u": "k6",
+       "text": "Final exam is December 12 at 9 AM in the gym."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

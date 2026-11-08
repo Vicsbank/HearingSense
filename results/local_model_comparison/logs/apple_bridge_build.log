@@ -1,0 +1,51 @@
+Building for production...
+[Computing dependencies]
+[Pre-planning 1 / 37]
+[Planning deferred tasks]
+[Starting]
+[12 / 21]
+[16 / 21]
+[17 / 22] apple-bridge-product
+[18 / 42]
+[19 / 65]
+[27 / 65]
+[28 / 65]
+[30 / 65]
+[33 / 65]
+[35 / 65]
+[36 / 65]
+[37 / 65]
+[40 / 65]
+[41 / 65]
+[42 / 65]
+[43 / 65]
+[44 / 65]
+[46 / 65]
+[49 / 65]
+[51 / 65]
+[52 / 65]
+[53 / 65]
+[54 / 65]
+[56 / 65]
+[58 / 65]
+[59 / 65]
+[60 / 65]
+[61 / 65] apple-bridge-product
+/Users/vicwei/Desktop/Music Recognition/.claude/worktrees/model-bench/tools/model_bench/apple_bridge/Sources/apple-bridge/main.swift:97:9: [1;33mwarning: [1;39mmain actor-isolated var 'prepared' can not be mutated from a nonisolated context[0;0m
+ [0;36m47 |[0;0m // The session for the next request, created and prepared while nothing else runs (what an app that
+ [0;36m48 |[0;0m // expects more speech would do).
+ [0;36m49 |[0;0m var prepared: (instructions: String, session: LanguageModelSession)?
+    [0;36m|[0;0m     `- [1;39mnote: [1;39mmutation of this var is only permitted within the actor[0;0m
+ [0;36m50 |[0;0m 
+ [0;36m51 |[0;0m func session(for instructions: String) -> LanguageModelSession {
+    [0;36m:[0;0m
+ [0;36m95 |[0;0m         let next = LanguageModelSession(model: SystemLanguageModel.default, instructions: instructions)
+ [0;36m96 |[0;0m         next.prewarm()
+ [0;36m97 |[0;0m         prepared = (instructions, next)
+    [0;36m|[0;0m         |- [1;33mwarning: [1;39mmain actor-isolated var 'prepared' can not be mutated from a nonisolated context[0;0m
+    [0;36m|[0;0m         `- [1;39mnote: [1;39mconsider declaring an isolated method on 'MainActor' to perform the mutation[0;0m
+ [0;36m98 |[0;0m     }
+ [0;36m99 |[0;0m     return answer
+[63 / 65] apple-bridge-product
+[64 / 65] apple-bridge-product
+Build complete! (87.08 sec)

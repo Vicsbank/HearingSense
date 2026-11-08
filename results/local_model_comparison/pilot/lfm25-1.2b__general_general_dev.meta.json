@@ -1,0 +1,138 @@
+{
+ "model": "lfm25-1.2b",
+ "spec": {
+  "kind": "mlx",
+  "repo": "lmstudio-community/LFM2.5-1.2B-Instruct-MLX-4bit",
+  "name": "LFM2.5-1.2B-Instruct",
+  "quantization": "MLX 4-bit"
+ },
+ "task": "general",
+ "set": "general_dev",
+ "phase": "pilot",
+ "seed": 7,
+ "warmup_requests": 2,
+ "first_request_seconds_after_load": [
+  0.1468555000028573
+ ],
+ "info": {
+  "repo": "lmstudio-community/LFM2.5-1.2B-Instruct-MLX-4bit",
+  "runtime": "mlx-lm 0.32.0, mlx 0.32.3",
+  "load_seconds": 0.41161224999814294,
+  "mlx_active_gb_after_load": 0.658503176,
+  "rss_gb_after_load": 0.872480768,
+  "template_has_thinking_switch": false,
+  "thinking": false,
+  "prefix_cache": true,
+  "sampling": "greedy (temperature 0)"
+ },
+ "memory": {
+  "mlx_peak_gb": 0.775460656,
+  "mlx_active_gb": 0.662795784,
+  "rss_gb": 0.879886336,
+  "max_rss_gb": 0.904822784
+ },
+ "timing": {
+  "requests": 20,
+  "errors": 0,
+  "seconds_p50": 0.048560083989286795,
+  "seconds_p95": 0.09586766600841656,
+  "seconds_p99": 0.11004370800219476,
+  "seconds_mean": 0.0584251021486125,
+  "first_seconds_p50": 0.04072895899298601,
+  "output_tokens_mean": 5.35,
+  "input_tokens_mean": 43.15,
+  "decode_tps_median": 616.3882849527333,
+  "prefill_tps_median": 1066.0262077484256,
+  "decisions_per_minute_back_to_back": 1026.955842496972
+ },
+ "score": {
+  "n": 20,
+  "right": 18,
+  "accuracy": 0.9,
+  "format_followed": 0.95,
+  "categories": {
+   "logic": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "instruction": {
+    "n": 2,
+    "right": 0,
+    "format": 1
+   },
+   "semantic": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "causal": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "negation": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "hypothetical": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "context": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "ambiguity": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "structured": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   },
+   "summary": {
+    "n": 2,
+    "right": 2,
+    "format": 2
+   }
+  },
+  "wrong_ids": [
+   "gd03",
+   "gd04"
+  ]
+ },
+ "wall_seconds": 2.5245141983032227,
+ "system_before": {
+  "memory_free_percent": 74,
+  "swap_used_mb": 12286.56,
+  "swapins": 1131528,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ },
+ "system_after_load": {
+  "memory_free_percent": 74,
+  "swap_used_mb": 12286.56,
+  "swapins": 1131528,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ },
+ "system_after": {
+  "memory_free_percent": 67,
+  "swap_used_mb": 12286.56,
+  "swapins": 1131528,
+  "swapouts": 2194859,
+  "cpu_speed_limit": null,
+  "thermal_warning": false,
+  "other_runs": []
+ }
+}

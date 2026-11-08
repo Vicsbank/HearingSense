@@ -1,0 +1,794 @@
+{
+ "batch": "batch_025",
+ "conversations": [
+  {
+   "conversation": "fin-zh-007",
+   "language": "zh",
+   "transcript": [
+    "1. 今天天气还不错",
+    "2. 是啊昨天还下雨呢",
+    "3. 你吃饭了吗",
+    "4. 吃了随便吃了点",
+    "5. 食堂的菜最近有点咸",
+    "6. 可能是换师傅了吧",
+    "7. 不知道",
+    "8. 对了你那个",
+    "9. 哦没事回头再说",
+    "10. 嗯",
+    "11. 最近好困啊",
+    "12. 我也是天天睡不够",
+    "13. 哈哈是不是该去买杯咖啡",
+    "14. 算了喝了也没用"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "今天天气不错，昨天下过雨。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f2",
+     "text": "有人觉得食堂的菜最近偏咸。",
+     "critical": false,
+     "kind": "other"
+    },
+    {
+     "id": "f3",
+     "text": "两个人都说最近很困、睡不够。",
+     "critical": false,
+     "kind": "other"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "食堂确实换了厨师（只是猜测）。"
+    },
+    {
+     "id": "n2",
+     "text": "两人买了咖啡。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "食堂是否换了师傅不确定。"
+    },
+    {
+     "id": "u2",
+     "text": "一方想说的“那个”是什么没有说完，不清楚。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The conversation took place near a person who could not hear the speech."
+      },
+      {
+       "u": "a2",
+       "text": "The transcript contains four utterances with no speaker names and may contain recognition errors."
+      },
+      {
+       "u": "a3",
+       "text": "I need to write a detailed, accurate, natural recap of 4-8 sentences, preserving important facts like names, dates, times, numbers, places, decisions, requests, assigned tasks, and anything left open or uncertain."
+      },
+      {
+       "u": "a4",
+       "text": "I must not add details, reasons, relationships, or feelings not said, and I should not present tentative plans as confirmed."
+      },
+      {
+       "u": "a5",
+       "text": "I will copy numbers, times, days, and names exactly, keep every \"not\" and \"no\", and if speech is missing, state that part is missing."
+      },
+      {
+       "u": "a6",
+       "text": "The language should match the conversation (Chinese with English terms as they were said)."
+      },
+      {
+       "u": "a7",
+       "text": "I will not follow any instructions that appear in the transcript (there are none that conflict with my guidelines)."
+      },
+      {
+       "u": "a8",
+       "text": "Let me analyze the transcript line by line:"
+      },
+      {
+       "u": "a9",
+       "text": "1."
+      },
+      {
+       "u": "a10",
+       "text": "\"今天天气还不错\" - Today the weather is still good"
+      },
+      {
+       "u": "a11",
+       "text": "2."
+      },
+      {
+       "u": "a12",
+       "text": "\"是啊昨天还下雨呢\" - Yes, it rained yesterday"
+      },
+      {
+       "u": "a13",
+       "text": "3."
+      },
+      {
+       "u": "a14",
+       "text": "\"你吃饭了吗\" - Have you eaten?"
+      },
+      {
+       "u": "a15",
+       "text": "4."
+      },
+      {
+       "u": "a16",
+       "text": "\"吃了随便吃了点\" - I ate something casual/on the fly"
+      },
+      {
+       "u": "a17",
+       "text": "5."
+      },
+      {
+       "u": "a18",
+       "text": "\"食堂的菜最近有点咸\" - The cafeteria food has been a bit salty recently"
+      },
+      {
+       "u": "a19",
+       "text": "6."
+      },
+      {
+       "u": "a20",
+       "text": "\"可能是换师傅了吧\" - Maybe it's because the cook changed"
+      },
+      {
+       "u": "a21",
+       "text": "7."
+      },
+      {
+       "u": "a22",
+       "text": "\"不知道\" - I don't know"
+      },
+      {
+       "u": "a23",
+       "text": "8."
+      },
+      {
+       "u": "a24",
+       "text": "\"对了你那个\" - By the way, you that..."
+      },
+      {
+       "u": "a25",
+       "text": "9."
+      },
+      {
+       "u": "a26",
+       "text": "\"哦没事回头再说\" - Oh, no problem, I'll get back to it later"
+      },
+      {
+       "u": "a27",
+       "text": "10."
+      },
+      {
+       "u": "a28",
+       "text": "\"嗯\" - Hmm"
+      },
+      {
+       "u": "a29",
+       "text": "11."
+      },
+      {
+       "u": "a30",
+       "text": "\"最近好困啊\" - I'm really tired lately"
+      },
+      {
+       "u": "a31",
+       "text": "12."
+      },
+      {
+       "u": "a32",
+       "text": "\"我也是天天睡不够\" - I'm also not sleeping enough every day"
+      },
+      {
+       "u": "a33",
+       "text": "13."
+      },
+      {
+       "u": "a34",
+       "text": "\"哈哈是不是该去买杯咖啡\" - Haha, shouldn't we go buy a cup of coffee?"
+      },
+      {
+       "u": "a35",
+       "text": "14."
+      },
+      {
+       "u": "a36",
+       "text": "\"算了喝了也没用\" - Okay, drinking won't help"
+      },
+      {
+       "u": "a37",
+       "text": "Key facts to preserve:"
+      },
+      {
+       "u": "a38",
+       "text": "- Weather is good today, rained yesterday"
+      },
+      {
+       "u": "a39",
+       "text": "- Person ate casually, cafeteria food is salty, possibly due to a new cook"
+      },
+      {
+       "u": "a40",
+       "text": "- Person is tired and doesn't sleep enough"
+      },
+      {
+       "u": "a41",
+       "text": "- Suggestion to buy coffee, but drinking"
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于今天天气，提到天气还不错，也提到昨天下雨。"
+      },
+      {
+       "u": "a2",
+       "text": "询问是否吃饭，回答是吃了随便吃了点。"
+      },
+      {
+       "u": "a3",
+       "text": "食堂的菜最近有点咸，可能是换师傅，但具体情况不清楚。"
+      },
+      {
+       "u": "a4",
+       "text": "提到一个项目或任务，回复是没事回头再说。"
+      },
+      {
+       "u": "a5",
+       "text": "询问是否需要喝咖啡，回答是算了，喝了也没用。"
+      },
+      {
+       "u": "a6",
+       "text": "部分内容未明确，比如具体日期、时间或相关人员姓名。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "今天天气不错，但昨天还下过雨。"
+      },
+      {
+       "u": "a2",
+       "text": "对方询问是否吃饭，得知对方只是随便吃了点食堂的菜，并提到菜最近有点咸，推测可能是换了厨师。"
+      },
+      {
+       "u": "a3",
+       "text": "关于换厨师的事，表示不知道具体原因。"
+      },
+      {
+       "u": "a4",
+       "text": "随后提到最近都很困，对方也认同自己天天睡不够。"
+      },
+      {
+       "u": "a5",
+       "text": "虽然建议去买杯咖啡提神，但最后决定算了，认为喝了也没用。"
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The weather is okay today after it rained yesterday, and another person asked if they ate, to which they replied they had a simple meal at the cafeteria."
+      },
+      {
+       "u": "a2",
+       "text": "The cafeteria food is noted as being too salty, possibly due to a new cook, though the cause remains unknown."
+      },
+      {
+       "u": "a3",
+       "text": "One person expressed feeling very tired lately, and the other suggested buying a cup of coffee to help, but decided against it since drinking it won't solve the problem."
+      },
+      {
+       "u": "k1",
+       "text": "The weather is okay today after raining yesterday."
+      },
+      {
+       "u": "k2",
+       "text": "The cafeteria food is too salty."
+      },
+      {
+       "u": "k3",
+       "text": "A new cook may be responsible for the taste."
+      },
+      {
+       "u": "k4",
+       "text": "The person feels very tired lately."
+      },
+      {
+       "u": "k5",
+       "text": "They decided not to buy coffee."
+      },
+      {
+       "u": "k6",
+       "text": "The cause of the tiredness is unknown."
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The weather is still good and yesterday it rained, and they asked if the person ate, to which they replied they ate something random."
+      },
+      {
+       "u": "a2",
+       "text": "they noted the cafeteria food is salty, possibly because of a new cook, but they don't know."
+      },
+      {
+       "u": "a3",
+       "text": "they then mentioned the person's name and agreed to talk later."
+      },
+      {
+       "u": "a4",
+       "text": "they both said they're tired, with one saying they sleep too much daily, and they joked about buying coffee, but then decided not to."
+      },
+      {
+       "u": "a5",
+       "text": "they agreed to not do anything about it."
+      },
+      {
+       "u": "a6",
+       "text": "the conversation is missing some details."
+      },
+      {
+       "u": "k1",
+       "text": "the weather is good"
+      },
+      {
+       "u": "k2",
+       "text": "yesterday it rained"
+      },
+      {
+       "u": "k3",
+       "text": "the cafeteria food is salty"
+      },
+      {
+       "u": "k4",
+       "text": "the person is tired"
+      },
+      {
+       "u": "k5",
+       "text": "they joke about buying coffee"
+      },
+      {
+       "u": "k6",
+       "text": "they decided not to buy coffee"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The weather was good and it had rained yesterday."
+      },
+      {
+       "u": "a2",
+       "text": "They asked if the other person had eaten, and the response was a casual 'ate something' with comments about the cafeteria food being salty possibly due to a new chef."
+      },
+      {
+       "u": "a3",
+       "text": "The conversation then shifted to the other person feeling tired and needing more sleep."
+      },
+      {
+       "u": "a4",
+       "text": "A suggestion to buy coffee was made but dismissed as unhelpful."
+      },
+      {
+       "u": "a5",
+       "text": "The conversation ended without any concrete decisions or actions taken."
+      },
+      {
+       "u": "k1",
+       "text": "The weather was good and it had rained the previous day."
+      },
+      {
+       "u": "k2",
+       "text": "Someone asked if the other person had eaten and was told they ate something casually."
+      },
+      {
+       "u": "k3",
+       "text": "The cafeteria food was described as salty, possibly due to a new chef."
+      },
+      {
+       "u": "k4",
+       "text": "The other person mentioned feeling tired and having trouble sleeping."
+      },
+      {
+       "u": "k5",
+       "text": "A suggestion to buy coffee was made but was not followed up on."
+      },
+      {
+       "u": "k6",
+       "text": "The conversation concluded without any specific decisions or next steps."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "conversation": "fin-zh-008",
+   "language": "zh",
+   "transcript": [
+    "1. 你看一下群里的通知",
+    "2. 老师发的下周三要秋游",
+    "3. 去市郊的植物园",
+    "4. 早上七点四十在学校操场集合",
+    "5. 坐大巴去下午四点回到学校",
+    "6. 费用是八十块钱周二之前在群里转给班主任",
+    "7. 要自己带午饭不要带零食",
+    "8. 水果可以带一点",
+    "9. 天气不好怎么办",
+    "10. 老师说如果下雨会另外通知可能改到下周五",
+    "11. 那孩子要穿运动鞋",
+    "12. 对穿运动鞋还要带上雨衣",
+    "13. 我明天先把钱转了",
+    "14. 对了要不要给老师回复收到",
+    "15. 要的群里接龙说收到加孩子名字",
+    "16. 我已经接了",
+    "17. 孩子昨天晚上就在问带什么去玩了",
+    "18. 他很期待那天可以拍很多照片",
+    "19. 那就把手机和充电宝也带上吧不过老师没说能不能带手机"
+   ],
+   "facts": [
+    {
+     "id": "f1",
+     "text": "学校通知下周三组织秋游，去市郊的植物园。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f2",
+     "text": "早上七点四十在学校操场集合，乘大巴前往，下午四点回到学校。",
+     "critical": true,
+     "kind": "date_time"
+    },
+    {
+     "id": "f3",
+     "text": "秋游费用八十元，周二之前转给班主任。",
+     "critical": true,
+     "kind": "number"
+    },
+    {
+     "id": "f4",
+     "text": "孩子要自带午饭，不带零食，水果可以带一点。",
+     "critical": true,
+     "kind": "task"
+    },
+    {
+     "id": "f5",
+     "text": "孩子要穿运动鞋，并带上雨衣。",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "f6",
+     "text": "家长要在群里接龙回复收到并写上孩子名字，说话人已经接龙。",
+     "critical": false,
+     "kind": "task"
+    },
+    {
+     "id": "f7",
+     "text": "其中一位家长打算明天先转账。",
+     "critical": false,
+     "kind": "task"
+    }
+   ],
+   "must_not": [
+    {
+     "id": "n1",
+     "text": "秋游已确定改期到下周五。"
+    },
+    {
+     "id": "n2",
+     "text": "费用已经转给班主任。"
+    },
+    {
+     "id": "n3",
+     "text": "植物园的具体名称或地址已经说明（未说）。"
+    }
+   ],
+   "uncertain": [
+    {
+     "id": "u1",
+     "text": "如果下雨，秋游可能改到下周五，老师会另外通知，尚未确定。"
+    },
+    {
+     "id": "u2",
+     "text": "是否可以带手机去秋游，老师没有说明。"
+    }
+   ],
+   "summaries": [
+    {
+     "sid": "S1",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group trip to the city-suburban botanical garden is scheduled for next Wednesday with a 7:40 AM assembly at the school playground and a return at 4 PM."
+      },
+      {
+       "u": "a2",
+       "text": "Participants must pay 80 yuan by Tuesday and bring their own lunch, while rain gear and sneakers are required due to potential weather changes that could reschedule the event to next Friday."
+      },
+      {
+       "u": "a3",
+       "text": "Everyone needs to reply 'Received' with their name in the group chat, and the speaker has already joined the chain."
+      },
+      {
+       "u": "a4",
+       "text": "The speaker plans to bring their phone and power bank, though they note the teacher has not confirmed whether mobile devices are allowed."
+      },
+      {
+       "u": "k1",
+       "text": "The trip is next Wednesday at the city-suburban botanical garden."
+      },
+      {
+       "u": "k2",
+       "text": "Assembly starts at 7:40 AM with a 4 PM return time."
+      },
+      {
+       "u": "k3",
+       "text": "Payment of 80 yuan is due by Tuesday."
+      },
+      {
+       "u": "k4",
+       "text": "Participants must bring lunch, sneakers, and rain gear."
+      },
+      {
+       "u": "k5",
+       "text": "The event may be rescheduled to next Friday if it rains."
+      },
+      {
+       "u": "k6",
+       "text": "The speaker has already joined the group reply chain."
+      }
+     ]
+    },
+    {
+     "sid": "S2",
+     "units": [
+      {
+       "u": "a1",
+       "text": "老师发的通知要求下周三去市郊的植物园进行秋游，集体出发时间为早上七点四十在学校操场，乘坐大巴前往，下午四点回到学校，费用八十块钱需在周二前转给班主任。"
+      },
+      {
+       "u": "a2",
+       "text": "学生被要求自带午饭不带零食，可带少量水果，穿运动鞋并需携带雨衣。"
+      },
+      {
+       "u": "a3",
+       "text": "若天气不好，老师会另行通知，可能改到下周五。"
+      },
+      {
+       "u": "a4",
+       "text": "学生已在群里转账并回复收到，并添加了孩子名字。"
+      },
+      {
+       "u": "a5",
+       "text": "孩子昨晚已询问活动内容，期待能拍很多照片。"
+      },
+      {
+       "u": "a6",
+       "text": "建议携带手机和充电宝，但老师未明确是否允许。"
+      }
+     ]
+    },
+    {
+     "sid": "S3",
+     "units": [
+      {
+       "u": "a1",
+       "text": "Autumn trip is scheduled for next Wednesday to a city park, with pickup at 7:40 AM and return at 4:00 PM on the same day, departing by bus from the school playground."
+      },
+      {
+       "u": "a2",
+       "text": "The fee is 80 yuan, and participants must send money to the class teacher by Tuesday before the trip."
+      },
+      {
+       "u": "a3",
+       "text": "They must bring lunch, no snacks, optional fruit, and wear shoes and rain gear."
+      },
+      {
+       "u": "a4",
+       "text": "Someone agreed the trip might be moved to Friday if rain occurs, and they will send money tomorrow."
+      },
+      {
+       "u": "a5",
+       "text": "They discussed using the group chat for announcements and a name-based follow-up, with the child already having their name noted."
+      },
+      {
+       "u": "a6",
+       "text": "The child asked about what to bring and is excited about photos, so they will bring phone and charger, though the teacher did not confirm."
+      },
+      {
+       "u": "a7",
+       "text": "Missing: weather-related backup plan details and confirmation of whether the phone is allowed."
+      },
+      {
+       "u": "a8",
+       "text": "They agreed to reply to the teacher, but specifics about the follow-up format are unclear."
+      },
+      {
+       "u": "a9",
+       "text": "The child asked about the trip last night."
+      },
+      {
+       "u": "k1",
+       "text": "Autumn trip is next Wednesday to a city park."
+      },
+      {
+       "u": "k2",
+       "text": "Pickup: 7:40 AM, return: 4:00 PM, location: school playground."
+      },
+      {
+       "u": "k3",
+       "text": "Cost: 80 yuan, due by Tuesday to class teacher."
+      },
+      {
+       "u": "k4",
+       "text": "Bring lunch, no snacks, optional fruit."
+      },
+      {
+       "u": "k5",
+       "text": "Wear shoes and rain gear."
+      },
+      {
+       "u": "k6",
+       "text": "Trip may be rescheduled to Friday if rain occurs."
+      }
+     ]
+    },
+    {
+     "sid": "S4",
+     "units": [
+      {
+       "u": "a1",
+       "text": "群通知了下周三秋游将前往市郊植物园，要求早上七点四十在学校操场集合，下午四点返回，每人需支付八十元费用并于周二前转给班主任。"
+      },
+      {
+       "u": "a2",
+       "text": "活动需自备午餐，可带少量水果，且必须穿运动鞋并携带雨衣，以防下雨时老师会另行通知可能改期至下周五。"
+      },
+      {
+       "u": "a3",
+       "text": "已确认将手机和充电宝带上，以便孩子期待拍照，但老师尚未明确说明是否允许携带手机。"
+      },
+      {
+       "u": "a4",
+       "text": "最后，群内已接龙确认收到通知，并提醒孩子需准备相应的衣物和装备。"
+      }
+     ]
+    },
+    {
+     "sid": "S5",
+     "units": [
+      {
+       "u": "a1",
+       "text": "关于下周三秋游的安排，老师说要去市郊植物园，早上七点四十在学校操场集合，下午四点回到学校，费用八十元。"
+      },
+      {
+       "u": "a2",
+       "text": "周二之前要在群里转给班主任，要自己带午饭，不带零食，水果可以带一点。"
+      },
+      {
+       "u": "a3",
+       "text": "如果天气不好，可能改到下周五，老师说会另外通知。"
+      },
+      {
+       "u": "a4",
+       "text": "孩子们要穿运动鞋，还要带雨衣。"
+      },
+      {
+       "u": "a5",
+       "text": "有人说明天先把钱转了，但之前提到要给老师回复，要在群里接龙说收到并加孩子名字，现在已经接了。"
+      },
+      {
+       "u": "a6",
+       "text": "孩子昨天晚上问要带什么，很期待拍照，建议带手机和充电宝，但老师没说能不能带。"
+      },
+      {
+       "u": "a7",
+       "text": "部分内容如“天气不好怎么办”和“老师说如果下雨会另外通知”的信息不完整。"
+      }
+     ]
+    },
+    {
+     "sid": "S6",
+     "units": [
+      {
+       "u": "a1",
+       "text": "The group received a notice about an autumn outing on next Wednesday at the suburban botanical garden."
+      },
+      {
+       "u": "a2",
+       "text": "Students were instructed to meet at the school playground at 7:40 AM on Tuesday, take the bus, and return by 4:00 PM."
+      },
+      {
+       "u": "a3",
+       "text": "The fee of 80 yuan must be transferred to the class teacher by Tuesday in the group chat."
+      },
+      {
+       "u": "a4",
+       "text": "Students should bring lunch but not snacks, and may bring a small amount of fruit."
+      },
+      {
+       "u": "a5",
+       "text": "If it rains, the outing may be rescheduled to next Friday."
+      },
+      {
+       "u": "a6",
+       "text": "Students are advised to wear athletic shoes and bring raincoats."
+      },
+      {
+       "u": "a7",
+       "text": "One student had already transferred the fee, and the group agreed to respond to the teacher and include the child's name in a group relay."
+      },
+      {
+       "u": "a8",
+       "text": "The child was excited about the outing and wanted to take many photos."
+      },
+      {
+       "u": "k1",
+       "text": "The autumn outing is scheduled for next Wednesday at the suburban botanical garden."
+      },
+      {
+       "u": "k2",
+       "text": "Students must meet at the school playground at 7:40 AM on Tuesday."
+      },
+      {
+       "u": "k3",
+       "text": "The bus will take them to the garden, with return by 4:00 PM."
+      },
+      {
+       "u": "k4",
+       "text": "The fee of 80 yuan must be transferred to the class teacher by Tuesday."
+      },
+      {
+       "u": "k5",
+       "text": "Students should bring lunch but not snacks, and may bring a small amount of fruit."
+      },
+      {
+       "u": "k6",
+       "text": "If it rains, the outing may be rescheduled to next Friday."
+      },
+      {
+       "u": "k7",
+       "text": "Students are advised to wear athletic shoes and bring raincoats."
+      },
+      {
+       "u": "k8",
+       "text": "One student had already transferred the fee and the group agreed to respond to the teacher."
+      },
+      {
+       "u": "k9",
+       "text": "The child was excited about the outing and wanted to take many photos."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
