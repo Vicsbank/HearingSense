@@ -5,8 +5,11 @@ import SwiftUI
 struct HearingSenseApp: App {
     @State private var controller = ListeningController.shared
     #if DEBUG
-    @State private var exporter: DebugDiagnosticsExporter?
     @State private var probe: BackgroundInferenceProbe?
+    #endif
+
+    #if DEBUG
+    private static var launchAidsHandled = false
     #endif
 
     var body: some Scene {
@@ -15,20 +18,24 @@ struct HearingSenseApp: App {
                 .environment(controller)
                 #if DEBUG
                 .task {
-                    // Device-test aids; see DebugDiagnosticsExporter.
-                    if DebugDiagnosticsExporter.isExportRequested, exporter == nil {
-                        let exporter = DebugDiagnosticsExporter(controller: controller)
-                        if BackgroundInferenceProbe.isRequested {
+                    // Device-test aids; see DebugDiagnosticsExporter. The export itself belongs to
+                    // the controller (it also runs in a process started for an intent, which has
+                    // no window); what needs launch arguments is here. A window that is created a
+                    // second time must not repeat them.
+                    guard !Self.launchAidsHandled else { return }
+                    Self.launchAidsHandled = true
+                    if DebugDiagnosticsExporter.isExportRequested {
+                        let exporter = controller.startDiagnosticsExport()
+                        if BackgroundInferenceProbe.isRequested, !DeviceTestMode.configuration.prohibitsModelInference {
                             let probe = BackgroundInferenceProbe()
                             controller.attachExperimentConsumer(probe)
                             exporter.extraHeartbeat = { probe.heartbeat() }
                             exporter.extraReport = { probe.reportText() }
                             self.probe = probe
                         }
-                        exporter.start()
-                        self.exporter = exporter
-                        // The stop of a timed test is in the file the moment it happens.
-                        controller.onTimeLimitStop = { [exporter] in exporter.writeNow() }
+                    }
+                    if DeviceTestSafetyCheck.isRequested {
+                        await DeviceTestSafetyCheck(controller: controller).run()
                     }
                     // Armed before listening starts, and whether or not it starts: the limit
                     // belongs to the launch (see ListeningController.limitListening).
@@ -43,10 +50,19 @@ struct HearingSenseApp: App {
                         await Window7SelfTest(controller: controller).run()
                     }
                     // Presentation check without a microphone; see LiveActivityController.
-                    if let scene = LiveActivityController.requestedDemo {
+                    if let scene = LiveActivityController.requestedDemo, controller.session.isOn {
+                        // Into the open (synthetic) session, like real events.
+                        controller.playTestScene(scene, keyAt: LiveActivityController.requestedDemoKeyTime,
+                                                 afterBackground: LiveActivityController.demoStartsAfterBackground)
+                    } else if let scene = LiveActivityController.requestedDemo {
                         controller.liveActivity.runDemo(scene, attention: controller.attention,
                                                         keyAt: LiveActivityController.requestedDemoKeyTime,
                                                         afterBackground: LiveActivityController.demoStartsAfterBackground)
+                    }
+                    // Layout check of the island's conversation states, with a sample text:
+                    // `--hs-island-conversation summarizing|ready|following|notice`.
+                    if let sample = LiveActivityController.requestedConversationSample, controller.session.isOn {
+                        controller.liveActivity.receive(conversation: sample)
                     }
                 }
                 #endif

@@ -202,7 +202,8 @@ private func said(_ text: String, _ start: TimeInterval, _ end: TimeInterval) ->
                                summary: "Someone said the report is due next Wednesday and not Monday. "
                                    + "And the teacher said it has to be at least six pages. Fine, then let's split it, three pages each.",
                                keyPoints: ["The report is due next Wednesday.", "One more thing, the report is due next Wednesday, not Monday."])
-        let result = RecapValidator().validate(draft, transcript: spoken.joined(separator: "\n"))
+        // The rule of Window 7, with short copies switched off (the default keeps them: `ShortCopyTests`).
+        let result = RecapValidator(keptCopyMaximumWords: 0).validate(draft, transcript: spoken.joined(separator: "\n"))
         #expect(result.summary == "Someone said the report is due next Wednesday and not Monday.")
         #expect(result.keyPoints == ["The report is due next Wednesday."])
         #expect(result.corrections.filter { $0 == "copied_from_transcript" }.count == 3)
@@ -225,10 +226,14 @@ private func said(_ text: String, _ start: TimeInterval, _ end: TimeInterval) ->
         let previous = ConversationRecap(title: "Chemistry project", summary: earlier, source: .languageModel, coveredTo: at(10))
         let copying = ScriptedSummarizer(update: RecapDraft(title: "Chemistry project",
                                                             summary: earlier + " " + spoken.joined(separator: " "), keyPoints: []))
-        let engine = ConversationRecapEngine(summarizer: copying)
         let new = spoken.enumerated().map { said($0.element, 20 + Double($0.offset) * 5, 23 + Double($0.offset) * 5) }
+        // Short copies off (Window 7): nothing is added.
+        let strict = ConversationRecapEngine(summarizer: copying, validator: RecapValidator(keptCopyMaximumWords: 0))
+        #expect(await strict.update(previous, earlierTranscript: "we meet on saturday at ten in room 204", new: new) == nil)
+        // Short copies on (2026-10-12): three spoken sentences in a row are never all kept.
+        let engine = ConversationRecapEngine(summarizer: copying)
         let updated = await engine.update(previous, earlierTranscript: "we meet on saturday at ten in room 204", new: new)
-        #expect(updated == nil)
+        #expect(spoken.filter { (updated?.summary ?? "").contains($0) }.count <= 1)
 
         // The same new speech, restated: the update is kept and holds no utterance word for word.
         let restating = ScriptedSummarizer(update: RecapDraft(

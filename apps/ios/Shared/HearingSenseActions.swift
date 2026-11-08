@@ -38,6 +38,23 @@ enum HearingSenseActionCenter {
 enum HearingSenseLink {
     static let conversation = URL(string: "hearingsense://conversation")!
     static let home = URL(string: "hearingsense://home")!
+
+    /// The page of one saved summary. An identifier only: no text of the summary is in the link.
+    static func summary(_ id: UUID) -> URL {
+        URL(string: "hearingsense://summary/\(id.uuidString)")!
+    }
+
+    /// The saved summary a link names, if it is such a link.
+    static func summaryID(in url: URL) -> UUID? {
+        guard url.scheme == "hearingsense", url.host() == "summary" else { return nil }
+        return UUID(uuidString: url.lastPathComponent)
+    }
+
+    /// Where a touch on the island (outside its buttons) leads: the page of the summary it
+    /// shows, otherwise the first screen.
+    static func destination(for content: IslandContent) -> URL {
+        content.conversation?.recordID.map(summary) ?? home
+    }
 }
 
 struct SummarizeConversationIntent: LiveActivityIntent {
@@ -73,75 +90,112 @@ struct StopConversationIntent: LiveActivityIntent {
     }
 }
 
-/// The controls of the expanded Dynamic Island, chosen by what the content says:
+/// The two buttons along the bottom of the expanded Dynamic Island, in every state:
 ///
-/// | state | controls |
-/// |---|---|
-/// | listening, nothing asked | Summarize |
-/// | summary being written | (a line of text, no control) |
-/// | summary ready | Continue · Open |
-/// | following a conversation | Stop · Open |
-/// | paused, not updating | none |
+/// | state | left | right |
+/// |---|---|---|
+/// | listening, summary ready | Summary | Continue |
+/// | summary being written | Summary (a progress bar above) | Continue |
+/// | following a conversation | Summary | Stop |
+/// | paused, not updating | none | none |
 ///
-/// Touching and holding the island only reveals these; nothing is summarized until the user
-/// presses Summarize.
+/// - Summary writes a summary of the last two minutes, or brings a followed one up to date.
+/// - Continue keeps following the conversation (a summary is written first when there is none).
+/// - Stop ends the following; the summary is finished and saved, listening for sounds goes on.
+///
+/// Equal weight, one row, one height. Each runs its own App Intent; a touch anywhere else on
+/// the island opens the app (`HearingSenseLink.destination`). Touching and holding the island
+/// only reveals them; nothing is summarized until the user presses one.
 struct IslandControls: View {
     let content: IslandContent
     var isStale = false
+
+    /// How long the bar takes to fill. A summary is usually written in less; when it takes
+    /// longer the bar stays full until the state changes.
+    private static let expectedSummarySeconds: TimeInterval = 20
 
     var body: some View {
         if isStale || content.mode == .paused {
             EmptyView()
         } else {
-            HStack(spacing: 8) {
-                switch content.conversation?.phase {
-                case nil, .notice:
-                    Button(intent: SummarizeConversationIntent()) {
-                        control("Summarize last 2 min", systemImage: "text.bubble")
+            VStack(spacing: IslandMetrics.margin) {
+                if let conversation = content.conversation, conversation.phase == .summarizing {
+                    // Runs by itself, without updates from the app.
+                    ProgressView(timerInterval: conversation.since ... conversation.since.addingTimeInterval(Self.expectedSummarySeconds),
+                                 countsDown: false) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        EmptyView()
                     }
+                    .progressViewStyle(.linear)
                     .tint(IslandStyle.conversationTint)
-                    .accessibilityHint("Writes a summary of what was transcribed in the last two minutes.")
-                case .summarizing:
-                    Label("Writing the summary…", systemImage: "ellipsis.bubble")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity)
-                case .summaryReady:
-                    Button(intent: ContinueConversationIntent()) {
-                        control("Continue", systemImage: "captions.bubble")
-                    }
-                    .tint(IslandStyle.conversationTint)
-                    .accessibilityHint("Keeps following the conversation: captions and a growing summary.")
-                    openLink
-                case .following:
-                    Button(intent: StopConversationIntent()) {
-                        control("Stop", systemImage: "stop.circle")
-                    }
-                    .tint(.orange)
-                    .accessibilityHint("Stops following the conversation. Hearing Sense keeps listening for sounds.")
-                    openLink
+                    .accessibilityLabel("Writing the summary")
                 }
+                HStack(spacing: IslandMetrics.margin) {
+                    Button(intent: SummarizeConversationIntent()) {
+                        pill("Summary", systemImage: "text.bubble.fill", tint: IslandStyle.conversationTint)
+                    }
+                    .accessibilityHint("Summarizes what was transcribed in the last two minutes.")
+                    if content.conversation?.phase == .following {
+                        Button(intent: StopConversationIntent()) {
+                            pill("Stop", systemImage: "stop.fill", tint: .orange)
+                        }
+                        .accessibilityHint("Stops following the conversation. Hearing Sense keeps listening for sounds.")
+                    } else {
+                        Button(intent: ContinueConversationIntent()) {
+                            pill("Continue", systemImage: "captions.bubble.fill", tint: IslandStyle.conversationTint)
+                        }
+                        .accessibilityHint("Keeps following the conversation: captions and a growing summary.")
+                    }
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
         }
     }
 
-    private var openLink: some View {
-        Link(destination: HearingSenseLink.conversation) {
-            control("Open", systemImage: "arrow.up.forward.app")
-        }
-        .padding(.vertical, 5)
-        .background(.white.opacity(0.12), in: Capsule())
-        .foregroundStyle(.white)
-        .accessibilityHint("Opens the summary in Hearing Sense.")
-    }
-
-    private func control(_ title: String, systemImage: String) -> some View {
+    private func pill(_ title: String, systemImage: String, tint: Color) -> some View {
         Label(title, systemImage: systemImage)
-            .font(.caption.weight(.semibold))
-            .lineLimit(1)
-            .minimumScaleFactor(0.8)
+            .labelStyle(IslandControlLabelStyle())
+            .dynamicTypeSize(...IslandMetrics.largestTextSize)
             .frame(maxWidth: .infinity)
+            .frame(height: IslandMetrics.controlHeight)
+            .foregroundStyle(tint)
+            .background(tint.opacity(0.24), in: Capsule())
+    }
+}
+
+/// The trailing region of the expanded Dynamic Island: the session timer. In the summary layout
+/// it is part of the small header beside the camera.
+struct IslandTrailingControl: View {
+    let content: IslandContent
+    let sessionStart: Date
+    var isStale = false
+
+    var body: some View {
+        if !isStale, content.summaryConversation != nil {
+            Text(sessionStart, style: .timer)
+                .font(.footnote.weight(.medium).monospacedDigit())
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.trailing)
+                .dynamicTypeSize(...IslandMetrics.largestTextSize)
+                .frame(maxWidth: 52, alignment: .trailing)
+                .frame(height: IslandMetrics.headerHeight)
+                .padding(.trailing, IslandMetrics.margin)
+                .accessibilityHidden(true)
+        } else {
+            IslandExpandedTrailing(content, sessionStart: sessionStart)
+        }
+    }
+}
+
+/// Icon and title of a control, with one spacing and one weight for all of them.
+private struct IslandControlLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 6) {
+            configuration.icon.font(.footnote.weight(.semibold))
+            configuration.title.font(.subheadline.weight(.semibold))
+        }
+        .lineLimit(1)
+        .minimumScaleFactor(0.85)
     }
 }

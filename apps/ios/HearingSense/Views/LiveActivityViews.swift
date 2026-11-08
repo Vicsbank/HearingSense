@@ -92,7 +92,9 @@ struct IslandExpandedPreview: View {
             HStack(alignment: .center, spacing: 10) {
                 IslandExpandedLeading(content)
                 IslandExpandedCenter(content)
-                IslandExpandedTrailing(content, sessionStart: sessionStart)
+                // The summary layout has no centre text: its header is label … control.
+                if content.summaryConversation != nil { Spacer(minLength: 0) }
+                IslandTrailingControl(content: content, sessionStart: sessionStart)
             }
             IslandExpandedBottom(content) { IslandControls(content: content) }
         }

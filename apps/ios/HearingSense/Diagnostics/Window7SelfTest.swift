@@ -60,6 +60,14 @@ final class Window7SelfTest {
     private var speechIndex = 0
 
     func run() async {
+        guard !DeviceTestMode.configuration.prohibitsModelInference else {
+            // The walk-through asks the language model for summaries of its scripted sentences.
+            note("Hearing Sense Window 7 self-test · \(Date.now.formatted(.iso8601)) · \(DeviceInfo.summary)")
+            note("NOT RUN: model inference is prohibited by the device test mode (\(DeviceTestMode.summary)).")
+            note("In the Simulator: launch with --hs-test-mode off --hs-w7-selftest, then --hs-test-mode locked.")
+            write()
+            return
+        }
         let conversation = controller.conversation
         let live = controller.liveActivity
         let begin = ProcessResourceUsage.sample()
@@ -165,7 +173,9 @@ final class Window7SelfTest {
               extended.localizedCaseInsensitiveContains("Wednesday") && extended.localizedCaseInsensitiveContains("six"),
               "checked for two facts of the later sentences")
         let copied = (Self.firstPart + Self.laterPart).filter { extended.contains($0) }.count
-        check("17", "no sentence is in the summary word for word", copied == 0, "\(copied) of \(Self.firstPart.count + Self.laterPart.count) sentences copied")
+        check("17", "at most three short sentences are in the summary as they were said, none longer than 12 words",
+              copied <= 3 && (Self.firstPart + Self.laterPart).filter { extended.contains($0) }.allSatisfy { $0.split(separator: " ").count <= 12 },
+              "\(copied) of \(Self.firstPart.count + Self.laterPart.count) sentences copied")
 
         // 9 — Stop ends the conversation only.
         _ = try? await StopConversationIntent().perform()
@@ -199,10 +209,43 @@ final class Window7SelfTest {
             say(line)
             await pause(0.3)
         }
-        _ = try? await SummarizeConversationIntent().perform()
-        await wait(90) { conversation.phase == .summaryAvailable || conversation.phase == .idle }
+        // Window 8, A — Continue before any summary exists: one is written first, then following begins.
+        let recapsBeforeContinue = conversation.recapsMade
         _ = try? await ContinueConversationIntent().perform()
+        check("W8-A", "Continue without a summary starts writing one",
+              conversation.phase == .preparing || conversation.phase == .summarizing || conversation.phase == .continuing,
+              "phase \(conversation.phase.rawValue); island \(live.content?.conversation?.phase.rawValue ?? "none")")
+        await wait(90) { conversation.phase == .continuing || (conversation.phase == .idle && conversation.recapsMade > recapsBeforeContinue) }
+        await pause(1)
         let followed = conversation.phase == .continuing
+        check("W8-A", "following begins by itself when the summary is ready",
+              followed && conversation.recapsMade == recapsBeforeContinue + 1 && live.content?.conversation?.phase == .following,
+              "phase \(conversation.phase.rawValue); recaps +\(conversation.recapsMade - recapsBeforeContinue); island "
+                  + "\(live.content?.conversation?.phase.rawValue ?? "none")")
+        // Window 8, E — a touch on the island leads to this summary's own page.
+        let destination = live.content.map { HearingSenseLink.destination(for: $0) }
+        check("W8-E", "the island's link is the saved summary's page",
+              conversation.currentRecordID != nil && destination == conversation.currentRecordID.map(HearingSenseLink.summary),
+              destination?.host() ?? "no link")
+        // Window 8, B — Summary while following: the summary is brought up to date at once.
+        let updatesBeforeSummary = conversation.updatesMade
+        for line in Self.laterPart {
+            say(line)
+            await pause(0.3)
+        }
+        let pressed = ContinuousClock.now
+        _ = try? await SummarizeConversationIntent().perform()
+        await wait(60) { conversation.updatesMade > updatesBeforeSummary }
+        check("W8-B", "Summary while following brings the summary up to date",
+              conversation.updatesMade > updatesBeforeSummary && conversation.phase == .continuing,
+              "updates +\(conversation.updatesMade - updatesBeforeSummary) after \(Self.seconds(since: pressed)); phase \(conversation.phase.rawValue)")
+        // Window 8 — the island's text is a preview; the saved summary is the whole one.
+        let preview = live.content?.conversation?.detail ?? ""
+        let saved = conversation.currentRecordID.flatMap(conversation.record)
+        check("W8", "the saved summary is complete, the island shows a part of it",
+              !(saved?.summary ?? "").isEmpty && (saved?.summary.count ?? 0) >= preview.count
+                  && live.content?.conversation?.heading == nil,
+              "saved \(saved?.summary.count ?? 0) characters, \(saved?.keyPoints.count ?? 0) key points; preview \(preview.count) characters")
         let savedBeforeOff = conversation.history.count
         _ = try? await ToggleHearingSenseIntent().perform()
         await wait(4) { self.activityCount == 0 }

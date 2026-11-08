@@ -20,7 +20,14 @@ actor ScriptedSummarizer: ConversationSummarizing {
     var restatements: [String: String] = [:]
     private(set) var restateRequests: [String] = []
 
-    init(recap: RecapDraft? = nil, update: RecapDraft? = nil, available: Bool = true, restatements: [String: String] = [:]) {
+    /// Window 8: statements the scripted model does not find in the transcript; nil: it cannot judge.
+    var ungrounded: Set<String>?
+    private(set) var evidenceRequests = 0
+
+    init(recap: RecapDraft? = nil, update: RecapDraft? = nil, available: Bool = true, restatements: [String: String] = [:],
+         ungrounded: Set<String>? = nil)
+    {
+        self.ungrounded = ungrounded
         recapDraft = recap
         updateDraft = update
         self.available = available
@@ -31,6 +38,12 @@ actor ScriptedSummarizer: ConversationSummarizing {
         restateRequests.append(statement)
         guard let answer = restatements[statement] else { throw RecapError.restatementUnsupported }
         return answer
+    }
+
+    func evidence(for statements: [String], in lines: [String]) async throws -> [StatementEvidence]? {
+        guard let ungrounded else { return nil }
+        evidenceRequests += 1
+        return statements.map { ungrounded.contains($0) ? StatementEvidence(lines: [], isSupported: false) : StatementEvidence(lines: [0], isSupported: true) }
     }
 
     func isAvailable() async -> Bool { available }

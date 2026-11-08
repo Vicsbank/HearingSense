@@ -208,7 +208,17 @@ public struct ConversationSessionMachine: Sendable {
 
         case .summarizeRequested:
             switch phase {
-            case .continuing, .preparing, .summarizing:
+            case .continuing:
+                // "Summary" while a conversation is followed: bring the growing summary up to
+                // date now instead of waiting for a pause. Nothing new was said: nothing to do.
+                guard !updateInFlight, pendingWords > 0, let first = firstPending else { return [] }
+                let since = coveredTo ?? first
+                updateInFlight = true
+                lastUpdateRequest = now
+                pendingWords = 0
+                firstPending = nil
+                return [.requestUpdate(since: since)]
+            case .preparing, .summarizing:
                 return []
             case .idle, .summaryAvailable:
                 return beginRecap(at: now)

@@ -5,6 +5,8 @@ import SwiftUI
 struct StatusCard: View {
     let state: ListeningState
     let format: CaptureFormat?
+    /// Debug builds: the session runs without the microphone (device test mode, synthetic capture).
+    var isSynthetic = false
 
     var body: some View {
         Card {
@@ -19,7 +21,14 @@ struct StatusCard: View {
                         Text(state.title)
                             .font(.headline)
                         Spacer(minLength: 8)
-                        if state.isCapturing {
+                        if state.isCapturing, isSynthetic {
+                            Text("TEST · MIC OFF")
+                                .font(.caption.weight(.bold))
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .overlay(Capsule().stroke(.secondary))
+                                .accessibilityLabel("Test session, microphone off")
+                        } else if state.isCapturing {
                             Text("MIC ON")
                                 .font(.caption.weight(.bold))
                                 .padding(.horizontal, 8)
@@ -29,7 +38,9 @@ struct StatusCard: View {
                                 .accessibilityLabel("Microphone on")
                         }
                     }
-                    Text(state.detail)
+                    Text(state.isCapturing && isSynthetic
+                        ? "Test session without the microphone: the audio session is not active and nothing is captured."
+                        : state.detail)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)

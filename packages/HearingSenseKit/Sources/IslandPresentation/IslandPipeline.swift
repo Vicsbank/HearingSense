@@ -317,7 +317,7 @@ public struct IslandPipeline: Sendable {
             sceneTitle = title
         case .speechTextCleared:
             recalled = nil
-            conversation?.detail = nil
+            conversation = conversation?.withoutSpeechText
             for (id, item) in items where item.intent.hasPrivateDetail { items[id] = nil }
         case .tick:
             break
@@ -542,7 +542,7 @@ public struct IslandPipeline: Sendable {
         var content = composeChannels(at: now)
         guard content.mode != .paused else { return content }
         if var conversation {
-            if !showsSpeechText { conversation.detail = nil }
+            if !showsSpeechText { conversation = conversation.withoutSpeechText }
             conversation.detail = conversation.detail.map { text in
                 text.count <= policy.maximumSummaryLength ? text : String(text.prefix(policy.maximumSummaryLength - 1)) + "…"
             }

@@ -18,7 +18,8 @@ public struct BufferedUtterance: Identifiable, Hashable, Sendable {
         self.isLowQuality = isLowQuality
     }
 
-    public var wordCount: Int { text.split(whereSeparator: \.isWhitespace).count }
+    /// Words as `RecapText.words` counts them: a sentence without spaces (Chinese) is not one word.
+    public var wordCount: Int { RecapText.words(in: text).count }
 }
 
 /// A stretch of time inside the excerpt for which no speech text exists although speech was
