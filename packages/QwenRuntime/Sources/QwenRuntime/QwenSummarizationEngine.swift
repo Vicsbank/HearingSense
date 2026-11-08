@@ -36,6 +36,7 @@ public actor QwenSummarizationEngine: SummarizationEngine {
     private var container: ModelContainer?
     private var loading: Task<ModelContainer, Error>?
     private var loadFailure: String?
+    private let execution = SummaryExecutionGate()
     public private(set) var lastMetrics = Metrics()
     public private(set) var loadSeconds: TimeInterval?
 
@@ -73,6 +74,10 @@ public actor QwenSummarizationEngine: SummarizationEngine {
     }
 
     public func releaseResources() async {
+        try? await execution.perform { await self.releaseIdleResources() }
+    }
+
+    private func releaseIdleResources() {
         loading?.cancel()
         loading = nil
         container = nil
@@ -80,7 +85,7 @@ public actor QwenSummarizationEngine: SummarizationEngine {
     }
 
     public func prewarm() async {
-        _ = try? await ensureLoaded()
+        _ = try? await execution.perform { try await self.ensureLoaded() }
     }
 
     /// Loads the weights (once). Concurrent callers share one load.
@@ -101,6 +106,7 @@ public actor QwenSummarizationEngine: SummarizationEngine {
         }
         loading = task
         let started = Date()
+        SummaryRequest.current?.record(.load)
         do {
             let loaded = try await task.value
             try Task.checkCancellation()
@@ -108,6 +114,7 @@ public actor QwenSummarizationEngine: SummarizationEngine {
             container = loaded
             loading = nil
             loadSeconds = Date().timeIntervalSince(started)
+            SummaryRequest.current?.record(.load, .completed, duration: loadSeconds ?? 0)
             return loaded
         } catch {
             loading = nil
@@ -170,8 +177,18 @@ public actor QwenSummarizationEngine: SummarizationEngine {
     // MARK: Generation
 
     private func generate(instructions: String, prompt: String, maxTokens: Int) async throws -> String {
+        SummaryRequest.current?.record(.queue)
+        return try await execution.perform {
+            try await self.generateSerial(instructions: instructions, prompt: prompt, maxTokens: maxTokens)
+        }
+    }
+
+    private func generateSerial(instructions: String, prompt: String, maxTokens: Int) async throws -> String {
         let container = try await ensureLoaded()
+        try Task.checkCancellation()
+        try SummaryRequest.current?.check()
         let started = Date()
+        SummaryRequest.current?.record(.generation)
         var parameters = GenerateParameters(maxTokens: maxTokens, temperature: 0)
         #if targetEnvironment(simulator)
         // Bound a CPU prefill forward so cancellation is checked between smaller chunks.
@@ -183,11 +200,17 @@ public actor QwenSummarizationEngine: SummarizationEngine {
             additionalContext: ["enable_thinking": false])
         var text = ""
         var metrics = Metrics(loadSeconds: loadSeconds ?? 0)
+        var firstOutput = true
         do {
             for try await event in session.streamDetails(to: prompt) {
                 try Task.checkCancellation()
                 switch event {
-                case .chunk(let piece): text += piece
+                case .chunk(let piece):
+                    if firstOutput {
+                        firstOutput = false
+                        SummaryRequest.current?.record(.firstOutput, .completed, duration: Date().timeIntervalSince(started))
+                    }
+                    text += piece
                 case .info(let info):
                     metrics.promptTokens = info.promptTokenCount
                     metrics.generatedTokens = info.generationTokenCount
@@ -197,12 +220,19 @@ public actor QwenSummarizationEngine: SummarizationEngine {
                 }
             }
         } catch is CancellationError {
+            await session.synchronize()
+            SummaryRequest.current?.record(.cleanup, .completed)
             throw CancellationError()
         } catch {
+            await session.synchronize()
             // The kind only: errors can quote the prompt, which holds the transcript.
             throw RecapError.modelFailure("qwen_generation_" + String(describing: type(of: error)))
         }
+        await session.synchronize()
+        try Task.checkCancellation()
+        try SummaryRequest.current?.check()
         metrics.totalSeconds = Date().timeIntervalSince(started)
+        SummaryRequest.current?.record(.generation, .completed, duration: metrics.totalSeconds)
         metrics.activeBytes = MLX.Memory.activeMemory
         metrics.peakBytes = MLX.Memory.peakMemory
         lastMetrics = metrics

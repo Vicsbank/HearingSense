@@ -27,26 +27,30 @@ struct HearingSenseLiveActivity: Widget {
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    // The centre region lies below the camera; the icon and the timer are moved
-                    // down to its row, so that the three share one centre line.
-                    // (Not in the summary layout: it has no centre region, and its header stays
-                    // beside the camera.)
-                    IslandExpandedLeading(context.state, isStale: context.isStale)
-                        .frame(maxHeight: Self.hasHeader(context) ? nil : .infinity, alignment: .bottom)
+                    if Self.hasHeader(context) {
+                        IslandSummaryHeaderControl(content: context.state, isLeading: true)
+                    } else {
+                        IslandExpandedLeading(context.state, isStale: context.isStale)
+                            .frame(maxHeight: .infinity, alignment: .bottom)
+                    }
                 }
                 // Priority: the control beside the camera (Open, Stop) keeps its full width; a long
                 // title in the centre is shortened instead.
                 DynamicIslandExpandedRegion(.trailing, priority: 1) {
-                    IslandTrailingControl(content: context.state, sessionStart: context.attributes.sessionStart,
-                                          isStale: context.isStale)
-                        .frame(maxHeight: Self.hasHeader(context) ? nil : .infinity, alignment: .bottom)
+                    if Self.hasHeader(context) {
+                        IslandSummaryHeaderControl(content: context.state, isLeading: false)
+                    } else {
+                        IslandTrailingControl(content: context.state, sessionStart: context.attributes.sessionStart,
+                                              isStale: context.isStale)
+                            .frame(maxHeight: .infinity, alignment: .bottom)
+                    }
                 }
                 DynamicIslandExpandedRegion(.center) {
                     IslandExpandedCenter(context.state, isStale: context.isStale)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     IslandExpandedBottom(context.state) {
-                        IslandControls(content: context.state, isStale: context.isStale)
+                        if !Self.hasHeader(context) { IslandControls(content: context.state, isStale: context.isStale) }
                     }
                 }
             } compactLeading: {
@@ -56,9 +60,8 @@ struct HearingSenseLiveActivity: Widget {
             } minimal: {
                 IslandMinimal(context.state, isStale: context.isStale)
             }
-            // The system's defaults leave more room above the header and under the buttons than
-            // beside them. With these the header sits level with the camera, and three lines
-            // of text and the buttons fit below it.
+            // Ready/following controls occupy the camera row; the bottom is text only.
+            .contentMargins(.horizontal, 12, for: .expanded)
             .contentMargins(.top, 8, for: .expanded)
             .contentMargins(.bottom, 8, for: .expanded)
             .keylineTint(context.state.mode == .attention ? IslandStyle.tint(for: context.state) : nil)

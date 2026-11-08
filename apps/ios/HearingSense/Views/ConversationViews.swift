@@ -20,7 +20,7 @@ struct ConversationCard: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                ConversationButtons(conversation: conversation) { navigation.showsConversation = true }
+                ConversationButtons(conversation: conversation) { }
 
                 if let message = conversation.unavailableMessage {
                     Label(message, systemImage: "exclamationmark.triangle")
@@ -62,6 +62,7 @@ struct ConversationCard: View {
     }
 
     private static func explanation(_ conversation: ConversationIntelligenceController, isTranscribing: Bool) -> String {
+        if conversation.storageError != nil { return "The summary has not been saved. Open the summary for details." }
         if !isTranscribing {
             return "Speech near you is shown as an icon only. Turn on “Transcribe nearby speech” to be able to ask for a summary. Speech from before it is on cannot be recovered."
         }
@@ -90,7 +91,7 @@ struct ConversationButtons: View {
             case .idle:
                 Button {
                     conversation.summarize()
-                    if conversation.phase != .idle { onSummarize() }
+                    onSummarize()
                 } label: {
                     Label("Summary", systemImage: "text.bubble").frame(maxWidth: .infinity)
                 }
@@ -141,6 +142,7 @@ struct ConversationLiveView: View {
     @AppStorage("conversation.captionSize") private var captionSize = 26.0
     @AppStorage("conversation.highContrast") private var highContrast = true
     @State private var showsTextSettings = false
+    @State private var followsCaptions = true
 
     private var foreground: Color { highContrast ? .white : .primary }
     private var background: Color { highContrast ? .black : Color(.systemBackground) }
@@ -152,18 +154,23 @@ struct ConversationLiveView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     statusLine(conversation)
-                    summarySection(conversation)
+                    if let id = conversation.summaryRequestID {
+                        Button("Read summary") { ConversationNavigation.shared.showSummary(id) }
+                    }
                     captionSection(conversation)
                     Color.clear.frame(height: 1).id("end")
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .onScrollGeometryChange(for: Bool.self) { geometry in
+                geometry.contentOffset.y + geometry.containerSize.height >= geometry.contentSize.height - 80
+            } action: { _, atBottom in followsCaptions = atBottom }
             .onChange(of: conversation.captions.count) { _, _ in
-                withAnimation { proxy.scrollTo("end", anchor: .bottom) }
+                if followsCaptions { withAnimation { proxy.scrollTo("end", anchor: .bottom) } }
             }
             .onChange(of: conversation.tentativeCaption) { _, _ in
-                proxy.scrollTo("end", anchor: .bottom)
+                if followsCaptions { proxy.scrollTo("end", anchor: .bottom) }
             }
         }
         .background(background.ignoresSafeArea())
@@ -421,21 +428,17 @@ struct ConversationRecordView: View {
                         Section("Title") { TextField("Title", text: $title) }
                         Section("Summary") { TextEditor(text: $summary).frame(minHeight: 220) }
                     } else {
-                        Section {
-                            VStack(alignment: .leading, spacing: HSSpacing.xs) {
-                                Text(record.title).font(.title2.bold())
-                                Text(record.summary).font(.body).textSelection(.enabled)
-                            }
-                            .padding(.vertical, HSSpacing.xxs)
-                        }
-                        if !record.keyPoints.isEmpty {
-                            Section("Key Points") {
-                                ForEach(record.keyPoints, id: \.self) { Text($0).textSelection(.enabled) }
-                            }
-                        }
-                        if !record.caveats.isEmpty {
-                            Section("Notes") {
-                                ForEach(record.caveats, id: \.self) { Label($0, systemImage: "info.circle") }
+                        SummarySections(title: record.title, summary: record.summary,
+                                        keyPoints: record.keyPoints, caveats: record.caveats, savedAt: record.updatedAt)
+                        if conversation.currentRecordID == id {
+                            Section {
+                                if conversation.isSummaryWorking {
+                                    HStack { ProgressView(); Text(conversation.summaryStage) }
+                                    if let started = conversation.summaryStartedAt { Text(started, style: .timer).monospacedDigit() }
+                                }
+                                if let message = conversation.unavailableMessage { Text(message).foregroundStyle(.orange) }
+                                if let message = conversation.storageError { Text(message).foregroundStyle(.orange) }
+                                ConversationButtons(conversation: conversation) { }
                             }
                         }
                         Section {

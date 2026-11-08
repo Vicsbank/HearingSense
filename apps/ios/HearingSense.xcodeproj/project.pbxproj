@@ -35,6 +35,10 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin Window9UITestProxy section */
+		4A5E2000000000000000005A = {isa = PBXContainerItemProxy; containerPortal = 4A5E10000000000000000001; proxyType = 1; remoteGlobalIDString = 4A5E10000000000000000010; remoteInfo = HearingSense; };
+/* End Window9UITestProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		4A5E1000000000000000005C /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -55,6 +59,7 @@
 		4A5E10000000000000000057 /* HearingSenseWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HearingSenseWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A5E10000000000000000058 /* HearingSenseWidgets-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HearingSenseWidgets-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+		4A5E20000000000000000004 = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HearingSenseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4A5E10000000000000000005 /* HearingSense */ = {
@@ -73,6 +78,7 @@
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
+		4A5E20000000000000000005 = {isa = PBXFileSystemSynchronizedRootGroup; path = HearingSenseUITests; sourceTree = "<group>"; };
 
 /* Begin PBXFrameworksBuildPhase section */
 		4A5E10000000000000000012 /* Frameworks */ = {
@@ -105,6 +111,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
+		4A5E20000000000000000012 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 
 /* Begin PBXGroup section */
 		4A5E10000000000000000002 = {
@@ -113,6 +120,7 @@
 				4A5E10000000000000000005 /* HearingSense */,
 				4A5E10000000000000000059 /* HearingSenseWidgets */,
 				4A5E10000000000000000080 /* Shared */,
+				4A5E20000000000000000005 /* HearingSenseUITests */,
 				4A5E10000000000000000006 /* Config */,
 				4A5E10000000000000000003 /* Products */,
 			);
@@ -123,6 +131,7 @@
 			children = (
 				4A5E10000000000000000004 /* HearingSense.app */,
 				4A5E10000000000000000057 /* HearingSenseWidgets.appex */,
+				4A5E20000000000000000004 /* HearingSenseUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -203,6 +212,18 @@
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
+		4A5E20000000000000000010 = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A5E20000000000000000023;
+			buildPhases = (4A5E20000000000000000011, 4A5E20000000000000000012, 4A5E20000000000000000013, );
+			buildRules = ();
+			dependencies = (4A5E2000000000000000005B, );
+			fileSystemSynchronizedGroups = (4A5E20000000000000000005, );
+			name = HearingSenseUITests;
+			productName = HearingSenseUITests;
+			productReference = 4A5E20000000000000000004;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 
 /* Begin PBXProject section */
 		4A5E10000000000000000001 /* Project object */ = {
@@ -238,6 +259,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				4A5E20000000000000000010 /* HearingSenseUITests */,
 				4A5E10000000000000000010 /* HearingSense */,
 				4A5E10000000000000000060 /* HearingSenseWidgets */,
 			);
@@ -260,6 +282,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+		4A5E20000000000000000013 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 
 /* Begin PBXSourcesBuildPhase section */
 		4A5E10000000000000000011 /* Sources */ = {
@@ -277,6 +300,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+		4A5E20000000000000000011 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 
 /* Begin PBXTargetDependency section */
 		4A5E1000000000000000005B /* PBXTargetDependency */ = {
@@ -285,6 +309,7 @@
 			targetProxy = 4A5E1000000000000000005A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+		4A5E2000000000000000005B = {isa = PBXTargetDependency; target = 4A5E10000000000000000010; targetProxy = 4A5E2000000000000000005A; };
 
 /* Begin XCBuildConfiguration section */
 		4A5E10000000000000000021 /* Debug */ = {
@@ -537,6 +562,8 @@
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
+		4A5E20000000000000000024 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = 86G57JQY76; GENERATE_INFOPLIST_FILE = YES; IPHONEOS_DEPLOYMENT_TARGET = 26.0; PRODUCT_BUNDLE_IDENTIFIER = org.hearingsense.HearingSenseUITests; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 6.0; TARGETED_DEVICE_FAMILY = 1; TEST_TARGET_NAME = HearingSense; }; name = Debug; };
+		4A5E20000000000000000025 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = 86G57JQY76; GENERATE_INFOPLIST_FILE = YES; IPHONEOS_DEPLOYMENT_TARGET = 26.0; PRODUCT_BUNDLE_IDENTIFIER = org.hearingsense.HearingSenseUITests; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 6.0; TARGETED_DEVICE_FAMILY = 1; TEST_TARGET_NAME = HearingSense; }; name = Release; };
 
 /* Begin XCConfigurationList section */
 		4A5E10000000000000000020 /* Build configuration list for PBXProject "HearingSense" */ = {
@@ -567,6 +594,7 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+		4A5E20000000000000000023 = {isa = XCConfigurationList; buildConfigurations = (4A5E20000000000000000024, 4A5E20000000000000000025, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 
 /* Begin XCLocalSwiftPackageReference section */
 		4A5E10000000000000000015 /* XCLocalSwiftPackageReference "../../packages/HearingSenseKit" */ = {

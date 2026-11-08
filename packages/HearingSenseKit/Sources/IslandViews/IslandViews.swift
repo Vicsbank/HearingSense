@@ -21,15 +21,14 @@ public enum IslandMetrics {
     public static let margin: CGFloat = 8
     public static let spacing: CGFloat = 8
     /// Height of a control in the bottom region.
-    public static let controlHeight: CGFloat = 32
+    public static let controlHeight: CGFloat = 44
     /// Height of the header beside the camera in the summary layout: its label and its one
     /// small control (Open, Stop).
-    public static let headerHeight: CGFloat = 24
+    public static let headerHeight: CGFloat = 20
     /// Lines of preview text under the summary's title.
     public static let previewLines = 3
-    /// Width of the preview's lines on the iPhone 18 Pro's expanded island, a little less than
-    /// measured (320), for the app's choice of sentences.
-    public static let previewWidth: CGFloat = 314
+    /// Shared width for preview selection and expanded-island rendering.
+    public static let previewWidth: CGFloat = 350
     /// The summary layout follows the user's text size up to here. Beyond it the island's fixed
     /// height would cut the text; the full summary in the app follows every size.
     public static let largestTextSize = DynamicTypeSize.xLarge
@@ -200,7 +199,7 @@ public struct IslandExpandedLeading: View {
                 IslandIcon(content)
                     .font(.footnote)
                 Text(conversation.phase == .following ? "Following" : "Summary")
-                    .font(.subheadline.weight(.semibold))
+                    .font(.caption.weight(.semibold))
                     .foregroundStyle(IslandStyle.conversationTint)
             }
             .lineLimit(1)
@@ -367,7 +366,7 @@ public struct IslandExpandedBottom<Controls: View>: View {
     }
 
     public var body: some View {
-        VStack(spacing: IslandMetrics.spacing) {
+        VStack(spacing: content.summaryConversation == nil ? IslandMetrics.spacing : 4) {
             if content.mode == .attention, content.isUncertain || content.additionalCount > 0 || content.ambientSymbolName != nil {
                 HStack(spacing: 8) {
                     if content.isUncertain {
@@ -397,6 +396,7 @@ public struct IslandExpandedBottom<Controls: View>: View {
                 Group {
                     if let preview = conversation.detail {
                         Text(preview)
+                            .accessibilityIdentifier("island.summary-preview")
                             .privacySensitive()
                             .lineLimit(IslandMetrics.previewLines)
                             .multilineTextAlignment(.leading)
@@ -411,13 +411,13 @@ public struct IslandExpandedBottom<Controls: View>: View {
                 // Body: 17 points at the default text size. No title of its own and nothing
                 // scaled down: the preview is already made to fit these lines.
                 .font(.body)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: IslandMetrics.previewWidth, alignment: .leading)
                 .dynamicTypeSize(...IslandMetrics.largestTextSize)
             }
-            controls
+            controls.padding(.horizontal, content.summaryConversation == nil ? 0 : 8)
         }
-        .padding(.horizontal, IslandMetrics.margin)
-        .padding(.bottom, IslandMetrics.margin / 2)
+        .padding(.horizontal, 4)
+        .padding(.bottom, 2)
     }
 }
 

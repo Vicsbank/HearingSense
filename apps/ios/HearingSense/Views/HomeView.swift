@@ -173,8 +173,7 @@ struct HomeView: View {
                         asksForTranscription = true
                         return
                     }
-                    if conversation.phase == .idle { conversation.summarize() }
-                    showConversation()
+                    conversation.summarize()
                 } label: {
                     buttonLabel("Summary", systemImage: "text.bubble")
                 }

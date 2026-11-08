@@ -8,7 +8,7 @@ import QwenRuntime
 enum SummarizationSetup {
     static var routingPolicy: SummarizationCoordinator.Policy {
         var policy = SummarizationCoordinator.Policy()
-        #if targetEnvironment(simulator)
+        #if DEBUG && targetEnvironment(simulator)
         // The Simulator reference backend runs on CPU; device/Mac Metal keeps 40 s.
         policy.primaryTimeout = 600
         #endif
@@ -30,6 +30,11 @@ enum SummarizationSetup {
     }
 
     static func makeCoordinator() -> SummarizationCoordinator {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--hs-w9-ui-fixture") {
+            return SummarizationCoordinator(primary: StabilityFixtureEngine(delay: 5), fallback: StabilityFixtureEngine(delay: 5))
+        }
+        #endif
         var primary: (any SummarizationEngine)?
         switch forcedEngine {
         case "apple":

@@ -104,6 +104,7 @@ final class Window9SelfTest {
         // Speech alone never summarizes; old speech is not kept.
         conversation.transcriptionProvider = { true }
         let historyBefore = conversation.history.count
+        let recapsBefore = conversation.recapsMade
         let historyIDsBefore = Set(conversation.history.map(\.id))
         say(Self.oldSentence, secondsAgo: 200)
         for line in Self.firstPart {
@@ -111,7 +112,7 @@ final class Window9SelfTest {
             await pause(0.4)
         }
         await pause(3)
-        check("6", "normal speech does not start a summary", conversation.phase == .idle && conversation.recapsMade == 0
+        check("6", "normal speech does not start a summary", conversation.phase == .idle && conversation.recapsMade == recapsBefore
             && conversation.history.count == historyBefore, "phase \(conversation.phase.rawValue), summaries \(conversation.recapsMade)")
         check("5", "only the last two minutes are buffered",
               !conversation.captions.contains { $0.text.contains("zebra") } && conversation.captions.count == Self.firstPart.count,
@@ -556,6 +557,7 @@ final class Window9SelfTest {
     private func write() {
         guard let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         try? Data(lines.joined(separator: "\n").utf8).write(to: folder.appendingPathComponent(Self.fileName), options: .atomic)
+        Window9StabilitySelfTest.save(["synthetic_only": true, "requests": controller.conversation.requestDiagnosticMetadata()], "window9-request-trace.json")
     }
 
     private static func argumentValue(_ name: String) -> String? {

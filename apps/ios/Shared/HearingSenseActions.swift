@@ -27,10 +27,15 @@ enum HearingSenseAction: String, Sendable {
 /// Where the intents hand their action to the app. Set once by the app at launch.
 @MainActor
 enum HearingSenseActionCenter {
-    static var handler: (@MainActor (HearingSenseAction) -> Void)?
+    private static var pending: HearingSenseAction?
+    static var handler: (@MainActor (HearingSenseAction) -> Void)? {
+        didSet {
+            if let pending, let handler { self.pending = nil; handler(pending) }
+        }
+    }
 
     static func perform(_ action: HearingSenseAction) {
-        handler?(action)
+        if let handler { handler(action) } else { pending = action }
     }
 }
 
@@ -60,6 +65,7 @@ enum HearingSenseLink {
 struct SummarizeConversationIntent: LiveActivityIntent {
     static let title: LocalizedStringResource = "Summarize the Last Two Minutes"
     static let isDiscoverable = false
+    static var supportedModes: IntentModes { .foreground(.immediate) }
 
     @MainActor
     func perform() async throws -> some IntentResult {
@@ -110,25 +116,18 @@ struct IslandControls: View {
     let content: IslandContent
     var isStale = false
 
-    /// How long the bar takes to fill. A summary is usually written in less; when it takes
-    /// longer the bar stays full until the state changes.
-    private static let expectedSummarySeconds: TimeInterval = 20
-
     var body: some View {
         if isStale || content.mode == .paused {
             EmptyView()
         } else {
-            VStack(spacing: IslandMetrics.margin) {
+            VStack(spacing: 4) {
                 if let conversation = content.conversation, conversation.phase == .summarizing {
-                    // Runs by itself, without updates from the app.
-                    ProgressView(timerInterval: conversation.since ... conversation.since.addingTimeInterval(Self.expectedSummarySeconds),
-                                 countsDown: false) {
-                        EmptyView()
-                    } currentValueLabel: {
-                        EmptyView()
+                    HStack {
+                        Text(conversation.title).lineLimit(1)
+                        Spacer(minLength: 4)
+                        Text(conversation.since, style: .timer).monospacedDigit()
                     }
-                    .progressViewStyle(.linear)
-                    .tint(IslandStyle.conversationTint)
+                    .font(.caption)
                     .accessibilityLabel("Writing the summary")
                 }
                 HStack(spacing: IslandMetrics.margin) {
@@ -154,6 +153,43 @@ struct IslandControls: View {
     }
 
     private func pill(_ title: String, systemImage: String, tint: Color) -> some View {
+        IslandControlPill(title: title, systemImage: systemImage, tint: tint)
+    }
+}
+
+/// Finished summaries put their controls beside the camera, leaving the bottom region for
+/// three readable preview lines within the system's 160 pt expanded-height limit.
+struct IslandSummaryHeaderControl: View {
+    let content: IslandContent
+    let isLeading: Bool
+
+    var body: some View {
+        Group {
+            if isLeading {
+                Button(intent: SummarizeConversationIntent()) {
+                    IslandControlPill(title: "Summary", systemImage: "text.bubble.fill", tint: IslandStyle.conversationTint)
+                }
+            } else if content.conversation?.phase == .following {
+                Button(intent: StopConversationIntent()) {
+                    IslandControlPill(title: "Stop", systemImage: "stop.fill", tint: .orange)
+                }
+            } else {
+                Button(intent: ContinueConversationIntent()) {
+                    IslandControlPill(title: "Continue", systemImage: "captions.bubble.fill", tint: IslandStyle.conversationTint)
+                }
+            }
+        }
+        .frame(width: 104)
+        .padding(isLeading ? .leading : .trailing, 8)
+        .buttonStyle(.plain)
+    }
+}
+
+private struct IslandControlPill: View {
+    let title: String
+    let systemImage: String
+    let tint: Color
+    var body: some View {
         Label(title, systemImage: systemImage)
             .labelStyle(IslandControlLabelStyle())
             .dynamicTypeSize(...IslandMetrics.largestTextSize)

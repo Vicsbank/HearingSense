@@ -45,6 +45,8 @@ final class ConversationIntelligenceController {
         #if DEBUG
         let arguments = ProcessInfo.processInfo.arguments
         return isDemoRequested || arguments.contains(sampleHistoryArgument)
+            || (Window9StabilitySelfTest.requested
+                && !(arguments.contains("--hs-w9-device-acceptance") && arguments.contains("--hs-w9-persist")))
             || (arguments.contains("--hs-w7-selftest") && !arguments.contains("--hs-w7-persist"))
             || (arguments.contains("--hs-w9-selftest") && !arguments.contains("--hs-w9-persist"))
             || arguments.contains("--hs-w9-runtime-probe")
@@ -65,6 +67,14 @@ final class ConversationIntelligenceController {
     private(set) var status: ConversationStatus?
     private(set) var recap: ConversationRecap?
     private(set) var currentRecordID: UUID?
+    private(set) var summaryRequestID: UUID?
+    private(set) var summaryStage = "Preparing summary…"
+    private(set) var summaryStartedAt: Date?
+    private(set) var isSummaryWorking = false
+    private(set) var acceptedRevision = 0
+    private(set) var requestRecords: [UUID: UUID] = [:]
+    private(set) var requestNotices: [UUID: String] = [:]
+    private(set) var isForeground = true
     private(set) var captions: [BufferedUtterance] = []
     private(set) var tentativeCaption: String?
     private(set) var unavailableMessage: String?
@@ -81,6 +91,9 @@ final class ConversationIntelligenceController {
     // History
     private(set) var history: [ConversationRecord] = []
     private(set) var storageError: String?
+    #if DEBUG
+    @ObservationIgnored var rejectsHistoryWritesForTesting = false
+    #endif
 
     private(set) var isSessionActive = false
     /// "Continue" was pressed while there was no summary yet: follow as soon as one is ready.
@@ -108,6 +121,13 @@ final class ConversationIntelligenceController {
     @ObservationIgnored private var statusSince = Date.now
     @ObservationIgnored private var unavailableTitle: String?
     @ObservationIgnored private var workTask: Task<Void, Never>?
+    @ObservationIgnored private var progressTask: Task<Void, Never>?
+    @ObservationIgnored private var activeRequest: SummaryRequest?
+    @ObservationIgnored private var recentRequests: [SummaryRequest] = []
+    @ObservationIgnored private var sourceRevision = 0
+    @ObservationIgnored private var resumeSummary = false
+    @ObservationIgnored private var lifecycleRevision = 0
+    @ObservationIgnored private var insertsNewRecord = false
     @ObservationIgnored private var deadlineTask: Task<Void, Never>?
     @ObservationIgnored private var lastUtteranceIndex: [SpeechEventID: Int] = [:]
     /// The words the saved recap was written from, kept only while the session is followed so
@@ -128,9 +148,7 @@ final class ConversationIntelligenceController {
         var recapPolicy = ConversationRecapEngine.Policy()
         let routingPolicy = SummarizationSetup.routingPolicy
         recapPolicy.timeout = routingPolicy.primaryTimeout + routingPolicy.fallbackTimeout + 1
-        #if targetEnvironment(simulator)
         recapPolicy.rewriteTimeout = recapPolicy.timeout
-        #endif
         recapEngine = ConversationRecapEngine(summarizer: summarizer, policy: recapPolicy, bufferPolicy: policy)
         var opened: SwiftDataConversationHistory?
         var records: [ConversationRecord] = []
@@ -184,6 +202,7 @@ final class ConversationIntelligenceController {
 
     deinit {
         workTask?.cancel()
+        progressTask?.cancel()
         deadlineTask?.cancel()
         residencyTask?.cancel()
         modelPreparationTask?.cancel()
@@ -191,6 +210,98 @@ final class ConversationIntelligenceController {
 
     func setLogger(_ logger: @escaping (DiagnosticEventLog.Kind, String) -> Void) {
         log = logger
+    }
+
+    func foregroundChanged(_ foreground: Bool) {
+        guard isForeground != foreground else { return }
+        isForeground = foreground
+        lifecycleRevision += 1
+        let revision = lifecycleRevision
+        modelPreparationTask?.cancel()
+        if !foreground {
+            resumeSummary = activeRequest?.operation == .summary && isSummaryWorking
+            activeRequest?.finish(.suspended)
+            run(machine.setForeground(false, at: .now))
+            if resumeSummary {
+                summaryStage = "Return to Hearing Sense to finish this summary."
+                if let id = summaryRequestID { requestNotices[id] = summaryStage }
+                unavailableTitle = "Summary paused"
+                unavailableMessage = summaryStage
+                status = recap == nil ? .unavailable : .summaryAvailable
+                publishIslandState()
+            }
+        }
+        Task {
+            await coordinator?.setForeground(foreground, revision: revision)
+            guard self.isForeground == foreground else { return }
+            if foreground {
+                buffer.prune(now: .now)
+                captions = buffer.utterances
+                run(machine.setForeground(true, at: .now))
+                if resumeSummary {
+                    resumeSummary = false
+                    if let request = activeRequest { finishRequest(request, outcome: .suspended) }
+                    summarize()
+                }
+                prepareModelIfUseful()
+            }
+        }
+    }
+
+    private func beginRequest(_ operation: SummaryRequest.Operation) -> SummaryRequest {
+        let request = SummaryRequest(operation: operation, sourceRevision: sourceRevision,
+                                     budget: recapEngine.policy.timeout)
+        activeRequest = request
+        summaryRequestID = request.id
+        summaryStartedAt = .now
+        summaryStage = "Preparing summary…"
+        isSummaryWorking = true
+        recentRequests.append(request)
+        if recentRequests.count > 32 {
+            let old = recentRequests.removeFirst()
+            requestRecords[old.id] = nil
+            requestNotices[old.id] = nil
+        }
+        progressTask?.cancel()
+        progressTask = Task { [weak self] in
+            while !Task.isCancelled {
+                guard let self, self.activeRequest?.id == request.id, self.isSummaryWorking else { return }
+                switch request.snapshot.stage {
+                case .queue: self.summaryStage = "Waiting for the previous operation to stop…"
+                case .load: self.summaryStage = "Loading the on-device model…"
+                case .check, .retention: self.summaryStage = "Checking the summary…"
+                case .restatement, .rewrite: self.summaryStage = "Refining the summary…"
+                case .save: self.summaryStage = "Saving the summary…"
+                default: self.summaryStage = "Writing the summary…"
+                }
+                self.publishIslandState()
+                try? await Task.sleep(for: .milliseconds(250))
+            }
+        }
+        return request
+    }
+
+    private func finishRequest(_ request: SummaryRequest, outcome: SummaryRequest.Outcome) {
+        guard activeRequest?.id == request.id else { request.record(.publication, .staleDropped); return }
+        request.finish(outcome)
+        isSummaryWorking = false
+        progressTask?.cancel()
+        workTask = nil
+        if outcome == .completed, let currentRecordID, storageError == nil {
+            acceptedRevision += 1
+            requestRecords[request.id] = currentRecordID
+            request.markSaved(recordID: currentRecordID, revision: acceptedRevision)
+            request.record(.publication, .completed)
+        }
+        if outcome == .noChange, let currentRecordID, storageError == nil {
+            requestRecords[request.id] = currentRecordID
+            request.markSaved(recordID: currentRecordID, revision: acceptedRevision)
+        }
+        if outcome != .completed {
+            requestNotices[request.id] = unavailableMessage ?? "The update could not finish. Your last saved summary is still available."
+        }
+        log(.recognition, "Summary request \(request.id.uuidString): \(outcome.rawValue), source revision \(request.sourceRevision), accepted revision \(acceptedRevision), elapsed \(Self.seconds(request.snapshot.elapsed))")
+        activeRequest = nil
     }
 
     // MARK: - Lifecycle (called by ListeningController)
@@ -248,6 +359,7 @@ final class ConversationIntelligenceController {
             if keeps {
                 buffer.append(BufferedUtterance(text: utterance.text, start: utterance.startDate, end: utterance.endDate,
                                                 isLowQuality: utterance.quality == .poor), now: now)
+                sourceRevision += 1
                 run(machine.process(.utterance(meaningfulWords: MeaningfulWords.count(in: utterance.text), end: now)))
             }
         }
@@ -273,7 +385,7 @@ final class ConversationIntelligenceController {
     /// summary, never without transcription, and the model is freed again after a quiet time
     /// (`scheduleModelRelease`).
     private func prepareModelIfUseful() {
-        guard let coordinator, !isModelResident, isTranscriptionOn, bufferedWordCount >= ConversationBufferPolicy.standard.minimumWords
+        guard isForeground, let coordinator, !isModelResident, isTranscriptionOn, bufferedWordCount >= ConversationBufferPolicy.standard.minimumWords
         else { return }
         isModelResident = true
         modelPreparationTask = Task {
@@ -315,6 +427,17 @@ final class ConversationIntelligenceController {
     func summarizationAttempts() async -> [SummarizationCoordinator.Attempt] {
         await coordinator?.lastAttempts ?? []
     }
+    func requestDiagnosticMetadata() -> [[String: Any]] {
+        recentRequests.map { request in
+            let snapshot = request.snapshot
+            return ["request_id": request.id.uuidString, "operation": request.operation.rawValue,
+                    "source_revision": request.sourceRevision, "elapsed": snapshot.elapsed,
+                    "outcome": snapshot.outcome?.rawValue ?? "pending",
+                    "saved_record_id": snapshot.savedRecordID?.uuidString ?? "none",
+                    "accepted_revision": snapshot.acceptedRevision ?? 0,
+                    "events": Window9StabilitySelfTest.trace(request)]
+        }
+    }
     #endif
 
     // MARK: - Settings
@@ -339,9 +462,24 @@ final class ConversationIntelligenceController {
     func summarize() -> String {
         unavailableMessage = nil
         unavailableTitle = nil
+        // A foreground intent can arrive just before SwiftUI reports the active scene.
+        // Defer the request itself; do not leave the machine stuck in preparing without work.
+        if !isForeground {
+            resumeSummary = true
+            let request = beginRequest(.summary)
+            unavailableMessage = "Return to Hearing Sense to finish this summary."
+            finishRequest(request, outcome: .suspended)
+            ConversationNavigation.shared.showSummary(request.id)
+            return unavailableMessage!
+        }
         transcriptionChanged(isOn: transcriptionProvider())
         let before = phase
         run(machine.process(.summarizeRequested(at: .now)))
+        if summaryRequestID == nil {
+            let request = beginRequest(.summary)
+            finishRequest(request, outcome: .unavailable)
+        }
+        if let summaryRequestID { ConversationNavigation.shared.showSummary(summaryRequestID) }
         switch (before, phase) {
         case (_, .preparing), (_, .summarizing):
             return before == phase ? "A summary is already being written." : "Writing a summary of the last two minutes."
@@ -361,7 +499,7 @@ final class ConversationIntelligenceController {
             continuesWhenReady = true
             summarize()
             // Nothing could be started (not listening, transcription off).
-            if phase == .idle { continuesWhenReady = false }
+            if phase == .idle, !resumeSummary { continuesWhenReady = false }
         case .preparing, .summarizing:
             continuesWhenReady = true
         case .continuing:
@@ -383,13 +521,39 @@ final class ConversationIntelligenceController {
         for effect in effects {
             switch effect {
             case .generateRecap:
+                guard isForeground else { resumeSummary = true; break }
+                let request = beginRequest(.summary)
+                let previousRecordID = currentRecordID
                 let excerpt = buffer.excerpt(now: .now)
-                recapTranscript = recapEngine.transcript(of: excerpt)
+                let requestTranscript = recapEngine.transcript(of: excerpt)
                 run(machine.process(.excerptReady(at: .now)))
                 workTask?.cancel()
                 workTask = Task { [recapEngine] in
-                    let recap = await recapEngine.recap(excerpt)
-                    guard !Task.isCancelled else { return }
+                    var recap: ConversationRecap
+                    do {
+                        recap = try await SummaryRequest.$current.withValue(request) {
+                            try await SummaryDeadline.run(seconds: request.remaining) { await recapEngine.recap(excerpt) }
+                        }
+                    } catch {
+                        guard self.activeRequest?.id == request.id, !Task.isCancelled else { return }
+                        self.unavailableMessage = "The summary took too long to finish. Please try again."
+                        let note = ConversationRecap(title: "No summary", summary: self.unavailableMessage!, source: .unavailable)
+                        self.run(self.machine.process(.recapReady(note, at: .now)))
+                        self.finishRequest(request, outcome: .deadlineExpired)
+                        return
+                    }
+                    guard !Task.isCancelled, self.activeRequest?.id == request.id, self.isForeground else {
+                        request.record(.publication, .staleDropped); return
+                    }
+                    // Never publish a candidate that the final persistence gate would refuse.
+                    if recap.isSummary, !recapEngine.maySave(recap, transcript: requestTranscript) {
+                        self.summariesNotSaved += 1
+                        recap = ConversationRecap(title: "No summary", summary: "The summary did not pass the final checks. Please try again.", source: .unavailable)
+                    }
+                    if recap.isSummary {
+                        self.insertsNewRecord = true
+                        self.recapTranscript = requestTranscript
+                    }
                     self.recapsMade += 1
                     self.lastRecapSeconds = recap.modelSeconds
                     self.lastEngineLabel = recap.engineLabel
@@ -398,9 +562,12 @@ final class ConversationIntelligenceController {
                     self.scheduleModelRelease()
                     self.log(.recognition, "Recap: \(recap.source.rawValue), engine \(recap.engineLabel ?? "none")"
                         + "\(recap.fallbackReason.map { " (fallback: \($0))" } ?? ""), \(excerpt.utterances.count) utterance(s), "
-                        + "\(excerpt.wordCount) words, model \(Self.seconds(recap.modelSeconds)), "
+                + "\(excerpt.wordCount) words, pipeline \(Self.seconds(recap.modelSeconds)), "
                         + "\(recap.corrections.count) correction(s)" + Self.tally(recap.corrections))
                     self.run(self.machine.process(.recapReady(recap, at: .now)))
+                    if !recap.isSummary { self.currentRecordID = previousRecordID }
+                    self.finishRequest(request, outcome: recap.isSummary ? (self.storageError == nil ? .completed : .failed)
+                        : (recap.corrections.contains("summary_failed_checks") ? .rejected : .unavailable))
                     // "Continue" was pressed before there was a summary.
                     if self.continuesWhenReady {
                         self.continuesWhenReady = false
@@ -410,19 +577,35 @@ final class ConversationIntelligenceController {
             case .cancelWork:
                 workTask?.cancel()
                 workTask = nil
+                if let request = activeRequest { finishRequest(request, outcome: .cancelled) }
             case .save(let recap, let isContinuing):
                 self.recap = recap
                 save(recap, status: isContinuing ? .continuing : .completed)
             case .requestUpdate(let since):
+                guard isForeground else { break }
                 guard let recap else {
                     run(machine.process(.updateFinished(nil, at: .now)))
                     break
                 }
                 let new = buffer.utterances(after: since)
                 let earlier = recapTranscript
+                let request = beginRequest(.update)
+                insertsNewRecord = false
                 workTask = Task { [recapEngine] in
-                    let updated = await recapEngine.update(recap, earlierTranscript: earlier, new: new)
-                    guard !Task.isCancelled else { return }
+                    var result = try? await SummaryRequest.$current.withValue(request) {
+                        try await SummaryDeadline.run(seconds: request.remaining) {
+                            await recapEngine.updateResult(recap, earlierTranscript: earlier, new: new)
+                        }
+                    }
+                    guard !Task.isCancelled, self.activeRequest?.id == request.id, self.isForeground else {
+                        request.record(.publication, .staleDropped); return
+                    }
+                    let combined = String((earlier + "\n" + new.map(\.text).joined(separator: "\n")).suffix(8000))
+                    if let candidate = result?.recap, !recapEngine.maySave(candidate, transcript: combined) {
+                        self.summariesNotSaved += 1
+                        result = .rejected
+                    }
+                    let updated = result?.recap
                     if let updated {
                         self.updatesMade += 1
                         self.lastEngineLabel = updated.engineLabel
@@ -431,10 +614,27 @@ final class ConversationIntelligenceController {
                     self.scheduleModelRelease()
                     if updated != nil {
                         // Kept only as long as the session is followed; bounded.
-                        self.recapTranscript = String((earlier + "\n" + new.map(\.text).joined(separator: "\n")).suffix(8000))
+                        self.recapTranscript = combined
                     }
                     self.log(.recognition, "Recap update: \(updated == nil ? "nothing new" : "extended") from \(new.count) utterance(s)")
-                    self.run(self.machine.process(.updateFinished(updated, at: .now)))
+                    let shouldRetry = result?.shouldRetry ?? true
+                    let effects = shouldRetry ? self.machine.updateFailed(at: .now)
+                        : self.machine.process(.updateFinished(updated, at: .now))
+                    let follows = effects.filter { if case .requestUpdate = $0 { true } else { false } }
+                    self.run(effects.filter { if case .requestUpdate = $0 { false } else { true } })
+                    if updated == nil {
+                        self.unavailableMessage = shouldRetry ? "The update could not finish. Your last saved summary is still available." : "Your summary is already up to date."
+                    } else { self.unavailableMessage = nil }
+                    let outcome: SummaryRequest.Outcome
+                    switch result {
+                    case .updated: outcome = self.storageError == nil ? .completed : .failed
+                    case .noChange, .insufficientContext: outcome = .noChange
+                    case .unavailable: outcome = .unavailable
+                    case .rejected: outcome = .rejected
+                    case nil: outcome = request.remaining <= 0 ? .deadlineExpired : .failed
+                    }
+                    self.finishRequest(request, outcome: outcome)
+                    self.run(follows)
                 }
             case .finalize:
                 if let recap { save(recap, status: .completed) }
@@ -443,17 +643,17 @@ final class ConversationIntelligenceController {
                 clearTemporaryText()
                 if isSessionActive, isTranscriptionOn { buffer.begin(at: .now) }
             case .status(let newStatus, _):
-                if newStatus != status { statusSince = .now }
-                status = newStatus
+                let displayed = newStatus == .summarySaved && storageError != nil ? ConversationStatus.summaryAvailable : newStatus
+                if displayed != status { statusSince = .now }
+                status = displayed
             case .unavailable(let reason):
                 unavailableMessage = reason.message
                 unavailableTitle = reason.title
             case .noSummary(let note):
                 // The engine's own explanation ("too little was said", "the model is not
                 // available"): shown, never saved, and never a summary.
-                recap = nil
                 unavailableMessage = note.summary
-                unavailableTitle = "No summary"
+                unavailableTitle = recap == nil ? "No summary" : "Update could not finish"
                 log(.recognition, "Summary request ended without a summary (\(note.source.rawValue))")
             }
         }
@@ -464,30 +664,47 @@ final class ConversationIntelligenceController {
     }
 
     private func save(_ recap: ConversationRecap, status: ConversationRecord.Status) {
-        guard let store else { return }
+        let began = ContinuousClock.now
+        let request = activeRequest
+        var outcome = SummaryRequest.Outcome.failed
+        request?.record(.save)
+        defer { request?.record(.save, outcome, duration: SummaryRequest.seconds(began.duration(to: .now))) }
+        guard let store else {
+            outcome = .unavailable
+            storageError = "The summary history is unavailable. This summary has not been saved."
+            return
+        }
         // The last check before anything is written, whatever path the text took: a text that
         // repeats too much of the words still held in memory is not a summary and is not stored.
         // An earlier saved version of this summary stays as it is.
         guard recapEngine.maySave(recap, transcript: recapTranscript) else {
+            outcome = .rejected
             summariesNotSaved += 1
             storageError = "This summary repeated too much of what was said word for word, so it was not saved."
             log(.error, "A summary was not saved: it failed the word-for-word check before storage")
             return
         }
         do {
+            #if DEBUG
+            if rejectsHistoryWritesForTesting { throw CocoaError(.fileWriteNoPermission) }
+            #endif
             let now = Date.now
-            if let id = currentRecordID, var record = try store.record(id) {
+            let persisted: ConversationRecord
+            if !insertsNewRecord, let id = currentRecordID, var record = try store.record(id) {
                 record.apply(recap, at: now, status: status)
-                try store.save(record)
+                persisted = record
             } else {
-                let record = ConversationRecord(recap: recap, at: now, status: status)
-                currentRecordID = record.id
-                try store.save(record)
+                persisted = ConversationRecord(recap: recap, at: now, status: status)
             }
-            history = try store.all()
+            try store.save(persisted)
+            currentRecordID = persisted.id
+            insertsNewRecord = false
+            history = (try? store.all()) ?? ([persisted] + history.filter { $0.id != persisted.id })
             storageError = nil
+            outcome = .completed
         } catch {
-            storageError = "The summary could not be saved: \(error.localizedDescription)"
+            if insertsNewRecord { currentRecordID = nil }
+            storageError = "The summary could not be saved. Please try again."
             log(.error, "Saving a summary failed: \(type(of: error))")
         }
     }
@@ -499,7 +716,7 @@ final class ConversationIntelligenceController {
         tentativeCaption = nil
         recapTranscript = ""
         lastUtteranceIndex.removeAll()
-        if phase == .idle { recap = nil }
+        // Accepted summaries outlive temporary captions; the History record is the canonical copy.
     }
 
     private func scheduleDeadline() {
@@ -545,11 +762,16 @@ final class ConversationIntelligenceController {
     }
 
     private func publishIslandState() {
+        if storageError != nil, status == .summarySaved || status == .summaryAvailable || status == .continuing || status == .stopped {
+            let state = IslandConversation(phase: .notice, title: "Summary not saved", message: "Open Hearing Sense for details.", since: statusSince)
+            if state != islandState { islandState = state; onIslandState?(state) }
+            return
+        }
         let state: IslandConversation? = switch status {
         case nil:
             nil
         case .preparingRecap, .summarizing:
-            IslandConversation(phase: .summarizing, title: "Summarizing", since: statusSince)
+            IslandConversation(phase: .summarizing, title: summaryStage, since: summaryStartedAt ?? statusSince)
         case .summarySaved, .summaryAvailable:
             IslandConversation(phase: .summaryReady, title: "Summary Ready", detail: islandPreview(newestFirst: false),
                                recordID: currentRecordID, since: statusSince)

@@ -11,6 +11,26 @@ guard let directory = QwenModelLocator.locate() else {
     print("no complete Qwen checkpoint found"); exit(2)
 }
 let engine = QwenSummarizationEngine(modelDirectory: directory)
+if arguments.contains("--stability-benchmark") {
+    let text = "The team meeting is Friday at 7:45. Bring twenty dollars for the tickets."
+    var runs: [[String: Any]] = []
+    for n in 0..<4 {
+        let request = SummaryRequest(operation: .summary, sourceRevision: n, budget: 600, checkReserve: 0)
+        let started = ContinuousClock.now
+        do {
+            let draft = try await SummaryRequest.$current.withValue(request) { try await engine.recap(transcript: text, notes: []) }
+            let m = await engine.lastMetrics
+            runs.append(["index": n, "cold": n == 0, "seconds": SummaryRequest.seconds(started.duration(to: .now)),
+                         "prompt_tokens": m.promptTokens, "generated_tokens": m.generatedTokens,
+                         "tokens_per_second": m.tokensPerSecond, "parsed": !draft.summary.isEmpty,
+                         "trace": request.snapshot.events.map { ["stage": $0.stage, "outcome": $0.outcome, "elapsed": $0.elapsed, "duration": $0.duration] }])
+        } catch { runs.append(["index": n, "status": "failed"]) }
+    }
+    let data = try JSONSerialization.data(withJSONObject: ["synthetic_only": true, "backend": QwenSummarizationEngine.executionBackend, "runs": runs], options: [.prettyPrinted, .sortedKeys])
+    print(String(decoding: data, as: UTF8.self))
+    await engine.releaseResources()
+    exit(0)
+}
 print("engine:", engine.identity.detail)
 let t0 = Date()
 await engine.prewarm()

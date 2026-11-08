@@ -182,6 +182,10 @@ public struct ConversationSessionMachine: Sendable {
     private var lastUpdateRequest: Date?
     private var updateInFlight = false
     private var coveredTo: Date?
+    private var isForeground = true
+    private var inFlightWords = 0
+    private var inFlightSince: Date?
+    private var retryAfter = Date.distantPast
 
     public init(policy: ConversationSessionPolicy = .standard) {
         self.policy = policy
@@ -191,6 +195,34 @@ public struct ConversationSessionMachine: Sendable {
     public mutating func setContextAllowed(_ isAllowed: Bool) { isContextAllowed = isAllowed }
 
     public var isUpdateInFlight: Bool { updateInFlight }
+
+    /// An unsuccessful update may retry at the normal cadence; an accepted no-change result
+    /// must not repeatedly run the model on the same speech.
+    public mutating func updateFailed(at now: Date) -> [ConversationEffect] {
+        guard phase == .continuing else { return [] }
+        updateInFlight = false
+        updatesSkipped += 1
+        pendingWords += inFlightWords
+        firstPending = [firstPending, inFlightSince].compactMap { $0 }.min()
+        retryAfter = now + policy.minimumUpdateInterval
+        return []
+    }
+
+    /// GPU work is foreground-only. Restore pending input when an update is interrupted;
+    /// the host's bounded buffer decides which of those utterances still exist on resume.
+    public mutating func setForeground(_ foreground: Bool, at now: Date) -> [ConversationEffect] {
+        isForeground = foreground
+        guard !foreground else { return updateIfDue(at: now) }
+        if updateInFlight {
+            pendingWords += inFlightWords
+            firstPending = [firstPending, inFlightSince].compactMap { $0 }.min()
+            updateInFlight = false
+        }
+        if phase == .preparing || phase == .summarizing {
+            phase = recap == nil ? .idle : .summaryAvailable
+        }
+        return [.cancelWork]
+    }
 
     @discardableResult
     public mutating func process(_ input: ConversationInput) -> [ConversationEffect] {
@@ -213,6 +245,9 @@ public struct ConversationSessionMachine: Sendable {
                 // date now instead of waiting for a pause. Nothing new was said: nothing to do.
                 guard !updateInFlight, pendingWords > 0, let first = firstPending else { return [] }
                 let since = coveredTo ?? first
+                guard isForeground else { return [] }
+                inFlightWords = pendingWords
+                inFlightSince = first
                 updateInFlight = true
                 lastUpdateRequest = now
                 pendingWords = 0
@@ -232,10 +267,9 @@ public struct ConversationSessionMachine: Sendable {
         case .recapReady(let ready, _):
             guard phase == .preparing || phase == .summarizing else { return [] }
             if policy.savesOnlySummaries, !ready.isSummary {
-                phase = .idle
-                recap = nil
+                phase = recap == nil ? .idle : .summaryAvailable
                 noticeEnds = now + policy.notice
-                return [.noSummary(ready), .status(.unavailable, until: noticeEnds)]
+                return [.noSummary(ready), .status(recap == nil ? .unavailable : .summaryAvailable, until: noticeEnds)]
             }
             phase = .summaryAvailable
             recap = ready
@@ -319,9 +353,9 @@ public struct ConversationSessionMachine: Sendable {
         var deadlines = [noticeEnds, offerEnds].compactMap(\.self)
         if phase == .continuing {
             if let since = continuedSince { deadlines.append(since + policy.maximumContinuedDuration) }
-            if pendingWords > 0, !updateInFlight {
-                if let last = lastUtterance { deadlines.append(max(last + policy.quietBeforeUpdate, earliestUpdate)) }
-                if let first = firstPending { deadlines.append(first + policy.maximumPendingAge) }
+            if isForeground, pendingWords > 0, !updateInFlight {
+                if let last = lastUtterance { deadlines.append(max(last + policy.quietBeforeUpdate, earliestUpdate, retryAfter)) }
+                if let first = firstPending { deadlines.append(max(first + policy.maximumPendingAge, retryAfter)) }
             }
         }
         return deadlines.min()
@@ -334,7 +368,6 @@ public struct ConversationSessionMachine: Sendable {
             return [.unavailable(isListening ? .contextNotAllowed : .notListening), .status(.unavailable, until: now + policy.notice)]
         }
         phase = .preparing
-        recap = nil
         offerEnds = nil
         noticeEnds = nil
         return [.status(.preparingRecap, until: nil), .generateRecap]
@@ -347,7 +380,7 @@ public struct ConversationSessionMachine: Sendable {
     /// Something new was said, the speakers paused (or the text is getting old), and the last
     /// update is long enough ago: ask for one. Nothing new: no update, however long it lasts.
     private mutating func updateIfDue(at now: Date) -> [ConversationEffect] {
-        guard phase == .continuing, !updateInFlight, pendingWords > 0, let first = firstPending else { return [] }
+        guard isForeground, now >= retryAfter, phase == .continuing, !updateInFlight, pendingWords > 0, let first = firstPending else { return [] }
         let isOld = now.timeIntervalSince(first) >= policy.maximumPendingAge
         let isPaused = lastUtterance.map { now.timeIntervalSince($0) >= policy.quietBeforeUpdate } ?? false
         guard isOld || (pendingWords >= policy.minimumNewWords && isPaused && now >= earliestUpdate) else { return [] }
@@ -359,6 +392,8 @@ public struct ConversationSessionMachine: Sendable {
             return []
         }
         let since = coveredTo ?? first
+        inFlightWords = pendingWords
+        inFlightSince = first
         updateInFlight = true
         lastUpdateRequest = now
         pendingWords = 0

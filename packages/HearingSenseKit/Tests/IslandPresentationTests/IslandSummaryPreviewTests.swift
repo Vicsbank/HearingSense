@@ -5,6 +5,15 @@ import Testing
 /// The Dynamic Island preview of a summary: whole sentences from the summary, never a fragment,
 /// and the full summary untouched.
 @Suite struct IslandSummaryPreviewTests {
+    @Test func lowercaseSentenceStopsKeepAbbreviationsDecimalsAndSupersededFraming() {
+        let text = "Ms. Wang arrives at 3 p.m. on Friday. tickets cost 2.50 dollars. Superseded: the meeting was Thursday. the meeting is Friday."
+        #expect(IslandSummaryPreview.sentences(in: text) == [
+            "Ms. Wang arrives at 3 p.m. on Friday.", "tickets cost 2.50 dollars.",
+            "Superseded: the meeting was Thursday.", "the meeting is Friday."
+        ])
+        let preview = IslandSummaryPreview.body(summary: "Superseded: the meeting was Thursday. the meeting is Friday.", keyPoints: [], limit: 40)
+        #expect(!preview.contains("Thursday") || preview.contains("Superseded:"))
+    }
     private let summary = "The conversation was about a meeting. The meeting with Ms. Wang is tomorrow at 3 p.m. in room 204. "
         + "The slides have to be finished tonight. Parking is free after five."
     private let points = ["The meeting with Ms. Wang is tomorrow at 3 p.m. in room 204.", "The slides must be finished tonight"]

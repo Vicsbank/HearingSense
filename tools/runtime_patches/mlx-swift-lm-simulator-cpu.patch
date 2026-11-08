@@ -21,3 +21,10 @@
          return gatedDeltaKernel(q: q, k: k, v: v, g: g, beta: beta, state: state, mask: mask)
      }
  
+--- a/Libraries/MLXLMCommon/ChatSession.swift
++++ b/Libraries/MLXLMCommon/ChatSession.swift
+@@ -913,3 +913,3 @@
+                 try await cache.update { cache in
+-
++                    try Task.checkCancellation()
+                     // these are all Sendable

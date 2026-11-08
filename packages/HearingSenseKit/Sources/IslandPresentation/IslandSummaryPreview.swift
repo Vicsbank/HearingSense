@@ -140,10 +140,7 @@ public enum IslandSummaryPreview {
                 current = ""
             } else if character == "." || character == "!" || character == "?" {
                 let next = index + 1 < characters.count ? characters[index + 1] : nil
-                let afterSpace = characters[(index + 1)...].first { !$0.isWhitespace }
-                let endsHere = next == nil
-                    || (next!.isWhitespace && (afterSpace == nil || afterSpace!.isUppercase || afterSpace!.isNumber
-                            || afterSpace == "“" || afterSpace == "\""))
+                let endsHere = next == nil || next!.isWhitespace
                 if endsHere, character != "." || !endsWithAbbreviation(current) {
                     sentences.append(current.trimmingCharacters(in: .whitespacesAndNewlines))
                     current = ""

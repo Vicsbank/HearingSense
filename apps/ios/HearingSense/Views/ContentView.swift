@@ -8,7 +8,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var navigation = ConversationNavigation.shared
     /// Saved summaries opened on top of History (a summary opened from the Dynamic Island).
-    @State private var historyPath: [UUID] = []
+    @State private var historyPath = NavigationPath()
 
     enum AppTab: Hashable {
         case listen, history, settings
@@ -45,7 +45,7 @@ struct ContentView: View {
         TabView(selection: $tab) {
             Tab("Listen", systemImage: "ear", value: AppTab.listen) {
                 NavigationStack {
-                    HomeView { navigation.showsConversation = true }
+                    HomeView { }
                         .navigationDestination(isPresented: $navigation.showsConversation) {
                             ConversationLiveView()
                         }
@@ -58,6 +58,13 @@ struct ContentView: View {
                 NavigationStack(path: $historyPath) {
                     ConversationHistoryView()
                         .navigationDestination(for: UUID.self) { ConversationRecordView(id: $0) }
+                        .navigationDestination(for: ConversationNavigation.Destination.self) { destination in
+                            switch destination {
+                            case .request(let id): SummaryRequestView(requestID: id)
+                            case .record(let id): ConversationRecordView(id: id)
+                            case .captions: ConversationLiveView()
+                            }
+                        }
                         #if DEBUG
                         .navigationDestination(item: debugBinding(for: .history)) { debugDestination($0) }
                         #endif
@@ -72,7 +79,16 @@ struct ContentView: View {
                 }
             }
         }
-        .onChange(of: scenePhase) { _, phase in
+        .onChange(of: navigation.revision, initial: true) { _, _ in
+            guard let destination = navigation.destination else { return }
+            switch destination {
+            case .captions: tab = .listen
+            case .request, .record:
+                tab = .history
+                historyPath = NavigationPath([destination])
+            }
+        }
+        .onChange(of: scenePhase, initial: true) { _, phase in
             controller.scenePhaseChanged(phase)
         }
         // The summary's two-minute buffer follows the transcription switch.
@@ -84,15 +100,13 @@ struct ContentView: View {
             if let id = HearingSenseLink.summaryID(in: url) {
                 // "Open" on a finished summary: that summary's own page, in History.
                 controller.conversation.refreshHistory()
-                if controller.conversation.record(id) != nil {
-                    tab = .history
-                    historyPath = [id]
-                    return
-                }
+                navigation.open(.record(id))
+                return
             }
             tab = .listen
             if url == HearingSenseLink.conversation || HearingSenseLink.summaryID(in: url) != nil {
-                navigation.showsConversation = true
+                if let requestID = controller.conversation.summaryRequestID { navigation.showSummary(requestID) }
+                else { navigation.showsConversation = true }
             }
         }
         #if DEBUG

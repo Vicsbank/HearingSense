@@ -90,6 +90,9 @@ public actor SummarizationCoordinator: ConversationSummarizing {
     private let primary: (any SummarizationEngine)?
     private let fallback: any SummarizationEngine
     private let policy: Policy
+    private let gate = SummaryExecutionGate()
+    private var isForeground = true
+    private var lifecycleRevision = 0
     private var consecutivePrimaryFailures = 0
     private var primarySkippedUntil: Date?
     public private(set) var lastAttempts: [Attempt] = []
@@ -107,17 +110,31 @@ public actor SummarizationCoordinator: ConversationSummarizing {
     }
 
     public func isAvailable() async -> Bool {
+        guard isForeground else { return false }
         if await primaryUsable() { return true }
         return await fallback.isAvailable()
     }
 
     public func prewarm() async {
-        if await primaryUsable() { await primary?.prewarm() } else { await fallback.prewarm() }
+        guard isForeground else { return }
+        let engine = await primaryUsable() ? primary : fallback
+        try? await gate.perform { await engine?.prewarm() }
+    }
+
+    public func setForeground(_ foreground: Bool, revision: Int? = nil) {
+        if let revision {
+            guard revision >= lifecycleRevision else { return }
+            lifecycleRevision = revision
+        }
+        isForeground = foreground
     }
 
     public func releaseResources() async {
-        await primary?.releaseResources()
-        await fallback.releaseResources()
+        let primary = self.primary, fallback = self.fallback
+        try? await gate.perform {
+            await primary?.releaseResources()
+            await fallback.releaseResources()
+        }
     }
 
     // MARK: ConversationSummarizing
@@ -137,17 +154,34 @@ public actor SummarizationCoordinator: ConversationSummarizing {
     public func restate(_ statement: String) async throws -> String {
         // Same engine as the draft when possible; failures here are not worth a second engine.
         let engine: any SummarizationEngine = lastEngine?.kind == .qwen ? (primary ?? fallback) : fallback
-        return try await engine.restate(statement)
+        return try await gate.perform { try await engine.restate(statement) }
+    }
+
+    public func restate(_ statement: String, using identity: SummarizationEngineIdentity?) async throws -> String {
+        let engine = engine(for: identity)
+        guard isForeground else { throw CancellationError() }
+        return try await gate.perform { try await engine.restate(statement) }
+    }
+
+    public func evidence(for statements: [String], in lines: [String], using identity: SummarizationEngineIdentity?) async throws -> [StatementEvidence]? {
+        let engine = engine(for: identity)
+        guard isForeground else { throw CancellationError() }
+        return try await gate.perform { try await engine.evidence(for: statements, in: lines) }
+    }
+
+    private func engine(for identity: SummarizationEngineIdentity?) -> any SummarizationEngine {
+        if let primary, primary.identity == identity { return primary }
+        return fallback
     }
 
     public func evidence(for statements: [String], in lines: [String]) async throws -> [StatementEvidence]? {
         let engine: any SummarizationEngine = lastEngine?.kind == .qwen ? (primary ?? fallback) : fallback
-        return try await engine.evidence(for: statements, in: lines)
+        return try await gate.perform { try await engine.evidence(for: statements, in: lines) }
     }
 
     public func isGrounded(_ statement: String, in transcript: String) async throws -> Bool? {
         let engine: any SummarizationEngine = lastEngine?.kind == .qwen ? (primary ?? fallback) : fallback
-        return try await engine.isGrounded(statement, in: transcript)
+        return try await gate.perform { try await engine.isGrounded(statement, in: transcript) }
     }
 
     // MARK: Routing
@@ -171,42 +205,72 @@ public actor SummarizationCoordinator: ConversationSummarizing {
 
     private func run(_ operation: @escaping @Sendable (any SummarizationEngine) async throws -> RecapDraft) async throws -> RecapDraft {
         try Task.checkCancellation()
-        lastAttempts = []
-        lastEngine = nil
+        guard isForeground else { throw CancellationError() }
+        var attempts: [Attempt] = []
+        defer { lastAttempts = attempts }
+        let request = SummaryRequest.current
+        request?.record(.availability)
         if let primary, await primaryUsable() {
+            let stageBudget = request?.budget(maximum: policy.primaryTimeout, reservingChecks: true) ?? policy.primaryTimeout
+            guard stageBudget > 0 else { throw CancellationError() }
             let started = Date()
             do {
-                var draft = try await Self.withTimeout(policy.primaryTimeout) { try await operation(primary) }
+                request?.record(.primary)
+                let gate = self.gate
+                request?.record(.queue)
+                var draft = try await Self.withTimeout(stageBudget) {
+                    try await gate.perform {
+                        try request?.check()
+                        request?.record(.queue, .completed, duration: Date().timeIntervalSince(started))
+                        request?.record(.primary)
+                        return try await operation(primary)
+                    }
+                }
+                try request?.check()
                 consecutivePrimaryFailures = 0
                 draft.engine = primary.identity
                 lastEngine = primary.identity
-                lastAttempts.append(Attempt(engine: primary.identity, seconds: Date().timeIntervalSince(started), failure: nil))
+                attempts.append(Attempt(engine: primary.identity, seconds: Date().timeIntervalSince(started), failure: nil))
+                request?.record(.primary, .completed, duration: Date().timeIntervalSince(started))
                 return draft
             } catch is CancellationError where Task.isCancelled {
                 throw CancellationError()
             } catch {
                 notePrimaryFailure()
-                lastAttempts.append(Attempt(engine: primary.identity, seconds: Date().timeIntervalSince(started),
+                request?.record(.primary, .failed, duration: Date().timeIntervalSince(started))
+                attempts.append(Attempt(engine: primary.identity, seconds: Date().timeIntervalSince(started),
                                             failure: Self.failureCode(error)))
             }
         } else if let primary {
-            lastAttempts.append(Attempt(engine: primary.identity, seconds: 0,
+            attempts.append(Attempt(engine: primary.identity, seconds: 0,
                                         failure: (await primary.unavailabilityReason()) ?? "skipped_after_failures"))
         }
         // The fallback.
         try Task.checkCancellation()
         let fallback = self.fallback
         guard await fallback.isAvailable() else { throw RecapError.modelFailure("no_engine_available") }
+        let fallbackBudget = request?.budget(maximum: policy.fallbackTimeout, reservingChecks: true) ?? policy.fallbackTimeout
+        guard fallbackBudget > 0 else { throw CancellationError() }
         let started = Date()
         do {
-            var draft = try await Self.withTimeout(policy.fallbackTimeout) { try await operation(fallback) }
+            guard isForeground else { throw CancellationError() }
+            request?.record(.fallback)
+            let gate = self.gate
+            var draft = try await Self.withTimeout(fallbackBudget) {
+                try await gate.perform {
+                    try request?.check()
+                    return try await operation(fallback)
+                }
+            }
+            try request?.check()
             draft.engine = fallback.identity
-            if let first = lastAttempts.first, let failure = first.failure { draft.fallbackReason = failure }
+            if let first = attempts.first, let failure = first.failure { draft.fallbackReason = failure }
             lastEngine = fallback.identity
-            lastAttempts.append(Attempt(engine: fallback.identity, seconds: Date().timeIntervalSince(started), failure: nil))
+            attempts.append(Attempt(engine: fallback.identity, seconds: Date().timeIntervalSince(started), failure: nil))
+            request?.record(.fallback, .completed, duration: Date().timeIntervalSince(started))
             return draft
         } catch {
-            lastAttempts.append(Attempt(engine: fallback.identity, seconds: Date().timeIntervalSince(started),
+            attempts.append(Attempt(engine: fallback.identity, seconds: Date().timeIntervalSince(started),
                                         failure: Self.failureCode(error)))
             throw error
         }
@@ -222,15 +286,6 @@ public actor SummarizationCoordinator: ConversationSummarizing {
     private static func withTimeout<Value: Sendable>(_ seconds: TimeInterval,
                                                      _ operation: @escaping @Sendable () async throws -> Value) async throws -> Value
     {
-        try await withThrowingTaskGroup(of: Value.self) { group in
-            group.addTask { try await operation() }
-            group.addTask {
-                try await Task.sleep(for: .seconds(seconds))
-                throw CancellationError()
-            }
-            defer { group.cancelAll() }
-            guard let first = try await group.next() else { throw CancellationError() }
-            return first
-        }
+        try await SummaryDeadline.run(seconds: seconds, operation: operation)
     }
 }

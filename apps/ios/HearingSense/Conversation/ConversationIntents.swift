@@ -6,5 +6,16 @@ import Observation
 @Observable
 final class ConversationNavigation {
     static let shared = ConversationNavigation()
-    var showsConversation = false
+    enum Destination: Hashable { case captions, request(UUID), record(UUID) }
+    private(set) var destination: Destination?
+    private(set) var revision = 0
+    func open(_ destination: Destination?) {
+        self.destination = destination
+        revision += 1 // the same destination can be requested again after the user went back
+    }
+    var showsConversation: Bool {
+        get { destination == .captions }
+        set { if newValue { open(.captions) } else if destination == .captions { open(nil) } }
+    }
+    func showSummary(_ requestID: UUID) { open(.request(requestID)) }
 }

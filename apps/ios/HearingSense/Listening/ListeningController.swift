@@ -200,6 +200,7 @@ final class ListeningController {
         log.append(.lifecycle, "App launched on \(DeviceInfo.summary). Microphone permission: \(MicrophonePermission.current.rawValue)")
         // A process launched for an intent (Action Button) starts without a scene.
         isInBackground = UIApplication.shared.applicationState == .background
+        conversation.foregroundChanged(UIApplication.shared.applicationState == .active)
         let stored = defaults.data(forKey: Self.sessionRecordKey)
             .flatMap { try? JSONDecoder().decode(ListeningSessionRecord.self, from: $0) }
         if let stored { report(.restored(stored, at: .now)) }
@@ -506,6 +507,7 @@ final class ListeningController {
     }
 
     func scenePhaseChanged(_ phase: ScenePhase) {
+        conversation.foregroundChanged(phase == .active)
         switch phase {
         case .background:
             isInBackground = true
