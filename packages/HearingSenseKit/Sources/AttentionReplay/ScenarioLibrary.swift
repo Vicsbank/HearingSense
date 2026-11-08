@@ -109,6 +109,7 @@ public enum ScenarioLibrary {
         scene.speech(at: 0, label: .optional, name: "conversation that started earlier") { speech in
             speech.partial("so then we went", at: 2)
             speech.final("so then we went to the store", at: 4, category: .casualConversation)
+            speech.summary("Went To The Store", at: 5.5, category: .casualConversation)
             speech.final("and it was closed", at: 9, category: .casualConversation)
             speech.final("so we came back home", at: 15, category: .casualConversation)
             speech.completed(at: 24)
@@ -256,6 +257,7 @@ public enum ScenarioLibrary {
         scene.sound("glass_breaking", at: 200, duration: 1, label: .important, name: "glass breaking")
         scene.speech(at: 220, label: .optional, name: "ordinary speech") { speech in
             speech.final("did you see the game last night", at: 224, category: .casualConversation)
+            speech.summary("Asking About Last Night's Game", at: 225.5, category: .casualConversation)
             speech.completed(at: 232)
         }
         scene.speech(at: 250, label: .important, name: "important speech") { speech in

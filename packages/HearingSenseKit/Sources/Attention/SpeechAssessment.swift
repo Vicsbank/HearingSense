@@ -130,7 +130,7 @@ struct SpeechAssessment: Hashable, Sendable {
     enum Tier: Int, Hashable, Comparable, Sendable {
         /// Probably lyrics, or speech attention is off.
         case irrelevant
-        /// Speech with nothing that marks it as relevant (including "Nearby Speech" without text).
+        /// Speech with nothing that marks it as relevant. Without a summary it is never presented.
         case ordinary
         /// A validated summary of a question, request, reminder or announcement.
         case informative
@@ -209,6 +209,16 @@ struct SpeechAssessment: Hashable, Sendable {
             default:
                 priority = mode == .quiet ? .low : .normal
             }
+        } else if facts.summaryText == nil {
+            // Nearby speech with nothing to read is an ordinary sound in every mode and under
+            // every speech preference: the sound itself is shown as an icon (Window 5's ambient
+            // channel) and never becomes an episode. Decided by the student after the device
+            // session of Window 5, where "Nearby Speech" without text was presented 12 times in
+            // 17 minutes; the rule first lived in the island's presentation only, so the app's
+            // Attention card showed episodes the island did not.
+            tier = .ordinary
+            priority = .ambient
+            reasons += [.ordinarySpeech, .speechWithoutSummary]
         } else {
             tier = .ordinary
             reasons.append(.ordinarySpeech)

@@ -43,10 +43,18 @@ public struct IslandContent: Hashable, Sendable, Codable {
     public var ambientSymbolName: String?
     /// `attention` only: further presented episodes behind the one shown.
     public var additionalCount: Int
+    /// `ambient` / `listening` only: the latest speech summary that was presented a short while
+    /// ago, so that a touch and hold can still read it after an ordinary sound took the icon
+    /// back. Speech-derived: only the expanded presentation draws it, never the compact, minimal
+    /// or Lock Screen ones, and it is absent while the iPhone is judged locked.
+    public var recentSummary: String?
+    /// When `recentSummary` was last presented as an episode.
+    public var recentSummaryDate: Date?
 
     public init(mode: Mode, symbolName: String, spokenLabel: String, headline: String? = nil, caption: String? = nil,
                 headlineIsSpeech: Bool = false, priority: AttentionPriority? = nil, isUncertain: Bool = false,
-                since: Date, ambientSymbolName: String? = nil, additionalCount: Int = 0)
+                since: Date, ambientSymbolName: String? = nil, additionalCount: Int = 0, recentSummary: String? = nil,
+                recentSummaryDate: Date? = nil)
     {
         self.mode = mode
         self.symbolName = symbolName
@@ -59,6 +67,8 @@ public struct IslandContent: Hashable, Sendable, Codable {
         self.since = since
         self.ambientSymbolName = ambientSymbolName
         self.additionalCount = additionalCount
+        self.recentSummary = recentSummary
+        self.recentSummaryDate = recentSummaryDate
     }
 
     public static func listening(since: Date) -> IslandContent {

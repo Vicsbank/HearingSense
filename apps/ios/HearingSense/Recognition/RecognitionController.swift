@@ -21,6 +21,9 @@ final class RecognitionController {
     private(set) var history: [ConfirmedAcousticEvent] = []
     private(set) var diagnostics = SoundAnalysisDiagnostics()
     private(set) var detectorStatistics = SoundEventDetector.Statistics()
+    /// Warning sounds the classifier reported without an event being confirmed (labels, scores
+    /// and times only), so a missed siren can be explained afterwards.
+    @ObservationIgnored private(set) var warningNearMisses = WarningNearMissLog()
     private(set) var analyzerDescription: String?
     private(set) var lastFailure: String?
     @ObservationIgnored private var failuresInARow = 0
@@ -138,6 +141,8 @@ final class RecognitionController {
                 failuresInARow = 0
             }
             forwardFrame(report.frame)
+            warningNearMisses.note(report.frame, taxonomy: engine.taxonomy,
+                                   confirmedKindIDs: Set(report.activeEvents.map(\.kind.id)))
             latestFrame = report.frame
             status = report.status
             candidates = report.candidates
@@ -146,6 +151,7 @@ final class RecognitionController {
             detectorStatistics = report.detectorStatistics
             if report.frame.sequence % 8 == 0 { sampleResources() }
         case .sessionEnded(let final):
+            warningNearMisses.endSession()
             diagnostics = final
             activeEvents = []
             candidates = []
@@ -205,6 +211,8 @@ final class RecognitionController {
             lines.append("Process: CPU \(resources.cpuUtilization.map { $0.formatted(.percent.precision(.fractionLength(1))) } ?? "–"), "
                 + "memory \(resources.memoryMB.map { "\(Int($0)) MB" } ?? "–"), thermal \(resources.thermal)")
         }
+        lines.append("")
+        lines += warningNearMisses.reportLines()
         lines.append("")
         lines.append("Confirmed events (newest first):")
         for event in history {

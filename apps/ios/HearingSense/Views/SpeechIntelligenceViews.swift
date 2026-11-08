@@ -28,11 +28,19 @@ struct SpeechIntelligenceCard: View {
                 {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Transcribe nearby speech")
-                        Text("On this iPhone only. Nothing is recorded or uploaded.")
+                        Text(speech.isTranscriptionLockedOff ? "Held off for this test launch."
+                            : "On this iPhone only. Nothing is recorded or uploaded.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
+                .disabled(speech.isTranscriptionLockedOff)
+                // One element with a name, a value and an identifier: a test tool (or VoiceOver)
+                // can read the state and set it, instead of flipping an unnamed switch blindly.
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Transcribe nearby speech")
+                .accessibilityValue(speech.isTranscriptionEnabled ? "On" : "Off")
+                .accessibilityIdentifier("speech.transcription.switch")
                 .accessibilityHint("When on, speech near you is turned into text and a short summary while listening.")
 
                 Divider()

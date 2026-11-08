@@ -22,12 +22,22 @@ final class SpeechIntelligenceController {
     static let historyCapacity = 20
     private static let enabledKey = "speech.transcriptionEnabled"
     private static let keepTranscriptsKey = "speech.keepTranscriptsAfterStop"
+    /// `--hs-transcription-off`: transcription cannot run in this launch, whatever the stored
+    /// switch says and whatever is tapped. For device tests that are promised to be without
+    /// transcription. The stored switch is not changed. (The older way, the argument-domain
+    /// default `-speech.transcriptionEnabled NO`, only set the starting value: the switch could
+    /// still turn transcription on during the run.)
+    static let lockedOffArgument = "--hs-transcription-off"
 
     enum ModelInstallState: Equatable {
         case idle, installing, failed(String)
     }
 
     private(set) var isTranscriptionEnabled: Bool
+    /// Transcription is held off for this launch (`--hs-transcription-off`).
+    let isTranscriptionLockedOff: Bool
+    /// What the stored switch says; differs from `isTranscriptionEnabled` only while locked off.
+    private(set) var storedTranscriptionSetting: Bool
     private(set) var keepsTranscriptsAfterStop: Bool
     private(set) var capabilities: SpeechCapabilities
     private(set) var activity: SpeechActivityReport?
@@ -53,7 +63,11 @@ final class SpeechIntelligenceController {
     ///     defaults (Apple's labels).
     init(defaults: UserDefaults = .standard, taxonomy: SoundTaxonomy = .appleV1, vocalMusicLabels: Set<SoundLabel>? = nil) {
         self.defaults = defaults
-        let isEnabled = defaults.bool(forKey: Self.enabledKey)
+        let stored = defaults.bool(forKey: Self.enabledKey)
+        let lockedOff = ProcessInfo.processInfo.arguments.contains(Self.lockedOffArgument)
+        isTranscriptionLockedOff = lockedOff
+        storedTranscriptionSetting = stored
+        let isEnabled = stored && !lockedOff
         let transcriber = AppleSpeechTranscriber(locale: Locale(identifier: "en-US"))
         var configuration = SpeechIntelligenceConfiguration.standard
         if let vocalMusicLabels { configuration.activation.vocalMusicLabels = vocalMusicLabels }
@@ -114,8 +128,14 @@ final class SpeechIntelligenceController {
     // MARK: - User actions
 
     func setTranscriptionEnabled(_ isEnabled: Bool) {
+        if isTranscriptionLockedOff {
+            if isEnabled { log(.recognition, "Speech transcription stays off: locked off for this launch (\(Self.lockedOffArgument))") }
+            return
+        }
         guard isEnabled != isTranscriptionEnabled else { return }
+        SettingsAudit.record("Transcribe nearby speech", from: isTranscriptionEnabled, to: isEnabled, defaults: defaults)
         isTranscriptionEnabled = isEnabled
+        storedTranscriptionSetting = isEnabled
         defaults.set(isEnabled, forKey: Self.enabledKey)
         engine.setTranscriptionEnabled(isEnabled)
         log(.recognition, "Speech transcription switched \(isEnabled ? "on" : "off") by the user")
@@ -131,6 +151,8 @@ final class SpeechIntelligenceController {
     func clearSpeechData() {
         events.removeAll { $0.state.isTerminal || !isSessionActive }
         for index in events.indices { events[index].transcript = nil }
+        // Summaries held by the attention engine and the Live Activity go as well.
+        forwardCleared()
         log(.recognition, "Speech data cleared by the user")
     }
 
@@ -228,7 +250,9 @@ final class SpeechIntelligenceController {
     func reportText() -> String {
         var lines = [
             "Speech intelligence",
-            "Transcription switch: \(isTranscriptionEnabled ? "on" : "off") · language \(capabilities.language)",
+            "Transcription switch: \(isTranscriptionEnabled ? "on" : "off")"
+                + (isTranscriptionLockedOff ? " (locked off for this launch; stored switch: \(storedTranscriptionSetting ? "on" : "off"))" : "")
+                + " · language \(capabilities.language)",
             "Transcription: \(capabilities.transcription.displayName)",
             "Language model: \(capabilities.model.displayName)",
             "Best available level: \(capabilities.level.rawValue) (1 detection, 2 transcript, 3 summary)",
@@ -239,6 +263,8 @@ final class SpeechIntelligenceController {
             lines.append("Pre-roll buffer: \(preRoll.bufferedSeconds.formatted(.number.precision(.fractionLength(1)))) of "
                 + "\(preRoll.capacitySeconds.formatted()) s, \(preRoll.memoryBytes / 1024) KB, resets \(preRoll.resets)")
         }
+        lines.append("")
+        lines += SettingsAudit.reportLines(defaults: defaults)
         lines.append("")
         lines.append("Speech events (newest first; text omitted):")
         for event in events {

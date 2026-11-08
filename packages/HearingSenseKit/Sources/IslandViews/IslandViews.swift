@@ -8,7 +8,8 @@ import SwiftUI
 //
 // Presentations:
 // - compact / minimal: icons only, for every mode.
-// - expanded: text for attention episodes only.
+// - expanded: text for attention episodes; while an ordinary sound or nothing is shown, the
+//   latest speech summary of the last minutes, if there is one (marked with its age).
 // - Lock Screen: icon-focused for every mode and priority; no event text, no speech text.
 
 public enum IslandStyle {
@@ -182,7 +183,7 @@ public struct IslandExpandedTrailing: View {
 }
 
 /// The text of the expanded presentation. Ordinary sounds get no text of their own: the
-/// expanded island then only says that the app is listening.
+/// expanded island then says that the app is listening, or shows the latest speech summary.
 public struct IslandExpandedCenter: View {
     let content: IslandContent
     var isStale: Bool
@@ -205,12 +206,36 @@ public struct IslandExpandedCenter: View {
                 if let caption = content.caption {
                     Text(caption).font(.caption).foregroundStyle(.secondary).lineLimit(1)
                 }
+            } else if content.mode != .paused, let recent = content.recentSummary {
+                // The episode is over or gave way to an ordinary sound; its summary stays readable
+                // for a short while. Speech-derived: hidden wherever the system redacts content.
+                Text("“\(recent)”")
+                    .privacySensitive()
+                    .font(.headline)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+                recentCaption
             } else {
                 Text(content.mode == .paused ? "Paused" : "Listening").font(.headline)
                 Text("Hearing Sense").font(.caption).foregroundStyle(.secondary)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    /// "Nearby speech · 40 sec ago": the age counts up without an update from the app.
+    @ViewBuilder
+    private var recentCaption: some View {
+        Group {
+            if let date = content.recentSummaryDate {
+                Text("Nearby speech · \(Text(date, style: .relative)) ago")
+            } else {
+                Text("Nearby speech, a moment ago")
+            }
+        }
+        .font(.caption)
+        .foregroundStyle(.secondary)
+        .lineLimit(1)
     }
 
     @ViewBuilder

@@ -157,6 +157,8 @@ public enum AttentionReason: String, Hashable, Sendable, Codable, CaseIterable {
     case transcriptionOff = "transcription_off"
     case modelUnavailable = "model_unavailable"
     case ordinarySpeech = "ordinary_speech"
+    /// Speech with no validated summary: nothing to read, so it stays an ordinary sound.
+    case speechWithoutSummary = "speech_without_summary"
     case relevantSpeech = "relevant_speech"
     case importantSpeech = "important_speech"
     case urgentPhrase = "urgent_phrase"

@@ -47,7 +47,7 @@ struct AmbientDriver {
 func intent(_ id: Int, _ title: String, priority: AttentionPriority, action: PresentationAction = .present,
             interruption: PresentationInterruption? = nil, at time: TimeInterval, expires: TimeInterval? = nil,
             category: AttentionCategory = .doorAndKnock, subtitle: String? = nil, summary: String? = nil,
-            uncertain: Bool = false) -> AttentionPresentationIntent
+            uncertain: Bool = false, reasons: [AttentionReason] = []) -> AttentionPresentationIntent
 {
     let event = AttentionEvent(
         id: AttentionEventID(rawValue: id), category: category, kindID: nil, title: title, subtitle: subtitle,
@@ -61,7 +61,7 @@ func intent(_ id: Int, _ title: String, priority: AttentionPriority, action: Pre
     case .low, .ambient: .none
     }
     return AttentionPresentationIntent(event: event, action: action, interruption: interruption ?? suggested,
-                                       timestamp: T.date(time), expiresAt: expires.map(T.date), reasons: [])
+                                       timestamp: T.date(time), expiresAt: expires.map(T.date), reasons: reasons)
 }
 
 /// Drives an `IslandPipeline` and delivers its deadlines.
