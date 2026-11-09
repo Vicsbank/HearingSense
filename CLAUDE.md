@@ -1,34 +1,63 @@
-# Window 9 worktree — agent delegation rules
+# Hearing Sense — project rules for agents
 
-Worktree: `.claude/worktrees/window9`, branch `feature/window9-summary-postprocessing`, based on Window 8 HEAD `aef0abb`.
-Never merge or push from here, never touch other worktrees, never access the physical iPhone without the student's authorization in chat.
+Hearing Sense iOS 2.0: an iPhone app that keeps people wearing noise-cancelling headphones aware of
+their surroundings, fully on device. Read `README.md`, then `docs/PRODUCT_ARCHITECTURE_FINAL.md` and
+the top of `docs/PROJECT_HANDOFF.md`.
 
-## Roles
+## Repository
 
-**Main agent (Sonnet 5.5, high effort)** — owns overall coordination, Qwen runtime integration, all Swift wiring outside postprocessing, builds, unit tests, Simulator testing, all Git operations, and the final integration/review of anything a subagent returns.
+- `main` is the only branch and holds Window 9. Older work is in the `archive/*` tags. Documents
+  written before 2026-11-08 name branches and `.claude/worktrees/...` folders that no longer exist.
+- Remote: `origin` = `github.com/Vicsbank/HearingSense` (private). Commit and push only when the
+  student asks.
+- Not in Git: `data/`, the Qwen checkpoint, `packages/RuntimeDependencies/` (patched MLX sources,
+  from `tools/prepare_qwen_runtime.py`), build folders and `.venv/`.
 
-**`summary-postprocessing-xhigh` subagent (Opus 5.5, xhigh effort)** — defined in `.claude/agents/summary-postprocessing-xhigh.md`. No shell, edit tools only.
+## Hard constraints
 
-## Automatic delegation
-
-Delegate to `summary-postprocessing-xhigh` (Agent tool, `subagent_type: "summary-postprocessing-xhigh"`) without asking the student first whenever a task involves any of:
-
-- implementing or changing summary postprocessing logic (grounding checks, semantic-equivalence checks, restatement, fail-closed fallbacks);
-- reviewing such code, or reviewing a summarizer's outputs for hallucination risk;
-- deciding what transcript-derived data may be logged, exported or persisted (transcript privacy review).
-
-Do **not** delegate: Qwen runtime integration, Swift wiring/UI, builds, test runs, Simulator, Git, or coordination.
-
-Each delegation brief must contain: the goal, the exact **Owned files** list (the only files the subagent may edit), the call sites to read, the invariants to preserve, and "report format per your definition".
-
-## Concurrency rule (no overlapping edits)
-
-1. One edit-capable subagent at a time. It may run in the background only while the main agent works on files disjoint from its Owned files (Window 9 overnight run: the subagent owns `Sources/SummaryPostprocessing/**`, `Tests/SummaryPostprocessingTests/**`, `docs/research/W9_POSTPROCESSING_DESIGN.md`). No parallel subagents that could edit.
-2. While the subagent runs on a brief, the main agent does not edit any file in that brief's Owned files. The main agent may work only on disjoint files.
-3. The subagent edits nothing outside Owned files; needs elsewhere come back as requests.
-4. Before delegating, the main agent checks `git status --short` and confirms no Owned file has uncommitted changes of its own; after return, it reviews `git diff` of those files, then builds/tests before accepting.
-5. Review-only briefs (no edits) may run alongside main-agent edits.
+- **No model training or fine-tuning** without a separate approval request (model and dataset, M1 Max
+  time estimates, resources, expected benefit, checkpoint plan, the student's maximum time).
+  Forward-only inference, evaluation and model inspection are allowed.
+- The Mac (M1 Max, 32 GB) is the student's daily school computer: no long or background workloads
+  without approval; large downloads need approval with sizes shown.
+- Do not delete, move or overwrite research assets (`models/`, `results/`, `data/`, `docs/` reports,
+  `ml/`, `src/`, `tools/`).
+- Do not fabricate results. Label evidence as Mac, Simulator or physical iPhone; never claim device
+  validation from the Simulator.
+- No access to the physical iPhone, and no microphone recording or transcription of real
+  conversations, without the student's authorization in chat.
+- Apple-native frameworks first; no new third-party dependencies without a reason.
+- Communicate with the student in Chinese; code, comments and docs in English.
 
 ## Privacy
 
-Raw transcript text never goes to logs, diagnostics, exports, committed fixtures or reports. Use synthetic sentences in tests.
+No audio is stored or uploaded. Raw transcript text never goes to logs, diagnostics, exports,
+committed fixtures or reports; use synthetic sentences in tests.
+
+## Build and test
+
+```bash
+cd packages/HearingSenseKit && swift test
+xcodebuild build -project apps/ios/HearingSense.xcodeproj -scheme HearingSense -destination 'platform=iOS Simulator,name=iPhone 18 Pro'
+```
+
+More commands in `docs/PROJECT_HANDOFF.md` §10.
+
+## Summary postprocessing subagent
+
+`summary-postprocessing-xhigh` (`.claude/agents/summary-postprocessing-xhigh.md`; edit tools only, no shell).
+
+Delegate to it whenever a task involves:
+
+- implementing or changing summary postprocessing logic (grounding checks, semantic-equivalence
+  checks, restatement, fail-closed fallbacks);
+- reviewing such code, or reviewing a summarizer's outputs for hallucination risk;
+- deciding what transcript-derived data may be logged, exported or persisted.
+
+Do not delegate Qwen runtime integration, Swift wiring or UI, builds, test runs, the Simulator, Git or
+coordination. Each brief names the goal, the exact files the subagent may edit, the call sites to
+read and the invariants to keep.
+
+Only one edit-capable subagent runs at a time. While it works, the main agent edits no file in its
+list. Before delegating, check `git status --short` for uncommitted changes in those files. After it
+returns, review the `git diff`, then build and test before accepting.
