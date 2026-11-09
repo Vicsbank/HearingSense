@@ -105,3 +105,13 @@ struct IslandDriver {
     var updates: [TimedIslandCommand] { commands.filter { if case .update = $0.command { true } else { false } } }
     var alerts: [IslandAlertRequest] { commands.compactMap(\.alert) }
 }
+
+extension IslandPolicy {
+    /// The standard policy with warnings that leave when the attention engine lets them go
+    /// (before 2026-11-08), for tests of the other presentation rules.
+    static var expiringAlerts: IslandPolicy {
+        var policy = IslandPolicy.standard
+        policy.alertsStayUntilAcknowledged = false
+        return policy
+    }
+}

@@ -60,12 +60,18 @@ public struct IslandContent: Hashable, Sendable, Codable {
     /// "Traffic nearby": the acoustic scene, in generic words. Drawn in the expanded
     /// presentation only.
     public var sceneTitle: String?
+    /// `attention` only: a warning on the island waits for the user's acknowledgement
+    /// (`IslandPolicy.alertsStayUntilAcknowledged`); the expanded and Lock Screen presentations
+    /// offer "Got It".
+    public var needsAcknowledgement: Bool
 
     public init(mode: Mode, symbolName: String, spokenLabel: String, headline: String? = nil, caption: String? = nil,
                 headlineIsSpeech: Bool = false, priority: AttentionPriority? = nil, isUncertain: Bool = false,
                 since: Date, ambientSymbolName: String? = nil, additionalCount: Int = 0, recentSummary: String? = nil,
-                recentSummaryDate: Date? = nil, conversation: IslandConversation? = nil, sceneTitle: String? = nil)
+                recentSummaryDate: Date? = nil, conversation: IslandConversation? = nil, sceneTitle: String? = nil,
+                needsAcknowledgement: Bool = false)
     {
+        self.needsAcknowledgement = needsAcknowledgement
         self.mode = mode
         self.symbolName = symbolName
         self.spokenLabel = spokenLabel

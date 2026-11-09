@@ -279,14 +279,14 @@ func eventRate(_ results: [ClipResult], where match: (EventRecord) -> Bool) -> E
 
 // MARK: - Commands
 
-func evaluate(window: Double, padding: Double, libri: Int, gtzan: Int, gtzanHoldout: Bool, outDirectory: URL) async throws {
-    let configuration = ClassifierConfiguration(windowDuration: window, overlapFactor: 0.5, backlogLimit: nil)
+func evaluate(window: Double, overlap: Double = 0.5, padding: Double, libri: Int, gtzan: Int, gtzanHoldout: Bool, outDirectory: URL) async throws {
+    let configuration = ClassifierConfiguration(windowDuration: window, overlapFactor: overlap, backlogLimit: nil)
     var policy = DetectionPolicy.standard
     if arguments.contains("--no-suppressions") { policy.suppressions = [] }
     let engine = SoundRecognitionEngine(configuration: configuration, policy: policy)
     var iterator = engine.outputs.makeAsyncIterator()
     let clips = datasetClips(libri: libri, gtzan: gtzan, gtzanHoldout: gtzanHoldout)
-    print("Evaluating \(clips.count) clips, window \(window) s …")
+    print("Evaluating \(clips.count) clips, window \(window) s, overlap \(overlap) …")
     let start = Date()
     var results: [ClipResult] = []
     for (index, clip) in clips.enumerated() {
@@ -323,7 +323,7 @@ func evaluate(window: Double, padding: Double, libri: Int, gtzan: Int, gtzanHold
     for event in speechOnly.flatMap(\.events) where event.kind != "speech" { otherKinds[event.kind, default: 0] += 1 }
 
     let summary = Summary(
-        configuration: ["windowDuration": window, "overlapFactor": 0.5, "hop": configuration.hop,
+        configuration: ["windowDuration": window, "overlapFactor": overlap, "hop": configuration.hop,
                         "trailingSilencePadding": padding, "gtzanHoldout": gtzanHoldout ? 1 : 0,
                         "suppressions": Double(policy.suppressions.count)],
         platform: ProcessInfo.processInfo.operatingSystemVersionString,
@@ -385,9 +385,10 @@ case "evaluate":
     let out = option("--out").map { URL(fileURLWithPath: $0) }
         ?? repositoryRoot.appending(path: "results/sound_eval_window2")
     let padding = Double(option("--pad") ?? "") ?? window
-    try await evaluate(window: window, padding: padding, libri: Int(option("--libri") ?? "500") ?? 500,
+    let overlap = Double(option("--overlap") ?? "0.5") ?? 0.5
+    try await evaluate(window: window, overlap: overlap, padding: padding, libri: Int(option("--libri") ?? "500") ?? 500,
                        gtzan: Int(option("--gtzan") ?? "300") ?? 300,
                        gtzanHoldout: arguments.contains("--gtzan-holdout"), outDirectory: out)
 default:
-    print("usage: hs-sound-eval labels | evaluate [--window 1.5] [--pad S] [--libri 500] [--gtzan 300] [--gtzan-holdout] [--no-suppressions] [--out DIR]")
+    print("usage: hs-sound-eval labels | evaluate [--window 1.5] [--overlap 0.5] [--pad S] [--libri 500] [--gtzan 300] [--gtzan-holdout] [--no-suppressions] [--out DIR]")
 }

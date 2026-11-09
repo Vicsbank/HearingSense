@@ -13,13 +13,22 @@ import WidgetKit
 /// - Expanded (the user touches and holds the island): the current sound, the listening status
 ///   and one control (`IslandControls`, `IslandTrailingControl`: Summary, then Open or Stop).
 ///   Holding the island only shows it; nothing is summarized until Summary is pressed.
-/// - Lock Screen: icon-focused, whatever the priority; never event text or speech text.
+/// - Lock Screen: icon-focused, whatever the priority; never event text or speech text. A warning
+///   that waits for acknowledgement adds "Got It".
 ///
 /// A tap on the activity opens the app, on the conversation screen while a summary exists.
 struct HearingSenseLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: HearingSenseActivityAttributes.self) { context in
-            IslandLockScreenView(context.state, sessionStart: context.attributes.sessionStart, isStale: context.isStale)
+            VStack(spacing: 8) {
+                IslandLockScreenView(context.state, sessionStart: context.attributes.sessionStart, isStale: context.isStale)
+                // A warning that waits for the user can be cleared here too.
+                if context.state.needsAcknowledgement, !context.isStale {
+                    IslandAcknowledgeButton(content: context.state)
+                        .frame(maxWidth: 200)
+                        .padding(.bottom, 8)
+                }
+            }
                 .foregroundStyle(.white)
                 .activityBackgroundTint(Color.black.opacity(0.6))
                 .activitySystemActionForegroundColor(.white)

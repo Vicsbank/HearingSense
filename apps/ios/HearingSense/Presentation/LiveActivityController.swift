@@ -272,11 +272,18 @@ final class LiveActivityController {
         process(.speechTextCleared(at: .now))
     }
 
+    /// "Got It": the user has seen the warnings that wait on the island.
+    func acknowledgeAlerts() {
+        process(.alertsAcknowledged(at: .now))
+    }
+
     func appBecameActive() {
         // On screen means unlocked: a lock notice without its "available" counterpart is over.
         willLockNoticeAt = nil
         refreshLockEstimate(checkPasscode: true)
         syncLockWithPipeline()
+        // Opening the app shows its current state, so the warnings on the island count as seen.
+        if pipeline.shown?.needsAcknowledgement == true { process(.alertsAcknowledged(at: .now)) }
         // An activity can only be requested while the app is on screen. A session whose activity
         // could not be started, or was removed before its time, shows one again when the user
         // opens the app. A running activity is never replaced, and after the system's limit
@@ -587,6 +594,8 @@ final class LiveActivityController {
             + "(rate-limited \(statistics.alertRequestsRateLimited), lost behind another episode "
             + "\(statistics.alertsLostToLead)): sent to iOS \(alertsSent), silent instead "
             + (blocked.isEmpty ? "0" : blocked.joined(separator: ", ")))
+        lines.append("Warnings kept until acknowledged \(statistics.alertsHeldForAcknowledgement); acknowledgements "
+            + "\(statistics.acknowledgements) clearing \(statistics.alertsAcknowledged) warning(s)")
         lines.append("Secondary-only changes not sent: \(statistics.secondaryChangesNotSent)")
         lines.append("Requested summaries: states shown \(statistics.conversationStates), expansion requests when ready "
             + "\(statistics.summaryReadyRequests); speech episodes that asked for no expansion: \(statistics.speechAlertsWithheld)")

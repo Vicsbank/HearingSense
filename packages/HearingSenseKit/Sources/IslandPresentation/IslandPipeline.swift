@@ -23,6 +23,9 @@ public enum IslandInput: Hashable, Sendable {
     /// Every speech-derived text must go now (the user switched transcription off or deleted the
     /// speech data), whether or not an episode is presented.
     case speechTextCleared(at: Date)
+    /// The user acknowledged the warnings on the island ("Got It", or opening the app): those
+    /// whose sound has ended leave, the others expire as usual.
+    case alertsAcknowledged(at: Date)
     /// Window 7: where a summary the user asked for stands; nil when that is over.
     case conversation(IslandConversation?, at: Date)
     /// Window 7: the acoustic scene in generic words ("Traffic nearby"); nil when there is none.
@@ -33,7 +36,7 @@ public enum IslandInput: Hashable, Sendable {
     public var date: Date {
         switch self {
         case .sessionStarted(let date), .sessionPaused(let date), .sessionEnded(let date), .tick(let date),
-             .speechTextCleared(let date): date
+             .speechTextCleared(let date), .alertsAcknowledged(let date): date
         case .settings(_, let date), .deviceLock(_, let date), .conversation(_, let date), .scene(_, let date): date
         case .intent(let intent): intent.timestamp
         case .sound(let update): AmbientIconInput.sound(update).date
@@ -114,6 +117,12 @@ public struct IslandPolicy: Hashable, Sendable {
     /// An event the attention engine marks as uncertain asks for nothing: a prominent alert
     /// needs a verified event.
     public var alertsNeedVerifiedEvent = true
+    /// An acoustic event that asked for a prominent presentation stays on the island after its
+    /// sound has ended, in front of ordinary sounds, until the user acknowledges it ("Got It" in
+    /// the expanded island or on the Lock Screen, or opening the app). iOS collapses an expansion
+    /// after a few seconds; this keeps the warning visible instead. Decided by the student on
+    /// 2026-11-08. Off: the episode leaves when the attention engine lets it go (Window 5–9).
+    public var alertsStayUntilAcknowledged = true
 
     public init(ambient: AmbientIconPolicy, minimumUpdateInterval: TimeInterval, attentionMinimumHold: TimeInterval,
                 protectedPriority: AttentionPriority = .high, protectedFor: TimeInterval = 20,
@@ -166,6 +175,12 @@ public struct IslandStatistics: Hashable, Sendable, Codable {
     /// Expansion requests of episodes that never reached the front while their sound was still
     /// going (another episode held it), so they were not sent.
     public var alertsLostToLead = 0
+    /// Warnings kept on the island after the attention engine let them go, because the user had
+    /// not acknowledged them yet.
+    public var alertsHeldForAcknowledgement = 0
+    /// Acknowledgements by the user, and the warnings they cleared.
+    public var acknowledgements = 0
+    public var alertsAcknowledged = 0
     /// Speech summaries that were presented as (part of) an episode.
     public var summariesPresented = 0
     /// First summaries that did not ask for an expansion because the speech was ordinary
@@ -228,6 +243,9 @@ public struct IslandPipeline: Sendable {
         /// Highest priority an expansion was requested for.
         var alertedPriority: AttentionPriority?
         var summaryAlerted = false
+        /// A warning that asked for an expansion and that the user has not acknowledged
+        /// (`IslandPolicy.alertsStayUntilAcknowledged`): it does not expire.
+        var needsAcknowledgement = false
     }
 
     private var ambient: AmbientIconStream
@@ -328,15 +346,36 @@ public struct IslandPipeline: Sendable {
             recalled = nil
             conversation = conversation?.withoutSpeechText
             for (id, item) in items where item.intent.hasPrivateDetail { items[id] = nil }
+        case .alertsAcknowledged:
+            statistics.acknowledgements += 1
+            for (id, var item) in items where item.needsAcknowledgement {
+                statistics.alertsAcknowledged += 1
+                pendingAlerts[id] = nil
+                if item.isResolved {
+                    keepRecall(of: item, until: now)
+                    items[id] = nil
+                } else {
+                    item.needsAcknowledgement = false
+                    items[id] = item
+                }
+            }
         case .tick:
             break
         }
 
         if case .sound = input {} else { noteAmbient(ambient.process(.tick(at: now))) }
-        for (id, item) in items {
+        for (id, var item) in items {
             if let removeAt = item.removeAt, removeAt <= now {
-                keepRecall(of: item, until: now)
-                items[id] = nil
+                if item.needsAcknowledgement {
+                    // Its time is over, but the user has not seen to it yet: it stays.
+                    item.removeAt = nil
+                    item.isResolved = true
+                    items[id] = item
+                    statistics.alertsHeldForAcknowledgement += 1
+                } else {
+                    keepRecall(of: item, until: now)
+                    items[id] = nil
+                }
             }
         }
         let holdDeadline = selectLead(at: now)
@@ -407,6 +446,12 @@ public struct IslandPipeline: Sendable {
                 item.removeAt = expires
                 item.isResolved = true
                 items[intent.id] = item
+            } else if item.needsAcknowledgement, !intent.reasons.contains(.speechDataCleared) {
+                // A warning the user has not acknowledged stays, without an expiry.
+                item.removeAt = nil
+                item.isResolved = true
+                items[intent.id] = item
+                statistics.alertsHeldForAcknowledgement += 1
             } else {
                 keepRecall(of: item, until: now)
                 items[intent.id] = nil
@@ -477,6 +522,8 @@ public struct IslandPipeline: Sendable {
             if wantsAlert {
                 item.alertedPriority = max(item.alertedPriority ?? intent.priority, intent.priority)
                 if intent.privateDetail != nil { item.summaryAlerted = true }
+                // Speech never gets here (see above): only acoustic warnings wait for the user.
+                if policy.alertsStayUntilAcknowledged, intent.category != .speech { item.needsAcknowledgement = true }
             }
             items[intent.id] = item
             guard wantsAlert else { return nil }
@@ -498,7 +545,8 @@ public struct IslandPipeline: Sendable {
         func isActiveWarning(_ item: Item) -> Bool {
             !item.isResolved && item.intent.priority >= policy.protectedPriority
         }
-        let best = items.filter { !$0.value.isResolved || $0.key == leadID }.max { lhs, rhs in
+        // A warning waiting for acknowledgement may come back to the front: it is kept for that.
+        let best = items.filter { !$0.value.isResolved || $0.key == leadID || $0.value.needsAcknowledgement }.max { lhs, rhs in
             if isActiveWarning(lhs.value) != isActiveWarning(rhs.value) { return isActiveWarning(rhs.value) }
             if lhs.value.intent.priority != rhs.value.intent.priority {
                 return lhs.value.intent.priority < rhs.value.intent.priority
@@ -595,7 +643,7 @@ public struct IslandPipeline: Sendable {
             // on the iPhone: a door episode joined by the room's speech held the island for 48 s
             // and hid a dog and footsteps.)
             let isRecent = item.lastChanged.addingTimeInterval(policy.protectedFor) > now
-            let isProtected = intent.priority >= .urgent
+            let isProtected = intent.priority >= .urgent || item.needsAcknowledgement
                 || ((intent.priority >= policy.protectedPriority || summary != nil) && isRecent)
             if !isProtected, let ambientIcon, let ambientSince, ambientSince > item.lastChanged {
                 return quiet(IslandContent(mode: .ambient, symbolName: ambientIcon.symbolName,
@@ -608,7 +656,7 @@ public struct IslandPipeline: Sendable {
                 headline: clip(summary ?? intent.title), caption: caption.map(clip), headlineIsSpeech: summary != nil,
                 priority: intent.priority, isUncertain: intent.isUncertain, since: item.firstShown,
                 ambientSymbolName: ambientIcon.flatMap { $0.symbolName == intent.symbolName ? nil : $0.symbolName },
-                additionalCount: items.count - 1)
+                additionalCount: items.count - 1, needsAcknowledgement: items.values.contains(where: \.needsAcknowledgement))
         }
         if let ambientIcon {
             return quiet(IslandContent(mode: .ambient, symbolName: ambientIcon.symbolName, spokenLabel: ambientIcon.spokenName,
@@ -698,6 +746,7 @@ extension IslandContent {
         if let priority { parts.append(priority.description) }
         if let headline { parts.append(headlineIsSpeech ? "<speech summary>" : "“\(headline)”") }
         if additionalCount > 0 { parts.append("+\(additionalCount)") }
+        if needsAcknowledgement { parts.append("[until acknowledged]") }
         if recentSummary != nil { parts.append("(recent <speech summary>)") }
         if let conversation { parts.append("[\(conversation.phase.rawValue)\(conversation.detail == nil ? "" : " <summary>")]") }
         if let sceneTitle { parts.append("{\(sceneTitle)}") }

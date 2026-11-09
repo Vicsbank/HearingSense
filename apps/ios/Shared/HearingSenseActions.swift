@@ -22,6 +22,8 @@ enum HearingSenseAction: String, Sendable {
     case continueUnderstanding
     /// Stop following the conversation. Listening for sounds goes on.
     case stopUnderstanding
+    /// "Got It": the user has seen the warnings on the island; those whose sound has ended leave.
+    case acknowledgeAlerts
 }
 
 /// Where the intents hand their action to the app. Set once by the app at launch.
@@ -96,6 +98,31 @@ struct StopConversationIntent: LiveActivityIntent {
     }
 }
 
+struct AcknowledgeAlertsIntent: LiveActivityIntent {
+    static let title: LocalizedStringResource = "Acknowledge Warnings"
+    static let isDiscoverable = false
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        HearingSenseActionCenter.perform(.acknowledgeAlerts)
+        return .result()
+    }
+}
+
+/// "Got It" for warnings that stay on the island until the user has seen them
+/// (`IslandContent.needsAcknowledgement`). Tinted like the warning.
+struct IslandAcknowledgeButton: View {
+    let content: IslandContent
+
+    var body: some View {
+        Button(intent: AcknowledgeAlertsIntent()) {
+            IslandControlPill(title: "Got It", systemImage: "checkmark", tint: IslandStyle.tint(for: content))
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint("Clears the warning from the Dynamic Island.")
+    }
+}
+
 /// The two buttons along the bottom of the expanded Dynamic Island, in every state:
 ///
 /// | state | left | right |
@@ -104,6 +131,7 @@ struct StopConversationIntent: LiveActivityIntent {
 /// | summary being written | Summary (a progress bar above) | Continue |
 /// | following a conversation | Summary | Stop |
 /// | paused, not updating | none | none |
+/// | a warning waits for acknowledgement | Got It | Summary |
 ///
 /// - Summary writes a summary of the last two minutes, or brings a followed one up to date.
 /// - Continue keeps following the conversation (a summary is written first when there is none).
@@ -131,6 +159,9 @@ struct IslandControls: View {
                     .accessibilityLabel("Writing the summary")
                 }
                 HStack(spacing: IslandMetrics.margin) {
+                    if content.needsAcknowledgement, content.conversation == nil {
+                        IslandAcknowledgeButton(content: content)
+                    }
                     Button(intent: SummarizeConversationIntent()) {
                         pill("Summary", systemImage: "text.bubble.fill", tint: IslandStyle.conversationTint)
                     }
@@ -140,6 +171,8 @@ struct IslandControls: View {
                             pill("Stop", systemImage: "stop.fill", tint: .orange)
                         }
                         .accessibilityHint("Stops following the conversation. Hearing Sense keeps listening for sounds.")
+                    } else if content.needsAcknowledgement, content.conversation == nil {
+                        // Two buttons only: Got It takes Continue's place while a warning waits.
                     } else {
                         Button(intent: ContinueConversationIntent()) {
                             pill("Continue", systemImage: "captions.bubble.fill", tint: IslandStyle.conversationTint)

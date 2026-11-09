@@ -271,14 +271,16 @@ final class ListeningController {
         }
     }
 
-    /// A control of the expanded Dynamic Island was pressed. Each one acts on the conversation
-    /// only; none of them starts or stops listening.
+    /// A control of the expanded Dynamic Island (or "Got It" on the Lock Screen) was pressed. Each
+    /// one acts on the conversation or on the island's warnings only; none of them starts or stops
+    /// listening.
     func perform(_ action: HearingSenseAction) {
         log.append(.lifecycle, "Live Activity control: \(action.rawValue)")
         switch action {
         case .summarize: conversation.summarize()
         case .continueUnderstanding: conversation.continueUnderstanding()
         case .stopUnderstanding: conversation.stopUnderstanding()
+        case .acknowledgeAlerts: liveActivity.acknowledgeAlerts()
         }
     }
 

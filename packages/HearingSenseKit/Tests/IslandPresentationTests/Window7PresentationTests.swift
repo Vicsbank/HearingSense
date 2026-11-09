@@ -215,7 +215,7 @@ import Testing
 
     /// Deduplication, cooldown, expiry and recovery of one alert.
     @Test func anAlertIsNotRepeatedExpiresAndCanHappenAgainLater() {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .expiringAlerts)
         driver.send(.intent(intent(1, "Alarm", priority: .high, at: 5, expires: 25, category: .emergencySignals)))
         // More evidence for the same episode: no second request.
         driver.send(.intent(intent(1, "Alarm", priority: .high, action: .update, at: 8, expires: 28, category: .emergencySignals)))

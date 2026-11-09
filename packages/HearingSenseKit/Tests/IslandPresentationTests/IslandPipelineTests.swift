@@ -114,7 +114,7 @@ import Testing
     // MARK: - Attention channel
 
     @Test func anAttentionEpisodeTakesTheIslandAndAmbientUpdatesCannotOverwriteIt() {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .expiringAlerts)
         var rain = sound("rain", 1, at: 2)
         driver.send(.sound(rain.started()))
         driver.send(.intent(intent(1, "Door or knock", priority: .high, at: 10, subtitle: "Repeated 2 times")))
@@ -173,7 +173,7 @@ import Testing
     }
 
     @Test func aResolvedEpisodeStaysUntilItsExpiryAndCanComeBack() {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .expiringAlerts)
         driver.send(.intent(intent(1, "Siren", priority: .urgent, at: 5, category: .emergencySignals)))
         driver.send(.intent(intent(1, "Siren", priority: .urgent, action: .dismiss, at: 20, expires: 24,
                                    category: .emergencySignals)))
@@ -227,7 +227,7 @@ import Testing
     /// 48 s and hid a dog. A high-priority episode is protected for a limited time after the
     /// engine last changed it; an urgent one for as long as it is presented.
     @Test func aHighPriorityEpisodeIsProtectedForALimitedTimeAndAnUrgentOneThroughout() {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .expiringAlerts)
         driver.send(.intent(intent(1, "Door or knock", priority: .high, at: 5)))
         driver.send(.sound(sound("dog", 1, at: 15).started()))
         #expect(driver.shown?.headline == "Door or knock")
@@ -248,7 +248,7 @@ import Testing
 
     /// Seen on the iPhone: when an episode left, the icon that took over was replaced 1.0 s later.
     @Test func anIconThatTookOverFromAnEpisodeStaysForTheMinimumDisplayTime() {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .expiringAlerts)
         driver.send(.intent(intent(1, "Door or knock", priority: .high, at: 5)))
         var laughter = sound("laughter", 1, at: 20)
         driver.send(.sound(laughter.started()))
@@ -310,7 +310,7 @@ import Testing
     }
 
     @Test func anEpisodeIsRemovedAtItsOwnExpiryEvenWithoutADismissal() {
-        var driver = IslandDriver()
+        var driver = IslandDriver(policy: .expiringAlerts)
         driver.send(.intent(intent(1, "Door or knock", priority: .high, at: 5, expires: 17)))
         driver.advance(to: 17)
         #expect(driver.shown?.mode == .listening)
@@ -427,6 +427,86 @@ import Testing
         lost.send(.intent(intent(1, "Siren", priority: .urgent, action: .dismiss, at: 20, category: .emergencySignals)))
         #expect(lost.alerts.map(\.title) == ["Siren"])
         #expect(lost.pipeline.statistics.alertsLostToLead == 1)
+    }
+
+    // MARK: - Warnings stay until acknowledged (student, 2026-11-08)
+
+    @Test func aWarningStaysOnTheIslandUntilTheUserAcknowledgesIt() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Horn", priority: .high, at: 5, category: .vehicleWarnings)))
+        #expect(driver.alerts.map(\.title) == ["Horn"])
+        #expect(driver.shown?.needsAcknowledgement == true)
+        // The engine lets it go with a short linger; it does not leave when that runs out.
+        driver.send(.intent(intent(1, "Horn", priority: .high, action: .dismiss, at: 8, expires: 15,
+                                   category: .vehicleWarnings)))
+        driver.advance(to: 120)
+        #expect(driver.shown?.headline == "Horn")
+        #expect(driver.shown?.needsAcknowledgement == true)
+        #expect(driver.pipeline.statistics.alertsHeldForAcknowledgement == 1)
+        // "Got It": the warning leaves, the island goes back to listening.
+        driver.send(.alertsAcknowledged(at: T.date(121)))
+        #expect(driver.shown?.mode == .listening)
+        #expect(driver.pipeline.statistics.alertsAcknowledged == 1)
+        #expect(driver.pipeline.presentedCount == 0)
+    }
+
+    @Test func anOrdinarySoundCannotReplaceAWarningWaitingForAcknowledgement() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Breaking glass", priority: .high, at: 5, category: .impacts)))
+        driver.send(.intent(intent(1, "Breaking glass", priority: .high, action: .dismiss, at: 7,
+                                   category: .impacts)))
+        driver.send(.sound(sound("dog", 2, at: 40).started()))
+        driver.send(.intent(intent(3, "Dog", priority: .normal, at: 41, category: .animals)))
+        driver.advance(to: 60)
+        #expect(driver.shown?.mode == .attention)
+        #expect(driver.shown?.headline == "Breaking glass")
+        #expect(driver.shown?.needsAcknowledgement == true)
+        // After the acknowledgement the ordinary sound is shown again.
+        driver.send(.alertsAcknowledged(at: T.date(61)))
+        #expect(driver.shown?.headline != "Breaking glass")
+    }
+
+    @Test func aNewerWarningGoesInFrontAndBothWaitForOneAcknowledgement() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Siren", priority: .urgent, at: 5, category: .emergencySignals)))
+        driver.send(.intent(intent(1, "Siren", priority: .urgent, action: .dismiss, at: 8, category: .emergencySignals)))
+        driver.send(.intent(intent(2, "Horn", priority: .high, at: 30, category: .vehicleWarnings)))
+        #expect(driver.shown?.headline == "Horn")
+        #expect(driver.shown?.additionalCount == 1)
+        #expect(driver.alerts.map(\.title) == ["Siren", "Horn"])
+        driver.send(.intent(intent(2, "Horn", priority: .high, action: .dismiss, at: 32, category: .vehicleWarnings)))
+        driver.advance(to: 90)
+        // Both ended and wait; the urgent one is in front again.
+        #expect(driver.shown?.headline == "Siren")
+        driver.send(.alertsAcknowledged(at: T.date(91)))
+        #expect(driver.shown?.mode == .listening)
+        #expect(driver.pipeline.statistics.alertsAcknowledged == 2)
+    }
+
+    @Test func anAcknowledgedWarningThatIsStillSoundingExpiresAsUsual() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Alarm", priority: .high, at: 5, category: .emergencySignals)))
+        driver.send(.alertsAcknowledged(at: T.date(6)))
+        #expect(driver.shown?.headline == "Alarm")
+        #expect(driver.shown?.needsAcknowledgement == false)
+        driver.send(.intent(intent(1, "Alarm", priority: .high, action: .dismiss, at: 20, category: .emergencySignals)))
+        #expect(driver.shown?.mode == .listening)
+    }
+
+    @Test func episodesWithoutAnExpansionAndTheOldRuleStillExpire() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Dog", priority: .normal, at: 5, category: .animals)))
+        #expect(driver.shown?.needsAcknowledgement == false)
+        driver.send(.intent(intent(1, "Dog", priority: .normal, action: .dismiss, at: 9, category: .animals)))
+        #expect(driver.shown?.mode == .listening)
+
+        var policy = IslandPolicy.standard
+        policy.alertsStayUntilAcknowledged = false
+        var old = IslandDriver(policy: policy)
+        old.send(.intent(intent(1, "Horn", priority: .high, at: 5, category: .vehicleWarnings)))
+        #expect(old.shown?.needsAcknowledgement == false)
+        old.send(.intent(intent(1, "Horn", priority: .high, action: .dismiss, at: 8, category: .vehicleWarnings)))
+        #expect(old.shown?.mode == .listening)
     }
 
     @Test func normalAndLowPrioritiesDoNotRequestAnExpansion() {
