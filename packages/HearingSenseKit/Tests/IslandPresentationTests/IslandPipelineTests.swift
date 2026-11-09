@@ -394,6 +394,41 @@ import Testing
         #expect(driver.alerts.last?.priority == .urgent)
     }
 
+    /// iPhone, 2026-11-08: a siren ended and lingered; a car horn confirmed 13 s later (0.98) got
+    /// no alert, because the resolved siren kept the front and the horn's request was dropped.
+    @Test func anActiveWarningTakesTheFrontAndAlertsWhileAnEndedSirenLingers() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Siren", priority: .urgent, at: 5, category: .emergencySignals)))
+        driver.send(.intent(intent(1, "Siren", priority: .urgent, action: .dismiss, at: 10, expires: 25,
+                                   category: .emergencySignals)))
+        driver.send(.intent(intent(2, "Horn", priority: .high, at: 23, category: .vehicleWarnings)))
+        #expect(driver.shown?.headline == "Horn")
+        #expect(driver.alerts.map(\.title) == ["Siren", "Horn"])
+        #expect(driver.pipeline.statistics.alertsLostToLead == 0)
+    }
+
+    /// A warning that arrives while another episode is in front asks for its expansion when it
+    /// reaches the front, if its sound is still going; otherwise the loss is counted.
+    @Test func aWarningBehindAnotherEpisodeAlertsWhenItReachesTheFrontOrIsCountedAsLost() {
+        var driver = IslandDriver()
+        driver.send(.intent(intent(1, "Siren", priority: .urgent, at: 5, category: .emergencySignals)))
+        driver.send(.intent(intent(2, "Horn", priority: .high, at: 15, category: .vehicleWarnings)))
+        #expect(driver.shown?.headline == "Siren")
+        #expect(driver.alerts.count == 1)
+        driver.send(.intent(intent(1, "Siren", priority: .urgent, action: .dismiss, at: 17, category: .emergencySignals)))
+        #expect(driver.shown?.headline == "Horn")
+        #expect(driver.alerts.map(\.title) == ["Siren", "Horn"])
+
+        var lost = IslandDriver()
+        lost.send(.intent(intent(1, "Siren", priority: .urgent, at: 5, category: .emergencySignals)))
+        lost.send(.intent(intent(2, "Horn", priority: .high, at: 15, category: .vehicleWarnings)))
+        lost.send(.intent(intent(2, "Horn", priority: .high, action: .dismiss, at: 17, expires: 30,
+                                 category: .vehicleWarnings)))
+        lost.send(.intent(intent(1, "Siren", priority: .urgent, action: .dismiss, at: 20, category: .emergencySignals)))
+        #expect(lost.alerts.map(\.title) == ["Siren"])
+        #expect(lost.pipeline.statistics.alertsLostToLead == 1)
+    }
+
     @Test func normalAndLowPrioritiesDoNotRequestAnExpansion() {
         var driver = IslandDriver()
         driver.send(.intent(intent(1, "Dog", priority: .normal, at: 5, category: .animals)))

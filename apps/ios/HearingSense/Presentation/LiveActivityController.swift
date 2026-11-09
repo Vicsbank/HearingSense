@@ -584,7 +584,8 @@ final class LiveActivityController {
             alertsBlocked[reason].map { "\(reason.rawValue) \($0)" }
         }
         lines.append("Attention episodes shown \(statistics.attentionEpisodes); expansion requests \(statistics.alertRequests) "
-            + "(rate-limited \(statistics.alertRequestsRateLimited)): sent to iOS \(alertsSent), silent instead "
+            + "(rate-limited \(statistics.alertRequestsRateLimited), lost behind another episode "
+            + "\(statistics.alertsLostToLead)): sent to iOS \(alertsSent), silent instead "
             + (blocked.isEmpty ? "0" : blocked.joined(separator: ", ")))
         lines.append("Secondary-only changes not sent: \(statistics.secondaryChangesNotSent)")
         lines.append("Requested summaries: states shown \(statistics.conversationStates), expansion requests when ready "

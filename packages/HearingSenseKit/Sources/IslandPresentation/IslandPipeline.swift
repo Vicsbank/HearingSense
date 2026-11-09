@@ -163,6 +163,9 @@ public struct IslandStatistics: Hashable, Sendable, Codable {
     public var speechWithoutSummary = 0
     public var alertRequests = 0
     public var alertRequestsRateLimited = 0
+    /// Expansion requests of episodes that never reached the front while their sound was still
+    /// going (another episode held it), so they were not sent.
+    public var alertsLostToLead = 0
     /// Speech summaries that were presented as (part of) an episode.
     public var summariesPresented = 0
     /// First summaries that did not ask for an expansion because the speech was ordinary
@@ -238,6 +241,9 @@ public struct IslandPipeline: Sendable {
     private var lastSentAt: Date?
     private var hasPendingChange = false
     private var lastAlertAt: Date?
+    /// Expansion requests of episodes that are not in front yet. Each is sent when its episode
+    /// reaches the front while still active, or counted in `alertsLostToLead`.
+    private var pendingAlerts: [AttentionEventID: (request: IslandAlertRequest, isUrgent: Bool)] = [:]
     private var lastEvaluated: Date?
     private var isDeviceLocked = false
     /// The latest summary an episode showed: when it first appeared and when its episode was
@@ -269,6 +275,7 @@ public struct IslandPipeline: Sendable {
                 sessionActive = true
                 sessionStart = now
                 items.removeAll()
+                pendingAlerts.removeAll()
                 leadID = nil
                 recalled = nil
                 conversation = nil
@@ -280,6 +287,7 @@ public struct IslandPipeline: Sendable {
             guard sessionActive else { break }
             pausedSince = now
             items.removeAll()
+            pendingAlerts.removeAll()
             leadID = nil
             recalled = nil
             noteAmbient(ambient.process(.sessionEnded(at: now)))
@@ -287,6 +295,7 @@ public struct IslandPipeline: Sendable {
             sessionActive = false
             pausedSince = nil
             items.removeAll()
+            pendingAlerts.removeAll()
             leadID = nil
             recalled = nil
             conversation = nil
@@ -332,10 +341,19 @@ public struct IslandPipeline: Sendable {
         }
         let holdDeadline = selectLead(at: now)
         noteSummary(at: now)
+        if let alertCandidate { pendingAlerts[alertCandidate.id] = (alertCandidate.request, alertCandidate.isUrgent) }
+        for (id, _) in pendingAlerts where items[id].map(\.isResolved) ?? true {
+            pendingAlerts[id] = nil
+            statistics.alertsLostToLead += 1
+        }
 
         var commands: [IslandCommand] = []
         let wanted = sessionActive && settings.isEnabled
         let content = compose(at: now)
+        if !isLive || !wanted {
+            // No activity to expand: requests are not kept for later.
+            pendingAlerts.removeAll()
+        }
         if !isLive {
             if wanted {
                 isLive = true
@@ -352,7 +370,7 @@ public struct IslandPipeline: Sendable {
             hasPendingChange = false
         } else {
             var alert: IslandAlertRequest?
-            if let candidate = alertCandidate, candidate.id == leadID {
+            if let leadID, let candidate = pendingAlerts.removeValue(forKey: leadID) {
                 if !candidate.isUrgent, let lastAlertAt, lastAlertAt.addingTimeInterval(policy.alertMinimumInterval) > now {
                     statistics.alertRequestsRateLimited += 1
                 } else {
@@ -474,7 +492,14 @@ public struct IslandPipeline: Sendable {
         // A resolved episode keeps the island while it lingers, but it does not come back to the
         // front once something else was there. (Seen on the iPhone: a dog that had ended 10 s
         // earlier reappeared for 2 s when a later speech episode expired.)
+        // An active episode of at least `protectedPriority` goes before one whose sound has ended,
+        // whatever its priority. (Seen on the iPhone: a siren that had ended kept the front while
+        // it lingered, and a car horn confirmed during that time got no expansion.)
+        func isActiveWarning(_ item: Item) -> Bool {
+            !item.isResolved && item.intent.priority >= policy.protectedPriority
+        }
         let best = items.filter { !$0.value.isResolved || $0.key == leadID }.max { lhs, rhs in
+            if isActiveWarning(lhs.value) != isActiveWarning(rhs.value) { return isActiveWarning(rhs.value) }
             if lhs.value.intent.priority != rhs.value.intent.priority {
                 return lhs.value.intent.priority < rhs.value.intent.priority
             }
@@ -493,7 +518,9 @@ public struct IslandPipeline: Sendable {
             }
             return nil
         }
-        if best.value.intent.priority == current.intent.priority, let leadSince {
+        if best.value.intent.priority == current.intent.priority, !(current.isResolved && isActiveWarning(best.value)),
+           let leadSince
+        {
             let holdEnds = leadSince.addingTimeInterval(policy.attentionMinimumHold)
             if holdEnds > now { return holdEnds }
         }
