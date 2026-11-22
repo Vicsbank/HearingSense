@@ -157,3 +157,13 @@ Known limitations:
 This project started as a science-fair entry (HearingSense). That version also generated
 lyrics with GPT-4o and new music with Suno; both were removed. The original research plan,
 slides and pipeline diagram are kept in `docs/science_fair/` unchanged.
+
+## License
+
+The source code is released under the [MIT License](LICENSE).
+
+Exceptions: the trained model weights in `models/` were trained on datasets licensed for
+non-commercial research only (for example GTZAN and DEAM; see [`data/README.md`](data/README.md)).
+They are not covered by the MIT License and may be used for non-commercial research only.
+Third-party sources fetched by `tools/prepare_qwen_runtime.py` and the Qwen checkpoint keep their
+own licenses.
